@@ -112,7 +112,7 @@ const Layout = ({ children }) => {
                   <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-red-50 transition-colors">
                     <SafeIcon icon="FiMail" className="text-black text-lg stroke-[2.5]" />
                   </div>
-                  <span className="text-[15px]">info@humanconcernusa.org</span>
+                  <span className="text-[15px]"><a target="_blank" href="mailto:info@humanconcernusa.org">info@humanconcernusa.org</a></span>
                 </li>
                 <li className="flex items-center space-x-4 text-gray-600 hover:text-black transition-all duration-300 cursor-default group">
                   <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-red-50 transition-colors">

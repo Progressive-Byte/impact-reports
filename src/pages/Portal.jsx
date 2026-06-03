@@ -237,16 +237,6 @@ const Portal = () => {
               )}
             </AnimatePresence>
           </div>
-          <div className="flex bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100 w-full md:w-auto">
-            <button onClick={() => setViewMode('grid')} className={`flex-1 md:flex-none flex items-center justify-center space-x-2 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${viewMode === 'grid' ? 'bg-[#0B0D0F] text-white shadow-lg' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`} >
-              <SafeIcon icon="FiGrid" className="text-base" />
-              <span>Grid</span>
-            </button>
-            <button onClick={() => setViewMode('list')} className={`flex-1 md:flex-none flex items-center justify-center space-x-2 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${viewMode === 'list' ? 'bg-[#0B0D0F] text-white shadow-lg' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`} >
-              <SafeIcon icon="FiList" className="text-base" />
-              <span>List</span>
-            </button>
-          </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
@@ -283,6 +273,24 @@ const Portal = () => {
           </aside>
 
           <div className="flex-grow">
+            <div className="flex items-center justify-between gap-4 mb-6">
+              <div className="text-left">
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Results</p>
+                <p className="text-sm font-black text-[#0B0D0F] tabular-nums">
+                  {filteredReports.length.toLocaleString()} report{filteredReports.length === 1 ? '' : 's'}
+                </p>
+              </div>
+              <div className="flex bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100">
+                <button onClick={() => setViewMode('grid')} className={`flex items-center justify-center space-x-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${viewMode === 'grid' ? 'bg-[#0B0D0F] text-white shadow-lg' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`} >
+                  <SafeIcon icon="FiGrid" className="text-base" />
+                  <span className="hidden sm:inline">Grid</span>
+                </button>
+                <button onClick={() => setViewMode('list')} className={`flex items-center justify-center space-x-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${viewMode === 'list' ? 'bg-[#0B0D0F] text-white shadow-lg' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`} >
+                  <SafeIcon icon="FiList" className="text-base" />
+                  <span className="hidden sm:inline">List</span>
+                </button>
+              </div>
+            </div>
             <motion.div layout className={viewMode === 'grid' ? "grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8" : "flex flex-col space-y-4"} >
               <AnimatePresence mode="popLayout">
                 {filteredReports.map((report) => (
