@@ -164,105 +164,90 @@ const Portal = () => {
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen">
-      <section className="relative overflow-hidden pt-32 sm:pt-36 pb-10 sm:pb-14">
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-[#FFF5F5] to-[#F9FAFB]" />
-        <div className="absolute -top-28 left-1/2 -translate-x-1/2 w-[620px] h-[620px] bg-[#E52321]/10 rounded-full blur-[90px]" />
-        <div className="absolute -bottom-40 -left-40 w-[520px] h-[520px] bg-black/5 rounded-full blur-[90px]" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
-            <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="lg:col-span-7 text-left">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/70 border border-[#E52321]/15 px-4 py-2 backdrop-blur-md">
-                <span className="w-2 h-2 rounded-full bg-[#E52321]" />
-                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#0B0D0F]/70">Verified Transparency</span>
-              </div>
-              <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl font-black text-[#0B0D0F] tracking-tight leading-[1.05] uppercase">
-                Global Projects <br className="hidden sm:block" />
-                <span className="text-[#E52321]">Impact Reports</span>
-              </h1>
-              <p className="mt-4 text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl">
-                A comprehensive database of our global initiatives, ensuring every contribution is accounted for through verified field documentation.
-              </p>
-            </motion.div>
-
-            <div className="lg:col-span-5">
-              <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_24px_60px_rgba(0,0,0,0.06)] overflow-hidden">
-                <div className="p-6 sm:p-8">
-                  <div className="space-y-4">
-                    {globalMetrics.map((metric, idx) => (
-                      <div key={idx} className="flex items-center gap-4 p-4 rounded-2xl bg-gray-50/60 border border-gray-100">
-                        <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 flex items-center justify-center shadow-sm">
-                          <SafeIcon icon={metric.icon} className="text-[#E52321] text-lg" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 truncate">{metric.label}</p>
-                          <p className="text-xl sm:text-2xl font-black text-[#0B0D0F] tracking-tight leading-none">{metric.value}</p>
-                          <p className="mt-1 text-xs text-gray-500 truncate">{metric.description}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-10 sm:mt-12 bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] p-4 sm:p-5">
-            <div className="flex flex-col md:flex-row items-stretch gap-4">
-              <div ref={searchContainerRef} className="flex-grow relative">
-                <SafeIcon icon="FiSearch" className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
-                <input
-                  type="text"
-                  placeholder="Search by Country, Region, Sector, or Year"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => searchQuery.length > 1 && setShowSuggestions(suggestions.length > 0)}
-                  className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-4 pl-12 pr-5 text-sm font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#E52321]/10 focus:bg-white transition-all"
-                />
-                <AnimatePresence>
-                  {showSuggestions && (
-                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute top-full left-0 right-0 mt-3 bg-white border border-gray-100 rounded-2xl shadow-[0_30px_70px_rgba(0,0,0,0.14)] z-50 overflow-hidden">
-                      <div className="px-5 py-3 border-b border-gray-50 flex items-center justify-between">
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Matched Filters</span>
-                        <SafeIcon icon="FiFilter" className="text-gray-300 text-xs" />
-                      </div>
-                      <div className="py-2">
-                        {suggestions.map((suggestion, idx) => (
-                          <button key={idx} onClick={() => { handleFilterChange(suggestion.type, suggestion.label); setSearchQuery(''); setShowSuggestions(false); }} className="w-full px-5 py-3 text-left text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[#E52321] flex items-center transition-all duration-200 group">
-                            <div className="w-9 h-9 rounded-xl bg-gray-50 group-hover:bg-[#E52321]/10 flex items-center justify-center mr-4 transition-colors">
-                              <SafeIcon icon={suggestion.icon} className="text-gray-400 group-hover:text-[#E52321] text-sm" />
-                            </div>
-                            <div className="flex flex-col min-w-0">
-                              <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">{suggestion.type}</span>
-                              <span className="truncate">{suggestion.label}</span>
-                            </div>
-                            <div className="ml-auto w-8 h-8 rounded-xl bg-white border border-gray-100 flex items-center justify-center text-gray-300 group-hover:text-[#E52321] group-hover:border-[#E52321]/30 transition-all">
-                              <SafeIcon icon="FiPlus" className="text-sm" />
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-
-              <div className="flex items-center bg-gray-50 border border-gray-100 rounded-2xl p-1.5">
-                <button onClick={() => setViewMode('grid')} className={`flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${viewMode === 'grid' ? 'bg-white text-[#0B0D0F] shadow-sm' : 'text-gray-500 hover:text-black'}`} >
-                  <SafeIcon icon="FiGrid" className="text-base" />
-                  <span className="hidden sm:inline">Grid</span>
-                </button>
-                <button onClick={() => setViewMode('list')} className={`flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${viewMode === 'list' ? 'bg-white text-[#0B0D0F] shadow-sm' : 'text-gray-500 hover:text-black'}`} >
-                  <SafeIcon icon="FiList" className="text-base" />
-                  <span className="hidden sm:inline">List</span>
-                </button>
-              </div>
-            </div>
-          </div>
+      <section className="bg-[#0B0D0F] pt-40 pb-28 md:pt-48 md:pb-44 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=2000" alt="Background" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0D0F] via-transparent to-[#0B0D0F]"></div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+            <span className="inline-block bg-[#E52321]/10 text-[#E52321] px-4 py-1.5 rounded-full text-[10px] font-black tracking-[0.25em] uppercase mb-6 border border-[#E52321]/20">
+              Verified Transparency
+            </span>
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white mb-6 sm:mb-8 tracking-tighter leading-[1.1] sm:leading-[0.9] uppercase">
+              Global Projects <br className="hidden sm:block" />
+              <span className="text-[#E52321]">Impact Reports</span>
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed px-4">
+              A comprehensive database of our global initiatives, ensuring every contribution is accounted for through verified field documentation.
+            </p>
+          </motion.div>
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 md:-mt-20 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+          {globalMetrics.map((metric, idx) => (
+            <motion.div key={idx} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + (idx * 0.1), duration: 0.6 }} whileHover={{ y: -8 }} className="bg-white rounded-[2rem] p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-gray-100 flex items-center group transition-all duration-300">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#0B0D0F] rounded-2xl flex items-center justify-center mr-5 sm:mr-6 group-hover:bg-[#E52321] transition-colors duration-500 shadow-lg shadow-black/10 group-hover:shadow-red-500/20 flex-shrink-0">
+                <SafeIcon icon={metric.icon} className="text-white text-xl sm:text-2xl" />
+              </div>
+              <div className="text-left overflow-hidden">
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 truncate">{metric.label}</p>
+                <p className="text-2xl sm:text-3xl font-black text-black tracking-tighter leading-none mb-1">{metric.value}</p>
+                <p className="text-[10px] sm:text-[11px] text-gray-400 font-medium truncate">{metric.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-12 sm:mb-16">
+          <div ref={searchContainerRef} className="flex-grow w-full relative group">
+            <SafeIcon icon="FiSearch" className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg group-focus-within:text-[#E52321] transition-colors" />
+            <input 
+              type="text" 
+              placeholder="Search by Country, Region, Sector, or Year" 
+              value={searchQuery} 
+              onChange={(e) => setSearchQuery(e.target.value)} 
+              onFocus={() => searchQuery.length > 1 && setShowSuggestions(suggestions.length > 0)}
+              className="w-full bg-white border border-gray-100 rounded-2xl py-4 sm:py-5 pl-14 pr-6 text-sm font-medium shadow-xl shadow-black/5 focus:ring-2 focus:ring-[#E52321]/10 transition-all outline-none" 
+            />
+            <AnimatePresence>
+              {showSuggestions && (
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute top-full left-0 right-0 mt-3 bg-white border border-gray-100 rounded-[1.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.12)] z-50 overflow-hidden py-3" >
+                  <div className="px-6 py-2 mb-1 border-b border-gray-50 flex items-center justify-between">
+                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Matched Filters</span>
+                    <SafeIcon icon="FiFilter" className="text-gray-300 text-xs" />
+                  </div>
+                  {suggestions.map((suggestion, idx) => (
+                    <button key={idx} onClick={() => { handleFilterChange(suggestion.type, suggestion.label); setSearchQuery(''); setShowSuggestions(false); }} className="w-full px-6 py-4 text-left text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[#E52321] flex items-center transition-all duration-200 group" >
+                      <div className="w-8 h-8 rounded-lg bg-gray-50 group-hover:bg-[#E52321]/10 flex items-center justify-center mr-4 transition-colors">
+                        <SafeIcon icon={suggestion.icon} className="text-gray-400 group-hover:text-[#E52321] text-xs" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">{suggestion.type}</span>
+                        <span className="flex-grow">{suggestion.label}</span>
+                      </div>
+                      <SafeIcon icon="FiPlus" className="ml-auto text-gray-200 group-hover:text-[#E52321] opacity-0 group-hover:opacity-100 transition-all" />
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+          <div className="flex bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100 w-full md:w-auto">
+            <button onClick={() => setViewMode('grid')} className={`flex-1 md:flex-none flex items-center justify-center space-x-2 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${viewMode === 'grid' ? 'bg-[#0B0D0F] text-white shadow-lg' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`} >
+              <SafeIcon icon="FiGrid" className="text-base" />
+              <span>Grid</span>
+            </button>
+            <button onClick={() => setViewMode('list')} className={`flex-1 md:flex-none flex items-center justify-center space-x-2 px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${viewMode === 'list' ? 'bg-[#0B0D0F] text-white shadow-lg' : 'text-gray-400 hover:text-black hover:bg-gray-50'}`} >
+              <SafeIcon icon="FiList" className="text-base" />
+              <span>List</span>
+            </button>
+          </div>
+        </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
           <aside className="w-full lg:w-64 flex-shrink-0">
