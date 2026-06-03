@@ -375,18 +375,18 @@ const ReportCard = ({ report }) => (
 
     <div className="relative z-10 p-6 sm:p-7 min-h-[340px] flex flex-col">
       <div className="flex items-center justify-between gap-4">
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-white/80">
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-md border border-white/25 px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.35)] tabular-nums">
           <span className="w-1.5 h-1.5 rounded-full bg-[#E52321]" />
           {report.year}
         </span>
-        <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-white/70">
-          <SafeIcon icon="FiMapPin" className="text-sm" />
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-md border border-white/25 px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.35)]">
+          <SafeIcon icon="FiMapPin" className="text-sm text-[#E52321]" />
           <span className="truncate max-w-[180px]">{report.region}</span>
         </span>
       </div>
 
       <div className="mt-5 flex items-center gap-2 flex-wrap">
-        <span className="px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/80">
+        <span className="px-3 py-1 rounded-full bg-white/20 backdrop-blur-md border border-white/25 text-[10px] font-black uppercase tracking-widest text-white shadow-[0_12px_30px_rgba(0,0,0,0.35)]">
           {report.sector}
         </span>
       </div>

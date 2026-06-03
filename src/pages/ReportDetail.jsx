@@ -113,16 +113,16 @@ const ReportDetail = () => {
 
             <div className="relative z-10 p-6 sm:p-10 flex flex-col justify-end min-h-[360px] sm:min-h-[420px]">
               <div className="flex flex-wrap items-center gap-3 mb-5">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-white/85">
-                  <SafeIcon icon="FiMapPin" className="text-sm" />
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-md border border-white/30 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#0B0D0F] shadow-[0_14px_35px_rgba(0,0,0,0.35)]">
+                  <SafeIcon icon="FiMapPin" className="text-sm text-[#E52321]" />
                   {report.region}
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-white/85">
-                  <SafeIcon icon="FiLayers" className="text-sm" />
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-md border border-white/30 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#0B0D0F] shadow-[0_14px_35px_rgba(0,0,0,0.35)]">
+                  <SafeIcon icon="FiLayers" className="text-sm text-[#E52321]" />
                   {report.sector}
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/10 border border-white/15 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-white/85">
-                  <SafeIcon icon="FiCalendar" className="text-sm" />
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-md border border-white/30 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#0B0D0F] shadow-[0_14px_35px_rgba(0,0,0,0.35)] tabular-nums">
+                  <SafeIcon icon="FiCalendar" className="text-sm text-[#E52321]" />
                   {report.year}
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-full bg-[#D1FAE5] text-[#065F46] border border-[#065F46]/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em]">
@@ -161,8 +161,13 @@ const ReportDetail = () => {
               </div>
             </CollapsibleContainer>
             <CollapsibleContainer title="Implementation Timeline" isOpen={openSections.timeline} onToggle={() => toggleSection('timeline')}>
-              <div className="px-6 sm:px-10 py-2 sm:py-4">
-                {report.milestones.map((milestone, idx) => <TimelineItem key={idx} milestone={milestone} isLast={idx === report.milestones.length - 1} />)}
+              <div className="px-6 sm:px-10 py-8">
+                <div className="relative pl-8 sm:pl-10">
+                  <div className="absolute left-3 sm:left-3.5 top-2 bottom-2 w-px bg-[#E52321] z-0" />
+                  <div className="space-y-0">
+                    {report.milestones.map((milestone, idx) => <TimelineItem key={idx} milestone={milestone} isLast={idx === report.milestones.length - 1} />)}
+                  </div>
+                </div>
               </div>
             </CollapsibleContainer>
           </div>
@@ -603,16 +608,32 @@ const DemographicRow = ({ label, percentage, icon, color }) => (
 );
 
 const TimelineItem = ({ milestone, isLast }) => (
-  <div className={`grid grid-cols-1 sm:grid-cols-[130px_1fr] gap-4 py-6 ${isLast ? '' : 'border-b border-gray-100'} text-left`}>
-    <div className="flex items-start sm:justify-start">
-      <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/15 text-[10px] font-black uppercase tracking-[0.25em]">
-        <span className="w-1.5 h-1.5 rounded-full bg-[#E52321]" />
-        {milestone.date}
-      </span>
+  <div className={`relative ${isLast ? '' : 'pb-7'} text-left`}>
+    <div className="absolute -left-7 sm:-left-[34px] top-6 z-10">
+      <div className="w-4 h-4 rounded-full bg-white border border-[#E52321]/35 shadow-[0_10px_26px_rgba(229,35,33,0.10)] flex items-center justify-center">
+        <div className="w-2 h-2 rounded-full bg-[#E52321]" />
+      </div>
     </div>
-    <div className="min-w-0">
-      <h4 className="text-base sm:text-lg font-black text-[#0B0D0F] tracking-tight">{milestone.title}</h4>
-      <p className="mt-2 text-sm text-gray-600 leading-relaxed">{milestone.description}</p>
+    {!isLast && <div className="absolute left-0 top-10 bottom-0 w-px bg-transparent" />}
+
+    <div className="rounded-[1.75rem] bg-white border border-black/10 shadow-[0_12px_32px_rgba(0,0,0,0.06)] overflow-hidden transition-shadow hover:shadow-[0_18px_45px_rgba(0,0,0,0.10)]">
+      <div className="px-5 sm:px-6 py-4 border-b border-gray-100 bg-gradient-to-b from-gray-50/60 to-white">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/15 text-[10px] font-black uppercase tracking-[0.25em] tabular-nums">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#E52321]" />
+            {milestone.date}
+          </span>
+          <div className="hidden sm:flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+            Milestone
+          </div>
+        </div>
+      </div>
+
+      <div className="px-5 sm:px-6 py-5">
+        <h4 className="text-base sm:text-lg font-black text-[#0B0D0F] tracking-tight leading-snug">{milestone.title}</h4>
+        <p className="mt-2 text-sm text-gray-600 leading-relaxed">{milestone.description}</p>
+      </div>
     </div>
   </div>
 );
