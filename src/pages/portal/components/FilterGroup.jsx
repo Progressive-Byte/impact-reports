@@ -1,6 +1,6 @@
 import React from 'react';
 import SafeIcon from '../../../common/SafeIcon';
-import CollapsibleSection from '../../../components/CollapsibleSection';
+import CollapsibleSection from '../../../common/CollapsibleSection';
 
 const FilterGroup = ({ title, options, selected, isOpen, onToggle, onOptionToggle }) => (
   <CollapsibleSection title={title} isOpen={isOpen} onToggle={onToggle} variant="filter">

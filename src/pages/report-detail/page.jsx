@@ -5,7 +5,7 @@ import SafeIcon from '../../common/SafeIcon';
 import { reports } from '../../data/mockData';
 import { cleanCountryName, getGpsData } from '../../utils/location';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import CollapsibleSection from '../../components/CollapsibleSection';
+import CollapsibleSection from '../../common/CollapsibleSection';
 import MediaLightbox from './components/MediaLightbox';
 import StatTile from './components/StatTile';
 import DeliverableRow from './components/DeliverableRow';

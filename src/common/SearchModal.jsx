@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import SafeIcon from '../common/SafeIcon';
+import SafeIcon from './SafeIcon';
 import { reports, taxonomies } from '../data/mockData';
 import { cleanCountryName } from '../utils/location';
 

@@ -4,7 +4,7 @@ import L from 'leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import SafeIcon from '../../../common/SafeIcon';
-import CollapsibleSection from '../../../components/CollapsibleSection';
+import CollapsibleSection from '../../../common/CollapsibleSection';
 
 L.Marker.prototype.options.icon = L.icon({
   iconUrl: markerIcon,

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CollapsibleSection from '../../../components/CollapsibleSection';
+import CollapsibleSection from '../../../common/CollapsibleSection';
 
 const ProjectBrief = ({ report }) => {
   const [openSections, setOpenSections] = useState({ background: true, response: false });

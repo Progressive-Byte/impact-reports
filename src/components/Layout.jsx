@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import SafeIcon from '../common/SafeIcon';
 import CustomCursor from '../common/CustomCursor';
-import SearchModal from './SearchModal';
+import SearchModal from '../common/SearchModal';
 
 const Layout = ({ children }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);

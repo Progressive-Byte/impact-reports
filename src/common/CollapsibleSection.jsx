@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import SafeIcon from '../common/SafeIcon';
+import SafeIcon from './SafeIcon';
 
 /**
  * variant="section"  — large card sections (ReportDetail top-level)
