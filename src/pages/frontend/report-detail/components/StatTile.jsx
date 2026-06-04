@@ -1,5 +1,5 @@
 import React from 'react';
-import SafeIcon from '../../../common/SafeIcon';
+import SafeIcon from '../../../../common/SafeIcon';
 
 const StatTile = ({ title, value, icon }) => (
   <div className="p-6 sm:p-8 flex items-center gap-4 text-left">

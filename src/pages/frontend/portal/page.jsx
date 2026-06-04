@@ -1,10 +1,10 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
-import SafeIcon from '../../common/SafeIcon';
-import { reports, taxonomies } from '../../data/mockData';
-import { cleanCountryName } from '../../utils/location';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import SafeIcon from '../../../common/SafeIcon';
+import { reports, taxonomies } from '../../../data/mockData';
+import { cleanCountryName } from '../../../utils/location';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
 import FilterGroup from './components/FilterGroup';
 import ReportCard from './components/ReportCard';
 import ReportListRow from './components/ReportListRow';

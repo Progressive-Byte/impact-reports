@@ -1,5 +1,5 @@
 import React from 'react';
-import SafeIcon from '../../../common/SafeIcon';
+import SafeIcon from '../../../../common/SafeIcon';
 
 const DeliverableRow = ({ item }) => (
   <div className="flex items-center justify-between gap-4 p-4 sm:p-5 rounded-2xl bg-gray-50/60 border border-gray-100 hover:border-[#E52321]/20 hover:bg-white transition-all">

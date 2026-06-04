@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SafeIcon from '../../../common/SafeIcon';
+import SafeIcon from '../../../../common/SafeIcon';
 
 const ReportCard = ({ report }) => (
   <div className="group relative rounded-[2rem] overflow-hidden border border-gray-100 bg-[#0B0D0F] shadow-[0_18px_50px_rgba(0,0,0,0.06)] hover:shadow-[0_30px_80px_rgba(0,0,0,0.14)] transition-all duration-500 text-left">

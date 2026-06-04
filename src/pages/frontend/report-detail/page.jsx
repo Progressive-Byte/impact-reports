@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import SafeIcon from '../../common/SafeIcon';
-import { reports } from '../../data/mockData';
-import { cleanCountryName, getGpsData } from '../../utils/location';
-import { useLocalStorage } from '../../hooks/useLocalStorage';
-import CollapsibleSection from '../../common/CollapsibleSection';
+import SafeIcon from '../../../common/SafeIcon';
+import { reports } from '../../../data/mockData';
+import { cleanCountryName, getGpsData } from '../../../utils/location';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
+import CollapsibleSection from '../../../common/CollapsibleSection';
 import MediaLightbox from './components/MediaLightbox';
 import StatTile from './components/StatTile';
 import DeliverableRow from './components/DeliverableRow';

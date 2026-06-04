@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import SafeIcon from '../../../common/SafeIcon';
+import SafeIcon from '../../../../common/SafeIcon';
 
 const MediaLightbox = ({ media, title, onClose }) => (
   <AnimatePresence>
