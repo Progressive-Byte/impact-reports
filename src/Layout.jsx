@@ -22,6 +22,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] font-sans text-gray-900 flex flex-col relative">
+      <NavigationProgress />
       <Header onSearchClick={handleSearchClick} />
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
       <main className="flex-grow">
