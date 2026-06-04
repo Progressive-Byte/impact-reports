@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SafeIcon from '../../common/SafeIcon';
+import SafeIcon from '../../../common/SafeIcon';
 
 const ReportListRow = ({ report }) => (
   <div className="group bg-white rounded-[2rem] p-4 sm:p-5 border border-gray-100 shadow-[0_12px_35px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_55px_rgba(0,0,0,0.08)] hover:border-[#E52321]/20 transition-all duration-300 text-left">

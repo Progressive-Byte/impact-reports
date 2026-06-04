@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
-import Portal from './pages/Portal';
 import ReportDetail from './pages/ReportDetail';
+import Portal from './pages/portal/page';
 
 function App() {
   return (
