@@ -29,7 +29,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] font-sans text-gray-900 flex flex-col relative">
-      <CustomCursor />
+      {/* <CustomCursor /> */}
       <header className="absolute top-4 sm:top-6 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.08)] flex justify-between items-center px-3 py-2 sm:px-6 sm:py-3 border border-gray-100">
