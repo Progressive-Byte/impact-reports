@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const Admin = require('../models/Admin');
+import jwt from 'jsonwebtoken';
+import Admin from '../models/Admin.js';
 
-const protect = async (req, res, next) => {
+export const protect = async (req, res, next) => {
   const header = req.headers.authorization;
   if (!header?.startsWith('Bearer ')) {
     return res.status(401).json({ message: 'No token provided' });
@@ -19,5 +19,3 @@ const protect = async (req, res, next) => {
     res.status(401).json({ message: 'Invalid or expired token' });
   }
 };
-
-module.exports = { protect };
