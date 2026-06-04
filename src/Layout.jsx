@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SearchModal from './common/SearchModal';
 import Header from './common/Header';
 import Footer from './common/Footer';
+import NavigationProgress from './common/NavigationProgress';
 
 const Layout = ({ children }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
