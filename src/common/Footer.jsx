@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SafeIcon from '../common/SafeIcon';
+import SafeIcon from './SafeIcon';
 
 const LogoIcon = ({ className = "w-10 h-10" }) => (
   <div className={`${className} rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-red-500/10 overflow-hidden bg-white border border-gray-100 relative`}>

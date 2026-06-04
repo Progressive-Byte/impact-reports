@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import SafeIcon from '../common/SafeIcon';
+import SafeIcon from './SafeIcon';
 import { motion } from 'framer-motion';
 
 const LogoIcon = ({ className = "w-10 h-10 sm:w-12 sm:h-12" }) => (

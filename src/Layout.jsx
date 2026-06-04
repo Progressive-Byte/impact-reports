@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import SearchModal from './common/SearchModal';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import Header from './common/Header';
+import Footer from './common/Footer';
 
 const Layout = ({ children }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
