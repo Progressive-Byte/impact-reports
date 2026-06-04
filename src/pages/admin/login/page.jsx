@@ -139,10 +139,6 @@ const AdminLogin = () => {
             </button>
           </form>
         </div>
-
-        <p className="text-center text-gray-600 text-xs mt-6">
-          Default: <span className="text-gray-400 font-bold">admin</span> / <span className="text-gray-400 font-bold">admin123</span>
-        </p>
       </motion.div>
     </div>
   );
