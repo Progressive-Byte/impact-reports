@@ -1,6 +1,11 @@
-require('dotenv').config({ path: require('path').join(__dirname, '../.env') });
-const mongoose = require('mongoose');
-const Admin = require('../models/Admin');
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import mongoose from 'mongoose';
+import Admin from '../models/Admin.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: join(__dirname, '../.env') });
 
 async function seed() {
   await mongoose.connect(process.env.MONGODB_URI);
