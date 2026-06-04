@@ -5,9 +5,9 @@ import SafeIcon from '../../common/SafeIcon';
 import { reports, taxonomies } from '../../data/mockData';
 import { cleanCountryName } from '../../utils/location';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import FilterGroup from '../components/portal/FilterGroup';
-import ReportCard from '../components/portal/ReportCard';
-import ReportListRow from '../components/portal/ReportListRow';
+import FilterGroup from './components/FilterGroup';
+import ReportCard from './components/ReportCard';
+import ReportListRow from './components/ReportListRow';
 
 const EMPTY_FILTERS = { region: [], sector: [], year: [], country: [] };
 
