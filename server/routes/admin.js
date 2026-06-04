@@ -1,6 +1,6 @@
-const express = require('express');
-const Admin = require('../models/Admin');
-const { protect } = require('../middleware/auth');
+import express from 'express';
+import Admin from '../models/Admin.js';
+import { protect } from '../middleware/auth.js';
 
 const router = express.Router();
 router.use(protect);
@@ -118,4 +118,4 @@ router.put('/settings/profile', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
