@@ -1,19 +1,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ReportDetail from './pages/report-detail/page';
-import Portal from './pages/portal/page';
 import Layout from './Layout';
+import Portal from './pages/portal/page';
+import ReportDetail from './pages/report-detail/page';
+import AdminLogin from './pages/admin/login/page';
+import AdminDashboard from './pages/admin/dashboard/page';
+import AdminProtectedRoute from './common/AdminProtectedRoute';
+import { AdminAuthProvider } from './context/AdminAuthContext';
 
 function App() {
   return (
-    <Router>
-      <Layout>
+    <AdminAuthProvider>
+      <Router>
         <Routes>
-          <Route path="/" element={<Portal />} />
-          <Route path="/report/:id" element={<ReportDetail />} />
+          {/* Admin routes — no public Layout */}
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminProtectedRoute>
+                <AdminDashboard />
+              </AdminProtectedRoute>
+            }
+          />
+          {/* Public routes — wrapped in Layout */}
+          <Route path="/" element={<Layout><Portal /></Layout>} />
+          <Route path="/report/:id" element={<Layout><ReportDetail /></Layout>} />
         </Routes>
-      </Layout>
-    </Router>
+      </Router>
+    </AdminAuthProvider>
   );
 }
 
