@@ -3,7 +3,7 @@ import SafeIcon from '../../../common/SafeIcon';
 import CollapsibleSection from '../../../common/CollapsibleSection';
 
 const FilterGroup = ({ title, options, selected, isOpen, onToggle, onOptionToggle }) => (
-  <CollapsibleSection title={title} isOpen={isOpen} onToggle={onToggle} variant="filter">
+  <CollapsibleSection title={title} isOpen={isOpen} onToggle={onToggle} variant="filter" selectedCount={selected.length}>
     <div className="flex flex-wrap gap-2">
       {options.map((option) => {
         const isSelected = selected.includes(option);

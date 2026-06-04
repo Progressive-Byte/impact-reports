@@ -13,7 +13,7 @@ const ReportCard = ({ report }) => (
       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
     </div>
 
-    <div className="relative z-10 p-6 sm:p-7 min-h-[340px] flex flex-col">
+    <div className="relative z-10 p-5 sm:p-7 min-h-[270px] sm:min-h-[320px] flex flex-col">
       <div className="flex items-center justify-between gap-4">
         <span className="inline-flex items-center gap-2 rounded-full bg-white/20 backdrop-blur-md border border-white/25 px-3 py-1 text-[10px] font-black uppercase tracking-[0.25em] text-white shadow-[0_12px_30px_rgba(0,0,0,0.35)] tabular-nums">
           <span className="w-1.5 h-1.5 rounded-full bg-[#E52321]" />

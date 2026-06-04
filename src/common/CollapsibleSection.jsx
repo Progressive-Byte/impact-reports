@@ -15,6 +15,7 @@ const CollapsibleSection = ({
   children,
   headerRight,
   variant = 'section',
+  selectedCount = 0,
 }) => {
   if (variant === 'brief') {
     return (
@@ -60,10 +61,15 @@ const CollapsibleSection = ({
           className="w-full flex items-center justify-between px-4 py-4 hover:bg-white/70 transition-colors group"
         >
           <div className="flex items-center gap-3">
-            <span className="w-2 h-2 rounded-full bg-[#E52321]" />
+            <span className="w-2 h-2 rounded-full bg-[#E52321] flex-shrink-0" />
             <h4 className="text-[10px] font-black text-gray-600 uppercase tracking-[0.25em] group-hover:text-[#0B0D0F] transition-colors">
               {title}
             </h4>
+            {selectedCount > 0 && (
+              <span className="bg-[#E52321] text-white rounded-full min-w-[18px] h-[18px] px-1 flex items-center justify-center text-[9px] font-black leading-none">
+                {selectedCount}
+              </span>
+            )}
           </div>
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}

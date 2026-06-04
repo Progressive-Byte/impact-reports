@@ -30,7 +30,7 @@ const ReportListRow = ({ report }) => (
         <p className="mt-1 text-xs sm:text-sm text-gray-500 line-clamp-1">{report.summary}</p>
       </div>
       <div className="flex items-center gap-4 w-full sm:w-auto">
-        <div className="hidden md:block text-right min-w-[120px]">
+        <div className="hidden sm:block text-right min-w-[100px]">
           <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Impact</p>
           <p className="text-base font-black text-[#0B0D0F]">
             {report.metrics.beneficiaries.toLocaleString()}

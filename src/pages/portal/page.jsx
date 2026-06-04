@@ -19,6 +19,7 @@ const Portal = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const searchContainerRef = useRef(null);
 
   const [expandedGroups, setExpandedGroups] = useState({
@@ -29,6 +30,12 @@ const Portal = () => {
     const all = reports.flatMap((r) => r.countries.map(cleanCountryName));
     return [...new Set(all)].sort();
   }, []);
+
+  // Lock body scroll when mobile filter sheet is open
+  useEffect(() => {
+    document.body.style.overflow = isMobileFilterOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [isMobileFilterOpen]);
 
   // Apply filter/search params pushed by SearchModal
   useEffect(() => {
@@ -135,6 +142,11 @@ const Portal = () => {
   const activeFilterCount =
     filters.region.length + filters.sector.length + filters.year.length + filters.country.length;
 
+  const activeFilterChips = [...filters.region, ...filters.sector, ...filters.year, ...filters.country];
+
+  const expandAllGroups = () => setExpandedGroups({ Regions: true, Countries: true, Sectors: true, Years: true });
+  const collapseAllGroups = () => setExpandedGroups({ Regions: false, Countries: false, Sectors: false, Years: false });
+
   return (
     <div className="bg-[#F9FAFB] min-h-screen">
       {/* Hero */}
@@ -166,7 +178,7 @@ const Portal = () => {
 
       {/* Metrics strip */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-16 md:-mt-20 relative z-20">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
           {globalMetrics.map((metric, idx) => (
             <motion.div
               key={idx}
@@ -174,10 +186,10 @@ const Portal = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 + idx * 0.1, duration: 0.6 }}
               whileHover={{ y: -8 }}
-              className="bg-white rounded-[2rem] p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-gray-100 flex items-center group transition-all duration-300"
+              className="bg-white rounded-[2rem] p-5 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.06)] border border-gray-100 flex items-center group transition-all duration-300"
             >
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#0B0D0F] rounded-2xl flex items-center justify-center mr-5 sm:mr-6 group-hover:bg-[#E52321] transition-colors duration-500 shadow-lg shadow-black/10 group-hover:shadow-red-500/20 flex-shrink-0">
-                <SafeIcon icon={metric.icon} className="text-white text-xl sm:text-2xl" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#0B0D0F] rounded-2xl flex items-center justify-center mr-4 sm:mr-6 group-hover:bg-[#E52321] transition-colors duration-500 shadow-lg shadow-black/10 group-hover:shadow-red-500/20 flex-shrink-0">
+                <SafeIcon icon={metric.icon} className="text-white text-lg sm:text-2xl" />
               </div>
               <div className="text-left overflow-hidden">
                 <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 truncate">{metric.label}</p>
@@ -190,17 +202,17 @@ const Portal = () => {
       </div>
 
       {/* Search + filter + results */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
         {/* Search bar */}
-        <div ref={searchContainerRef} className="flex-grow w-full relative group mb-12 sm:mb-16">
-          <SafeIcon icon="FiSearch" className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg group-focus-within:text-[#E52321] transition-colors" />
+        <div ref={searchContainerRef} className="w-full relative group mb-8 sm:mb-10">
+          <SafeIcon icon="FiSearch" className="absolute left-5 sm:left-6 top-1/2 -translate-y-1/2 text-gray-400 text-lg group-focus-within:text-[#E52321] transition-colors" />
           <input
             type="text"
             placeholder="Search by Country, Region, Sector, or Year"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => searchQuery.length > 1 && setShowSuggestions(suggestions.length > 0)}
-            className="w-full bg-white border border-gray-100 rounded-2xl py-4 sm:py-5 pl-14 pr-6 text-sm font-medium shadow-xl shadow-black/5 focus:ring-2 focus:ring-[#E52321]/10 transition-all outline-none"
+            className="w-full bg-white border border-gray-100 rounded-2xl py-4 sm:py-5 pl-12 sm:pl-14 pr-5 sm:pr-6 text-sm font-medium shadow-xl shadow-black/5 focus:ring-2 focus:ring-[#E52321]/10 transition-all outline-none"
           />
           <AnimatePresence>
             {showSuggestions && (
@@ -210,7 +222,7 @@ const Portal = () => {
                 exit={{ opacity: 0, y: 10 }}
                 className="absolute top-full left-0 right-0 mt-3 bg-white border border-gray-100 rounded-[1.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.12)] z-50 overflow-hidden py-3"
               >
-                <div className="px-6 py-2 mb-1 border-b border-gray-50 flex items-center justify-between">
+                <div className="px-5 sm:px-6 py-2 mb-1 border-b border-gray-50 flex items-center justify-between">
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Matched Filters</span>
                   <SafeIcon icon="FiFilter" className="text-gray-300 text-xs" />
                 </div>
@@ -218,16 +230,16 @@ const Portal = () => {
                   <button
                     key={idx}
                     onClick={() => { handleFilterChange(s.type, s.label); setSearchQuery(''); setShowSuggestions(false); }}
-                    className="w-full px-6 py-4 text-left text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[#E52321] flex items-center transition-all duration-200 group"
+                    className="w-full px-5 sm:px-6 py-3 sm:py-4 text-left text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[#E52321] flex items-center transition-all duration-200 group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-gray-50 group-hover:bg-[#E52321]/10 flex items-center justify-center mr-4 transition-colors">
+                    <div className="w-8 h-8 rounded-lg bg-gray-50 group-hover:bg-[#E52321]/10 flex items-center justify-center mr-4 transition-colors flex-shrink-0">
                       <SafeIcon icon={s.icon} className="text-gray-400 group-hover:text-[#E52321] text-xs" />
                     </div>
-                    <div className="flex flex-col">
+                    <div className="flex flex-col min-w-0">
                       <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">{s.type}</span>
-                      <span>{s.label}</span>
+                      <span className="truncate">{s.label}</span>
                     </div>
-                    <SafeIcon icon="FiPlus" className="ml-auto text-gray-200 group-hover:text-[#E52321] opacity-0 group-hover:opacity-100 transition-all" />
+                    <SafeIcon icon="FiPlus" className="ml-auto flex-shrink-0 text-gray-200 group-hover:text-[#E52321] opacity-0 group-hover:opacity-100 transition-all" />
                   </button>
                 ))}
               </motion.div>
@@ -235,10 +247,46 @@ const Portal = () => {
           </AnimatePresence>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-12">
-          {/* Sidebar */}
-          <aside className="w-full lg:w-64 flex-shrink-0">
-            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden lg:sticky lg:top-28">
+        {/* Mobile filter trigger row — hidden on lg+ */}
+        <div className="flex lg:hidden items-center gap-3 mb-8 overflow-hidden">
+          <button
+            onClick={() => setIsMobileFilterOpen(true)}
+            className="flex items-center gap-2.5 bg-white border border-gray-100 rounded-2xl px-4 py-3 shadow-sm hover:border-[#E52321]/20 hover:shadow-md transition-all duration-300 flex-shrink-0"
+          >
+            <div className="w-7 h-7 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
+              <SafeIcon icon="FiSliders" className="text-[#E52321] text-sm" />
+            </div>
+            <span className="text-[11px] font-black uppercase tracking-widest text-[#0B0D0F]">Filters</span>
+            {activeFilterCount > 0 && (
+              <span className="bg-[#E52321] text-white rounded-full min-w-[20px] h-5 px-1.5 flex items-center justify-center text-[10px] font-black leading-none">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+          {activeFilterCount > 0 && (
+            <div className="flex-1 flex items-center gap-2 overflow-x-auto scrollbar-hide">
+              {activeFilterChips.map((f) => (
+                <span
+                  key={f}
+                  className="inline-flex items-center bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/15 rounded-full px-3 py-1.5 text-[10px] font-black whitespace-nowrap flex-shrink-0"
+                >
+                  {f}
+                </span>
+              ))}
+              <button
+                onClick={clearFilters}
+                className="text-[10px] font-black text-gray-400 hover:text-[#E52321] whitespace-nowrap flex-shrink-0 ml-1 transition-colors"
+              >
+                Clear all
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+          {/* Desktop sidebar — hidden on mobile */}
+          <aside className="hidden lg:block w-64 flex-shrink-0">
+            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden sticky top-28">
               <div className="p-6 border-b border-gray-50 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
@@ -247,30 +295,22 @@ const Portal = () => {
                   <h3 className="text-[11px] font-black text-[#0B0D0F] uppercase tracking-widest">Filters</h3>
                 </div>
                 <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => setExpandedGroups({ Regions: true, Countries: true, Sectors: true, Years: true })}
-                    className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors"
-                  >
+                  <button onClick={expandAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">
                     Expand
                   </button>
-                  <button
-                    onClick={() => setExpandedGroups({ Regions: false, Countries: false, Sectors: false, Years: false })}
-                    className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors"
-                  >
+                  <button onClick={collapseAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">
                     Collapse
                   </button>
                 </div>
               </div>
-
-              <div className="p-6 space-y-6">
+              <div className="p-6 space-y-4">
                 <FilterGroup title="Regions" options={taxonomies.regions} selected={filters.region} isOpen={expandedGroups.Regions} onToggle={() => toggleGroup('Regions')} onOptionToggle={(v) => handleFilterChange('region', v)} />
                 <FilterGroup title="Countries" options={availableCountries} selected={filters.country} isOpen={expandedGroups.Countries} onToggle={() => toggleGroup('Countries')} onOptionToggle={(v) => handleFilterChange('country', v)} />
                 <FilterGroup title="Sectors" options={taxonomies.sectors} selected={filters.sector} isOpen={expandedGroups.Sectors} onToggle={() => toggleGroup('Sectors')} onOptionToggle={(v) => handleFilterChange('sector', v)} />
                 <FilterGroup title="Years" options={taxonomies.years} selected={filters.year} isOpen={expandedGroups.Years} onToggle={() => toggleGroup('Years')} onOptionToggle={(v) => handleFilterChange('year', v)} />
               </div>
-
               {activeFilterCount > 0 && (
-                <div className="p-6 pt-0">
+                <div className="px-6 pb-6">
                   <button
                     onClick={clearFilters}
                     className="w-full py-3 rounded-2xl bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/15 font-black text-[10px] uppercase tracking-[0.25em] hover:bg-[#E52321]/15 transition-all"
@@ -283,7 +323,7 @@ const Portal = () => {
           </aside>
 
           {/* Results */}
-          <div className="flex-grow">
+          <div className="flex-grow min-w-0">
             <div className="flex items-center justify-between gap-4 mb-6">
               <div className="text-left">
                 <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Results</p>
@@ -296,7 +336,7 @@ const Portal = () => {
                   <button
                     key={mode}
                     onClick={() => setViewMode(mode)}
-                    className={`flex items-center justify-center space-x-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${
+                    className={`flex items-center justify-center space-x-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 ${
                       viewMode === mode ? 'bg-[#0B0D0F] text-white shadow-lg' : 'text-gray-400 hover:text-black hover:bg-gray-50'
                     }`}
                   >
@@ -309,17 +349,17 @@ const Portal = () => {
 
             <motion.div
               layout
-              className={viewMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8' : 'flex flex-col space-y-4'}
+              className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6' : 'flex flex-col space-y-4'}
             >
               <AnimatePresence mode="popLayout">
                 {filteredReports.map((report) => (
                   <motion.div
                     layout
                     key={report.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.25 }}
                   >
                     {viewMode === 'grid' ? <ReportCard report={report} /> : <ReportListRow report={report} />}
                   </motion.div>
@@ -341,6 +381,85 @@ const Portal = () => {
           </div>
         </div>
       </section>
+
+      {/* Mobile filter bottom sheet */}
+      <AnimatePresence>
+        {isMobileFilterOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setIsMobileFilterOpen(false)}
+              className="fixed inset-0 bg-black/50 z-[70] lg:hidden backdrop-blur-sm"
+            />
+            <motion.div
+              initial={{ y: '100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '100%' }}
+              transition={{ type: 'spring', damping: 32, stiffness: 300 }}
+              className="fixed bottom-0 left-0 right-0 z-[80] lg:hidden bg-white rounded-t-[2rem] max-h-[88vh] flex flex-col shadow-[0_-20px_60px_rgba(0,0,0,0.15)]"
+            >
+              {/* Drag handle */}
+              <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
+                <div className="w-10 h-1.5 rounded-full bg-gray-200" />
+              </div>
+
+              {/* Sheet header */}
+              <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
+                    <SafeIcon icon="FiSliders" className="text-[#E52321]" />
+                  </div>
+                  <h3 className="text-[11px] font-black text-[#0B0D0F] uppercase tracking-widest">Filters</h3>
+                  {activeFilterCount > 0 && (
+                    <span className="bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/15 rounded-full px-2.5 py-1 text-[10px] font-black leading-none">
+                      {activeFilterCount} active
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-4">
+                  <button onClick={expandAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">
+                    Expand
+                  </button>
+                  <button onClick={collapseAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">
+                    Collapse
+                  </button>
+                </div>
+              </div>
+
+              {/* Scrollable filter groups */}
+              <div className="flex-1 overflow-y-auto p-5 space-y-4">
+                <FilterGroup title="Regions" options={taxonomies.regions} selected={filters.region} isOpen={expandedGroups.Regions} onToggle={() => toggleGroup('Regions')} onOptionToggle={(v) => handleFilterChange('region', v)} />
+                <FilterGroup title="Countries" options={availableCountries} selected={filters.country} isOpen={expandedGroups.Countries} onToggle={() => toggleGroup('Countries')} onOptionToggle={(v) => handleFilterChange('country', v)} />
+                <FilterGroup title="Sectors" options={taxonomies.sectors} selected={filters.sector} isOpen={expandedGroups.Sectors} onToggle={() => toggleGroup('Sectors')} onOptionToggle={(v) => handleFilterChange('sector', v)} />
+                <FilterGroup title="Years" options={taxonomies.years} selected={filters.year} isOpen={expandedGroups.Years} onToggle={() => toggleGroup('Years')} onOptionToggle={(v) => handleFilterChange('year', v)} />
+              </div>
+
+              {/* Action buttons */}
+              <div className="p-5 border-t border-gray-100 flex-shrink-0">
+                <div className={`grid gap-3 ${activeFilterCount > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                  {activeFilterCount > 0 && (
+                    <button
+                      onClick={clearFilters}
+                      className="py-4 rounded-2xl bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/15 font-black text-[10px] uppercase tracking-[0.25em] hover:bg-[#E52321]/15 active:scale-95 transition-all"
+                    >
+                      Clear filters
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setIsMobileFilterOpen(false)}
+                    className="py-4 rounded-2xl bg-[#0B0D0F] text-white font-black text-[10px] uppercase tracking-[0.25em] hover:bg-[#E52321] active:scale-95 transition-all"
+                  >
+                    Show {filteredReports.length} result{filteredReports.length === 1 ? '' : 's'}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
