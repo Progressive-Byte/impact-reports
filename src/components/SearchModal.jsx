@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import SafeIcon from '../common/SafeIcon';
 import { reports, taxonomies } from '../data/mockData';
+import { cleanCountryName } from '../utils/location';
 
 const SearchModal = ({ isOpen, onClose }) => {
   const [query, setQuery] = useState('');
@@ -16,11 +17,6 @@ const SearchModal = ({ isOpen, onClose }) => {
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
-
-  const cleanCountryName = (loc) => {
-    if (loc.includes('(')) return loc.split('(')[0].trim();
-    return loc;
-  };
 
   const availableCountries = useMemo(() => {
     const all = reports.flatMap(r => r.countries.map(cleanCountryName));
