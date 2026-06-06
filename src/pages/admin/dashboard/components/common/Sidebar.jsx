@@ -39,7 +39,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
             <button
               key={id}
               onClick={() => { setSection(id); setSidebarOpen(false); }}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[12px] font-bold transition-all duration-150 ${
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[14px] font-bold transition-all duration-150 ${
                 section === id
                   ? 'bg-[#E52321] text-white'
                   : 'text-[#909098] hover:text-white hover:bg-white/5'
