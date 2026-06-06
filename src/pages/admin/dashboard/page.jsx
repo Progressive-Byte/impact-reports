@@ -81,7 +81,7 @@ const AdminOverview = () => {
       </AnimatePresence>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Top bar */}
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100/80 px-5 py-3 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
@@ -159,7 +159,7 @@ const AdminOverview = () => {
         </header>
 
         {/* Scrollable content */}
-        <main className="flex-1 overflow-y-auto p-5 sm:p-7">
+        <main className="flex-1 p-5 sm:p-7">
           {section === 'overview' && <AdminDashboard />}
 
           {section === 'reports' && (
