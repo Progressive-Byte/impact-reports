@@ -113,7 +113,7 @@ const ReportsModule = () => {
             </div>
 
             <div className="flex gap-2">
-              <div className="flex-1 relative">
+              <div className="flex-1 relative min-w-0">
                 <SafeIcon icon="FiSearch" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
                 <input
                   type="text"
@@ -123,11 +123,11 @@ const ReportsModule = () => {
                   className="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm placeholder:text-gray-300 focus:outline-none bg-white"
                 />
               </div>
-              <div className="relative flex-shrink-0">
+              <div className="relative w-28 flex-shrink-0">
                 <select
                   value={ledgerSort}
                   onChange={e => setLedgerSort(e.target.value)}
-                  className="border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-600 focus:outline-none bg-white appearance-none pr-8 cursor-pointer"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-600 focus:outline-none bg-white appearance-none pr-7 cursor-pointer"
                 >
                   <option value="recent">Recent</option>
                   <option value="oldest">Oldest</option>
