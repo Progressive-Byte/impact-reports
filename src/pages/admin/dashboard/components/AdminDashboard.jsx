@@ -204,7 +204,9 @@ const AdminDashboard = () => {
           {/* Active Regions */}
           <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
             <div className="flex items-center gap-2.5 mb-5">
+              <div className='w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center flex-shrink-0'>
               <SafeIcon icon="FiGlobe" className="text-gray-400 text-base" />
+              </div>
               <h3 className="text-sm font-black text-[#0B0D0F]">Active Regions</h3>
             </div>
             <div className="divide-y divide-gray-100">
