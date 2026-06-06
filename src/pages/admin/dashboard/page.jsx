@@ -293,4 +293,4 @@ const AdminOverview = () => {
   );
 };
 
-export default AdminDashboard;
+export default AdminOverview;
