@@ -2,8 +2,8 @@ import { useState } from 'react';
 import SafeIcon from '../../../../../common/SafeIcon';
 import CustomSelect from '../ReportsModule/reports/CustomSelect';
 import Checkbox from '../../common/Checkbox';
-import UserRow from './UserRow';
-import InviteModal from './InviteModal';
+import InviteModal from './components/InviteModal';
+import UserRow from './components/UserRow';
 
 const MOCK_USERS = [
   { _id: '1', username: 'admin.lead',      email: 'admin.lead@impact.org',      role: 'superadmin',       region: 'Global',         isActive: true,  lastLogin: '2024-01-15T08:30:00' },
