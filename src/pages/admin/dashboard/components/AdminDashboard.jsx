@@ -165,7 +165,7 @@ const AdminDashboard = () => {
       
       <div className="flex gap-5 items-start">
         {/* System Log / Content Feed */}
-        <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+        <div className="flex-[3] min-w-0 bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
           <div className="flex border-b border-gray-100 px-6">
             {[{ id: 'system', label: 'System Log' }, { id: 'content', label: 'Content Feed' }].map(({ id, label }) => (
               <button
