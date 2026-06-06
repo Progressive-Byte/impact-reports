@@ -1,5 +1,4 @@
-# Nonprofit-Impact-Report-Portal-Design-4914
-Repository created by Greta
+# The backend server run
 npm run server:dev
 
   See:
