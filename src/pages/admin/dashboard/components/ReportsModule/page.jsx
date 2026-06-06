@@ -121,7 +121,7 @@ const ReportsModule = () => {
                   placeholder="Search records..."
                   value={ledgerSearch}
                   onChange={e => setLedgerSearch(e.target.value)}
-                  className="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm placeholder:text-gray-300 focus:outline-none bg-white"
+                  className="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] focus:ring-offset-0 bg-white"
                 />
               </div>
               <CustomSelect
