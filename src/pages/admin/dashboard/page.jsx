@@ -83,13 +83,13 @@ const AdminOverview = () => {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
-        <header className="bg-white border-b border-gray-100 px-5 py-3 flex items-center justify-between flex-shrink-0">
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-100/80 px-5 py-3 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden w-8 h-8 rounded-lg border border-gray-100 flex items-center justify-center text-gray-500"
+              className="lg:hidden w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors"
             >
-              <SafeIcon icon="FiMenu" className="text-sm" />
+              <SafeIcon icon="FiMenu" className="text-base" />
             </button>
             <p className="text-sm text-gray-400">
               Platform
@@ -98,47 +98,55 @@ const AdminOverview = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             {/* Bell */}
-            <button className="w-8 h-8 rounded-lg border border-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors">
-              <SafeIcon icon="FiBell" className="text-sm" />
+            <button className="w-10 h-10 rounded-xl border border-gray-200 bg-white flex items-center justify-center text-gray-500 hover:text-[#1F1F22] hover:border-gray-300 hover:bg-gray-50 transition-all shadow-sm">
+              <SafeIcon icon="FiBell" className="text-lg" />
             </button>
 
             {/* User menu */}
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setUserMenuOpen((v) => !v)}
-                className="flex items-center gap-2.5 bg-[#1F1F22] hover:bg-[#1a1d20] rounded-xl px-3 py-1.5 transition-colors"
+                className="flex items-center gap-2.5 bg-[#1F1F22] hover:bg-[#2a2d30] rounded-xl px-3 py-2 transition-colors shadow-sm"
               >
                 <div className="w-7 h-7 rounded-lg bg-[#E52321] flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-[11px] font-black">{initials}</span>
                 </div>
-                <div className="hidden sm:block text-left">
-                  <span className="text-white text-xs font-bold leading-none">{admin?.username}</span>
-                  <span className="text-gray-400 text-[10px] ml-1">{admin?.role}</span>
+                <div className="hidden sm:block text-left leading-tight">
+                  <span className="text-white text-xs font-bold block">{admin?.username}</span>
+                  <span className="text-gray-400 text-[10px]">{admin?.role}</span>
                 </div>
-                <SafeIcon icon="FiChevronDown" className="text-gray-400 text-xs" />
+                <SafeIcon icon="FiChevronDown" className="text-gray-400 text-xs ml-0.5" />
               </button>
 
               <AnimatePresence>
                 {userMenuOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 6 }}
+                    initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 4, scale: 0.97 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-100 rounded-xl shadow-lg overflow-hidden z-50"
+                    className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-50"
                   >
-                    <Link
-                      to="/"
-                      className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+                    <button
+                      onClick={() => { setSection('settings'); setUserMenuOpen(false); }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     >
-                      <SafeIcon icon="FiExternalLink" className="text-sm" />
-                      View Portal
-                    </Link>
+                      <SafeIcon icon="FiUser" className="text-sm text-gray-400" />
+                      View Profile
+                    </button>
+                    <button
+                      onClick={() => { setSection('settings'); setUserMenuOpen(false); }}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                    >
+                      <SafeIcon icon="FiSettings" className="text-sm text-gray-400" />
+                      Settings
+                    </button>
+                    <div className="h-px bg-gray-100 mx-3 my-1" />
                     <button
                       onClick={handleLogout}
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#E52321] hover:bg-red-50 transition-colors"
+                      className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#E52321] hover:bg-red-50 transition-colors"
                     >
                       <SafeIcon icon="FiLogOut" className="text-sm" />
                       Sign Out
