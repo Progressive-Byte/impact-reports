@@ -26,7 +26,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
           </div>
           <div>
             <p className="text-white font-black text-sm tracking-tight uppercase leading-none">Impact Report</p>
-            <p className="text-gray-500 text-[10px] uppercase tracking-widest mt-0.5">SYS.VER 1.0.4</p>
+            <p className="text-[#909098] text-[10px] uppercase tracking-widest mt-0.5">SYS.VER 1.0.4</p>
           </div>
         </div>
       </div>
