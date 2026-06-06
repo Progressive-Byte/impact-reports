@@ -205,7 +205,7 @@ const AdminDashboard = () => {
           <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
             <div className="flex items-center gap-2.5 mb-5">
               <div className='w-10 h-10 bg-[#f1f1f3] rounded-xl flex items-center justify-center flex-shrink-0'>
-              <SafeIcon icon="FiGlobe" className="text-gray-400 text-base" />
+                <SafeIcon icon="FiGlobe" className="text-gray-400 text-base" />
               </div>
               <h3 className="text-sm font-black text-[#0B0D0F]">Active Regions</h3>
             </div>
@@ -240,7 +240,9 @@ const AdminDashboard = () => {
           {/* Platform Configuration */}
           <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
             <div className="flex items-center gap-2.5 mb-5">
-              <SafeIcon icon="FiShield" className="text-gray-400 text-base" />
+              <div className='w-10 h-10 bg-[#f1f1f3] rounded-xl flex items-center justify-center flex-shrink-0'>
+                <SafeIcon icon="FiShield" className="text-gray-400 text-base" />
+              </div>
               <div>
                 <h3 className="text-sm font-black text-[#0B0D0F]">Platform Configuration</h3>
               </div>
