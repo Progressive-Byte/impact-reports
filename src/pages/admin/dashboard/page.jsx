@@ -7,6 +7,7 @@ import Overview from './components/AdminDashboard';
 import AdminsManager from './components/AdminsManager';
 import Settings from './components/Settings';
 import { reports } from '../../../data/mockData';
+import AdminDashboard from './components/AdminDashboard';
 
 const NAV = [
   { id: 'overview', label: 'Admin Dashboard', icon: 'FiGrid',     badge: null },
