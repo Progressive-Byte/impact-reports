@@ -7,6 +7,7 @@ import NarrativeTab from './reports/NarrativeTab';
 import MetricsTab from './reports/MetricsTab';
 import MediaTimelineTab from './reports/MediaTimelineTab';
 import RecordLedger from './reports/RecordLedger';
+import StatCard from './reports/StatCard';
 
 const INITIAL_FORM = {
   projectName: '', assignedTo: '', projectLead: '', fiscalYear: 'FY24',
