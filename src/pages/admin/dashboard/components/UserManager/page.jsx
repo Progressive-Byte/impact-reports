@@ -12,6 +12,15 @@ const MOCK_USERS = [
   { _id: '4', username: 'reg.manager',     email: 'reg.manager@impact.org',     role: 'regional_manager', region: 'Asia Pacific',   isActive: true,  lastLogin: '2024-01-16T10:05:00' },
 ];
 
+const COLS = [
+  { label: 'Email',      className: 'flex-1' },
+  { label: 'Region',     className: 'w-28 flex-shrink-0' },
+  { label: 'Role',       className: 'w-44 flex-shrink-0' },
+  { label: 'Status',     className: 'w-28 flex-shrink-0' },
+  { label: 'Last Login', className: 'w-44 flex-shrink-0' },
+  { label: 'Actions',    className: 'flex-shrink-0' },
+];
+
 const STATUS_OPTIONS = [
   { value: 'all',      label: 'All status' },
   { value: 'active',   label: 'Active' },
