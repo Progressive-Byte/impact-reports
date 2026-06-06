@@ -123,7 +123,7 @@ const ReportsModule = () => {
                   className="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm placeholder:text-gray-300 focus:outline-none bg-white"
                 />
               </div>
-              <div className="relative w-[200px] flex-shrink-0">
+              <div className="relative w-[150px] flex-shrink-0">
                 <select
                   value={ledgerSort}
                   onChange={e => setLedgerSort(e.target.value)}
