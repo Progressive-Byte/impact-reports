@@ -3,7 +3,7 @@ import SafeIcon from '../../../../../common/SafeIcon';
 import SettingCard from './SettingCard';
 import ToggleRow from './components/ToggleRow';
 import SelectRow from './SelectRow';
-import ActionRow from './ActionRow';
+import ActionRow from './components/ActionRow';
 
 const TIMEOUT_OPTIONS = [
   { value: '15',  label: '15 minutes' },
