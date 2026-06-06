@@ -58,8 +58,6 @@ const ReportsModule = () => {
           New Entry
         </button>
       </div>
-
-      {/* Section 3 — Left form + Right filter/ledger */}
       <div className="flex gap-5 items-start">
 
         {/* Left — form card */}
