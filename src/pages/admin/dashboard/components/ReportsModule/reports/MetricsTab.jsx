@@ -59,7 +59,7 @@ const MetricsTab = ({ form, update }) => {
         </div>
         <button
           onClick={addDeliverable}
-          className="mt-3 w-full border border-dashed border-gray-200 rounded-xl py-3 text-sm text-gray-400 hover:bg-red-50 hover:border-[#E52321] hover:text-[#E52321] transition-colors flex items-center justify-center gap-2"
+          className="mt-3 w-full border border-dashed border-gray-200 rounded-xl py-3 text-sm text-[#76767e] font-semibold hover:bg-red-50 hover:border-[#E52321] hover:text-[#E52321] transition-colors flex items-center justify-center gap-2"
         >
           <SafeIcon icon="FiPlus" className="text-sm" />
           Add Metric
