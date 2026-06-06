@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import SafeIcon from '../../../../../common/SafeIcon';
 import CustomSelect from '../ReportsModule/reports/CustomSelect';
+import Checkbox from '../../common/Checkbox';
 import UserRow from './UserRow';
 import InviteModal from './InviteModal';
 
