@@ -40,8 +40,6 @@ const ReportsModule = () => {
 
   return (
     <div className="space-y-5">
-
-      {/* Section 1 — Stat cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <StatCard icon="FiGlobe"      label="Global Lives Reached" value={stats.globalLives}   iconBg="bg-gray-100" />
         <StatCard icon="FiClipboard"  label="Ledger Entries"       value={stats.ledgerEntries} iconBg="bg-gray-100" />
