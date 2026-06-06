@@ -33,7 +33,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 overflow-y-auto">
-        <p className="text-[9px] font-black text-[#909098] uppercase tracking-widest px-3 mb-2">Platform</p>
+        <p className="text-[11px] font-black text-[#909098] uppercase tracking-widest px-3 mb-2">Platform</p>
         <div className="space-y-0.5">
           {NAV.map(({ id, label, icon, badge }) => (
             <button
