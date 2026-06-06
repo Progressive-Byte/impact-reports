@@ -151,55 +151,7 @@ const AdminOverview = () => {
         <main className="flex-1 p-5 sm:p-7">
           {section === 'overview' && <AdminDashboard />}
 
-          {section === 'reports' && (
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h2 className="text-xl font-black text-[#1F1F22] tracking-tight mb-1">Reports Module</h2>
-                  <p className="text-sm text-gray-400 font-medium">{reports.length} total impact reports</p>
-                </div>
-                <div className="relative">
-                  <SafeIcon icon="FiSearch" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
-                  <input
-                    type="text"
-                    value={reportSearch}
-                    onChange={(e) => setReportSearch(e.target.value)}
-                    placeholder="Search reports..."
-                    className="bg-white border border-gray-100 rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-gray-700 focus:outline-none focus:border-[#E52321]/30 focus:ring-1 focus:ring-[#E52321]/10 transition-all w-full sm:w-64 shadow-sm"
-                  />
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-                <div className="hidden sm:grid grid-cols-[2fr_1fr_1fr_1fr_80px] gap-4 px-6 py-3 border-b border-gray-50 bg-gray-50/50">
-                  {['Title', 'Region', 'Sector', 'Year', 'Impact'].map((h) => (
-                    <span key={h} className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{h}</span>
-                  ))}
-                </div>
-                <div className="divide-y divide-gray-50">
-                  {filteredReports.map((r) => (
-                    <div key={r.id} className="flex sm:grid sm:grid-cols-[2fr_1fr_1fr_1fr_80px] items-center gap-3 sm:gap-4 px-6 py-4 hover:bg-gray-50/50 transition-colors">
-                      <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <img src={r.image} alt={r.title} className="w-9 h-9 rounded-xl object-cover flex-shrink-0 hidden sm:block" />
-                        <p className="text-sm font-black text-[#1F1F22] truncate">{r.title}</p>
-                      </div>
-                      <span className="hidden sm:block text-xs font-bold text-gray-500 truncate">{r.region}</span>
-                      <span className="hidden sm:block text-[10px] font-black text-[#E52321] bg-[#E52321]/10 border border-[#E52321]/15 rounded-full px-2 py-1 w-fit">{r.sector}</span>
-                      <span className="hidden sm:block text-xs font-bold text-gray-400">{r.year}</span>
-                      <span className="text-xs font-black text-gray-700 tabular-nums whitespace-nowrap">
-                        {r.metrics.beneficiaries.toLocaleString()}
-                      </span>
-                    </div>
-                  ))}
-                  {filteredReports.length === 0 && (
-                    <div className="text-center py-16 text-gray-400 text-sm font-bold">
-                      No reports match your search.
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
+          {section === 'reports' && <ReportsModule />}
 
           {section === 'admins' && <AdminsManager />}
           {section === 'settings' && <Settings />}
