@@ -2,7 +2,7 @@ import { useState } from 'react';
 import SafeIcon from '../../../../../common/SafeIcon';
 import SettingCard from './SettingCard';
 import ToggleRow from './components/ToggleRow';
-import SelectRow from './SelectRow';
+import SelectRow from './components/SelectRow';
 import ActionRow from './components/ActionRow';
 
 const TIMEOUT_OPTIONS = [

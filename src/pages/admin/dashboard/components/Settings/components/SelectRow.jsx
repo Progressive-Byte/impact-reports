@@ -1,4 +1,4 @@
-import CustomSelect from '../ReportsModule/reports/CustomSelect';
+import CustomSelect from '../../ReportsModule/reports/CustomSelect';
 
 const SelectRow = ({ title, description, value, onChange, options }) => (
   <div className="flex items-center justify-between py-4">
