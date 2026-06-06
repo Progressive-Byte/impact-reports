@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAdminAuth } from '../../../../context/AdminAuthContext';
-import SafeIcon from '../../../../common/SafeIcon';
+import { useAdminAuth } from '../../../../../context/AdminAuthContext';
+import SafeIcon from '../../../../../common/SafeIcon';
 
 const Settings = () => {
   const { admin, getToken, login } = useAdminAuth();
