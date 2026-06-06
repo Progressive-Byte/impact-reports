@@ -62,96 +62,111 @@ const AdminDashboard = () => {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {/* Database Load */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                <SafeIcon icon="FiDatabase" className="text-gray-500 text-sm" />
+        <div className="bg-white border border-gray-200 rounded-3xl p-7 shadow-sm flex flex-col justify-between min-h-[220px]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                <SafeIcon icon="FiDatabase" className="text-gray-500 text-base" />
               </div>
-              <span className="text-sm font-bold text-gray-500">Database Load</span>
+              <span className="text-sm font-semibold text-gray-500">Database Load</span>
             </div>
-            <span className="flex items-center gap-1.5 text-[11px] font-bold text-green-700 bg-green-50 border border-green-100 rounded-full px-2.5 py-0.5">
+            <span className="flex items-center gap-1.5 text-[11px] font-bold text-green-700 bg-green-50 border border-green-200 rounded-full px-2.5 py-1">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
               Online
             </span>
           </div>
-          <div className="mb-2">
-            <span className="text-[2.2rem] font-black text-[#0B0D0F] tracking-tighter leading-none">24.5</span>
-            <span className="text-xl font-black text-gray-400 ml-0.5">%</span>
-          </div>
-          <div className="h-1.5 bg-gray-100 rounded-full mb-4 overflow-hidden">
-            <div className="h-full bg-green-500 rounded-full" style={{ width: '24.5%' }} />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Server Uptime</p>
-              <p className="text-sm font-black text-[#0B0D0F]">99.98%</p>
+
+          <div>
+            <div className="flex items-end gap-1 mb-3">
+              <span className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">24.5</span>
+              <span className="text-2xl font-black text-gray-400 mb-1">%</span>
             </div>
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Network Latency</p>
-              <p className="text-sm font-black text-[#0B0D0F]">12 ms</p>
+            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="h-full bg-green-500 rounded-full" style={{ width: '24.5%' }} />
+            </div>
+          </div>
+
+          <div>
+            <div className="h-px bg-gray-100 mb-4" />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Server Uptime</p>
+                <p className="text-base font-black text-[#0B0D0F]">99.98%</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Network Latency</p>
+                <p className="text-base font-black text-[#0B0D0F]">12 ms</p>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Reports Status */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                <SafeIcon icon="FiClipboard" className="text-gray-500 text-sm" />
+        <div className="bg-white border border-gray-200 rounded-3xl p-7 shadow-sm flex flex-col justify-between min-h-[220px]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                <SafeIcon icon="FiClipboard" className="text-gray-500 text-base" />
               </div>
-              <span className="text-sm font-bold text-gray-500">Reports Status</span>
+              <span className="text-sm font-semibold text-gray-500">Reports Status</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <TrendLine up={true} />
-              <span className="text-[11px] font-black text-green-600">+12%</span>
+              <span className="text-[12px] font-black text-green-600">+12%</span>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+
+          <div className="grid grid-cols-2 gap-6">
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Published</p>
-              <p className="text-[2rem] font-black text-[#0B0D0F] tracking-tighter leading-none">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Published</p>
+              <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">
                 {reports.length.toLocaleString()}
               </p>
             </div>
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Pending</p>
-              <div className="flex items-center gap-2">
-                <p className="text-[2rem] font-black text-[#0B0D0F] tracking-tighter leading-none">12</p>
-                <span className="text-[10px] font-black text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-full px-2 py-0.5 leading-none">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Pending</p>
+              <div className="flex items-end gap-2">
+                <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">12</p>
+                <span className="text-[10px] font-bold text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-md px-2 py-0.5 mb-1">
                   Review
                 </span>
               </div>
             </div>
           </div>
+
+          <div className="h-px bg-transparent" />
         </div>
 
         {/* Active Staff */}
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
-                <SafeIcon icon="FiUsers" className="text-gray-500 text-sm" />
+        <div className="bg-white border border-gray-200 rounded-3xl p-7 shadow-sm flex flex-col justify-between min-h-[220px]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
+                <SafeIcon icon="FiUsers" className="text-[#E52321] text-base" />
               </div>
-              <span className="text-sm font-bold text-gray-500">Active Staff</span>
+              <span className="text-sm font-semibold text-gray-500">Active Staff</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1.5">
               <TrendLine up={false} />
-              <span className="text-[11px] font-black text-[#E52321]">-2%</span>
+              <span className="text-[12px] font-black text-[#E52321]">-2%</span>
             </div>
           </div>
-          <p className="text-[2.2rem] font-black text-[#0B0D0F] tracking-tighter leading-none mb-3">89</p>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">Verified Today</p>
-              <p className="text-xl font-black text-[#0B0D0F]">31</p>
-            </div>
-            <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">In Field</p>
-              <p className="text-xl font-black text-[#0B0D0F]">58</p>
+
+          <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">89</p>
+
+          <div>
+            <div className="h-px bg-gray-100 mb-4" />
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Verified Today</p>
+                <p className="text-base font-black text-[#0B0D0F]">31</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">In Field</p>
+                <p className="text-base font-black text-[#0B0D0F]">58</p>
+              </div>
             </div>
           </div>
         </div>
