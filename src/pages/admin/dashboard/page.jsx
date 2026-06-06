@@ -17,9 +17,6 @@ const AdminOverview = () => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
 
-  // Reports table state
-  const [reportSearch, setReportSearch] = useState('');
-
   useEffect(() => {
     const handleClick = (e) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
