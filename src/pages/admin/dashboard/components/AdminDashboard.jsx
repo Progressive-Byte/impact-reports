@@ -162,8 +162,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       </div>
-
-      {/* Log + Sidebar row */}
+      
       <div className="flex gap-5 items-start">
         {/* System Log / Content Feed */}
         <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
