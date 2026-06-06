@@ -57,12 +57,7 @@ const UserRow = ({ user, isSelected, onToggleSelect }) => {
     }`}>
       {/* Checkbox */}
       <div className="w-5 flex-shrink-0 flex items-center">
-        <input
-          type="checkbox"
-          checked={isSelected}
-          onChange={onToggleSelect}
-          className="w-4 h-4 rounded border-gray-300 accent-[#E52321] cursor-pointer"
-        />
+        <Checkbox checked={isSelected} onChange={onToggleSelect} />
       </div>
 
       {/* Avatar + Email */}
