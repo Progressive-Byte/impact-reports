@@ -1,7 +1,7 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
 
 const inputClasses =
-  "w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 bg-white placeholder:text-gray-300 transition-all focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] focus:ring-offset-0";
+  "w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 bg-white placeholder:text-gray-400 placeholder:font-medium transition-all focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] focus:ring-offset-0";
 
 export const Input = ({ label, required, className = '', ...props }) => (
   <div className={className}>
