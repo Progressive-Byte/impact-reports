@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import SafeIcon from '../../../../../common/SafeIcon';
-import CustomSelect from '../ReportsModule/reports/CustomSelect';
-import Checkbox from '../../common/Checkbox';
+import SafeIcon from '../../../../../../common/SafeIcon';
+import CustomSelect from '../../ReportsModule/reports/CustomSelect';
+import Checkbox from '../../../common/Checkbox';
 
 const AVATAR_COLORS = [
   'bg-teal-500', 'bg-emerald-500', 'bg-rose-400',
