@@ -50,8 +50,8 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
                 {label}
               </div>
               {badge !== null && (
-                <span className={`text-[10px] font-black rounded-full px-1.5 py-0.5 min-w-[20px] text-center ${
-                  section === id ? 'bg-white/20 text-white' : 'bg-[#E52321] text-white'
+                <span className={`text-[10px] font-black rounded px-1.5 py-0.5 min-w-[20px] text-center ${
+                  section === id ? 'bg-white/25 text-white' : 'bg-[#E52321] text-white'
                 }`}>
                   {badge}
                 </span>
