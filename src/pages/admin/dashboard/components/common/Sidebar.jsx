@@ -25,7 +25,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
             <SafeIcon icon="FiZap" className="text-white text-base" />
           </div>
           <div>
-            <p className="text-white font-black text-sm tracking-tight uppercase leading-none">Impact Report</p>
+            <p className="text-white font-black text-base tracking-tight uppercase leading-none">Impact Report</p>
             <p className="text-[#909098] text-[10px] uppercase tracking-widest mt-0.5">SYS.VER 1.0.4</p>
           </div>
         </div>
