@@ -5,8 +5,8 @@ import { useAdminAuth } from '../../../context/AdminAuthContext';
 import SafeIcon from '../../../common/SafeIcon';
 import AdminsManager from './components/AdminsManager';
 import Settings from './components/Settings';
-import { reports } from '../../../data/mockData';
 import AdminDashboard from './components/AdminDashboard';
+import ReportsModule from './components/ReportsModule';
 import Sidebar, { NAV } from './components/common/Sidebar';
 
 const AdminOverview = () => {
