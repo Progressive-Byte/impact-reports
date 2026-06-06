@@ -14,7 +14,9 @@ const STATUS_ITEMS = [
   { icon: 'FiShield',  label: 'Encryption', value: 'AES-256', valueClass: 'text-white' },
 ];
 
-const Sidebar = ({ mobile = false }) => (
+export { NAV };
+
+const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
     <div className={`flex flex-col h-full ${mobile ? '' : 'w-64'}`}>
       {/* Logo */}
       <div className="px-5 py-5 border-b border-white/5">
