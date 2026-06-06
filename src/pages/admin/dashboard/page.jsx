@@ -74,7 +74,7 @@ const AdminOverview = () => {
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
               className="fixed left-0 top-0 bottom-0 z-50 w-64 bg-[#0B0D0F] lg:hidden flex flex-col"
             >
-              <Sidebar mobile />
+              <Sidebar section={section} setSection={setSection} setSidebarOpen={setSidebarOpen} mobile />
             </motion.aside>
           </>
         )}
