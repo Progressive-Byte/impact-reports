@@ -8,6 +8,7 @@ import MetricsTab from './reports/MetricsTab';
 import MediaTimelineTab from './reports/MediaTimelineTab';
 import RecordLedger from './reports/RecordLedger';
 import StatCard from './reports/StatCard';
+import CustomSelect from './reports/CustomSelect';
 
 const INITIAL_FORM = {
   projectName: '', assignedTo: '', projectLead: '', fiscalYear: 'FY24',
