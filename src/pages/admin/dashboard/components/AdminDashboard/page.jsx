@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
-import { reports } from '../../../../data/mockData';
-import { cleanCountryName } from '../../../../utils/location';
-import SafeIcon from '../../../../common/SafeIcon';
-import { TrendLine } from '../../../../common/SvgIcon';
+import { reports } from '../../../../../data/mockData';
+import { cleanCountryName } from '../../../../../utils/location';
+import SafeIcon from '../../../../../common/SafeIcon';
+import { TrendLine } from '../../../../../common/SvgIcon';
 
 const SYSTEM_LOGS = [
   { tag: 'SYS',  tagClass: 'bg-gray-600 text-gray-200',     time: '10:42:01', msg: 'Supabase connection established.' },

@@ -5,7 +5,7 @@ import { useAdminAuth } from '../../../context/AdminAuthContext';
 import SafeIcon from '../../../common/SafeIcon';
 import AdminsManager from './components/UserManager';
 import Settings from './components/Settings';
-import AdminDashboard from './components/AdminDashboard';
+import AdminDashboard from './components/AdminDashboard/page';
 import ReportsModule from './components/ReportsModule/page';
 import Sidebar, { NAV } from './components/common/Sidebar';
 
