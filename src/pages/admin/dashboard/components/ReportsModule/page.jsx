@@ -39,26 +39,35 @@ const ReportsModule = () => {
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
   return (
-    <div className="space-y-6">
-      {/* Stat cards */}
+    <div className="space-y-5">
+
+      {/* Section 1 — Stat cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <StatCard icon="FiGlobe"      label="Global Lives Reached" value={stats.globalLives}   iconBg="bg-gray-100" />
         <StatCard icon="FiClipboard"  label="Ledger Entries"       value={stats.ledgerEntries} iconBg="bg-gray-100" />
         <StatCard icon="FiTrendingUp" label="Avg Impact / Node"    value={stats.avgImpact}     iconBg="bg-green-50" />
       </div>
 
-      {/* Content row */}
+      {/* Section 2 — Header card: title (left) + New Entry button (right) */}
+      <div className="bg-white border border-gray-200 rounded-2xl px-6 py-4 flex items-center justify-between shadow-sm">
+        <div>
+          <h2 className="text-2xl font-black text-[#0B0D0F] tracking-tight">Impact Core</h2>
+          <p className="text-sm text-gray-400 mt-0.5">Technical reporting &amp; executive accountability</p>
+        </div>
+        <button
+          onClick={() => setForm(INITIAL_FORM)}
+          className="flex items-center gap-2 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors flex-shrink-0"
+        >
+          <SafeIcon icon="FiPlus" className="text-base" />
+          New Entry
+        </button>
+      </div>
+
+      {/* Section 3 — Left form + Right filter/ledger */}
       <div className="flex gap-5 items-start">
 
-        {/* Left — title + form */}
-        <div className="flex-[3] min-w-0 space-y-5">
-          {/* Title row */}
-          <div>
-            <h2 className="text-2xl font-black text-[#0B0D0F] tracking-tight">Impact Core</h2>
-            <p className="text-sm text-gray-400 mt-0.5">Technical reporting &amp; executive accountability</p>
-          </div>
-
-          {/* Form card */}
+        {/* Left — form card */}
+        <div className="flex-[3] min-w-0">
           <div className="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
             <div className="px-6 pt-5 pb-4 border-b border-gray-100">
               <TabNav active={activeTab} onChange={setActiveTab} />
@@ -88,22 +97,11 @@ const ReportsModule = () => {
           </div>
         </div>
 
-        {/* Right — New Entry button + filter card + ledger card */}
+        {/* Right — filter card + ledger card */}
         <div className="flex-[2] flex-shrink-0 space-y-4">
-          {/* New Entry — aligned with title */}
-          <div className="flex justify-end">
-            <button
-              onClick={() => setForm(INITIAL_FORM)}
-              className="flex items-center gap-2 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors"
-            >
-              <SafeIcon icon="FiPlus" className="text-base" />
-              New Entry
-            </button>
-          </div>
 
           {/* Filter + Search card */}
           <div className="bg-white border border-gray-200 rounded-2xl p-4 space-y-3 shadow-sm">
-            {/* Filter tabs */}
             <div className="bg-gray-50 border border-gray-100 rounded-xl p-1 flex gap-0.5">
               {FILTERS.map(f => (
                 <button
@@ -120,7 +118,6 @@ const ReportsModule = () => {
               ))}
             </div>
 
-            {/* Search + Sort */}
             <div className="flex gap-2">
               <div className="flex-1 relative">
                 <SafeIcon icon="FiSearch" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
