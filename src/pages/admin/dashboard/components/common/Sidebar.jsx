@@ -33,7 +33,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
 
       {/* Nav */}
       <nav className="flex-1 px-3 py-4 overflow-y-auto">
-        <p className="text-[9px] font-black text-gray-600 uppercase tracking-widest px-3 mb-2">Platform</p>
+        <p className="text-[9px] font-black text-[#909098] uppercase tracking-widest px-3 mb-2">Platform</p>
         <div className="space-y-0.5">
           {NAV.map(({ id, label, icon, badge }) => (
             <button
@@ -42,7 +42,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
               className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[12px] font-bold transition-all duration-150 ${
                 section === id
                   ? 'bg-[#E52321] text-white'
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+                  : 'text-[#909098] hover:text-white hover:bg-white/5'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -66,7 +66,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
         <div className="space-y-2">
           {STATUS_ITEMS.map(({ dot, icon, label, value, valueClass }) => (
             <div key={label} className="flex items-center justify-between py-0.5">
-              <div className="flex items-center gap-2 text-gray-500 text-[11px]">
+              <div className="flex items-center gap-2 text-[#909098] text-[11px]">
                 {dot
                   ? <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
                   : <SafeIcon icon={icon} className="text-[11px] flex-shrink-0" />
@@ -77,7 +77,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
             </div>
           ))}
           <div className="flex items-center justify-between py-0.5 border-t border-white/5 pt-2">
-            <span className="text-gray-600 text-[11px]">Active sessions</span>
+            <span className="text-[#909098] text-[11px]">Active sessions</span>
             <span className="text-white text-[11px] font-bold">156</span>
           </div>
         </div>
