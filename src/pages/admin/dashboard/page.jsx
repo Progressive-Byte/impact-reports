@@ -21,7 +21,7 @@ const STATUS_ITEMS = [
   { icon: 'FiShield',  label: 'Encryption', value: 'AES-256', valueClass: 'text-white' },
 ];
 
-const AdminDashboard = () => {
+const AdminOverview = () => {
   const { admin, logout, getToken } = useAdminAuth();
   const navigate = useNavigate();
   const [section, setSection] = useState('overview');
