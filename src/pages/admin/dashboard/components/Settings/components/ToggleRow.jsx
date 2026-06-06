@@ -1,4 +1,4 @@
-import Toggle from '../Toggle';
+import Toggle from './Toggle';
 
 const ToggleRow = ({ title, description, checked, onChange }) => (
   <div className="flex items-center justify-between py-4">
