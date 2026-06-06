@@ -32,14 +32,6 @@ const AdminOverview = () => {
     navigate('/admin/login');
   };
 
-  const filteredReports = reports.filter(
-    (r) =>
-      r.title.toLowerCase().includes(reportSearch.toLowerCase()) ||
-      r.region.toLowerCase().includes(reportSearch.toLowerCase()) ||
-      r.sector.toLowerCase().includes(reportSearch.toLowerCase()) ||
-      String(r.year).includes(reportSearch)
-  );
-
   const currentNav = NAV.find((n) => n.id === section);
 
   const initials = admin?.username
