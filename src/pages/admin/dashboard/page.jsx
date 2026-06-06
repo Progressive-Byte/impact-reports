@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import SafeIcon from '../../../common/SafeIcon';
-import AdminsManager from './components/AdminsManager';
+import AdminsManager from './components/UserManager';
 import Settings from './components/Settings';
 import AdminDashboard from './components/AdminDashboard';
 import ReportsModule from './components/ReportsModule/page';

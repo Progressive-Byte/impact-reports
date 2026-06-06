@@ -5,7 +5,7 @@ import SafeIcon from '../../../../common/SafeIcon';
 
 const EMPTY_FORM = { username: '', email: '', password: '', role: 'admin' };
 
-const AdminsManager = () => {
+const UserManager = () => {
   const { admin: currentAdmin, getToken } = useAdminAuth();
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
