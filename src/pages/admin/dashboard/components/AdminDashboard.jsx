@@ -220,7 +220,7 @@ const AdminDashboard = () => {
                       <span className="text-sm font-semibold text-[#0B0D0F]">{name}</span>
                       <span className="text-sm font-bold text-[#0B0D0F]">{val.toLocaleString()}</span>
                     </div>
-                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <div className="w-[90%] h-1.5 bg-gray-100 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-[#E52321] rounded-full"
                         style={{ width: `${(val / maxVal) * 100}%` }}
