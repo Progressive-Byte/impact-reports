@@ -27,7 +27,7 @@ const TrendLine = ({ up }) => (
   </svg>
 );
 
-const Overview = () => {
+const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('system');
   const [require2FA, setRequire2FA] = useState(true);
 

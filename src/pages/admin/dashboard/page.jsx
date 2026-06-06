@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import SafeIcon from '../../../common/SafeIcon';
-import Overview from './components/Overview';
+import Overview from './components/AdminDashboard';
 import AdminsManager from './components/AdminsManager';
 import Settings from './components/Settings';
 import { reports } from '../../../data/mockData';
