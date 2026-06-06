@@ -274,4 +274,4 @@ const UserManager = () => {
   );
 };
 
-export default AdminsManager;
+export default UserManager;
