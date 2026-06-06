@@ -200,7 +200,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Right sidebar */}
-        <div className="w-[340px] flex-shrink-0 space-y-5">
+        <div className="flex-[2] flex-shrink-0 space-y-5">
           {/* Active Regions */}
           <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
             <div className="flex items-center gap-2.5 mb-5">
