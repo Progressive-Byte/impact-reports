@@ -7,6 +7,7 @@ import AdminsManager from './components/AdminsManager';
 import Settings from './components/Settings';
 import { reports } from '../../../data/mockData';
 import AdminDashboard from './components/AdminDashboard';
+import Sidebar, { NAV } from './components/common/Sidebar';
 
 const AdminOverview = () => {
   const { admin, logout, getToken } = useAdminAuth();
