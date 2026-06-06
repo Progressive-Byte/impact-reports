@@ -164,15 +164,15 @@ const AdminDashboard = () => {
       </div>
 
       {/* Log + Sidebar row */}
-      <div className="flex gap-4 items-start">
+      <div className="flex gap-5 items-start">
         {/* System Log / Content Feed */}
-        <div className="flex-1 min-w-0 bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
-          <div className="flex border-b border-gray-100 px-5">
+        <div className="flex-1 min-w-0 bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+          <div className="flex border-b border-gray-100 px-6">
             {[{ id: 'system', label: 'System Log' }, { id: 'content', label: 'Content Feed' }].map(({ id, label }) => (
               <button
                 key={id}
                 onClick={() => setActiveTab(id)}
-                className={`py-3.5 mr-6 text-sm font-bold border-b-2 transition-colors ${
+                className={`py-4 mr-7 text-sm font-bold border-b-2 transition-colors ${
                   activeTab === id
                     ? 'border-[#E52321] text-[#0B0D0F]'
                     : 'border-transparent text-gray-400 hover:text-gray-600'
@@ -182,15 +182,15 @@ const AdminDashboard = () => {
               </button>
             ))}
           </div>
-          <div className="m-4 bg-[#111418] rounded-xl p-5 min-h-64 font-mono">
-            <div className="space-y-3">
+          <div className="m-5 bg-[#0f1114] rounded-2xl p-6 min-h-[340px] font-mono">
+            <div className="space-y-4">
               {logs.map((entry, i) => (
                 <div key={i} className="flex items-start gap-3">
-                  <span className={`inline-flex items-center justify-center px-1.5 py-0.5 rounded text-[10px] font-black min-w-[38px] flex-shrink-0 ${entry.tagClass}`}>
+                  <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-black min-w-[42px] flex-shrink-0 ${entry.tagClass}`}>
                     {entry.tag}
                   </span>
-                  <span className="text-gray-500 text-[12px] flex-shrink-0 tabular-nums">{entry.time}</span>
-                  <span className="text-gray-200 text-[12px] leading-relaxed">{entry.msg}</span>
+                  <span className="text-gray-500 text-[13px] flex-shrink-0 tabular-nums">{entry.time}</span>
+                  <span className="text-gray-200 text-[13px] leading-relaxed">{entry.msg}</span>
                 </div>
               ))}
               <div className="flex items-center pt-1">
@@ -201,26 +201,26 @@ const AdminDashboard = () => {
         </div>
 
         {/* Right sidebar */}
-        <div className="w-80 flex-shrink-0 space-y-4">
+        <div className="w-[340px] flex-shrink-0 space-y-5">
           {/* Active Regions */}
-          <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
-            <div className="flex items-center gap-2 mb-4">
+          <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
+            <div className="flex items-center gap-2.5 mb-5">
               <SafeIcon icon="FiGlobe" className="text-gray-400 text-base" />
               <h3 className="text-sm font-black text-[#0B0D0F]">Active Regions</h3>
             </div>
-            <div className="space-y-3.5">
+            <div className="divide-y divide-gray-100">
               {regionData.map(([name, val], i) => (
-                <div key={name}>
-                  <div className="flex items-center justify-between mb-1">
+                <div key={name} className="py-3 first:pt-0 last:pb-0">
+                  <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-3">
-                      <span className="text-[11px] font-black text-gray-400 w-5 flex-shrink-0">
+                      <span className="text-[11px] font-bold text-gray-400 w-5 flex-shrink-0">
                         {String(i + 1).padStart(2, '0')}
                       </span>
-                      <span className="text-sm font-bold text-[#0B0D0F]">{name}</span>
+                      <span className="text-sm font-semibold text-[#0B0D0F]">{name}</span>
                     </div>
-                    <span className="text-sm font-black text-[#0B0D0F]">{val.toLocaleString()}</span>
+                    <span className="text-sm font-bold text-[#0B0D0F]">{val.toLocaleString()}</span>
                   </div>
-                  <div className="h-1 bg-gray-100 rounded-full overflow-hidden ml-8">
+                  <div className="h-1 bg-gray-100 rounded-full overflow-hidden">
                     <div
                       className="h-full bg-[#E52321] rounded-full"
                       style={{ width: `${(val / maxVal) * 100}%` }}
@@ -229,45 +229,49 @@ const AdminDashboard = () => {
                 </div>
               ))}
             </div>
-            <button className="mt-4 text-[#E52321] text-xs font-black hover:underline">
-              View all 50+ global nodes →
-            </button>
+            <div className="border-t border-gray-100 mt-3 pt-4">
+              <button className="text-[#E52321] text-xs font-black hover:underline w-full text-center">
+                View all 50+ global nodes →
+              </button>
+            </div>
           </div>
 
           {/* Platform Configuration */}
-          <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-5">
-            <div className="flex items-center gap-2 mb-4">
+          <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
+            <div className="flex items-center gap-2.5 mb-5">
               <SafeIcon icon="FiShield" className="text-gray-400 text-base" />
               <h3 className="text-sm font-black text-[#0B0D0F]">Platform Configuration</h3>
             </div>
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <SafeIcon icon="FiLock" className="text-green-600 text-sm" />
+            <div className="flex items-center justify-between py-2">
+              <div className="flex items-center gap-3.5">
+                <div className="w-10 h-10 bg-green-50 border border-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <SafeIcon icon="FiLock" className="text-green-600 text-base" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-[#0B0D0F] leading-tight">Require 2FA</p>
-                  <p className="text-[11px] text-gray-400 leading-tight mt-0.5">
+                  <p className="text-sm font-bold text-[#0B0D0F]">Require 2FA</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">
                     Global enforcement · all staff accounts
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setRequire2FA((v) => !v)}
-                className={`relative flex-shrink-0 w-11 h-6 rounded-full transition-colors ${
+                className={`relative flex-shrink-0 w-12 h-6 rounded-full transition-colors ml-3 ${
                   require2FA ? 'bg-green-500' : 'bg-gray-200'
                 }`}
               >
                 <span
                   className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
-                    require2FA ? 'translate-x-5' : 'translate-x-0.5'
+                    require2FA ? 'translate-x-6' : 'translate-x-0.5'
                   }`}
                 />
               </button>
             </div>
-            <button className="mt-3 text-[#E52321] text-xs font-black hover:underline">
-              Manage in Settings →
-            </button>
+            <div className="border-t border-gray-100 mt-4 pt-4">
+              <button className="text-[#E52321] text-xs font-black hover:underline w-full text-center">
+                Manage In Settings →
+              </button>
+            </div>
           </div>
         </div>
       </div>
