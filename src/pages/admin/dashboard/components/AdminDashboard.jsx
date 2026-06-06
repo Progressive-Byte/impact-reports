@@ -261,13 +261,13 @@ const AdminDashboard = () => {
               </div>
               <button
                 onClick={() => setRequire2FA((v) => !v)}
-                className={`relative flex-shrink-0 w-12 h-6 rounded-full transition-colors ml-3 ${
+                className={`relative flex-shrink-0 w-11 h-6 rounded-full transition-colors duration-200 ml-3 ${
                   require2FA ? 'bg-green-500' : 'bg-gray-200'
                 }`}
               >
                 <span
-                  className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${
-                    require2FA ? 'translate-x-6' : 'translate-x-0.5'
+                  className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200 ${
+                    require2FA ? 'translate-x-5' : 'translate-x-0'
                   }`}
                 />
               </button>
