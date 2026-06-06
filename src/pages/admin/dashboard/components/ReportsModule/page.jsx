@@ -63,7 +63,7 @@ const ReportsModule = () => {
 
         {/* Left — form card */}
         <div className="flex-[4] min-w-0">
-          <div className="bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+          <div className="bg-white border border-gray-200 rounded-3xl shadow-sm">
             <div className="px-6 pt-5 pb-4 border-b border-gray-100">
               <TabNav active={activeTab} onChange={setActiveTab} />
             </div>
