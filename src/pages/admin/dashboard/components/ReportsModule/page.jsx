@@ -124,17 +124,15 @@ const ReportsModule = () => {
                   className="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm placeholder:text-gray-300 focus:outline-none bg-white"
                 />
               </div>
-              <div className="relative w-[150px] flex-shrink-0">
-                <select
-                  value={ledgerSort}
-                  onChange={e => setLedgerSort(e.target.value)}
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-600 focus:outline-none bg-white appearance-none pr-7 cursor-pointer"
-                >
-                  <option value="recent">Recent</option>
-                  <option value="oldest">Oldest</option>
-                </select>
-                <SafeIcon icon="FiChevronDown" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none" />
-              </div>
+              <CustomSelect
+                value={ledgerSort}
+                onChange={val => setLedgerSort(val)}
+                options={[
+                  { value: 'recent', label: 'Recent' },
+                  { value: 'oldest', label: 'Oldest' },
+                ]}
+                className="w-[130px] flex-shrink-0"
+              />
             </div>
           </div>
 
