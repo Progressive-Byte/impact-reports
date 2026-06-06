@@ -1,4 +1,18 @@
 import SafeIcon from "../../../../../common/SafeIcon";
+import { reports } from "../../../../../data/mockData";
+
+const NAV = [
+  { id: 'overview', label: 'Admin Dashboard', icon: 'FiGrid',     badge: null },
+  { id: 'reports',  label: 'Reports Module',  icon: 'FiFileText', badge: reports.length },
+  { id: 'admins',   label: 'User Management', icon: 'FiUsers',    badge: null },
+  { id: 'settings', label: 'Settings',        icon: 'FiSettings', badge: null },
+];
+
+const STATUS_ITEMS = [
+  { dot: true,         label: 'Database',   value: 'Online',  valueClass: 'text-white' },
+  { icon: 'FiLock',    label: 'Connection', value: 'TLS 1.3', valueClass: 'text-blue-400' },
+  { icon: 'FiShield',  label: 'Encryption', value: 'AES-256', valueClass: 'text-white' },
+];
 
 const Sidebar = ({ mobile = false }) => (
     <div className={`flex flex-col h-full ${mobile ? '' : 'w-64'}`}>
