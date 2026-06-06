@@ -4,6 +4,8 @@ npm run server:dev
   See:
   MongoDB Atlas connected
   Server running on http://localhost:5000
+
+  # The frontend server run
   
   Then login will work. Need two terminals running simultaneously:
 
