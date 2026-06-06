@@ -1,10 +1,12 @@
-import { Input, Select } from './FormField';
+import { Input } from './FormField';
+import CustomSelect from './CustomSelect';
 
 const ASSIGNED_OPTIONS = [
-  { value: '', label: 'Select an option...' },
+  { value: '',       label: 'Select an option...' },
   { value: 'marcus', label: 'Marcus Chen' },
-  { value: 'sarah', label: 'Sarah Ahmad' },
-  { value: 'ali', label: 'Ali Hassan' },
+  { value: 'aisha',  label: 'Aisha Khan' },
+  { value: 'daniel', label: 'Daniel Park' },
+  { value: 'sara',   label: 'Sara Ahmed' },
 ];
 const FISCAL_YEARS = ['FY23', 'FY24', 'FY25', 'FY26'].map(v => ({ value: v, label: v }));
 const STATUSES = ['Draft', 'Review', 'Published', 'Archived'].map(v => ({ value: v, label: v }));
@@ -18,10 +20,10 @@ const GeneralTab = ({ form, update }) => (
         value={form.projectName}
         onChange={e => update('projectName', e.target.value)}
       />
-      <Select
+      <CustomSelect
         label="Assigned To" required
         value={form.assignedTo}
-        onChange={e => update('assignedTo', e.target.value)}
+        onChange={val => update('assignedTo', val)}
         options={ASSIGNED_OPTIONS}
       />
     </div>
@@ -32,10 +34,10 @@ const GeneralTab = ({ form, update }) => (
         value={form.projectLead}
         onChange={e => update('projectLead', e.target.value)}
       />
-      <Select
+      <CustomSelect
         label="Fiscal Year"
         value={form.fiscalYear}
-        onChange={e => update('fiscalYear', e.target.value)}
+        onChange={val => update('fiscalYear', val)}
         options={FISCAL_YEARS}
       />
     </div>
@@ -46,10 +48,10 @@ const GeneralTab = ({ form, update }) => (
         value={form.livesImpacted}
         onChange={e => update('livesImpacted', e.target.value)}
       />
-      <Select
+      <CustomSelect
         label="Status"
         value={form.status}
-        onChange={e => update('status', e.target.value)}
+        onChange={val => update('status', val)}
         options={STATUSES}
       />
     </div>
