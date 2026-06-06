@@ -1,3 +1,5 @@
+import SafeIcon from "../../../../../common/SafeIcon";
+
 const Sidebar = ({ mobile = false }) => (
     <div className={`flex flex-col h-full ${mobile ? '' : 'w-64'}`}>
       {/* Logo */}
