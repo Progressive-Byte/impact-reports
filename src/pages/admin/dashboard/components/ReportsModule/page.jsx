@@ -45,7 +45,7 @@ const ReportsModule = () => {
         <StatCard icon="FiClipboard"  label="Ledger Entries"       value={stats.ledgerEntries} iconBg="bg-gray-100" />
         <StatCard icon="FiTrendingUp" label="Avg Impact / Node"    value={stats.avgImpact}     iconBg="bg-green-50" />
       </div>
-      <div className="bg-white border border-gray-200 rounded-2xl px-6 py-4 flex items-center justify-between shadow-sm">
+      <div className="px-6 py-4 flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-black text-[#0B0D0F] tracking-tight">Impact Core</h2>
           <p className="text-sm text-gray-400 mt-0.5">Technical reporting &amp; executive accountability</p>
