@@ -34,19 +34,19 @@ const MetricsTab = ({ form, update }) => {
         <div className="space-y-2">
           {form.deliverables.map((d) => (
             <div key={d.id} className="flex items-center gap-3">
-              <input
+              <Input
                 type="text"
                 placeholder="Metric Label (e.g. Solar Wells)"
                 value={d.label}
                 onChange={e => updateDeliverable(d.id, 'label', e.target.value)}
-                className="flex-1 border border-gray-200 rounded-xl px-4 py-3 text-sm placeholder:text-gray-300 focus:outline-none focus:border-gray-300 bg-white"
+                className="flex-1"
               />
-              <input
+              <Input
                 type="number"
                 placeholder="Count"
                 value={d.count}
                 onChange={e => updateDeliverable(d.id, 'count', e.target.value)}
-                className="w-28 border border-gray-200 rounded-xl px-4 py-3 text-sm placeholder:text-gray-300 focus:outline-none focus:border-gray-300 bg-white"
+                className="w-28"
               />
               <button
                 onClick={() => removeDeliverable(d.id)}
