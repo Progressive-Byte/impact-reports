@@ -138,12 +138,11 @@ const UserManager = () => {
           <div className="w-5 flex-shrink-0">
             <Checkbox checked={allSelected} onChange={toggleAll} />
           </div>
-          <span className="flex-1 text-[10px] font-black text-gray-400 uppercase tracking-widest">Email</span>
-          <span className="w-28 flex-shrink-0 text-[10px] font-black text-gray-400 uppercase tracking-widest">Region</span>
-          <span className="w-44 flex-shrink-0 text-[10px] font-black text-gray-400 uppercase tracking-widest">Role</span>
-          <span className="w-28 flex-shrink-0 text-[10px] font-black text-gray-400 uppercase tracking-widest">Status</span>
-          <span className="w-44 flex-shrink-0 text-[10px] font-black text-gray-400 uppercase tracking-widest">Last Login</span>
-          <span className="flex-shrink-0 text-[10px] font-black text-gray-400 uppercase tracking-widest">Actions</span>
+          {COLS.map(({ label, className }) => (
+            <span key={label} className={`${className} text-[10px] font-black text-gray-400 uppercase tracking-widest`}>
+              {label}
+            </span>
+          ))}
         </div>
 
         {/* Rows */}
