@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
-import { reports } from '../../../../data/mockData';
-import SafeIcon from '../../../../common/SafeIcon';
+import { reports } from '../../../../../data/mockData';
+import SafeIcon from '../../../../../common/SafeIcon';
 import TabNav from './reports/TabNav';
 import GeneralTab from './reports/GeneralTab';
 import NarrativeTab from './reports/NarrativeTab';

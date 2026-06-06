@@ -1,4 +1,4 @@
-import SafeIcon from '../../../../../common/SafeIcon';
+import SafeIcon from '../../../../../../common/SafeIcon';
 
 export const Input = ({ label, required, className = '', ...props }) => (
   <div className={className}>

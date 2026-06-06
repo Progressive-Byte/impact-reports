@@ -6,7 +6,7 @@ import SafeIcon from '../../../common/SafeIcon';
 import AdminsManager from './components/AdminsManager';
 import Settings from './components/Settings';
 import AdminDashboard from './components/AdminDashboard';
-import ReportsModule from './components/ReportsModule';
+import ReportsModule from './components/ReportsModule/page';
 import Sidebar, { NAV } from './components/common/Sidebar';
 
 const AdminOverview = () => {
@@ -153,7 +153,7 @@ const AdminOverview = () => {
 
           {section === 'reports' && <ReportsModule />}
 
-          {section === 'admins' && <AdminsManager />}
+          {section === 'admins' && <UserManager />}
           {section === 'settings' && <Settings />}
         </main>
       </div>

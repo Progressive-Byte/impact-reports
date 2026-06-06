@@ -1,4 +1,4 @@
-import SafeIcon from '../../../../../common/SafeIcon';
+import SafeIcon from '../../../../../../common/SafeIcon';
 import { Input } from './FormField';
 
 const MediaTimelineTab = ({ form, update }) => {

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SafeIcon from '../../../../../common/SafeIcon';
+import SafeIcon from '../../../../../../common/SafeIcon';
 
 const STATUS_STYLES = {
   draft:     'bg-gray-100 text-gray-500',
