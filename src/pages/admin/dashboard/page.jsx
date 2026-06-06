@@ -233,7 +233,7 @@ const AdminDashboard = () => {
 
         {/* Scrollable content */}
         <main className="flex-1 overflow-y-auto p-5 sm:p-7">
-          {section === 'overview' && <Overview />}
+          {section === 'overview' && <AdminDashboard />}
 
           {section === 'reports' && (
             <div className="space-y-6">
