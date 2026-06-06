@@ -127,12 +127,7 @@ const UserManager = () => {
         {/* Table header */}
         <div className="flex items-center gap-4 px-6 py-3 border-b border-gray-100">
           <div className="w-5 flex-shrink-0">
-            <input
-              type="checkbox"
-              checked={allSelected}
-              onChange={toggleAll}
-              className="w-4 h-4 rounded border-gray-300 accent-[#E52321] cursor-pointer"
-            />
+            <Checkbox checked={allSelected} onChange={toggleAll} />
           </div>
           <span className="flex-1 text-[10px] font-black text-gray-400 uppercase tracking-widest">Email</span>
           <span className="w-28 flex-shrink-0 text-[10px] font-black text-gray-400 uppercase tracking-widest">Region</span>
