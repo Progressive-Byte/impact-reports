@@ -108,13 +108,13 @@ const AdminOverview = () => {
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setUserMenuOpen((v) => !v)}
-                className="flex items-center gap-2.5 bg-[#1F1F22] hover:bg-[#2a2d30] rounded-xl px-3 py-2 transition-colors shadow-sm"
+                className="flex items-center gap-2.5 bg-white rounded-xl px-3 py-2 transition-colors shadow-sm"
               >
                 <div className="w-7 h-7 rounded-lg bg-black flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-[11px] font-black">{initials}</span>
                 </div>
                 <div className="hidden sm:flex items-baseline gap-1">
-                  <span className="text-white text-xs font-bold">{admin?.username}</span>
+                  <span className="text-[#1F1F22] text-xs font-bold">{admin?.username}</span>
                   <span className="text-gray-400 text-[10px]">{admin?.role}</span>
                 </div>
                 <SafeIcon icon="FiChevronDown" className="text-gray-400 text-xs ml-0.5" />
