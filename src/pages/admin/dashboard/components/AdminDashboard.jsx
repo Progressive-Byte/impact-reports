@@ -211,21 +211,21 @@ const AdminDashboard = () => {
             </div>
             <div className="divide-y divide-gray-100">
               {regionData.map(([name, val], i) => (
-                <div key={name} className="py-3 first:pt-0 last:pb-0">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-3">
-                      <span className="text-[11px] font-bold text-gray-400 w-5 flex-shrink-0">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
+                <div key={name} className="py-3 first:pt-0 last:pb-0 flex items-center gap-3">
+                  <span className="text-[11px] font-bold text-gray-400 w-5 flex-shrink-0">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1.5">
                       <span className="text-sm font-semibold text-[#0B0D0F]">{name}</span>
+                      <span className="text-sm font-bold text-[#0B0D0F]">{val.toLocaleString()}</span>
                     </div>
-                    <span className="text-sm font-bold text-[#0B0D0F]">{val.toLocaleString()}</span>
-                  </div>
-                  <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-[#E52321] rounded-full"
-                      style={{ width: `${(val / maxVal) * 100}%` }}
-                    />
+                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-[#E52321] rounded-full"
+                        style={{ width: `${(val / maxVal) * 100}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
               ))}
