@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import SafeIcon from '../../../../../common/SafeIcon';
-import SettingCard from './SettingCard';
+import SettingCard from './components/SettingCard';
 import ToggleRow from './components/ToggleRow';
 import SelectRow from './components/SelectRow';
 import ActionRow from './components/ActionRow';

@@ -1,4 +1,4 @@
-import SafeIcon from '../../../../../common/SafeIcon';
+import SafeIcon from '../../../../../../common/SafeIcon';
 
 const SettingCard = ({ icon, title, children, danger = false }) => (
   <div className={`bg-white rounded-2xl border shadow-sm p-6 ${danger ? 'border-red-100' : 'border-gray-100'}`}>
