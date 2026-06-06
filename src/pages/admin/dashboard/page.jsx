@@ -3,11 +3,11 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAdminAuth } from '../../../context/AdminAuthContext';
 import SafeIcon from '../../../common/SafeIcon';
-import AdminsManager from './components/UserManager';
 import Settings from './components/Settings';
 import AdminDashboard from './components/AdminDashboard/page';
 import ReportsModule from './components/ReportsModule/page';
 import Sidebar, { NAV } from './components/common/Sidebar';
+import UserManager from './components/UserManager';
 
 const AdminOverview = () => {
   const { admin, logout, getToken } = useAdminAuth();
