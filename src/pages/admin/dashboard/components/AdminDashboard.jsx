@@ -241,7 +241,9 @@ const AdminDashboard = () => {
           <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
             <div className="flex items-center gap-2.5 mb-5">
               <SafeIcon icon="FiShield" className="text-gray-400 text-base" />
-              <h3 className="text-sm font-black text-[#0B0D0F]">Platform Configuration</h3>
+              <div>
+                <h3 className="text-sm font-black text-[#0B0D0F]">Platform Configuration</h3>
+              </div>
             </div>
             <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-3.5">
