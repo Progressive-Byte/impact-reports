@@ -1,0 +1,70 @@
+const Sidebar = ({ mobile = false }) => (
+    <div className={`flex flex-col h-full ${mobile ? '' : 'w-64'}`}>
+      {/* Logo */}
+      <div className="px-5 py-5 border-b border-white/5">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-[#E52321] flex items-center justify-center flex-shrink-0">
+            <SafeIcon icon="FiZap" className="text-white text-base" />
+          </div>
+          <div>
+            <p className="text-white font-black text-sm tracking-tight uppercase leading-none">Impact Report</p>
+            <p className="text-gray-500 text-[10px] uppercase tracking-widest mt-0.5">SYS.VER 1.0.4</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Nav */}
+      <nav className="flex-1 px-3 py-4 overflow-y-auto">
+        <p className="text-[9px] font-black text-gray-600 uppercase tracking-widest px-3 mb-2">Platform</p>
+        <div className="space-y-0.5">
+          {NAV.map(({ id, label, icon, badge }) => (
+            <button
+              key={id}
+              onClick={() => { setSection(id); setSidebarOpen(false); }}
+              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[12px] font-bold transition-all duration-150 ${
+                section === id
+                  ? 'bg-[#E52321] text-white'
+                  : 'text-gray-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <SafeIcon icon={icon} className="text-base flex-shrink-0" />
+                {label}
+              </div>
+              {badge !== null && (
+                <span className={`text-[10px] font-black rounded-full px-1.5 py-0.5 min-w-[20px] text-center ${
+                  section === id ? 'bg-white/20 text-white' : 'bg-[#E52321] text-white'
+                }`}>
+                  {badge}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </nav>
+
+      {/* Bottom status */}
+      <div className="px-4 pb-5 pt-3 border-t border-white/5">
+        <div className="space-y-2">
+          {STATUS_ITEMS.map(({ dot, icon, label, value, valueClass }) => (
+            <div key={label} className="flex items-center justify-between py-0.5">
+              <div className="flex items-center gap-2 text-gray-500 text-[11px]">
+                {dot
+                  ? <span className="w-2 h-2 rounded-full bg-green-500 flex-shrink-0" />
+                  : <SafeIcon icon={icon} className="text-[11px] flex-shrink-0" />
+                }
+                {label}
+              </div>
+              <span className={`text-[11px] font-bold ${valueClass}`}>{value}</span>
+            </div>
+          ))}
+          <div className="flex items-center justify-between py-0.5 border-t border-white/5 pt-2">
+            <span className="text-gray-600 text-[11px]">Active sessions</span>
+            <span className="text-white text-[11px] font-bold">156</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  export default Sidebar;
