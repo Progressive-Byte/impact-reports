@@ -52,7 +52,7 @@ const AdminOverview = () => {
   return (
     <div className="flex h-screen bg-[#F4F5F7] overflow-hidden">
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex flex-col bg-[#0B0D0F] border-r border-white/5 flex-shrink-0 w-64">
+      <aside className="hidden lg:flex flex-col bg-[#1F1F22] border-r border-white/5 flex-shrink-0 w-64">
         <Sidebar section={section} setSection={setSection} setSidebarOpen={setSidebarOpen} />
       </aside>
 
@@ -72,7 +72,7 @@ const AdminOverview = () => {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed left-0 top-0 bottom-0 z-50 w-64 bg-[#0B0D0F] lg:hidden flex flex-col"
+              className="fixed left-0 top-0 bottom-0 z-50 w-64 bg-[#1F1F22] lg:hidden flex flex-col"
             >
               <Sidebar section={section} setSection={setSection} setSidebarOpen={setSidebarOpen} mobile />
             </motion.aside>
@@ -108,7 +108,7 @@ const AdminOverview = () => {
             <div className="relative" ref={userMenuRef}>
               <button
                 onClick={() => setUserMenuOpen((v) => !v)}
-                className="flex items-center gap-2.5 bg-[#0B0D0F] hover:bg-[#1a1d20] rounded-xl px-3 py-1.5 transition-colors"
+                className="flex items-center gap-2.5 bg-[#1F1F22] hover:bg-[#1a1d20] rounded-xl px-3 py-1.5 transition-colors"
               >
                 <div className="w-7 h-7 rounded-lg bg-[#E52321] flex items-center justify-center flex-shrink-0">
                   <span className="text-white text-[11px] font-black">{initials}</span>
@@ -158,7 +158,7 @@ const AdminOverview = () => {
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-black text-[#0B0D0F] tracking-tight mb-1">Reports Module</h2>
+                  <h2 className="text-xl font-black text-[#1F1F22] tracking-tight mb-1">Reports Module</h2>
                   <p className="text-sm text-gray-400 font-medium">{reports.length} total impact reports</p>
                 </div>
                 <div className="relative">
@@ -184,7 +184,7 @@ const AdminOverview = () => {
                     <div key={r.id} className="flex sm:grid sm:grid-cols-[2fr_1fr_1fr_1fr_80px] items-center gap-3 sm:gap-4 px-6 py-4 hover:bg-gray-50/50 transition-colors">
                       <div className="flex items-center gap-3 min-w-0 flex-1">
                         <img src={r.image} alt={r.title} className="w-9 h-9 rounded-xl object-cover flex-shrink-0 hidden sm:block" />
-                        <p className="text-sm font-black text-[#0B0D0F] truncate">{r.title}</p>
+                        <p className="text-sm font-black text-[#1F1F22] truncate">{r.title}</p>
                       </div>
                       <span className="hidden sm:block text-xs font-bold text-gray-500 truncate">{r.region}</span>
                       <span className="hidden sm:block text-[10px] font-black text-[#E52321] bg-[#E52321]/10 border border-[#E52321]/15 rounded-full px-2 py-1 w-fit">{r.sector}</span>
