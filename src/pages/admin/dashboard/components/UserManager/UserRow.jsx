@@ -21,14 +21,13 @@ const getInitials = (username = '', email = '') => {
 const formatLogin = (date) => {
   if (!date) return 'Never';
   const d = new Date(date);
-  const ymd = d.toISOString().slice(0, 10);
-  const hm  = d.toTimeString().slice(0, 5);
-  return `${ymd} · ${hm}`;
+  return `${d.toISOString().slice(0, 10)} · ${d.toTimeString().slice(0, 5)}`;
 };
 
 const ROLE_OPTIONS = [
-  { value: 'admin',      label: 'Admin' },
-  { value: 'superadmin', label: 'Superadmin' },
+  { value: 'field_staff',      label: 'Field Staff' },
+  { value: 'regional_manager', label: 'Regional Manager' },
+  { value: 'superadmin',       label: 'Superadmin' },
 ];
 
 const StatusBadge = ({ isActive }) => (
@@ -45,8 +44,9 @@ const StatusBadge = ({ isActive }) => (
   </span>
 );
 
-const UserRow = ({ user, isSelected, isCurrentUser, isSuperAdmin, onToggleSelect, onToggleActive, onDelete, onRoleChange }) => {
-  const [confirmRevoke, setConfirmRevoke] = useState(false);
+const UserRow = ({ user, isSelected, onToggleSelect }) => {
+  const [role, setRole]             = useState(user.role);
+  const [confirmRevoke, setConfirm] = useState(false);
   const initials = getInitials(user.username, user.email);
   const color    = avatarColor(user.username || user.email);
 
@@ -55,7 +55,7 @@ const UserRow = ({ user, isSelected, isCurrentUser, isSuperAdmin, onToggleSelect
       isSelected ? 'bg-red-50' : 'hover:bg-gray-50/60'
     }`}>
       {/* Checkbox */}
-      <div className="w-5 flex-shrink-0 flex items-center justify-center">
+      <div className="w-5 flex-shrink-0 flex items-center">
         <input
           type="checkbox"
           checked={isSelected}
@@ -69,24 +69,19 @@ const UserRow = ({ user, isSelected, isCurrentUser, isSuperAdmin, onToggleSelect
         <div className={`w-8 h-8 rounded-full ${color} flex items-center justify-center flex-shrink-0`}>
           <span className="text-white text-[11px] font-black">{initials}</span>
         </div>
-        <div className="min-w-0">
-          <p className="text-sm font-semibold text-[#0B0D0F] truncate">{user.email}</p>
-          {isCurrentUser && (
-            <span className="text-[9px] font-black text-blue-600 bg-blue-50 border border-blue-100 rounded-full px-1.5 py-0.5 uppercase tracking-widest">You</span>
-          )}
-        </div>
+        <p className="text-sm font-semibold text-[#0B0D0F] truncate">{user.email}</p>
       </div>
 
       {/* Region */}
       <div className="w-28 flex-shrink-0">
-        <span className="text-sm text-gray-500">Global</span>
+        <span className="text-sm text-gray-500">{user.region}</span>
       </div>
 
       {/* Role */}
       <div className="w-44 flex-shrink-0">
         <CustomSelect
-          value={user.role}
-          onChange={val => onRoleChange?.(user._id, val)}
+          value={role}
+          onChange={setRole}
           options={ROLE_OPTIONS}
         />
       </div>
@@ -103,45 +98,36 @@ const UserRow = ({ user, isSelected, isCurrentUser, isSuperAdmin, onToggleSelect
 
       {/* Actions */}
       <div className="flex items-center gap-1 flex-shrink-0">
-        {isSuperAdmin && !isCurrentUser ? (
-          confirmRevoke ? (
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => { onDelete(); setConfirmRevoke(false); }}
-                className="text-[10px] font-black text-[#E52321] bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl hover:bg-red-100 transition-colors"
-              >
-                Confirm
-              </button>
-              <button
-                onClick={() => setConfirmRevoke(false)}
-                className="text-[10px] font-black text-gray-400 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-xl hover:bg-gray-100 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <>
-              <button
-                onClick={onToggleActive}
-                className="px-3 py-1.5 text-xs font-bold text-gray-500 hover:text-[#0B0D0F] transition-colors"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() => setConfirmRevoke(true)}
-                className="px-3 py-1.5 text-xs font-bold text-gray-500 hover:text-[#E52321] transition-colors"
-              >
-                Revoke
-              </button>
-              <button className="px-4 py-1.5 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white text-xs font-bold rounded-xl transition-colors">
-                Activity
-              </button>
-            </>
-          )
+        {confirmRevoke ? (
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setConfirm(false)}
+              className="text-[10px] font-black text-[#E52321] bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl hover:bg-red-100 transition-colors"
+            >
+              Confirm
+            </button>
+            <button
+              onClick={() => setConfirm(false)}
+              className="text-[10px] font-black text-gray-400 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-xl hover:bg-gray-100 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
         ) : (
-          <button className="px-4 py-1.5 bg-[#0B0D0F] text-white text-xs font-bold rounded-xl opacity-60 cursor-default">
-            Activity
-          </button>
+          <>
+            <button className="px-3 py-1.5 text-xs font-bold text-gray-500 hover:text-[#0B0D0F] transition-colors">
+              Edit
+            </button>
+            <button
+              onClick={() => setConfirm(true)}
+              className="px-3 py-1.5 text-xs font-bold text-gray-500 hover:text-[#E52321] transition-colors"
+            >
+              Revoke
+            </button>
+            <button className="px-4 py-1.5 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white text-xs font-bold rounded-xl transition-colors">
+              Activity
+            </button>
+          </>
         )}
       </div>
     </div>
