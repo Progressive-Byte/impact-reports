@@ -6,7 +6,7 @@ import SafeIcon from '../../../common/SafeIcon';
 import Settings from './components/Settings/page';
 import AdminDashboard from './components/AdminDashboard/page';
 import ReportsModule from './components/ReportsModule/page';
-import Sidebar, { NAV } from './components/common/Sidebar';
+import Sidebar, { NAV } from './common/Sidebar';
 import UserManager from './components/UserManager/page';
 
 const AdminOverview = () => {
