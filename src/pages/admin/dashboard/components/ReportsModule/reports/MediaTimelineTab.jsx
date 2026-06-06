@@ -1,5 +1,5 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
-import { Input } from './FormField';
+import { Input, Textarea } from './FormField';
 
 const MediaTimelineTab = ({ form, update }) => {
   const addMilestone = () =>
