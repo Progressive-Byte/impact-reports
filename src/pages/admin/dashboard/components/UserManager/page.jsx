@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useAdminAuth } from '../../../../context/AdminAuthContext';
-import SafeIcon from '../../../../common/SafeIcon';
+import { useAdminAuth } from '../../../../../context/AdminAuthContext';
+import SafeIcon from '../../../../../common/SafeIcon';
 
 const EMPTY_FORM = { username: '', email: '', password: '', role: 'admin' };
 

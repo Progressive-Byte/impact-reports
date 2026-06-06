@@ -7,7 +7,7 @@ import Settings from './components/Settings';
 import AdminDashboard from './components/AdminDashboard/page';
 import ReportsModule from './components/ReportsModule/page';
 import Sidebar, { NAV } from './components/common/Sidebar';
-import UserManager from './components/UserManager';
+import UserManager from './components/UserManager/page';
 
 const AdminOverview = () => {
   const { admin, logout, getToken } = useAdminAuth();
