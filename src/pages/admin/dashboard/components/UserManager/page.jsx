@@ -77,7 +77,7 @@ const UserManager = () => {
       </div>
 
       {/* Directory card */}
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm">
 
         {/* Directory header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
