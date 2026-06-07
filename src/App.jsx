@@ -23,6 +23,14 @@ function App() {
               </AdminProtectedRoute>
             }
           />
+          <Route
+            path="/admin/dashboard/:section"
+            element={
+              <AdminProtectedRoute>
+                <AdminDashboard />
+              </AdminProtectedRoute>
+            }
+          />
           {/* Public routes — wrapped in Layout */}
           <Route path="/" element={<Layout><Portal /></Layout>} />
           <Route path="/report/:id" element={<Layout><ReportDetail /></Layout>} />
