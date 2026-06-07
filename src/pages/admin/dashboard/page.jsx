@@ -12,7 +12,9 @@ import UserManager from './components/UserManager/page';
 const AdminOverview = () => {
   const { admin, logout, getToken } = useAdminAuth();
   const navigate = useNavigate();
-  const [section, setSection] = useState('overview');
+  const { section: rawSection } = useParams();
+  const VALID = ['overview', 'reports', 'admins', 'settings'];
+  const section = VALID.includes(rawSection) ? rawSection : 'overview';
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef(null);
