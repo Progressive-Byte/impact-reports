@@ -4,7 +4,7 @@ import { reports } from "../../../../data/mockData";
 const NAV = [
   { id: 'overview', label: 'Admin Dashboard', icon: 'FiGrid',     badge: null },
   { id: 'reports',  label: 'Reports Module',  icon: 'FiFileText', badge: reports.length },
-  { id: 'admins',   label: 'User Management', icon: 'FiUsers',    badge: null },
+  { id: 'users',   label: 'User Management', icon: 'FiUsers',    badge: null },
   { id: 'settings', label: 'Settings',        icon: 'FiSettings', badge: null },
 ];
 
