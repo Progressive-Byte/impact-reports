@@ -121,14 +121,14 @@ const AdminOverview = () => {
                     className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-50"
                   >
                     <button
-                      onClick={() => { setSection('settings'); setUserMenuOpen(false); }}
+                      onClick={() => { navigate('/admin/dashboard/settings'); setUserMenuOpen(false); }}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <SafeIcon icon="FiUser" className="text-sm text-gray-400" />
                       View Profile
                     </button>
                     <button
-                      onClick={() => { setSection('settings'); setUserMenuOpen(false); }}
+                      onClick={() => { navigate('/admin/dashboard/settings'); setUserMenuOpen(false); }}
                       className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                     >
                       <SafeIcon icon="FiSettings" className="text-sm text-gray-400" />
