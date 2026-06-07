@@ -13,7 +13,7 @@ const AdminOverview = () => {
   const { admin, logout, getToken } = useAdminAuth();
   const navigate = useNavigate();
   const { section: rawSection } = useParams();
-  const VALID = ['overview', 'reports', 'admins', 'settings'];
+  const VALID = ['overview', 'reports', 'users', 'settings'];
   const section = VALID.includes(rawSection) ? rawSection : 'overview';
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -155,7 +155,7 @@ const AdminOverview = () => {
 
           {section === 'reports' && <ReportsModule />}
 
-          {section === 'admins' && <UserManager />}
+          {section === 'users' && <UserManager />}
           {section === 'settings' && <Settings />}
         </main>
       </div>
