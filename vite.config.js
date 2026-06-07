@@ -13,13 +13,14 @@ export default defineConfig({
     historyApiFallback: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://impact.progressivebyte.com',
         changeOrigin: true,
       },
     },
   },
-   build: {
+  build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    copyPublicDir: true,
   },
 });

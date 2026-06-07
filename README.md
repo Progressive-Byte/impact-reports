@@ -15,3 +15,6 @@ npm run server:dev
   ├─────────────────────────────────┼───────────────────────────────────────┤
   │ npm run dev (frontend on :5173) │ npm run server:dev (backend on :5000) │
   └─────────────────────────────────┴───────────────────────────────────────┘
+  npm run build:server — builds only the server
+  - npm run build:server — builds only the server
+  - npm run build:all — builds frontend then server (dist/ + dist/server/)

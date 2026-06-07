@@ -6,11 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "npm run lint && vite build",
+    "build:server": "vite build --config vite.server.config.js",
+    "build:all": "npm run build && npm run build:server",
     "lint": "eslint .",
     "lint:error": "eslint . --quiet",
     "preview": "vite preview",
     "server": "node server/index.js",
     "server:dev": "nodemon server/index.js",
+    "start": "NODE_ENV=production node server/index.js",
     "seed": "node server/scripts/seed.js"
   },
   "dependencies": {
