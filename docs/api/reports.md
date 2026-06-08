@@ -226,6 +226,15 @@ Save the data for one wizard step. Marks the step complete and updates the repor
 
 When `media` step is saved and all four steps are complete, `status` becomes `"published"`. Otherwise `"draft"`.
 
+### Errors
+
+| Status | Condition                                                                         |
+| ------ | --------------------------------------------------------------------------------- |
+| `400`  | Invalid `stepName`                                                                |
+| `400`  | `assignedTo` contains duplicate admin IDs (`general` step only)                  |
+| `403`  | Caller not assigned to report and not superadmin                                  |
+| `404`  | Report not found                                                                  |
+
 ### curl
 
 ```bash
