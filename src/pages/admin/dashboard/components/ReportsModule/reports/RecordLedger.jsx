@@ -2,102 +2,147 @@ import { useState } from 'react';
 import SafeIcon from '../../../../../../common/SafeIcon';
 
 const STATUS_STYLES = {
+  pending:   'bg-yellow-50 text-yellow-700 border border-yellow-200',
   draft:     'bg-gray-100 text-gray-500',
   published: 'bg-green-50 text-green-700 border border-green-200',
-  pending:   'bg-yellow-50 text-yellow-700 border border-yellow-200',
 };
 
-const COLUMNS = ['Project', 'Lives Impacted', 'Status', 'Assignee', 'Date', 'Actions'];
-
-const MOCK_ENTRIES = [
-  { id: 1, title: 'Winter Relief Alpha',    status: 'draft',     livesImpacted: 4800,  assignee: 'Marcus Chen', date: '2024-01-20' },
-  { id: 2, title: 'Jordan Water Access Q2', status: 'published', livesImpacted: 12500, assignee: 'Sarah Ahmad',  date: '2024-02-15' },
-  { id: 3, title: 'Syria Education Drive',  status: 'pending',   livesImpacted: 3200,  assignee: 'Ali Hassan',   date: '2024-03-08' },
-  { id: 4, title: 'Lebanon Food Security',  status: 'published', livesImpacted: 8900,  assignee: 'Marcus Chen',  date: '2024-03-22' },
-];
-
+const COLUMNS = ['Project', 'Lives Impacted', 'Status', 'Assignees', 'Date', 'Actions'];
 const ROW_GRID = 'grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_auto] gap-4 items-center px-6';
 
-const RecordLedger = ({ filter = 'all', search = '', sort = 'recent', onEdit }) => {
-  const [deleteId, setDeleteId] = useState(null);
+const SkeletonRow = () => (
+  <div className={`${ROW_GRID} py-4 animate-pulse`}>
+    <div className="h-4 bg-gray-100 rounded w-3/4" />
+    <div className="h-4 bg-gray-100 rounded w-10" />
+    <div className="h-6 bg-gray-100 rounded-full w-20" />
+    <div className="h-4 bg-gray-100 rounded w-28" />
+    <div className="h-4 bg-gray-100 rounded w-20" />
+    <div className="flex gap-2">
+      <div className="h-8 w-8 bg-gray-100 rounded-lg" />
+      <div className="h-8 w-8 bg-gray-100 rounded-lg" />
+    </div>
+  </div>
+);
 
-  const entries = MOCK_ENTRIES
-    .filter(e =>
-      (filter === 'all' || e.status === filter) &&
-      e.title.toLowerCase().includes(search.toLowerCase())
+const TableHead = () => (
+  <div className={`${ROW_GRID} py-3 border-b border-gray-100 bg-gray-50/70`}>
+    {COLUMNS.map(col => (
+      <span key={col} className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+        {col}
+      </span>
+    ))}
+  </div>
+);
+
+const RecordLedger = ({
+  reports = [],
+  loading = false,
+  filter  = 'all',
+  search  = '',
+  sort    = 'recent',
+  isSuperAdmin,
+  onEdit,
+  onDelete,
+}) => {
+  const [confirmId, setConfirmId] = useState(null);
+
+  const entries = reports
+    .filter(r =>
+      (filter === 'all' || r.status === filter) &&
+      (r.projectName || '').toLowerCase().includes(search.toLowerCase())
     )
-    .sort((a, b) => sort === 'recent' ? b.id - a.id : a.id - b.id);
+    .sort((a, b) =>
+      sort === 'recent'
+        ? new Date(b.createdAt) - new Date(a.createdAt)
+        : new Date(a.createdAt) - new Date(b.createdAt)
+    );
+
+  const handleConfirmDelete = (id) => {
+    onDelete?.(id);
+    setConfirmId(null);
+  };
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
-      {/* Table head */}
-      <div className={`${ROW_GRID} py-3 border-b border-gray-100 bg-gray-50/70`}>
-        {COLUMNS.map(col => (
-          <span key={col} className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-            {col}
-          </span>
-        ))}
-      </div>
+      <TableHead />
 
-      {/* Rows */}
       <div className="divide-y divide-gray-100">
-        {entries.map(entry => (
-          <div key={entry.id} className={`${ROW_GRID} py-4 hover:bg-gray-50/60 transition-colors`}>
-            <p className="text-sm font-bold text-[#0B0D0F] truncate">{entry.title}</p>
-
-            <p className="text-sm font-black text-[#0B0D0F]">{entry.livesImpacted.toLocaleString()}</p>
-
-            <span className={`text-[10px] font-black uppercase rounded px-2.5 py-1 w-fit ${STATUS_STYLES[entry.status]}`}>
-              {entry.status}
-            </span>
-
-            <div className="flex items-center gap-1.5 min-w-0">
-              <SafeIcon icon="FiUser" className="text-gray-400 text-xs flex-shrink-0" />
-              <span className="text-xs text-gray-600 truncate">{entry.assignee}</span>
-            </div>
-
-            <span className="text-xs text-gray-400 tabular-nums">{entry.date}</span>
-
-            <div className="flex items-center gap-1 flex-shrink-0">
-              {deleteId === entry.id ? (
-                <>
-                  <button
-                    onClick={() => setDeleteId(null)}
-                    className="text-[10px] font-black text-[#E52321] bg-red-50 border border-red-200 px-2.5 py-1.5 rounded-lg hover:bg-red-100 transition-colors"
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    onClick={() => setDeleteId(null)}
-                    className="text-[10px] font-black text-gray-400 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => onEdit?.(entry)}
-                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#0B0D0F] hover:bg-gray-100 rounded-lg transition-colors"
-                    title="Edit"
-                  >
-                    <SafeIcon icon="FiEdit2" className="text-sm" />
-                  </button>
-                  <button
-                    onClick={() => setDeleteId(entry.id)}
-                    className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#E52321] hover:bg-red-50 rounded-lg transition-colors"
-                    title="Delete"
-                  >
-                    <SafeIcon icon="FiTrash2" className="text-sm" />
-                  </button>
-                </>
-              )}
-            </div>
+        {loading ? (
+          Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
+        ) : entries.length === 0 ? (
+          <div className="px-6 py-14 text-center">
+            <SafeIcon icon="FiClipboard" className="text-gray-200 text-3xl mx-auto mb-3" />
+            <p className="text-sm text-gray-400">No reports found.</p>
           </div>
-        ))}
+        ) : (
+          entries.map(entry => {
+            const assigneeNames = (entry.assignedTo || [])
+              .map(a => a.username || a.email)
+              .join(', ');
 
-        {entries.length === 0 && (
-          <div className="px-6 py-12 text-center text-sm text-gray-400">No records found.</div>
+            return (
+              <div key={entry._id} className={`${ROW_GRID} py-4 hover:bg-gray-50/60 transition-colors`}>
+
+                <p className="text-sm font-bold text-[#0B0D0F] truncate">{entry.projectName}</p>
+
+                <p className="text-sm font-black text-[#0B0D0F]">
+                  {entry.livesImpacted ? entry.livesImpacted.toLocaleString() : '—'}
+                </p>
+
+                <span className={`text-[10px] font-black uppercase rounded px-2.5 py-1 w-fit ${STATUS_STYLES[entry.status] ?? STATUS_STYLES.draft}`}>
+                  {entry.status}
+                </span>
+
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <SafeIcon icon="FiUser" className="text-gray-400 text-xs flex-shrink-0" />
+                  <span className="text-xs text-gray-600 truncate">{assigneeNames || '—'}</span>
+                </div>
+
+                <span className="text-xs text-gray-400 tabular-nums">
+                  {entry.createdAt ? entry.createdAt.slice(0, 10) : '—'}
+                </span>
+
+                {/* Actions */}
+                <div className="flex items-center gap-1 flex-shrink-0">
+                  {confirmId === entry._id ? (
+                    <>
+                      <button
+                        onClick={() => handleConfirmDelete(entry._id)}
+                        className="text-[10px] font-black text-[#E52321] bg-red-50 border border-red-200 px-2.5 py-1.5 rounded-lg hover:bg-red-100 transition-colors"
+                      >
+                        Confirm
+                      </button>
+                      <button
+                        onClick={() => setConfirmId(null)}
+                        className="text-[10px] font-black text-gray-400 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        onClick={() => onEdit?.(entry)}
+                        className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#0B0D0F] hover:bg-gray-100 rounded-lg transition-colors"
+                        title="Edit"
+                      >
+                        <SafeIcon icon="FiEdit2" className="text-sm" />
+                      </button>
+                      {isSuperAdmin && (
+                        <button
+                          onClick={() => setConfirmId(entry._id)}
+                          className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#E52321] hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete"
+                        >
+                          <SafeIcon icon="FiTrash2" className="text-sm" />
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+            );
+          })
         )}
       </div>
     </div>
