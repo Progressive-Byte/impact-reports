@@ -25,12 +25,18 @@ const canAccess = (admin, report) =>
   admin.role === 'superadmin' ||
   report.assignedTo.some(a => String(a._id ?? a) === String(admin._id));
 
-// ── GET /api/reports ─────────────────────────────────────────────────
+// ── GET /api/reports?status= ─────────────────────────────────────────
 router.get('/', async (req, res) => {
   try {
+    const { status } = req.query;
+
     const filter = req.admin.role === 'superadmin'
       ? {}
       : { assignedTo: req.admin._id };
+
+    if (status && ['pending', 'draft', 'published'].includes(status)) {
+      filter.status = status;
+    }
 
     const reports = await Report.find(filter)
       .populate(POPULATE)
