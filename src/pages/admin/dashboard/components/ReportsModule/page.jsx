@@ -113,11 +113,12 @@ const ReportsModule = () => {
       .catch(() => {});
   }, []);
 
-  // ── Fetch report list ────────────────────────────────────────────────
-  const fetchReports = useCallback(async () => {
+  // ── Fetch report list (optional status filter) ───────────────────────
+  const fetchReports = useCallback(async (status = 'all') => {
     setLoadingList(true);
     try {
-      const data = await adminApiRequest('/api/reports');
+      const qs   = status !== 'all' ? `?status=${status}` : '';
+      const data = await adminApiRequest(`/api/reports${qs}`);
       setReports(data.reports || []);
     } catch (err) {
       toast.error(err.message || 'Failed to load reports');
@@ -127,8 +128,9 @@ const ReportsModule = () => {
   }, []);
 
   useEffect(() => {
-    if (!isWizard) fetchReports();
-  }, [isWizard, fetchReports]);
+    if (!isWizard) fetchReports('all');
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isWizard]);
 
   // ── Load single report when entering wizard ──────────────────────────
   useEffect(() => {
