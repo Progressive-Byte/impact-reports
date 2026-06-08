@@ -1,0 +1,45 @@
+import mongoose from 'mongoose';
+
+const deliverableSchema = new mongoose.Schema(
+  { label: String, count: Number },
+  { _id: false }
+);
+
+const milestoneSchema = new mongoose.Schema(
+  { date: String, title: String, notes: String },
+  { _id: false }
+);
+
+const reportSchema = new mongoose.Schema(
+  {
+    projectName:       { type: String, required: true, trim: true },
+    assignedTo:        [{ type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }],
+    createdBy:         { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+    status:            { type: String, enum: ['pending', 'draft', 'published'], default: 'pending' },
+
+    // General step
+    projectLead:       { type: String, default: '' },
+    fiscalYear:        { type: String, default: 'FY25' },
+    livesImpacted:     { type: Number, default: 0 },
+
+    // Narrative step
+    projectBackground: { type: String, default: '' },
+    strategicResponse: { type: String, default: '' },
+
+    // Metrics step
+    children:          { type: Number, default: 0 },
+    women:             { type: Number, default: 0 },
+    men:               { type: Number, default: 0 },
+    deliverables:      { type: [deliverableSchema], default: [] },
+
+    // Media & Timeline step
+    galleryUrl:        { type: String, default: '' },
+    milestones:        { type: [milestoneSchema], default: [] },
+
+    // Completed step tracking
+    stepsCompleted:    [{ type: String, enum: ['general', 'narrative', 'metrics', 'media'] }],
+  },
+  { timestamps: true }
+);
+
+export default mongoose.model('Report', reportSchema);
