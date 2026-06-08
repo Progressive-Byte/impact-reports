@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../common/SafeIcon';
@@ -7,6 +7,7 @@ import Checkbox from '../../common/Checkbox';
 import InviteModal from './components/InviteModal';
 import EditUserModal from './components/EditUserModal';
 import UserRow from './components/UserRow';
+import Pagination from './components/Pagination';
 import { adminApiRequest } from '../../../../../services/adminApi';
 
 const COLS = [
@@ -23,6 +24,8 @@ const STATUS_OPTIONS = [
   { value: 'active',   label: 'Active' },
   { value: 'inactive', label: 'Inactive' },
 ];
+
+const LIMIT = 10;
 
 const SkeletonRow = () => (
   <div className="flex items-center gap-4 px-6 py-4 animate-pulse">
@@ -49,19 +52,24 @@ const SkeletonRow = () => (
 const UserManager = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Read filter state from URL
+  // URL-driven filter state
   const urlSearch = searchParams.get('search') || '';
   const urlStatus = searchParams.get('status') || 'all';
+  const urlPage   = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 
-  // Local input tracks what the user is typing (debounced write to URL)
+  // Local input for debounce
   const [inputSearch,  setInputSearch]  = useState(urlSearch);
   const [isDebouncing, setIsDebouncing] = useState(false);
 
   const [users,       setUsers]       = useState([]);
+  const [meta,        setMeta]        = useState(null);
   const [loading,     setLoading]     = useState(true);
   const [selected,    setSelected]    = useState(new Set());
   const [showInvite,  setShowInvite]  = useState(false);
   const [editingUser, setEditingUser] = useState(null);
+
+  // Track previous search/status to detect changes that should reset page
+  const prevFiltersRef = useRef({ search: urlSearch, status: urlStatus });
 
   // ── Debounce: write search input → URL after 400 ms ──────────────
   useEffect(() => {
@@ -72,6 +80,7 @@ const UserManager = () => {
         const next = new URLSearchParams(prev);
         if (inputSearch) next.set('search', inputSearch);
         else             next.delete('search');
+        next.delete('page'); // reset to page 1 on new search
         return next;
       }, { replace: true });
       setIsDebouncing(false);
@@ -80,58 +89,76 @@ const UserManager = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [inputSearch]);
 
-  // If URL changes externally (e.g. browser back), sync the input box
+  // Sync input box when URL changes externally (browser back)
   useEffect(() => {
     setInputSearch(urlSearch);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlSearch]);
 
-  // Status filter → immediate URL update
+  // Status filter → immediate URL update, reset to page 1
   const handleStatusChange = (val) => {
     setSearchParams(prev => {
       const next = new URLSearchParams(prev);
       if (val === 'all') next.delete('status');
       else               next.set('status', val);
+      next.delete('page');
       return next;
     }, { replace: true });
   };
 
-  // ── Fetch users ───────────────────────────────────────────────────
-  const fetchUsers = useCallback(async () => {
+  // Page change
+  const handlePageChange = (page) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (page <= 1) next.delete('page');
+      else           next.set('page', String(page));
+      return next;
+    }, { replace: true });
+  };
+
+  // ── Fetch users from server (with search, status, page, limit) ────
+  const fetchUsers = useCallback(async (opts = {}) => {
     setLoading(true);
     try {
-      const data = await adminApiRequest('/api/admin/admins');
-      setUsers(Array.isArray(data) ? data : []);
+      const params = new URLSearchParams();
+      params.set('limit', String(LIMIT));
+      const page   = opts.page   ?? urlPage;
+      const search = opts.search ?? urlSearch;
+      const status = opts.status ?? urlStatus;
+
+      if (page > 1)          params.set('page',   String(page));
+      if (search)            params.set('q',      search);
+      if (status !== 'all')  params.set('status', status);
+
+      const data = await adminApiRequest(`/api/admin/admins?${params}`);
+      setUsers(Array.isArray(data.items) ? data.items : []);
+      setMeta(data.meta ?? null);
     } catch (err) {
       toast.error(err.message || 'Failed to load users');
     } finally {
       setLoading(false);
     }
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlPage, urlSearch, urlStatus]);
 
-  useEffect(() => { fetchUsers(); }, [fetchUsers]);
-
-  // ── Client-side filtering against URL params ──────────────────────
-  const filtered = users.filter(u => {
-    const q = urlSearch.toLowerCase();
-    const matchSearch =
-      !q ||
-      (u.email    || '').toLowerCase().includes(q) ||
-      (u.username || '').toLowerCase().includes(q) ||
-      (u.region   || '').toLowerCase().includes(q);
-    const matchStatus =
-      urlStatus === 'all' ||
-      (urlStatus === 'active'   &&  u.isActive) ||
-      (urlStatus === 'inactive' && !u.isActive);
-    return matchSearch && matchStatus;
-  });
+  // Re-fetch whenever URL params change
+  useEffect(() => {
+    // If filters changed, reset selected
+    const prev = prevFiltersRef.current;
+    if (prev.search !== urlSearch || prev.status !== urlStatus) {
+      setSelected(new Set());
+      prevFiltersRef.current = { search: urlSearch, status: urlStatus };
+    }
+    fetchUsers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlPage, urlSearch, urlStatus]);
 
   const showSkeleton  = loading || isDebouncing;
-  const allSelected   = filtered.length > 0 && filtered.every(u => selected.has(u._id));
+  const allSelected   = users.length > 0 && users.every(u => selected.has(u._id));
   const selectedCount = selected.size;
 
   const toggleAll = () =>
-    setSelected(allSelected ? new Set() : new Set(filtered.map(u => u._id)));
+    setSelected(allSelected ? new Set() : new Set(users.map(u => u._id)));
 
   const toggleOne = (id) => {
     const next = new Set(selected);
@@ -145,6 +172,12 @@ const UserManager = () => {
   const handleDelete = (id) => {
     setUsers(prev => prev.filter(u => u._id !== id));
     setSelected(prev => { const n = new Set(prev); n.delete(id); return n; });
+    // If last row on page > 1, go back one page
+    if (users.length === 1 && urlPage > 1) {
+      handlePageChange(urlPage - 1);
+    } else {
+      fetchUsers();
+    }
   };
 
   return (
@@ -152,7 +185,7 @@ const UserManager = () => {
       <InviteModal
         open={showInvite}
         onClose={() => setShowInvite(false)}
-        onInviteSent={fetchUsers}
+        onInviteSent={() => fetchUsers()}
       />
       <EditUserModal
         user={editingUser}
@@ -185,16 +218,16 @@ const UserManager = () => {
             <SafeIcon icon="FiUsers" className="text-gray-400 text-base" />
             <h3 className="text-sm font-black text-[#0B0D0F]">
               Directory
-              {!loading && (
+              {!loading && meta && (
                 <span className="ml-2 text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
-                  {users.length}
+                  {meta.total}
                 </span>
               )}
             </h3>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Search — writes to URL after 400 ms debounce */}
+            {/* Search — debounced URL write */}
             <div className="relative">
               <SafeIcon
                 icon={isDebouncing ? 'FiLoader' : 'FiSearch'}
@@ -210,7 +243,6 @@ const UserManager = () => {
                 autoComplete="off"
                 className="border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-sm placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] bg-white w-60 transition-colors"
               />
-              {/* Active search indicator */}
               {urlSearch && !isDebouncing && (
                 <button
                   onClick={() => setInputSearch('')}
@@ -222,7 +254,7 @@ const UserManager = () => {
               )}
             </div>
 
-            {/* Status filter — updates URL immediately */}
+            {/* Status filter */}
             <CustomSelect
               value={urlStatus}
               onChange={handleStatusChange}
@@ -231,7 +263,7 @@ const UserManager = () => {
             />
 
             <button
-              onClick={fetchUsers}
+              onClick={() => fetchUsers()}
               disabled={loading}
               className="w-9 h-9 border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-[#0B0D0F] hover:bg-gray-50 disabled:opacity-40 transition-colors"
               title="Refresh"
@@ -263,9 +295,11 @@ const UserManager = () => {
                 </button>
               </span>
             )}
-            <span className="text-[11px] text-gray-400 ml-auto">
-              {filtered.length} result{filtered.length !== 1 ? 's' : ''}
-            </span>
+            {meta && (
+              <span className="text-[11px] text-gray-400 ml-auto">
+                {meta.total} result{meta.total !== 1 ? 's' : ''}
+              </span>
+            )}
           </div>
         )}
 
@@ -312,15 +346,15 @@ const UserManager = () => {
         {/* Rows */}
         {showSkeleton ? (
           <div className="divide-y divide-gray-100">
-            {Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)}
+            {Array.from({ length: LIMIT }).map((_, i) => <SkeletonRow key={i} />)}
           </div>
-        ) : filtered.length === 0 ? (
+        ) : users.length === 0 ? (
           <div className="py-14 text-center">
             <SafeIcon icon={urlSearch ? 'FiSearch' : 'FiUsers'} className="text-gray-200 text-3xl mx-auto mb-3" />
             <p className="text-sm text-gray-400">
               {urlSearch
                 ? `No results for "${urlSearch}"`
-                : users.length === 0
+                : meta?.total === 0
                   ? 'No users yet. Invite someone to get started.'
                   : 'No users match your filters.'}
             </p>
@@ -335,7 +369,7 @@ const UserManager = () => {
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
-            {filtered.map(u => (
+            {users.map(u => (
               <UserRow
                 key={u._id}
                 user={u}
@@ -348,6 +382,9 @@ const UserManager = () => {
             ))}
           </div>
         )}
+
+        {/* Pagination */}
+        <Pagination meta={meta} onPageChange={handlePageChange} />
       </div>
     </div>
   );
