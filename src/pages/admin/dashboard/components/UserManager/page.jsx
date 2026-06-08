@@ -108,6 +108,12 @@ const UserManager = () => {
         onClose={() => setShowInvite(false)}
         onInviteSent={fetchUsers}
       />
+      <EditUserModal
+        user={editingUser}
+        open={Boolean(editingUser)}
+        onClose={() => setEditingUser(null)}
+        onUpdated={handleUpdate}
+      />
 
       {/* Page header */}
       <div className="flex items-start justify-between">
