@@ -24,12 +24,10 @@ export const AdminAuthProvider = ({ children }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Auto-logout when any API call returns 401 (token expired on backend)
   useEffect(() => {
     const handleUnauthorized = () => clearSession();
     window.addEventListener('admin:unauthorized', handleUnauthorized);
     return () => window.removeEventListener('admin:unauthorized', handleUnauthorized);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const login = (token, adminData) => {
