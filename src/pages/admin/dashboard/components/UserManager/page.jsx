@@ -232,6 +232,7 @@ const UserManager = () => {
                 onToggleSelect={() => toggleOne(u._id)}
                 onUpdate={handleUpdate}
                 onDelete={handleDelete}
+                onEdit={setEditingUser}
               />
             ))}
           </div>
