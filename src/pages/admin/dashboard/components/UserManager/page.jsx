@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../common/SafeIcon';
 import CustomSelect from '../ReportsModule/reports/CustomSelect';
@@ -23,7 +24,6 @@ const STATUS_OPTIONS = [
   { value: 'inactive', label: 'Inactive' },
 ];
 
-// ── Skeleton row ──────────────────────────────────────────────────
 const SkeletonRow = () => (
   <div className="flex items-center gap-4 px-6 py-4 animate-pulse">
     <div className="w-5 flex-shrink-0"><div className="w-4 h-4 bg-gray-100 rounded" /></div>
@@ -39,6 +39,7 @@ const SkeletonRow = () => (
     <div className="w-28 flex-shrink-0"><div className="h-6 bg-gray-100 rounded-full w-20" /></div>
     <div className="w-44 flex-shrink-0"><div className="h-3 bg-gray-100 rounded w-28" /></div>
     <div className="flex-shrink-0 flex gap-2">
+      <div className="h-7 w-12 bg-gray-100 rounded-xl" />
       <div className="h-7 w-16 bg-gray-100 rounded-xl" />
       <div className="h-7 w-20 bg-gray-100 rounded-xl" />
     </div>
@@ -46,14 +47,56 @@ const SkeletonRow = () => (
 );
 
 const UserManager = () => {
-  const [users,        setUsers]        = useState([]);
-  const [loading,      setLoading]      = useState(true);
-  const [selected,     setSelected]     = useState(new Set());
-  const [search,       setSearch]       = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [showInvite,   setShowInvite]   = useState(false);
-  const [editingUser,  setEditingUser]  = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
+  // Read filter state from URL
+  const urlSearch = searchParams.get('search') || '';
+  const urlStatus = searchParams.get('status') || 'all';
+
+  // Local input tracks what the user is typing (debounced write to URL)
+  const [inputSearch,  setInputSearch]  = useState(urlSearch);
+  const [isDebouncing, setIsDebouncing] = useState(false);
+
+  const [users,       setUsers]       = useState([]);
+  const [loading,     setLoading]     = useState(true);
+  const [selected,    setSelected]    = useState(new Set());
+  const [showInvite,  setShowInvite]  = useState(false);
+  const [editingUser, setEditingUser] = useState(null);
+
+  // ── Debounce: write search input → URL after 400 ms ──────────────
+  useEffect(() => {
+    if (inputSearch === urlSearch) { setIsDebouncing(false); return; }
+    setIsDebouncing(true);
+    const t = setTimeout(() => {
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        if (inputSearch) next.set('search', inputSearch);
+        else             next.delete('search');
+        return next;
+      }, { replace: true });
+      setIsDebouncing(false);
+    }, 400);
+    return () => clearTimeout(t);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inputSearch]);
+
+  // If URL changes externally (e.g. browser back), sync the input box
+  useEffect(() => {
+    setInputSearch(urlSearch);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlSearch]);
+
+  // Status filter → immediate URL update
+  const handleStatusChange = (val) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (val === 'all') next.delete('status');
+      else               next.set('status', val);
+      return next;
+    }, { replace: true });
+  };
+
+  // ── Fetch users ───────────────────────────────────────────────────
   const fetchUsers = useCallback(async () => {
     setLoading(true);
     try {
@@ -68,19 +111,22 @@ const UserManager = () => {
 
   useEffect(() => { fetchUsers(); }, [fetchUsers]);
 
+  // ── Client-side filtering against URL params ──────────────────────
   const filtered = users.filter(u => {
-    const q = search.toLowerCase();
+    const q = urlSearch.toLowerCase();
     const matchSearch =
+      !q ||
       (u.email    || '').toLowerCase().includes(q) ||
       (u.username || '').toLowerCase().includes(q) ||
       (u.region   || '').toLowerCase().includes(q);
     const matchStatus =
-      statusFilter === 'all' ||
-      (statusFilter === 'active'   &&  u.isActive) ||
-      (statusFilter === 'inactive' && !u.isActive);
+      urlStatus === 'all' ||
+      (urlStatus === 'active'   &&  u.isActive) ||
+      (urlStatus === 'inactive' && !u.isActive);
     return matchSearch && matchStatus;
   });
 
+  const showSkeleton  = loading || isDebouncing;
   const allSelected   = filtered.length > 0 && filtered.every(u => selected.has(u._id));
   const selectedCount = selected.size;
 
@@ -146,19 +192,44 @@ const UserManager = () => {
               )}
             </h3>
           </div>
+
           <div className="flex items-center gap-3">
+            {/* Search — writes to URL after 400 ms debounce */}
             <div className="relative">
-              <SafeIcon icon="FiSearch" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+              <SafeIcon
+                icon={isDebouncing ? 'FiLoader' : 'FiSearch'}
+                className={`absolute left-3 top-1/2 -translate-y-1/2 text-sm ${
+                  isDebouncing ? 'text-[#E52321] animate-spin' : 'text-gray-400'
+                }`}
+              />
               <input
                 type="text"
                 placeholder="Search email, user or region…"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
+                value={inputSearch}
+                onChange={e => setInputSearch(e.target.value)}
                 autoComplete="off"
-                className="border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-sm placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] bg-white w-60"
+                className="border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-sm placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] bg-white w-60 transition-colors"
               />
+              {/* Active search indicator */}
+              {urlSearch && !isDebouncing && (
+                <button
+                  onClick={() => setInputSearch('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 transition-colors"
+                  title="Clear search"
+                >
+                  <SafeIcon icon="FiX" className="text-sm" />
+                </button>
+              )}
             </div>
-            <CustomSelect value={statusFilter} onChange={setStatusFilter} options={STATUS_OPTIONS} className="w-36" />
+
+            {/* Status filter — updates URL immediately */}
+            <CustomSelect
+              value={urlStatus}
+              onChange={handleStatusChange}
+              options={STATUS_OPTIONS}
+              className="w-36"
+            />
+
             <button
               onClick={fetchUsers}
               disabled={loading}
@@ -169,6 +240,34 @@ const UserManager = () => {
             </button>
           </div>
         </div>
+
+        {/* Active filter pills */}
+        {(urlSearch || urlStatus !== 'all') && !showSkeleton && (
+          <div className="flex items-center gap-2 px-6 py-2.5 border-b border-gray-100 bg-gray-50/60">
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Filters:</span>
+            {urlSearch && (
+              <span className="flex items-center gap-1.5 bg-white border border-gray-200 text-xs font-bold text-gray-600 px-3 py-1 rounded-full">
+                <SafeIcon icon="FiSearch" className="text-[10px] text-gray-400" />
+                &quot;{urlSearch}&quot;
+                <button onClick={() => setInputSearch('')} className="text-gray-300 hover:text-gray-500 ml-0.5">
+                  <SafeIcon icon="FiX" className="text-[10px]" />
+                </button>
+              </span>
+            )}
+            {urlStatus !== 'all' && (
+              <span className="flex items-center gap-1.5 bg-white border border-gray-200 text-xs font-bold text-gray-600 px-3 py-1 rounded-full capitalize">
+                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${urlStatus === 'active' ? 'bg-green-500' : 'bg-red-400'}`} />
+                {urlStatus}
+                <button onClick={() => handleStatusChange('all')} className="text-gray-300 hover:text-gray-500 ml-0.5">
+                  <SafeIcon icon="FiX" className="text-[10px]" />
+                </button>
+              </span>
+            )}
+            <span className="text-[11px] text-gray-400 ml-auto">
+              {filtered.length} result{filtered.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+        )}
 
         {/* Bulk action bar */}
         <div className="flex items-center justify-between px-6 py-3 border-b border-gray-100 bg-gray-50/40">
@@ -211,16 +310,28 @@ const UserManager = () => {
         </div>
 
         {/* Rows */}
-        {loading ? (
+        {showSkeleton ? (
           <div className="divide-y divide-gray-100">
             {Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)}
           </div>
         ) : filtered.length === 0 ? (
           <div className="py-14 text-center">
-            <SafeIcon icon="FiUsers" className="text-gray-200 text-3xl mx-auto mb-3" />
+            <SafeIcon icon={urlSearch ? 'FiSearch' : 'FiUsers'} className="text-gray-200 text-3xl mx-auto mb-3" />
             <p className="text-sm text-gray-400">
-              {users.length === 0 ? 'No users yet. Invite someone to get started.' : 'No users match your filters.'}
+              {urlSearch
+                ? `No results for "${urlSearch}"`
+                : users.length === 0
+                  ? 'No users yet. Invite someone to get started.'
+                  : 'No users match your filters.'}
             </p>
+            {(urlSearch || urlStatus !== 'all') && (
+              <button
+                onClick={() => { setInputSearch(''); handleStatusChange('all'); }}
+                className="mt-3 text-sm font-bold text-[#E52321] hover:underline"
+              >
+                Clear filters
+              </button>
+            )}
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
