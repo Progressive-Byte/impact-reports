@@ -258,7 +258,7 @@ const ReportsModule = () => {
           {isWizard ? (
             <>
               <button
-                onClick={() => { goToList(); fetchReports(); }}
+                onClick={() => { goToList(); setLedgerFilter('all'); fetchReports('all'); }}
                 className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-[#0B0D0F] mb-1 transition-colors"
               >
                 <SafeIcon icon="FiArrowLeft" className="text-sm" />
