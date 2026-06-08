@@ -11,6 +11,13 @@ async function sendMail({ to, subject, text, html }) {
     return;
   }
 
+  // Fallback: use SMTP_USER as From if SMTP_FROM is blank
+  const from = process.env.SMTP_FROM?.trim() || process.env.SMTP_USER;
+
+  if (!from) {
+    throw new Error('SMTP_FROM (or SMTP_USER) must be set in .env');
+  }
+
   const transport = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT) || 587,
@@ -21,13 +28,9 @@ async function sendMail({ to, subject, text, html }) {
     },
   });
 
-  await transport.sendMail({
-    from: process.env.SMTP_FROM,
-    to,
-    subject,
-    text,
-    html,
-  });
+  console.log(`[MAILER] Sending to ${to} via ${process.env.SMTP_HOST}`);
+  await transport.sendMail({ from, to, subject, text, html });
+  console.log(`[MAILER] ✓ Sent to ${to}`);
 }
 
 export async function sendInviteEmail({ to, token }) {
