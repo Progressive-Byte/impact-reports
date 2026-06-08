@@ -1,24 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../common/SafeIcon';
 import CustomSelect from '../ReportsModule/reports/CustomSelect';
 import Checkbox from '../../common/Checkbox';
 import InviteModal from './components/InviteModal';
 import UserRow from './components/UserRow';
-
-const MOCK_USERS = [
-  { _id: '1', username: 'admin.lead',      email: 'admin.lead@impact.org',      role: 'superadmin',       region: 'Global',         isActive: true,  lastLogin: '2024-01-15T08:30:00' },
-  { _id: '2', username: 'field.staff1',    email: 'field.staff1@impact.org',    role: 'field_staff',      region: 'MENA',           isActive: true,  lastLogin: '2024-01-14T14:22:00' },
-  { _id: '3', username: 'temp.contractor', email: 'temp.contractor@impact.org', role: 'field_staff',      region: 'Eastern Europe', isActive: false, lastLogin: '2023-12-01T09:11:00' },
-  { _id: '4', username: 'reg.manager',     email: 'reg.manager@impact.org',     role: 'regional_manager', region: 'Asia Pacific',   isActive: true,  lastLogin: '2024-01-16T10:05:00' },
-];
+import { adminApiRequest } from '../../../../../services/adminApi';
 
 const COLS = [
-  { label: 'Email',      className: 'flex-1' },
-  { label: 'Region',     className: 'w-28 flex-shrink-0' },
-  { label: 'Role',       className: 'w-44 flex-shrink-0' },
-  { label: 'Status',     className: 'w-28 flex-shrink-0' },
-  { label: 'Last Login', className: 'w-44 flex-shrink-0' },
-  { label: 'Actions',    className: 'flex-shrink-0' },
+  { label: 'Email / User', className: 'flex-1' },
+  { label: 'Region',       className: 'w-28 flex-shrink-0' },
+  { label: 'Role',         className: 'w-44 flex-shrink-0' },
+  { label: 'Status',       className: 'w-28 flex-shrink-0' },
+  { label: 'Last Login',   className: 'w-44 flex-shrink-0' },
+  { label: 'Actions',      className: 'flex-shrink-0' },
 ];
 
 const STATUS_OPTIONS = [
@@ -27,25 +22,64 @@ const STATUS_OPTIONS = [
   { value: 'inactive', label: 'Inactive' },
 ];
 
-const UserManager = () => {
-  const [selected, setSelected]         = useState(new Set());
-  const [search, setSearch]             = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [showInvite, setShowInvite]     = useState(false);
+// ── Skeleton row ──────────────────────────────────────────────────
+const SkeletonRow = () => (
+  <div className="flex items-center gap-4 px-6 py-4 animate-pulse">
+    <div className="w-5 flex-shrink-0"><div className="w-4 h-4 bg-gray-100 rounded" /></div>
+    <div className="flex-1 flex items-center gap-3">
+      <div className="w-8 h-8 rounded-full bg-gray-100 flex-shrink-0" />
+      <div className="space-y-1.5 flex-1">
+        <div className="h-3 bg-gray-100 rounded w-48" />
+        <div className="h-2.5 bg-gray-100 rounded w-28" />
+      </div>
+    </div>
+    <div className="w-28 flex-shrink-0"><div className="h-3 bg-gray-100 rounded w-16" /></div>
+    <div className="w-44 flex-shrink-0"><div className="h-8 bg-gray-100 rounded-xl w-32" /></div>
+    <div className="w-28 flex-shrink-0"><div className="h-6 bg-gray-100 rounded-full w-20" /></div>
+    <div className="w-44 flex-shrink-0"><div className="h-3 bg-gray-100 rounded w-28" /></div>
+    <div className="flex-shrink-0 flex gap-2">
+      <div className="h-7 w-16 bg-gray-100 rounded-xl" />
+      <div className="h-7 w-20 bg-gray-100 rounded-xl" />
+    </div>
+  </div>
+);
 
-  const filtered = MOCK_USERS.filter(u => {
+const UserManager = () => {
+  const [users,        setUsers]        = useState([]);
+  const [loading,      setLoading]      = useState(true);
+  const [selected,     setSelected]     = useState(new Set());
+  const [search,       setSearch]       = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [showInvite,   setShowInvite]   = useState(false);
+
+  const fetchUsers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await adminApiRequest('/api/admin/admins');
+      setUsers(Array.isArray(data) ? data : []);
+    } catch (err) {
+      toast.error(err.message || 'Failed to load users');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => { fetchUsers(); }, [fetchUsers]);
+
+  const filtered = users.filter(u => {
     const q = search.toLowerCase();
     const matchSearch =
-      u.email.toLowerCase().includes(q) ||
-      u.region.toLowerCase().includes(q);
+      (u.email    || '').toLowerCase().includes(q) ||
+      (u.username || '').toLowerCase().includes(q) ||
+      (u.region   || '').toLowerCase().includes(q);
     const matchStatus =
       statusFilter === 'all' ||
-      (statusFilter === 'active' && u.isActive) ||
+      (statusFilter === 'active'   &&  u.isActive) ||
       (statusFilter === 'inactive' && !u.isActive);
     return matchSearch && matchStatus;
   });
 
-  const allSelected  = filtered.length > 0 && filtered.every(u => selected.has(u._id));
+  const allSelected   = filtered.length > 0 && filtered.every(u => selected.has(u._id));
   const selectedCount = selected.size;
 
   const toggleAll = () =>
@@ -57,9 +91,21 @@ const UserManager = () => {
     setSelected(next);
   };
 
+  const handleUpdate = (updated) =>
+    setUsers(prev => prev.map(u => u._id === updated._id ? { ...u, ...updated } : u));
+
+  const handleDelete = (id) => {
+    setUsers(prev => prev.filter(u => u._id !== id));
+    setSelected(prev => { const n = new Set(prev); n.delete(id); return n; });
+  };
+
   return (
     <div className="space-y-5">
-      <InviteModal open={showInvite} onClose={() => setShowInvite(false)} />
+      <InviteModal
+        open={showInvite}
+        onClose={() => setShowInvite(false)}
+        onInviteSent={fetchUsers}
+      />
 
       {/* Page header */}
       <div className="flex items-start justify-between">
@@ -83,25 +129,35 @@ const UserManager = () => {
         <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
           <div className="flex items-center gap-2.5">
             <SafeIcon icon="FiUsers" className="text-gray-400 text-base" />
-            <h3 className="text-sm font-black text-[#0B0D0F]">Directory</h3>
+            <h3 className="text-sm font-black text-[#0B0D0F]">
+              Directory
+              {!loading && (
+                <span className="ml-2 text-xs font-bold text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                  {users.length}
+                </span>
+              )}
+            </h3>
           </div>
           <div className="flex items-center gap-3">
             <div className="relative">
               <SafeIcon icon="FiSearch" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
               <input
                 type="text"
-                placeholder="Search email or region..."
+                placeholder="Search email, user or region…"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-sm placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] bg-white w-56"
+                className="border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-sm placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] bg-white w-60"
               />
             </div>
-            <CustomSelect
-              value={statusFilter}
-              onChange={setStatusFilter}
-              options={STATUS_OPTIONS}
-              className="w-36"
-            />
+            <CustomSelect value={statusFilter} onChange={setStatusFilter} options={STATUS_OPTIONS} className="w-36" />
+            <button
+              onClick={fetchUsers}
+              disabled={loading}
+              className="w-9 h-9 border border-gray-200 rounded-xl flex items-center justify-center text-gray-400 hover:text-[#0B0D0F] hover:bg-gray-50 disabled:opacity-40 transition-colors"
+              title="Refresh"
+            >
+              <SafeIcon icon="FiRefreshCw" className={`text-sm ${loading ? 'animate-spin' : ''}`} />
+            </button>
           </div>
         </div>
 
@@ -146,8 +202,17 @@ const UserManager = () => {
         </div>
 
         {/* Rows */}
-        {filtered.length === 0 ? (
-          <div className="py-14 text-center text-sm text-gray-400">No users found.</div>
+        {loading ? (
+          <div className="divide-y divide-gray-100">
+            {Array.from({ length: 4 }).map((_, i) => <SkeletonRow key={i} />)}
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="py-14 text-center">
+            <SafeIcon icon="FiUsers" className="text-gray-200 text-3xl mx-auto mb-3" />
+            <p className="text-sm text-gray-400">
+              {users.length === 0 ? 'No users yet. Invite someone to get started.' : 'No users match your filters.'}
+            </p>
+          </div>
         ) : (
           <div className="divide-y divide-gray-100">
             {filtered.map(u => (
@@ -156,6 +221,8 @@ const UserManager = () => {
                 user={u}
                 isSelected={selected.has(u._id)}
                 onToggleSelect={() => toggleOne(u._id)}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
               />
             ))}
           </div>
