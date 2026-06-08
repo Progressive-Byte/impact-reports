@@ -37,7 +37,6 @@ const TableHead = () => (
 const RecordLedger = ({
   reports = [],
   loading = false,
-  filter  = 'all',
   search  = '',
   sort    = 'recent',
   isSuperAdmin,
@@ -46,11 +45,9 @@ const RecordLedger = ({
 }) => {
   const [confirmId, setConfirmId] = useState(null);
 
+  // Status filter is server-side; only search + sort are applied client-side
   const entries = reports
-    .filter(r =>
-      (filter === 'all' || r.status === filter) &&
-      (r.projectName || '').toLowerCase().includes(search.toLowerCase())
-    )
+    .filter(r => (r.projectName || '').toLowerCase().includes(search.toLowerCase()))
     .sort((a, b) =>
       sort === 'recent'
         ? new Date(b.createdAt) - new Date(a.createdAt)
