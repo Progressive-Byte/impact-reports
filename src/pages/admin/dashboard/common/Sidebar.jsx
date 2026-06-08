@@ -1,22 +1,29 @@
 import SafeIcon from "../../../../common/SafeIcon";
+import { useAdminAuth } from "../../../../context/AdminAuthContext";
 import { reports } from "../../../../data/mockData";
 
 const NAV = [
-  { id: 'overview', label: 'Admin Dashboard', icon: 'FiGrid',     badge: null },
-  { id: 'reports',  label: 'Reports Module',  icon: 'FiFileText', badge: reports.length },
-  { id: 'users',   label: 'User Management', icon: 'FiUsers',    badge: null },
-  { id: 'settings', label: 'Settings',        icon: 'FiSettings', badge: null },
+  { id: 'overview', label: 'Admin Dashboard', icon: 'FiGrid',     badge: null,            superadminOnly: false },
+  { id: 'reports',  label: 'Reports Module',  icon: 'FiFileText', badge: reports.length,  superadminOnly: false },
+  { id: 'users',    label: 'User Management', icon: 'FiUsers',    badge: null,            superadminOnly: true  },
+  { id: 'settings', label: 'Settings',        icon: 'FiSettings', badge: null,            superadminOnly: true  },
 ];
 
 const STATUS_ITEMS = [
-  { dot: true,         label: 'Database',   value: 'Online',  valueClass: 'text-white' },
-  { icon: 'FiLock',    label: 'Connection', value: 'TLS 1.3', valueClass: 'text-blue-400' },
-  { icon: 'FiShield',  label: 'Encryption', value: 'AES-256', valueClass: 'text-white' },
+  { dot: true,        label: 'Database',   value: 'Online',  valueClass: 'text-white' },
+  { icon: 'FiLock',   label: 'Connection', value: 'TLS 1.3', valueClass: 'text-blue-400' },
+  { icon: 'FiShield', label: 'Encryption', value: 'AES-256', valueClass: 'text-white' },
 ];
 
 export { NAV };
 
-const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
+const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => {
+  const { admin } = useAdminAuth();
+  const isSuperAdmin = admin?.role === 'superadmin';
+
+  const visibleNav = NAV.filter(n => !n.superadminOnly || isSuperAdmin);
+
+  return (
     <div className={`flex flex-col h-full ${mobile ? '' : 'w-64'}`}>
       {/* Logo */}
       <div className="px-5 py-5 border-b border-white/5">
@@ -35,7 +42,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
       <nav className="flex-1 px-3 py-4 overflow-y-auto">
         <p className="text-[11px] font-black text-[#909098] uppercase tracking-widest px-3 mb-2">Platform</p>
         <div className="space-y-0.5">
-          {NAV.map(({ id, label, icon, badge }) => (
+          {visibleNav.map(({ id, label, icon, badge }) => (
             <button
               key={id}
               onClick={() => { setSection(id); setSidebarOpen(false); }}
@@ -84,5 +91,6 @@ const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => (
       </div>
     </div>
   );
+};
 
 export default Sidebar;
