@@ -78,6 +78,28 @@ router.patch('/admins/:id/toggle', async (req, res) => {
   }
 });
 
+// PATCH /api/admin/admins/:id/role
+router.patch('/admins/:id/role', async (req, res) => {
+  try {
+    if (req.admin.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Only superadmin can change roles' });
+    }
+    const { role } = req.body;
+    if (!['superadmin', 'admin'].includes(role)) {
+      return res.status(400).json({ message: 'Role must be superadmin or admin' });
+    }
+    const admin = await Admin.findByIdAndUpdate(
+      req.params.id,
+      { role },
+      { new: true, select: '-password' }
+    );
+    if (!admin) return res.status(404).json({ message: 'Admin not found' });
+    res.json(admin);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // PUT /api/admin/settings/password
 router.put('/settings/password', async (req, res) => {
   try {
