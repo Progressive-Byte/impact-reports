@@ -17,11 +17,26 @@ router.get('/stats', async (req, res) => {
   }
 });
 
-// GET /api/admin/admins
+// GET /api/admin/admins?page=1&limit=10&q=search&status=active|inactive
 router.get('/admins', async (req, res) => {
   try {
-    const admins = await Admin.find().select('-password').sort('-createdAt');
-    res.json(admins);
+    const { page, limit, skip } = parsePagination(req.query, { defaultLimit: 10, maxLimit: 100 });
+    const { q, status } = req.query;
+
+    const filter = {};
+    if (q && q.trim()) {
+      const regex = new RegExp(q.trim(), 'i');
+      filter.$or = [{ username: regex }, { email: regex }, { region: regex }];
+    }
+    if (status === 'active')   filter.isActive = true;
+    if (status === 'inactive') filter.isActive = false;
+
+    const [items, total] = await Promise.all([
+      Admin.find(filter).select('-password').sort('-createdAt').skip(skip).limit(limit),
+      Admin.countDocuments(filter),
+    ]);
+
+    res.json({ items, meta: buildMeta({ page, limit, total }) });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
