@@ -1,62 +1,46 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import { setCookie, getCookie, deleteCookie } from '../utils/cookies';
 
 const AdminAuthContext = createContext(null);
-
-const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours in ms
-
-const isSessionExpired = () => {
-  const loginTime = localStorage.getItem('adminLoginTime');
-  if (!loginTime) return true;
-  return Date.now() - parseInt(loginTime, 10) > SESSION_DURATION;
-};
 
 export const AdminAuthProvider = ({ children }) => {
   const [admin, setAdmin] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const clearSession = useCallback(() => {
-    localStorage.removeItem('adminToken');
+  function clearSession() {
+    deleteCookie('adminToken');
     localStorage.removeItem('adminData');
-    localStorage.removeItem('adminLoginTime');
     setAdmin(null);
-  }, []);
+  }
 
-  // On mount: restore session only if not expired
+  // On mount: restore session if the 24 h cookie is still alive
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
+    const token = getCookie('adminToken');
     const data  = localStorage.getItem('adminData');
-    if (token && data && !isSessionExpired()) {
+    if (token && data) {
       try { setAdmin(JSON.parse(data)); } catch { clearSession(); }
-    } else if (token) {
-      // Token exists but 24 h window has passed — wipe it
-      clearSession();
     }
     setLoading(false);
-  }, [clearSession]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  // Check every 60 s while the tab is open
+  // Auto-logout when any API call returns 401 (token expired on backend)
   useEffect(() => {
-    if (!admin) return;
-    const id = setInterval(() => {
-      if (isSessionExpired()) clearSession();
-    }, 60 * 1000);
-    return () => clearInterval(id);
-  }, [admin, clearSession]);
+    const handleUnauthorized = () => clearSession();
+    window.addEventListener('admin:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('admin:unauthorized', handleUnauthorized);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const login = (token, adminData) => {
-    localStorage.setItem('adminToken', token);
+    setCookie('adminToken', token, 1); // cookie expires in 1 day (24 h)
     localStorage.setItem('adminData', JSON.stringify(adminData));
-    localStorage.setItem('adminLoginTime', String(Date.now()));
     setAdmin(adminData);
   };
 
   const logout = () => clearSession();
 
-  // Returns null (and wipes session) if the 24 h window has passed
-  const getToken = () => {
-    if (isSessionExpired()) { clearSession(); return null; }
-    return localStorage.getItem('adminToken');
-  };
+  const getToken = () => getCookie('adminToken');
 
   return (
     <AdminAuthContext.Provider value={{ admin, loading, login, logout, getToken }}>
