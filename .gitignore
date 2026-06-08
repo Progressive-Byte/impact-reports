@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .env
-*.md
+README.md
 AGENTS.md
+CLAUDE.md
