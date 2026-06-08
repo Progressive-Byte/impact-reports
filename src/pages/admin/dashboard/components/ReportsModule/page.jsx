@@ -1,5 +1,8 @@
-import { useState, useMemo } from 'react';
-import { reports } from '../../../../../data/mockData';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { useAdminAuth } from '../../../../../context/AdminAuthContext';
+import { adminApiRequest } from '../../../../../services/adminApi';
 import SafeIcon from '../../../../../common/SafeIcon';
 import StepIndicator, { STEPS } from './reports/TabNav';
 import GeneralTab from './reports/GeneralTab';
@@ -9,81 +12,269 @@ import MediaTimelineTab from './reports/MediaTimelineTab';
 import RecordLedger from './reports/RecordLedger';
 import StatCard from './reports/StatCard';
 import CustomSelect from './reports/CustomSelect';
+import CreateReportModal from './reports/CreateReportModal';
 
-const INITIAL_FORM = {
-  projectName: '', assignedTo: '', projectLead: '', fiscalYear: 'FY24',
-  livesImpacted: 0, status: 'Draft', projectBackground: '', strategicResponse: '',
-  children: 0, women: 0, men: 0,
-  deliverables: [{ id: 1, label: '', count: '' }],
-  galleryUrl: '',
-  milestones: [{ id: 1, date: '', title: '', notes: '' }],
+// ── Constants ────────────────────────────────────────────────────────
+const STEP_KEYS    = ['general', 'narrative', 'metrics', 'media'];
+const TOTAL_STEPS  = STEPS.length;
+const STEP_CONTENT = [GeneralTab, NarrativeTab, MetricsTab, MediaTimelineTab];
+const FILTERS      = ['all', 'published', 'pending', 'draft'];
+
+// ── Blank form ────────────────────────────────────────────────────────
+const BLANK_FORM = {
+  projectName:       '',
+  assignedTo:        [],
+  projectLead:       '',
+  fiscalYear:        'FY25',
+  livesImpacted:     0,
+  projectBackground: '',
+  strategicResponse: '',
+  children:          0,
+  women:             0,
+  men:               0,
+  deliverables:      [{ id: 1, label: '', count: '' }],
+  galleryUrl:        '',
+  milestones:        [{ id: 1, date: '', title: '', notes: '' }],
 };
 
-const FILTERS = ['all', 'published', 'pending'];
-const TOTAL_STEPS = STEPS.length;
+// ── Convert API report object → local form state ──────────────────────
+const reportToForm = (report) => ({
+  projectName:       report.projectName || '',
+  assignedTo:        (report.assignedTo || []).map(a => String(a._id ?? a)),
+  projectLead:       report.projectLead || '',
+  fiscalYear:        report.fiscalYear || 'FY25',
+  livesImpacted:     report.livesImpacted ?? 0,
+  projectBackground: report.projectBackground || '',
+  strategicResponse: report.strategicResponse || '',
+  children:          report.children ?? 0,
+  women:             report.women ?? 0,
+  men:               report.men ?? 0,
+  deliverables:      (report.deliverables || []).map((d, i) => ({ ...d, id: i + 1 })),
+  galleryUrl:        report.galleryUrl || '',
+  milestones:        (report.milestones || []).map((m, i) => ({ ...m, id: i + 1 })),
+});
 
-const STEP_CONTENT = [GeneralTab, NarrativeTab, MetricsTab, MediaTimelineTab];
+// ── Extract only the fields relevant to a step for the API payload ────
+const buildStepPayload = {
+  general:   (f) => ({
+    projectName:   f.projectName,
+    assignedTo:    f.assignedTo,
+    projectLead:   f.projectLead,
+    fiscalYear:    f.fiscalYear,
+    livesImpacted: Number(f.livesImpacted) || 0,
+  }),
+  narrative: (f) => ({
+    projectBackground: f.projectBackground,
+    strategicResponse: f.strategicResponse,
+  }),
+  metrics:   (f) => ({
+    children:    Number(f.children) || 0,
+    women:       Number(f.women) || 0,
+    men:         Number(f.men) || 0,
+    deliverables: f.deliverables.map(({ label, count }) => ({ label, count: Number(count) || 0 })),
+  }),
+  media:     (f) => ({
+    galleryUrl: f.galleryUrl,
+    milestones: f.milestones.map(({ date, title, notes }) => ({ date, title, notes })),
+  }),
+};
 
+// ── Component ─────────────────────────────────────────────────────────
 const ReportsModule = () => {
-  const [step, setStep]                 = useState(1);
-  const [showForm, setShowForm]         = useState(false);
-  const [form, setForm]                 = useState(INITIAL_FORM);
-  const [ledgerFilter, setLedgerFilter] = useState('all');
-  const [ledgerSearch, setLedgerSearch] = useState('');
-  const [ledgerSort, setLedgerSort]     = useState('recent');
+  const { admin }    = useAdminAuth();
+  const isSuperAdmin = admin?.role === 'superadmin';
 
-  const stats = useMemo(() => {
-    const total = reports.reduce((s, r) => s + r.metrics.beneficiaries, 0);
-    return {
-      globalLives:   total.toLocaleString(),
-      ledgerEntries: reports.length,
-      avgImpact:     Math.round(total / reports.length).toLocaleString(),
-    };
-  }, []);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const reportId  = searchParams.get('reportId');
+  const stepKey   = STEP_KEYS.includes(searchParams.get('step')) ? searchParams.get('step') : 'general';
+  const stepIndex = STEP_KEYS.indexOf(stepKey);         // 0-based
+  const step      = stepIndex + 1;                       // 1-based for StepIndicator
+  const isWizard  = Boolean(reportId);
+
+  const [form,          setForm]          = useState(BLANK_FORM);
+  const [reports,       setReports]       = useState([]);
+  const [adminOptions,  setAdminOptions]  = useState([]);
+  const [loadingList,   setLoadingList]   = useState(true);
+  const [loadingReport, setLoadingReport] = useState(false);
+  const [saving,        setSaving]        = useState(false);
+  const [showCreate,    setShowCreate]    = useState(false);
+  const [ledgerFilter,  setLedgerFilter]  = useState('all');
+  const [ledgerSearch,  setLedgerSearch]  = useState('');
+  const [ledgerSort,    setLedgerSort]    = useState('recent');
 
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
-  const openForm = (entry = null) => {
-    setForm(entry ? { ...INITIAL_FORM, ...entry } : INITIAL_FORM);
-    setStep(1);
-    setShowForm(true);
+  // ── Load admin users (role=admin) for Assigned To dropdown ──────────
+  useEffect(() => {
+    adminApiRequest('/api/admin/admins?role=admin&limit=100')
+      .then(data => setAdminOptions(
+        (data.items || []).map(a => ({ value: a._id, label: a.username || a.email }))
+      ))
+      .catch(() => {});
+  }, []);
+
+  // ── Fetch report list ────────────────────────────────────────────────
+  const fetchReports = useCallback(async () => {
+    setLoadingList(true);
+    try {
+      const data = await adminApiRequest('/api/reports');
+      setReports(data.reports || []);
+    } catch (err) {
+      toast.error(err.message || 'Failed to load reports');
+    } finally {
+      setLoadingList(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isWizard) fetchReports();
+  }, [isWizard, fetchReports]);
+
+  // ── Load single report when entering wizard ──────────────────────────
+  useEffect(() => {
+    if (!reportId) { setForm(BLANK_FORM); return; }
+    setLoadingReport(true);
+    adminApiRequest(`/api/reports/${reportId}`)
+      .then(data => setForm(reportToForm(data.report)))
+      .catch(err => {
+        toast.error(err.message || 'Failed to load report');
+        setSearchParams({}, { replace: true });
+      })
+      .finally(() => setLoadingReport(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reportId]);
+
+  // ── Navigation helpers ───────────────────────────────────────────────
+  const goToList = useCallback(() => {
+    setSearchParams({}, { replace: true });
+  }, [setSearchParams]);
+
+  const goToStep = useCallback((key) => {
+    setSearchParams({ reportId, step: key }, { replace: true });
+  }, [reportId, setSearchParams]);
+
+  const openWizard = (report) => {
+    setForm(reportToForm(report));
+    setSearchParams({ reportId: report._id, step: 'general' }, { replace: true });
   };
 
-  const closeForm = () => setShowForm(false);
-
+  // ── Wizard: Back ─────────────────────────────────────────────────────
   const handleBack = () => {
-    if (step === 1) closeForm();
-    else setStep(s => s - 1);
+    if (step === 1) {
+      goToList();
+      fetchReports();
+    } else {
+      goToStep(STEP_KEYS[stepIndex - 1]);
+    }
   };
 
-  const handleNext = () => setStep(s => Math.min(s + 1, TOTAL_STEPS));
+  // ── Wizard: Save & Next / Submit ─────────────────────────────────────
+  const handleNext = async () => {
+    if (!form.projectName.trim() && stepKey === 'general') {
+      return toast.error('Project name is required');
+    }
 
-  const handleSubmit = () => {
-    // TODO: POST form to API
-    closeForm();
+    setSaving(true);
+    try {
+      const payload = buildStepPayload[stepKey](form);
+      const data    = await adminApiRequest(`/api/reports/${reportId}/step/${stepKey}`, {
+        method: 'PATCH',
+        body:   JSON.stringify(payload),
+      });
+
+      const isLastStep = stepKey === 'media';
+      if (isLastStep) {
+        toast.success('Report submitted successfully');
+        goToList();
+        fetchReports();
+      } else {
+        setForm(reportToForm(data.report));
+        toast.success('Step saved');
+        goToStep(STEP_KEYS[stepIndex + 1]);
+      }
+    } catch (err) {
+      toast.error(err.message || 'Failed to save step');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const StepContent = STEP_CONTENT[step - 1];
+  // ── Create report (from modal) ───────────────────────────────────────
+  const handleCreated = (report) => {
+    setShowCreate(false);
+    openWizard(report);
+  };
 
+  // ── Delete report ────────────────────────────────────────────────────
+  const handleDelete = async (id) => {
+    try {
+      await adminApiRequest(`/api/reports/${id}`, { method: 'DELETE' });
+      setReports(prev => prev.filter(r => r._id !== id));
+      toast.success('Report deleted');
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete');
+    }
+  };
+
+  // ── Stats (from real data) ───────────────────────────────────────────
+  const stats = useMemo(() => {
+    const total = reports.reduce((s, r) => s + (r.livesImpacted || 0), 0);
+    return {
+      globalLives:   total.toLocaleString(),
+      ledgerEntries: reports.length,
+      avgImpact:     reports.length ? Math.round(total / reports.length).toLocaleString() : '0',
+    };
+  }, [reports]);
+
+  const StepContent = STEP_CONTENT[stepIndex];
+
+  // ── Render ────────────────────────────────────────────────────────────
   return (
     <div className="space-y-5">
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <StatCard icon="FiGlobe"      label="Global Lives Reached" value={stats.globalLives}   iconBg="bg-gray-100" />
-        <StatCard icon="FiClipboard"  label="Ledger Entries"       value={stats.ledgerEntries} iconBg="bg-gray-100" />
-        <StatCard icon="FiTrendingUp" label="Avg Impact / Node"    value={stats.avgImpact}     iconBg="bg-green-50" />
-      </div>
+      <CreateReportModal
+        open={showCreate}
+        onClose={() => setShowCreate(false)}
+        onCreated={handleCreated}
+        adminOptions={adminOptions}
+      />
 
-      {/* Section header */}
+      {/* ── Stats row (list view only) ─────────────────────────────── */}
+      {!isWizard && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <StatCard icon="FiGlobe"      label="Global Lives Reached" value={stats.globalLives}   iconBg="bg-gray-100" />
+          <StatCard icon="FiClipboard"  label="Ledger Entries"       value={stats.ledgerEntries} iconBg="bg-gray-100" />
+          <StatCard icon="FiTrendingUp" label="Avg Impact / Node"    value={stats.avgImpact}     iconBg="bg-green-50" />
+        </div>
+      )}
+
+      {/* ── Section header ────────────────────────────────────────── */}
       <div className="flex items-center justify-between px-1">
         <div>
-          <h2 className="text-2xl font-black text-[#0B0D0F] tracking-tight">Impact Core</h2>
-          <p className="text-sm text-gray-400 mt-0.5">Technical reporting &amp; executive accountability</p>
+          {isWizard ? (
+            <>
+              <button
+                onClick={() => { goToList(); fetchReports(); }}
+                className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-[#0B0D0F] mb-1 transition-colors"
+              >
+                <SafeIcon icon="FiArrowLeft" className="text-sm" />
+                Back to reports
+              </button>
+              <h2 className="text-2xl font-black text-[#0B0D0F] tracking-tight">
+                {form.projectName || 'New Report'}
+              </h2>
+            </>
+          ) : (
+            <>
+              <h2 className="text-2xl font-black text-[#0B0D0F] tracking-tight">Impact Core</h2>
+              <p className="text-sm text-gray-400 mt-0.5">Technical reporting &amp; executive accountability</p>
+            </>
+          )}
         </div>
-        {!showForm && (
+
+        {!isWizard && isSuperAdmin && (
           <button
-            onClick={() => openForm()}
+            onClick={() => setShowCreate(true)}
             className="flex items-center gap-2 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors"
           >
             <SafeIcon icon="FiPlus" className="text-base" />
@@ -92,9 +283,8 @@ const ReportsModule = () => {
         )}
       </div>
 
-      {showForm ? (
-
-        /* ── Step wizard form ── */
+      {/* ── Wizard ────────────────────────────────────────────────── */}
+      {isWizard ? (
         <div className="bg-white border border-gray-200 rounded-3xl shadow-sm">
 
           {/* Step indicator */}
@@ -102,47 +292,55 @@ const ReportsModule = () => {
             <StepIndicator current={step} />
           </div>
 
-          {/* Active step content */}
+          {/* Step content */}
           <div className="px-8 py-7">
-            <StepContent form={form} update={update} />
+            {loadingReport ? (
+              <div className="space-y-4 animate-pulse">
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <div key={i} className="h-12 bg-gray-100 rounded-xl" />
+                ))}
+              </div>
+            ) : (
+              <StepContent form={form} update={update} adminOptions={adminOptions} />
+            )}
           </div>
 
           {/* Footer navigation */}
           <div className="px-8 py-5 border-t border-gray-100 bg-gray-50/50 rounded-b-3xl flex items-center justify-between">
             <p className="text-xs text-gray-400 flex items-center gap-1.5">
               <SafeIcon icon="FiShield" className="text-xs" />
-              Step {step} of {TOTAL_STEPS} · AES-256 encrypted
+              Step {step} of {TOTAL_STEPS} · saved on Next
             </p>
             <div className="flex items-center gap-3">
               <button
                 onClick={handleBack}
-                className="px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors"
+                disabled={saving}
+                className="px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 disabled:opacity-50 transition-colors"
               >
                 {step === 1 ? 'Cancel' : '← Back'}
               </button>
-              {step < TOTAL_STEPS ? (
-                <button
-                  onClick={handleNext}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white rounded-xl text-sm font-bold transition-colors"
-                >
-                  Next <SafeIcon icon="FiArrowRight" className="text-sm" />
-                </button>
-              ) : (
-                <button
-                  onClick={handleSubmit}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-[#E52321] hover:bg-[#c91d1b] text-white rounded-xl text-sm font-bold transition-colors"
-                >
-                  <SafeIcon icon="FiCheck" className="text-sm" />
-                  Submit Report
-                </button>
-              )}
+              <button
+                onClick={handleNext}
+                disabled={saving || loadingReport}
+                className={`flex items-center gap-2 px-5 py-2.5 text-white rounded-xl text-sm font-bold transition-colors disabled:opacity-50 ${
+                  step < TOTAL_STEPS ? 'bg-[#0B0D0F] hover:bg-[#1a1d20]' : 'bg-[#E52321] hover:bg-[#c91d1b]'
+                }`}
+              >
+                {saving && (
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                )}
+                {step < TOTAL_STEPS ? (
+                  <>Save &amp; Next <SafeIcon icon="FiArrowRight" className="text-sm" /></>
+                ) : (
+                  <><SafeIcon icon="FiCheck" className="text-sm" /> Submit Report</>
+                )}
+              </button>
             </div>
           </div>
         </div>
 
       ) : (
-
-        /* ── Table view ── */
+        /* ── List view ──────────────────────────────────────────── */
         <div className="space-y-4">
 
           {/* Filter bar */}
@@ -167,7 +365,7 @@ const ReportsModule = () => {
               <SafeIcon icon="FiSearch" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
               <input
                 type="text"
-                placeholder="Search records..."
+                placeholder="Search reports..."
                 value={ledgerSearch}
                 onChange={e => setLedgerSearch(e.target.value)}
                 className="w-full border border-gray-200 rounded-xl pl-9 pr-4 py-2.5 text-sm placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] bg-white"
@@ -176,7 +374,7 @@ const ReportsModule = () => {
 
             <CustomSelect
               value={ledgerSort}
-              onChange={val => setLedgerSort(val)}
+              onChange={setLedgerSort}
               options={[
                 { value: 'recent', label: 'Recent' },
                 { value: 'oldest', label: 'Oldest' },
@@ -185,16 +383,18 @@ const ReportsModule = () => {
             />
           </div>
 
-          {/* Table */}
           <RecordLedger
+            reports={reports}
+            loading={loadingList}
             filter={ledgerFilter}
             search={ledgerSearch}
             sort={ledgerSort}
-            onEdit={entry => openForm(entry)}
+            isSuperAdmin={isSuperAdmin}
+            onEdit={openWizard}
+            onDelete={handleDelete}
           />
         </div>
       )}
-
     </div>
   );
 };
