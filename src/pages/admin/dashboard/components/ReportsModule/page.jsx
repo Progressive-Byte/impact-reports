@@ -391,7 +391,6 @@ const ReportsModule = () => {
           <RecordLedger
             reports={reports}
             loading={loadingList}
-            filter={ledgerFilter}
             search={ledgerSearch}
             sort={ledgerSort}
             isSuperAdmin={isSuperAdmin}
