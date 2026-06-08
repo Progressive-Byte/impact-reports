@@ -121,7 +121,6 @@ const UserManager = () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
-      params.set('limit', String(LIMIT));
       const page   = opts.page   ?? urlPage;
       const search = opts.search ?? urlSearch;
       const status = opts.status ?? urlStatus;
