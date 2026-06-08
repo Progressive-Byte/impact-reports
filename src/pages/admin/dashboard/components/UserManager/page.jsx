@@ -52,6 +52,7 @@ const UserManager = () => {
   const [search,       setSearch]       = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [showInvite,   setShowInvite]   = useState(false);
+  const [editingUser,  setEditingUser]  = useState(null);
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
