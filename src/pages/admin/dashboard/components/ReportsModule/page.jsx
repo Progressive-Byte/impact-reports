@@ -353,8 +353,9 @@ const ReportsModule = () => {
               {FILTERS.map(f => (
                 <button
                   key={f}
-                  onClick={() => setLedgerFilter(f)}
-                  className={`px-4 py-2 rounded-lg text-xs font-bold capitalize transition-all ${
+                  onClick={() => { setLedgerFilter(f); fetchReports(f); }}
+                  disabled={loadingList}
+                  className={`px-4 py-2 rounded-lg text-xs font-bold capitalize transition-all disabled:opacity-60 ${
                     ledgerFilter === f
                       ? 'bg-white text-gray-800 shadow-sm'
                       : 'text-gray-400 hover:text-gray-600'
