@@ -44,7 +44,7 @@ const StatusBadge = ({ isActive }) => (
   </span>
 );
 
-const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete }) => {
+const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit }) => {
   const [role,          setRole]    = useState(user.role);
   const [isActive,      setActive]  = useState(user.isActive);
   const [confirmRevoke, setConfirm] = useState(false);
