@@ -21,7 +21,6 @@ export const AdminAuthProvider = ({ children }) => {
       try { setAdmin(JSON.parse(data)); } catch { clearSession(); }
     }
     setLoading(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
