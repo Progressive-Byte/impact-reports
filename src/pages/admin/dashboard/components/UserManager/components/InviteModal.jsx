@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../../common/SafeIcon';
 import CustomSelect from '../../ReportsModule/reports/CustomSelect';
+import { adminApiRequest } from '../../../../../../services/adminApi';
 
 const ROLE_OPTIONS = [
-  { value: 'field_staff',      label: 'Field Staff' },
-  { value: 'regional_manager', label: 'Regional Manager' },
-  { value: 'superadmin',       label: 'Superadmin' },
+  { value: 'admin',      label: 'Admin' },
+  { value: 'superadmin', label: 'Superadmin' },
 ];
 
 const REGION_OPTIONS = [
@@ -16,14 +17,36 @@ const REGION_OPTIONS = [
   { value: 'asia_pacific',   label: 'Asia Pacific' },
 ];
 
-const INITIAL = { email: '', role: 'field_staff', region: 'global' };
+const INITIAL = { email: '', role: 'admin', region: 'global' };
 
-const InviteModal = ({ open, onClose }) => {
-  const [form, setForm] = useState(INITIAL);
+const InviteModal = ({ open, onClose, onInviteSent }) => {
+  const [form,    setForm]    = useState(INITIAL);
+  const [loading, setLoading] = useState(false);
 
   const handleClose = () => {
+    if (loading) return;
     setForm(INITIAL);
     onClose();
+  };
+
+  const handleSend = async () => {
+    if (!form.email.trim()) { toast.error('Email is required'); return; }
+
+    setLoading(true);
+    try {
+      await adminApiRequest('/api/invite', {
+        method: 'POST',
+        body: JSON.stringify(form),
+      });
+      toast.success(`Invite sent to ${form.email}`);
+      setForm(INITIAL);
+      onClose();
+      onInviteSent?.();
+    } catch (err) {
+      toast.error(err.message || 'Failed to send invite');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -62,10 +85,11 @@ const InviteModal = ({ open, onClose }) => {
               </label>
               <input
                 type="email"
-                placeholder="name@impact.org"
+                placeholder="name@example.org"
                 value={form.email}
                 onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] bg-white transition-all"
+                disabled={loading}
+                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] bg-white transition-all disabled:opacity-50"
               />
             </div>
 
@@ -77,6 +101,7 @@ const InviteModal = ({ open, onClose }) => {
                   value={form.role}
                   onChange={val => setForm(p => ({ ...p, role: val }))}
                   options={ROLE_OPTIONS}
+                  disabled={loading}
                 />
               </div>
               <div>
@@ -85,6 +110,7 @@ const InviteModal = ({ open, onClose }) => {
                   value={form.region}
                   onChange={val => setForm(p => ({ ...p, region: val }))}
                   options={REGION_OPTIONS}
+                  disabled={loading}
                 />
               </div>
             </div>
@@ -93,15 +119,21 @@ const InviteModal = ({ open, onClose }) => {
             <div className="flex items-center justify-end gap-3">
               <button
                 onClick={handleClose}
-                className="px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors"
+                disabled={loading}
+                className="px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 disabled:opacity-40 transition-colors"
               >
                 Cancel
               </button>
               <button
-                onClick={handleClose}
-                className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-colors"
+                onClick={handleSend}
+                disabled={loading}
+                className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] disabled:opacity-50 text-white px-6 py-2.5 rounded-xl text-sm font-bold transition-colors"
               >
-                Send Invite
+                {loading ? (
+                  <><div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" /> Sending…</>
+                ) : (
+                  <><SafeIcon icon="FiSend" className="text-sm" /> Send Invite</>
+                )}
               </button>
             </div>
           </motion.div>
