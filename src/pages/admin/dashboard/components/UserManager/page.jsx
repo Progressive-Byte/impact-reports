@@ -25,7 +25,7 @@ const STATUS_OPTIONS = [
   { value: 'inactive', label: 'Inactive' },
 ];
 
-const LIMIT = 10;
+const SKELETON_ROWS = 5; // fallback count while meta hasn't loaded yet
 
 const SkeletonRow = () => (
   <div className="flex items-center gap-4 px-6 py-4 animate-pulse">
