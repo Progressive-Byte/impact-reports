@@ -1,6 +1,7 @@
 import express from 'express';
 import Admin from '../models/Admin.js';
 import { protect } from '../middleware/auth.js';
+import { parsePagination, buildMeta } from '../utils/pagination.js';
 
 const router = express.Router();
 router.use(protect);
