@@ -345,7 +345,7 @@ const UserManager = () => {
         {/* Rows */}
         {showSkeleton ? (
           <div className="divide-y divide-gray-100">
-            {Array.from({ length: LIMIT }).map((_, i) => <SkeletonRow key={i} />)}
+            {Array.from({ length: meta?.limit ?? SKELETON_ROWS }).map((_, i) => <SkeletonRow key={i} />)}
           </div>
         ) : users.length === 0 ? (
           <div className="py-14 text-center">
