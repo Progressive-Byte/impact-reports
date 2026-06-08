@@ -4,6 +4,7 @@ import SafeIcon from '../../../../../../common/SafeIcon';
 import CustomSelect from '../../ReportsModule/reports/CustomSelect';
 import Checkbox from '../../../common/Checkbox';
 import { adminApiRequest } from '../../../../../../services/adminApi';
+import { useAdminAuth } from '../../../../../../context/AdminAuthContext';
 
 const ROLE_OPTIONS = [
   { value: 'admin',      label: 'Admin' },
@@ -45,6 +46,10 @@ const StatusBadge = ({ isActive }) => (
 );
 
 const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit }) => {
+  const { admin: currentAdmin } = useAdminAuth();
+  // Prevent a logged-in admin from modifying their own account
+  const isSelf = String(currentAdmin?._id) === String(user._id);
+
   const [role,          setRole]    = useState(user.role);
   const [isActive,      setActive]  = useState(user.isActive);
   const [confirmRevoke, setConfirm] = useState(false);
@@ -56,6 +61,7 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
   const color    = avatarColor(user.username || user.email);
 
   const handleRoleChange = async (newRole) => {
+    if (isSelf) return;
     const prev = role;
     setRole(newRole);
     setLRole(true);
@@ -107,11 +113,11 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
 
   return (
     <div className={`flex items-center gap-4 px-6 py-4 transition-colors ${
-      isSelected ? 'bg-red-50' : 'hover:bg-gray-50/60'
+      isSelected ? 'bg-red-50' : isSelf ? 'bg-blue-50/30' : 'hover:bg-gray-50/60'
     }`}>
       {/* Checkbox */}
       <div className="w-5 flex-shrink-0 flex items-center">
-        <Checkbox checked={isSelected} onChange={onToggleSelect} />
+        <Checkbox checked={isSelected} onChange={isSelf ? undefined : onToggleSelect} disabled={isSelf} />
       </div>
 
       {/* Avatar + Email */}
@@ -120,7 +126,14 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
           <span className="text-white text-[11px] font-black">{initials}</span>
         </div>
         <div className="min-w-0">
-          <p className="text-sm font-semibold text-[#0B0D0F] truncate">{user.email}</p>
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-semibold text-[#0B0D0F] truncate">{user.email}</p>
+            {isSelf && (
+              <span className="text-[10px] font-black bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full flex-shrink-0">
+                You
+              </span>
+            )}
+          </div>
           <p className="text-xs text-gray-400 truncate">{user.username}</p>
         </div>
       </div>
@@ -130,9 +143,9 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
         <span className="text-sm text-gray-500 capitalize">{(user.region || 'global').replace('_', ' ')}</span>
       </div>
 
-      {/* Role */}
+      {/* Role — read-only for own account */}
       <div className="w-44 flex-shrink-0">
-        <div className={loadingRole ? 'opacity-50 pointer-events-none' : ''}>
+        <div className={loadingRole || isSelf ? 'opacity-50 pointer-events-none' : ''}>
           <CustomSelect value={role} onChange={handleRoleChange} options={ROLE_OPTIONS} />
         </div>
       </div>
@@ -149,7 +162,10 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
 
       {/* Actions */}
       <div className="flex items-center gap-1 flex-shrink-0">
-        {confirmRevoke ? (
+        {isSelf ? (
+          // Own account — no actions allowed
+          <span className="text-[11px] text-gray-300 italic px-2">own account</span>
+        ) : confirmRevoke ? (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-400 mr-1">
               {isActive ? 'Suspend?' : 'Delete?'}
