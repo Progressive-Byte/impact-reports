@@ -174,6 +174,12 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
         ) : (
           <>
             <button
+              onClick={() => onEdit?.(user)}
+              className="px-3 py-1.5 text-xs font-bold text-gray-500 hover:text-[#0B0D0F] transition-colors"
+            >
+              Edit
+            </button>
+            <button
               onClick={() => setConfirm(true)}
               className="px-3 py-1.5 text-xs font-bold text-gray-500 hover:text-[#E52321] transition-colors"
             >
