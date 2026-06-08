@@ -87,7 +87,7 @@ const ReportsModule = () => {
             className="flex items-center gap-2 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors"
           >
             <SafeIcon icon="FiPlus" className="text-base" />
-            New Entry
+            New Report
           </button>
         )}
       </div>
