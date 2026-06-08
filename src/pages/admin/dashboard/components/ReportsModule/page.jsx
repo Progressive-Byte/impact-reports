@@ -201,10 +201,11 @@ const ReportsModule = () => {
     }
   };
 
-  // ── Create report (from modal) ───────────────────────────────────────
-  const handleCreated = (report) => {
+  // ── Create report (from modal) → go straight to list ────────────────
+  const handleCreated = () => {
     setShowCreate(false);
-    openWizard(report);
+    setLedgerFilter('all');
+    fetchReports('all');
   };
 
   // ── Delete report ────────────────────────────────────────────────────
