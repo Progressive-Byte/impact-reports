@@ -1,17 +1,10 @@
 import { Input } from './FormField';
 import CustomSelect from './CustomSelect';
+import MultiSelect from './MultiSelect';
 
-const ASSIGNED_OPTIONS = [
-  { value: '',       label: 'Select an option...' },
-  { value: 'marcus', label: 'Marcus Chen' },
-  { value: 'aisha',  label: 'Aisha Khan' },
-  { value: 'daniel', label: 'Daniel Park' },
-  { value: 'sara',   label: 'Sara Ahmed' },
-];
 const FISCAL_YEARS = ['FY23', 'FY24', 'FY25', 'FY26'].map(v => ({ value: v, label: v }));
-const STATUSES = ['Draft', 'Review', 'Published', 'Archived'].map(v => ({ value: v, label: v }));
 
-const GeneralTab = ({ form, update }) => (
+const GeneralTab = ({ form, update, adminOptions = [] }) => (
   <div className="space-y-5">
     <div className="grid grid-cols-2 gap-5">
       <Input
@@ -20,11 +13,12 @@ const GeneralTab = ({ form, update }) => (
         value={form.projectName}
         onChange={e => update('projectName', e.target.value)}
       />
-      <CustomSelect
+      <MultiSelect
         label="Assigned To" required
         value={form.assignedTo}
         onChange={val => update('assignedTo', val)}
-        options={ASSIGNED_OPTIONS}
+        options={adminOptions}
+        placeholder="Select team members..."
       />
     </div>
     <div className="grid grid-cols-2 gap-5">
@@ -41,18 +35,13 @@ const GeneralTab = ({ form, update }) => (
         options={FISCAL_YEARS}
       />
     </div>
-    <div className="grid grid-cols-2 gap-5">
+    <div className="grid grid-cols-1 gap-5">
       <Input
         label="Lives Impacted"
         type="number"
+        min="0"
         value={form.livesImpacted}
         onChange={e => update('livesImpacted', e.target.value)}
-      />
-      <CustomSelect
-        label="Status"
-        value={form.status}
-        onChange={val => update('status', val)}
-        options={STATUSES}
       />
     </div>
   </div>
