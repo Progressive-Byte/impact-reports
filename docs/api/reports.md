@@ -136,11 +136,12 @@ Returns the created Report object (with `assignedTo` and `createdBy` populated).
 
 ### Errors
 
-| Status | Condition                             |
-| ------ | ------------------------------------- |
-| `400`  | `projectName` missing or empty        |
-| `400`  | `assignedTo` empty or not an array    |
-| `403`  | Caller is not `superadmin`            |
+| Status | Condition                                         |
+| ------ | ------------------------------------------------- |
+| `400`  | `projectName` missing or empty                    |
+| `400`  | `assignedTo` empty or not an array                |
+| `400`  | `assignedTo` contains duplicate admin IDs         |
+| `403`  | Caller is not `superadmin`                        |
 
 ### curl
 
