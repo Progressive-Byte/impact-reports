@@ -164,7 +164,8 @@ const ReportsModule = () => {
   const handleBack = () => {
     if (step === 1) {
       goToList();
-      fetchReports();
+      setLedgerFilter('all');
+      fetchReports('all');
     } else {
       goToStep(STEP_KEYS[stepIndex - 1]);
     }
