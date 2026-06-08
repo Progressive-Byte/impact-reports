@@ -78,6 +78,34 @@ router.patch('/admins/:id/toggle', async (req, res) => {
   }
 });
 
+// PUT /api/admin/admins/:id  — full edit (superadmin only)
+router.put('/admins/:id', async (req, res) => {
+  try {
+    if (req.admin.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Only superadmin can edit users' });
+    }
+    const { username, email, region, role } = req.body;
+    const update = {};
+    if (username) update.username = username.trim();
+    if (email)    update.email    = email.toLowerCase().trim();
+    if (region)   update.region   = region;
+    if (role && ['superadmin', 'admin'].includes(role)) update.role = role;
+
+    const admin = await Admin.findByIdAndUpdate(
+      req.params.id,
+      update,
+      { new: true, select: '-password', runValidators: true }
+    );
+    if (!admin) return res.status(404).json({ message: 'Admin not found' });
+    res.json(admin);
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({ message: 'Username or email already in use' });
+    }
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // PATCH /api/admin/admins/:id/role
 router.patch('/admins/:id/role', async (req, res) => {
   try {
