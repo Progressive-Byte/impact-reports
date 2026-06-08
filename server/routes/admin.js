@@ -21,7 +21,7 @@ router.get('/stats', async (req, res) => {
 router.get('/admins', async (req, res) => {
   try {
     const { page, limit, skip } = parsePagination(req.query, { defaultLimit: 10, maxLimit: 100 });
-    const { q, status } = req.query;
+    const { q, status, role } = req.query;
 
     const filter = {};
     if (q && q.trim()) {
@@ -30,6 +30,7 @@ router.get('/admins', async (req, res) => {
     }
     if (status === 'active')   filter.isActive = true;
     if (status === 'inactive') filter.isActive = false;
+    if (role && ['superadmin', 'admin'].includes(role)) filter.role = role;
 
     const [items, total] = await Promise.all([
       Admin.find(filter).select('-password').sort('-createdAt').skip(skip).limit(limit),
