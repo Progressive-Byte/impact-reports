@@ -128,6 +128,15 @@ router.patch('/:id/step/:stepName', async (req, res) => {
       return res.status(403).json({ message: 'Access denied' });
     }
 
+    // Validate assignedTo for duplicates when general step is being saved
+    if (stepName === 'general' && Array.isArray(req.body.assignedTo)) {
+      const unique = [...new Set(req.body.assignedTo.map(String))];
+      if (unique.length !== req.body.assignedTo.length) {
+        return res.status(400).json({ message: 'Duplicate assignees are not allowed' });
+      }
+      req.body.assignedTo = unique;
+    }
+
     // Apply only the fields allowed for this step
     for (const field of STEP_FIELDS[stepName]) {
       if (req.body[field] !== undefined) {
