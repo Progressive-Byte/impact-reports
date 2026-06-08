@@ -13,7 +13,10 @@ const AdminOverview = () => {
   const { admin, logout, getToken } = useAdminAuth();
   const navigate = useNavigate();
   const { section: rawSection } = useParams();
-  const VALID = ['overview', 'reports', 'users', 'settings'];
+  const isSuperAdmin = admin?.role === 'superadmin';
+  const VALID = isSuperAdmin
+    ? ['overview', 'reports', 'users', 'settings']
+    : ['overview', 'reports'];
   const section = VALID.includes(rawSection) ? rawSection : 'overview';
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
