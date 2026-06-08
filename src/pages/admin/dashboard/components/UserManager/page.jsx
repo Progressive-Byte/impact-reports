@@ -4,6 +4,7 @@ import SafeIcon from '../../../../../common/SafeIcon';
 import CustomSelect from '../ReportsModule/reports/CustomSelect';
 import Checkbox from '../../common/Checkbox';
 import InviteModal from './components/InviteModal';
+import EditUserModal from './components/EditUserModal';
 import UserRow from './components/UserRow';
 import { adminApiRequest } from '../../../../../services/adminApi';
 
