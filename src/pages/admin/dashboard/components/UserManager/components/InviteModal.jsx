@@ -89,6 +89,7 @@ const InviteModal = ({ open, onClose, onInviteSent }) => {
                 value={form.email}
                 onChange={e => setForm(p => ({ ...p, email: e.target.value }))}
                 disabled={loading}
+                autoComplete="off"
                 className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] bg-white transition-all disabled:opacity-50"
               />
             </div>
