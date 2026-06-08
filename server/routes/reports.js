@@ -81,10 +81,16 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'At least one assignee is required' });
     }
 
+    // Remove duplicate admin IDs before storing
+    const uniqueAssignees = [...new Set(assignedTo.map(String))];
+    if (uniqueAssignees.length !== assignedTo.length) {
+      return res.status(400).json({ message: 'Duplicate assignees are not allowed' });
+    }
+
     const created = await Report.create({
       projectName: projectName.trim(),
-      assignedTo,
-      createdBy: req.admin._id,
+      assignedTo:  uniqueAssignees,
+      createdBy:   req.admin._id,
     });
 
     const report = await Report.findById(created._id).populate(POPULATE);
