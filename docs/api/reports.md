@@ -55,7 +55,13 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 
 ## `GET /api/reports`
 
-List all reports accessible to the caller. Superadmin gets all; admin gets only assigned reports.
+List all reports accessible to the caller. Superadmin gets all; admin gets only assigned reports. Results are sorted newest first.
+
+### Query parameters
+
+| Param    | Type   | Required | Description                                                             |
+| -------- | ------ | :------: | ----------------------------------------------------------------------- |
+| `status` | string | No       | Filter by status: `pending`, `draft`, or `published`. Omit for all.    |
 
 ### Response `200`
 
@@ -68,7 +74,12 @@ List all reports accessible to the caller. Superadmin gets all; admin gets only 
 ### curl
 
 ```bash
+# All reports
 curl http://localhost:5000/api/reports \
+  -H "Authorization: Bearer $TOKEN"
+
+# Only published reports
+curl "http://localhost:5000/api/reports?status=published" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
