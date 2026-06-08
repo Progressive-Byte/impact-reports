@@ -146,6 +146,7 @@ const UserManager = () => {
                 placeholder="Search email, user or region…"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
+                autoComplete="off"
                 className="border border-gray-200 rounded-xl pl-9 pr-4 py-2 text-sm placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] bg-white w-60"
               />
             </div>
