@@ -25,27 +25,6 @@ const canAccess = (admin, report) =>
   admin.role === 'superadmin' ||
   report.assignedTo.some(a => String(a._id ?? a) === String(admin._id));
 
-// Helper — returns an error message if any assignee is already used in another report
-async function findAssigneeConflicts(assigneeIds, excludeReportId = null) {
-  const filter = { assignedTo: { $in: assigneeIds } };
-  if (excludeReportId) filter._id = { $ne: excludeReportId };
-
-  const conflicts = await Report.find(filter)
-    .select('projectName assignedTo')
-    .populate('assignedTo', 'username email');
-
-  if (conflicts.length === 0) return null;
-
-  const messages = [];
-  for (const report of conflicts) {
-    for (const a of report.assignedTo) {
-      if (assigneeIds.includes(String(a._id))) {
-        messages.push(`${a.username || a.email} is already assigned to "${report.projectName}"`);
-      }
-    }
-  }
-  return messages.join('; ');
-}
 
 // ── GET /api/reports?status= ─────────────────────────────────────────
 router.get('/', async (req, res) => {
