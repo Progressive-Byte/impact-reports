@@ -166,7 +166,7 @@ const UserManager = () => {
                 user={u}
                 isSelected={selected.has(u._id)}
                 onToggleSelect={() => toggleOne(u._id)}
-                onUpdate={handleUpdate}
+                onUpdate={fetchUsers}
                 onDelete={handleDelete}
                 onEdit={setEditingUser}
               />
