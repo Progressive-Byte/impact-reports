@@ -9,6 +9,7 @@ import EditUserModal from './components/EditUserModal';
 import UserRow from './components/UserRow';
 import Pagination from './components/Pagination';
 import { adminApiRequest } from '../../../../../services/adminApi';
+import UserSkeletonRow from './components/UserSkeletonRow';
 
 const COLS = [
   { label: 'Email / User', className: 'flex-1' },
@@ -323,7 +324,7 @@ const UserManager = () => {
         {/* Rows */}
         {showSkeleton ? (
           <div className="divide-y divide-gray-100">
-            {Array.from({ length: meta?.limit ?? SKELETON_ROWS }).map((_, i) => <SkeletonRow key={i} />)}
+            {Array.from({ length: meta?.limit ?? SKELETON_ROWS }).map((_, i) => <UserSkeletonRow key={i} />)}
           </div>
         ) : users.length === 0 ? (
           <div className="py-14 text-center">
