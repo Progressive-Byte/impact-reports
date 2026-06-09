@@ -1,21 +1,25 @@
 import Checkbox from '../../../common/Checkbox';
 
+// Keep in sync with UserRow and UserSkeletonRow
+// cols: checkbox | email/user | region | role | status | last-login | actions
+const ROW_GRID = 'grid grid-cols-[20px_1fr_7rem_11rem_7rem_11rem_14rem] items-center gap-4 px-6';
+
 const COLS = [
-  { label: 'Email / User', className: 'flex-1' },
-  { label: 'Region',       className: 'w-28 flex-shrink-0' },
-  { label: 'Role',         className: 'w-44 flex-shrink-0' },
-  { label: 'Status',       className: 'w-28 flex-shrink-0' },
-  { label: 'Last Login',   className: 'w-44 flex-shrink-0' },
-  { label: 'Actions',      className: 'flex-shrink-0' },
+  'Email / User',
+  'Region',
+  'Role',
+  'Status',
+  'Last Login',
+  'Actions',
 ];
 
 const UserTableHeader = ({ allSelected, onToggleAll }) => (
-  <div className="flex items-center gap-4 px-6 py-3 border-b border-gray-100">
-    <div className="w-5 flex-shrink-0">
+  <div className={`${ROW_GRID} py-3 border-b border-gray-100`}>
+    <div>
       <Checkbox checked={allSelected} onChange={onToggleAll} />
     </div>
-    {COLS.map(({ label, className }) => (
-      <span key={label} className={`${className} text-[10px] font-black text-gray-400 uppercase tracking-widest`}>
+    {COLS.map(label => (
+      <span key={label} className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
         {label}
       </span>
     ))}
