@@ -32,7 +32,7 @@ const ReportsModule = () => {
 
   const {
     form, setForm,
-    reports, setReports,
+    reports,
     adminOptions,
     loadingList, loadingReport,
     fetchReports,
