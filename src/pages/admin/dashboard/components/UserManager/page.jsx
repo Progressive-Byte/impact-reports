@@ -90,7 +90,7 @@ const UserManager = () => {
         user={editingUser}
         open={Boolean(editingUser)}
         onClose={() => setEditingUser(null)}
-        onUpdated={handleUpdate}
+        onUpdated={fetchUsers}
       />
 
       {/* Page header */}
