@@ -25,7 +25,6 @@ const canAccess = (admin, report) =>
   admin.role === 'superadmin' ||
   report.assignedTo.some(a => String(a._id ?? a) === String(admin._id));
 
-
 // ── GET /api/reports?status= ─────────────────────────────────────────
 router.get('/', async (req, res) => {
   try {
