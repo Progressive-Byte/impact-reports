@@ -109,17 +109,20 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
     }
   };
 
+  // cols: checkbox | email/user | region | role | status | last-login | actions
+  const ROW_GRID = 'grid grid-cols-[20px_1fr_7rem_11rem_7rem_11rem_14rem] items-center gap-4 px-6';
+
   return (
-    <div className={`flex items-center gap-4 px-6 py-4 transition-colors ${
+    <div className={`${ROW_GRID} py-4 transition-colors ${
       isSelected ? 'bg-red-50' : isSelf ? 'bg-blue-50/30' : 'hover:bg-gray-50/60'
     }`}>
       {/* Checkbox */}
-      <div className="w-5 flex-shrink-0 flex items-center">
+      <div className="flex items-center">
         <Checkbox checked={isSelected} onChange={isSelf ? undefined : onToggleSelect} disabled={isSelf} />
       </div>
 
       {/* Avatar + Email */}
-      <div className="flex-1 min-w-0 flex items-center gap-3">
+      <div className="min-w-0 flex items-center gap-3">
         <div className={`w-8 h-8 rounded-full ${color} flex items-center justify-center flex-shrink-0`}>
           <span className="text-white text-[11px] font-black">{initials}</span>
         </div>
