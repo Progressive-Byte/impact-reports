@@ -1,4 +1,4 @@
-const COLUMNS = ['Project', 'Lives Impacted', 'Status', 'Assignees', 'Date', 'Actions'];
+
 const ROW_GRID = 'grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_auto] gap-4 items-center px-6';
 
 

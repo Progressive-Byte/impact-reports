@@ -9,6 +9,8 @@ const STATUS_STYLES = {
   published: 'bg-green-50 text-green-700 border border-green-200',
 };
 
+const ROW_GRID = 'grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_auto] gap-4 items-center px-6';
+
 const RecordLedger = ({
   reports = [],
   loading = false,
