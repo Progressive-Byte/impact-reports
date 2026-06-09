@@ -66,12 +66,12 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
     setRole(newRole);
     setLRole(true);
     try {
-      const updated = await adminApiRequest(`/api/admin/admins/${user._id}/role`, {
+      await adminApiRequest(`/api/admin/admins/${user._id}/role`, {
         method: 'PATCH',
         body: JSON.stringify({ role: newRole }),
       });
-      onUpdate?.(updated);
       toast.success('Role updated');
+      onUpdate?.();
     } catch (err) {
       setRole(prev);
       toast.error(err.message || 'Failed to update role');
@@ -86,9 +86,8 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
       const updated = await adminApiRequest(`/api/admin/admins/${user._id}/toggle`, {
         method: 'PATCH',
       });
-      setActive(updated.isActive);
-      onUpdate?.(updated);
       toast.success(updated.isActive ? 'User activated' : 'User suspended');
+      onUpdate?.();
     } catch (err) {
       toast.error(err.message || 'Failed to update status');
     } finally {
