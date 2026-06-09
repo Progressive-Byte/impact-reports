@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import SafeIcon from '../../../../../../common/SafeIcon';
 import TableHead from './TableHead';
+import ReportSkeletonRow from './ReportSkeletonRow';
 
 const STATUS_STYLES = {
   pending:   'bg-yellow-50 text-yellow-700 border border-yellow-200',
@@ -39,7 +40,7 @@ const RecordLedger = ({
 
       <div className="divide-y divide-gray-100">
         {loading ? (
-          Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
+          Array.from({ length: 5 }).map((_, i) => <ReportSkeletonRow key={i} />)
         ) : entries.length === 0 ? (
           <div className="px-6 py-14 text-center">
             <SafeIcon icon="FiClipboard" className="text-gray-200 text-3xl mx-auto mb-3" />
