@@ -32,24 +32,24 @@ const formatLogin = (date) => {
   return `${d.toISOString().slice(0, 10)} · ${d.toTimeString().slice(0, 5)}`;
 };
 
-const StatusBadge = ({ user.isActive }) => (
+const StatusBadge = ({ isActive }) => (
   <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border ${
-    user.isActive
+    isActive
       ? 'bg-green-50 text-green-700 border-green-200'
       : 'bg-red-50 text-[#E52321] border-red-200'
   }`}>
-    {user.isActive
+    {isActive
       ? <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
       : <SafeIcon icon="FiX" className="text-[10px] flex-shrink-0" />}
-    {user.isActive ? 'Active' : 'Suspended'}
+    {isActive ? 'Active' : 'Suspended'}
   </span>
 );
 
 const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit }) => {
   const { admin: currentAdmin } = useAdminAuth();
-  // Prevent a logged-in admin from modifying their own account
   const isSelf = String(currentAdmin?._id) === String(user._id);
 
+  // Local optimistic role — kept for responsiveness during the API call
   const [role,          setRole]    = useState(user.role);
   const [confirmRevoke, setConfirm] = useState(false);
   const [loadingRole,   setLRole]   = useState(false);
@@ -85,7 +85,7 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
       const updated = await adminApiRequest(`/api/admin/admins/${user._id}/toggle`, {
         method: 'PATCH',
       });
-      toast.success(updated.user.isActive ? 'User activated' : 'User suspended');
+      toast.success(updated.isActive ? 'User activated' : 'User suspended');
       onUpdate?.();
     } catch (err) {
       toast.error(err.message || 'Failed to update status');
@@ -99,8 +99,8 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
     setLDelete(true);
     try {
       await adminApiRequest(`/api/admin/admins/${user._id}`, { method: 'DELETE' });
-      onDelete?.(user._id);
       toast.success('User removed');
+      onDelete?.(user._id);
     } catch (err) {
       toast.error(err.message || 'Failed to remove user');
     } finally {
@@ -150,7 +150,7 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
 
       {/* Status */}
       <div className="w-28 flex-shrink-0">
-        <StatusBadge user.isActive={user.isActive} />
+        <StatusBadge isActive={user.isActive} />
       </div>
 
       {/* Last Login */}
@@ -161,7 +161,6 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
       {/* Actions */}
       <div className="flex items-center gap-1 flex-shrink-0">
         {isSelf ? (
-          // Own account — no actions allowed
           <span className="text-[11px] text-gray-300 italic px-2">own account</span>
         ) : confirmRevoke ? (
           <div className="flex items-center gap-1.5">
