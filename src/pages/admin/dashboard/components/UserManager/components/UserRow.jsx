@@ -140,29 +140,29 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
       </div>
 
       {/* Region */}
-      <div className="w-28 flex-shrink-0">
+      <div>
         <span className="text-sm text-gray-500 capitalize">{(user.region || 'global').replace('_', ' ')}</span>
       </div>
 
       {/* Role — read-only for own account */}
-      <div className="w-44 flex-shrink-0">
+      <div>
         <div className={loadingRole || isSelf ? 'opacity-50 pointer-events-none' : ''}>
           <CustomSelect value={role} onChange={handleRoleChange} options={ROLE_OPTIONS} />
         </div>
       </div>
 
       {/* Status */}
-      <div className="w-28 flex-shrink-0">
+      <div>
         <StatusBadge isActive={user.isActive} />
       </div>
 
       {/* Last Login */}
-      <div className="w-44 flex-shrink-0">
+      <div>
         <span className="text-xs text-gray-500 tabular-nums">{formatLogin(user.lastLogin)}</span>
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-1 flex-shrink-0">
+      <div className="flex items-center gap-1">
         {isSelf ? (
           <span className="text-[11px] text-gray-300 italic px-2">own account</span>
         ) : confirmRevoke ? (
