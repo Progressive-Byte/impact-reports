@@ -32,16 +32,16 @@ const formatLogin = (date) => {
   return `${d.toISOString().slice(0, 10)} · ${d.toTimeString().slice(0, 5)}`;
 };
 
-const StatusBadge = ({ isActive }) => (
+const StatusBadge = ({ user.isActive }) => (
   <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border ${
-    isActive
+    user.isActive
       ? 'bg-green-50 text-green-700 border-green-200'
       : 'bg-red-50 text-[#E52321] border-red-200'
   }`}>
-    {isActive
+    {user.isActive
       ? <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
       : <SafeIcon icon="FiX" className="text-[10px] flex-shrink-0" />}
-    {isActive ? 'Active' : 'Suspended'}
+    {user.isActive ? 'Active' : 'Suspended'}
   </span>
 );
 
@@ -85,7 +85,7 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
       const updated = await adminApiRequest(`/api/admin/admins/${user._id}/toggle`, {
         method: 'PATCH',
       });
-      toast.success(updated.isActive ? 'User activated' : 'User suspended');
+      toast.success(updated.user.isActive ? 'User activated' : 'User suspended');
       onUpdate?.();
     } catch (err) {
       toast.error(err.message || 'Failed to update status');
@@ -150,7 +150,7 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
 
       {/* Status */}
       <div className="w-28 flex-shrink-0">
-        <StatusBadge isActive={isActive} />
+        <StatusBadge user.isActive={user.isActive} />
       </div>
 
       {/* Last Login */}
@@ -166,10 +166,10 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
         ) : confirmRevoke ? (
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] text-gray-400 mr-1">
-              {isActive ? 'Suspend?' : 'Delete?'}
+              {user.isActive ? 'Suspend?' : 'Delete?'}
             </span>
             <button
-              onClick={isActive ? handleToggle : handleDelete}
+              onClick={user.isActive ? handleToggle : handleDelete}
               disabled={loadingToggle || loadingDelete}
               className="text-[10px] font-black text-[#E52321] bg-red-50 border border-red-200 px-3 py-1.5 rounded-xl hover:bg-red-100 disabled:opacity-50 transition-colors flex items-center gap-1"
             >
@@ -197,7 +197,7 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
               onClick={() => setConfirm(true)}
               className="px-3 py-1.5 text-xs font-bold text-gray-500 hover:text-[#E52321] transition-colors"
             >
-              {isActive ? 'Suspend' : 'Delete'}
+              {user.isActive ? 'Suspend' : 'Delete'}
             </button>
             <button
               onClick={handleToggle}
@@ -207,7 +207,7 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
               {loadingToggle && (
                 <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
               )}
-              {isActive ? 'Deactivate' : 'Activate'}
+              {user.isActive ? 'Deactivate' : 'Activate'}
             </button>
           </>
         )}
