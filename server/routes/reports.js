@@ -114,6 +114,10 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'Duplicate assignees are not allowed' });
     }
 
+    // Reject if any assignee is already on a report with the same project name
+    const conflict = await findProjectAssigneeConflicts(projectName, uniqueAssignees);
+    if (conflict) return res.status(400).json({ message: conflict });
+
     const created = await Report.create({
       projectName: projectName.trim(),
       assignedTo:  uniqueAssignees,
