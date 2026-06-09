@@ -129,16 +129,11 @@ router.patch('/:id/step/:stepName', async (req, res) => {
       return res.status(403).json({ message: 'Access denied' });
     }
 
-    // Validate assignedTo when general step is being saved
+    // Reject duplicate user IDs within this report's assignedTo list
     if (stepName === 'general' && Array.isArray(req.body.assignedTo)) {
       const unique = [...new Set(req.body.assignedTo.map(String))];
       if (unique.length !== req.body.assignedTo.length) {
         return res.status(400).json({ message: 'Duplicate assignees are not allowed' });
-      }
-      // Reject assignees already used in a different report
-      const conflict = await findAssigneeConflicts(unique, req.params.id);
-      if (conflict) {
-        return res.status(400).json({ message: conflict });
       }
       req.body.assignedTo = unique;
     }
