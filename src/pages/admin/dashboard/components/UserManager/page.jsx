@@ -73,11 +73,7 @@ const UserManager = () => {
     setSelected(next);
   };
 
-  const handleUpdate = (updated) =>
-    setUsers(prev => prev.map(u => u._id === updated._id ? { ...u, ...updated } : u));
-
   const handleDelete = (id) => {
-    setUsers(prev => prev.filter(u => u._id !== id));
     setSelected(prev => { const n = new Set(prev); n.delete(id); return n; });
     if (users.length === 1 && urlPage > 1) handlePageChange(urlPage - 1);
     else fetchUsers();
