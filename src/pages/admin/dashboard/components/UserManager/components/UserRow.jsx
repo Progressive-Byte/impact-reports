@@ -51,7 +51,6 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
   const isSelf = String(currentAdmin?._id) === String(user._id);
 
   const [role,          setRole]    = useState(user.role);
-  const [isActive,      setActive]  = useState(user.isActive);
   const [confirmRevoke, setConfirm] = useState(false);
   const [loadingRole,   setLRole]   = useState(false);
   const [loadingToggle, setLToggle] = useState(false);
