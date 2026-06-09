@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import SafeIcon from '../../../../../../common/SafeIcon';
+import TableHead from './TableHead';
 
 const STATUS_STYLES = {
   pending:   'bg-yellow-50 text-yellow-700 border border-yellow-200',
