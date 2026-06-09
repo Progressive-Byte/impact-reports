@@ -95,8 +95,8 @@ const ReportsModule = () => {
   const handleDelete = async (id) => {
     try {
       await adminApiRequest(`/api/reports/${id}`, { method: 'DELETE' });
-      setReports(prev => prev.filter(r => r._id !== id));
       toast.success('Report deleted');
+      fetchReports(ledgerFilter);
     } catch (err) {
       toast.error(err.message || 'Failed to delete');
     }
