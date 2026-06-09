@@ -82,16 +82,10 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ message: 'At least one assignee is required' });
     }
 
-    // Remove duplicate admin IDs before storing
+    // Reject duplicate user IDs within this report
     const uniqueAssignees = [...new Set(assignedTo.map(String))];
     if (uniqueAssignees.length !== assignedTo.length) {
       return res.status(400).json({ message: 'Duplicate assignees are not allowed' });
-    }
-
-    // Reject assignees already used in another report
-    const conflict = await findAssigneeConflicts(uniqueAssignees);
-    if (conflict) {
-      return res.status(400).json({ message: conflict });
     }
 
     const created = await Report.create({
