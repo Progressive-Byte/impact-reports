@@ -12,20 +12,9 @@ const MetricsTab = ({ form, update, fieldErrors = {} }) => {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-3 gap-4">
-        <Input label="Children %" required type="number" value={form.children} onChange={e => update('children', e.target.value)} />
-        <Input label="Women %"   required type="number" value={form.women}    onChange={e => update('women',    e.target.value)} />
-        <Input label="Men %"     required type="number" value={form.men}      onChange={e => update('men',      e.target.value)} />
-      </div>
-
-      <div className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium border ${
-        fieldErrors.demographics
-          ? 'bg-red-50 border-red-300 text-red-700'
-          : isValid
-            ? 'bg-green-50 border-green-200 text-green-700'
-            : 'bg-yellow-50 border-yellow-200 text-yellow-700'
-      }`}>
-        <span>Demographic split</span>
-        <span>{fieldErrors.demographics || `${total}% — should total 100%`}</span>
+        <Input label="Children %" type="number" value={form.children} onChange={e => update('children', e.target.value)} />
+        <Input label="Women %"   type="number" value={form.women}    onChange={e => update('women',    e.target.value)} />
+        <Input label="Men %"     type="number" value={form.men}      onChange={e => update('men',      e.target.value)} />
       </div>
 
       <div>
