@@ -175,8 +175,6 @@ function validateStepPayload(stepName, body, isSuperAdmin) {
       if (!body.strategicResponse?.trim())  return 'Strategic response is required';
       break;
     case 'metrics': {
-      const total = (Number(body.children) || 0) + (Number(body.women) || 0) + (Number(body.men) || 0);
-      if (total !== 100) return `Demographic split is ${total}% — must total exactly 100%`;
       const valid = (body.deliverables || []).filter(d => d.label?.trim() && Number(d.count) > 0);
       if (!valid.length) return 'Add at least one deliverable with a label and count';
       break;
