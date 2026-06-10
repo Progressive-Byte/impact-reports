@@ -72,6 +72,7 @@ const ReportsModule = ({ onCountChange }) => {
   const goToStep = useCallback((key) => setSearchParams({ reportId, step: key }, { replace: true }), [reportId, setSearchParams]);
 
   const openWizard = (report) => {
+    loadAdminOptions();
     setForm(reportToForm(report));
     setSearchParams({ reportId: report._id, step: 'general' }, { replace: true });
   };
