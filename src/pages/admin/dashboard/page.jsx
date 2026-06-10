@@ -57,7 +57,7 @@ const AdminOverview = () => {
     <div className="flex h-screen bg-[#F4F5F7] overflow-hidden">
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex flex-col bg-[#1F1F22] border-r border-white/5 flex-shrink-0 w-64">
-        <Sidebar section={section} setSection={(id) => navigate(`/admin/dashboard/${id}`)} setSidebarOpen={setSidebarOpen} />
+        <Sidebar section={section} setSection={(id) => navigate(`/admin/dashboard/${id}`)} setSidebarOpen={setSidebarOpen} reportCount={reportCount} />
       </aside>
 
       {/* Mobile sidebar overlay */}
