@@ -253,14 +253,28 @@ Each `deliverables` item:
 
 When `media` step is saved and all four steps are complete, `status` becomes `"published"`. Otherwise `"draft"`.
 
+### Role protection
+
+When the caller's role is `admin` (not `superadmin`), `projectName` and `assignedTo` are silently ignored on the `general` step — they cannot be changed regardless of what is sent.
+
 ### Errors
 
-| Status | Condition                                                                         |
-| ------ | --------------------------------------------------------------------------------- |
-| `400`  | Invalid `stepName`                                                                |
-| `400`  | `assignedTo` contains duplicate admin IDs (`general` step only)                  |
-| `403`  | Caller not assigned to report and not superadmin                                  |
-| `404`  | Report not found                                                                  |
+| Status | Condition                                                                                    |
+| ------ | -------------------------------------------------------------------------------------------- |
+| `400`  | Invalid `stepName`                                                                           |
+| `400`  | Per-step validation failure — missing required field or invalid value (message describes which field) |
+| `400`  | `assignedTo` contains duplicate admin IDs (`general` step, superadmin only)                 |
+| `403`  | Caller not assigned to report and not superadmin                                             |
+| `404`  | Report not found                                                                             |
+
+**Per-step required fields**
+
+| Step        | Required                                                                 |
+| ----------- | ------------------------------------------------------------------------ |
+| `general`   | `projectLead`, `fiscalYear`, `livesImpacted > 0`; plus `projectName` and `assignedTo` for superadmin |
+| `narrative` | `projectBackground`, `strategicResponse`                                 |
+| `metrics`   | At least one deliverable with a non-empty `label` and `count > 0`        |
+| `media`     | `galleryUrl`; at least one milestone with `date` and `title`             |
 
 ### curl
 
