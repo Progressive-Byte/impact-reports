@@ -17,6 +17,7 @@ const STEP_FIELDS = {
   narrative: ['projectBackground', 'strategicResponse'],
   metrics:   ['children', 'women', 'men', 'deliverables'],
   media:     ['images', 'videoUrl', 'milestones'],
+  location:  ['countries', 'locations'],
 };
 
 const ALL_STEPS = Object.keys(STEP_FIELDS);
