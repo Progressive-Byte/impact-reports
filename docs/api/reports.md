@@ -287,6 +287,7 @@ When the caller's role is `admin` (not `superadmin`), `projectName` and `assigne
 | `narrative` | `projectBackground`, `strategicResponse`                                 |
 | `metrics`   | At least one deliverable with a non-empty `label` and `count > 0`        |
 | `media`     | At least one `images[].url`; max 10 images; at least one milestone with `date` and `title` |
+| `location`  | At least one country; every selected country must have at least one location entry          |
 
 ### curl
 
