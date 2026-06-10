@@ -1,7 +1,7 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
 import { Input } from './FormField';
 
-const MetricsTab = ({ form, update }) => {
+const MetricsTab = ({ form, update, fieldErrors = {} }) => {
   const total = (Number(form.children) || 0) + (Number(form.women) || 0) + (Number(form.men) || 0);
   const isValid = total === 100;
 
@@ -15,22 +15,29 @@ const MetricsTab = ({ form, update }) => {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-3 gap-4">
-        <Input label="Children %" type="number" value={form.children} onChange={e => update('children', e.target.value)} />
-        <Input label="Women %"   type="number" value={form.women}    onChange={e => update('women',    e.target.value)} />
-        <Input label="Men %"     type="number" value={form.men}      onChange={e => update('men',      e.target.value)} />
+        <Input label="Children %" required type="number" value={form.children} onChange={e => update('children', e.target.value)} />
+        <Input label="Women %"   required type="number" value={form.women}    onChange={e => update('women',    e.target.value)} />
+        <Input label="Men %"     required type="number" value={form.men}      onChange={e => update('men',      e.target.value)} />
       </div>
 
       <div className={`flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium border ${
-        isValid
-          ? 'bg-green-50 border-green-200 text-green-700'
-          : 'bg-yellow-50 border-yellow-200 text-yellow-700'
+        fieldErrors.demographics
+          ? 'bg-red-50 border-red-300 text-red-700'
+          : isValid
+            ? 'bg-green-50 border-green-200 text-green-700'
+            : 'bg-yellow-50 border-yellow-200 text-yellow-700'
       }`}>
         <span>Demographic split</span>
-        <span>{total}% — should total 100%</span>
+        <span>{fieldErrors.demographics || `${total}% — should total 100%`}</span>
       </div>
 
       <div>
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Custom Deliverables</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Custom Deliverables <span className="text-[#E52321]">*</span></p>
+          {fieldErrors.deliverables && (
+            <p className="text-xs text-red-500 font-medium">{fieldErrors.deliverables}</p>
+          )}
+        </div>
         <div className="space-y-2">
           {form.deliverables.map((d) => (
             <div key={d.id} className="flex items-center gap-3">
