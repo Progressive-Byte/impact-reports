@@ -34,7 +34,7 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
   "children":        40,
   "women":           35,
   "men":             25,
-  "deliverables":    [{ "label": "Solar Wells", "count": 12 }],
+  "deliverables":    [{ "label": "Solar Wells", "count": 12, "icon": "FiSun", "description": "Installed across rural communities" }],
   "galleryUrl":      "https://...",
   "milestones":      [{ "date": "2025-01", "title": "Phase 1", "notes": "..." }],
   "stepsCompleted":  ["general", "narrative"],
