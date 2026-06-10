@@ -7,6 +7,28 @@ const MAX_IMAGES  = 10;
 const MAX_SIZE_MB = 5;
 
 const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
+  const fileInputRef              = useRef({});
+  const [uploading, setUploading] = useState({});
+
+  const handleFileSelect = async (imgId, file) => {
+    if (!file) return;
+    if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+      alert(`File is too large. Maximum size is ${MAX_SIZE_MB} MB.`);
+      return;
+    }
+    setUploading(prev => ({ ...prev, [imgId]: true }));
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const data = await adminApiRequest('/api/upload', { method: 'POST', body: formData, json: false });
+      updateImage(imgId, data.url);
+    } catch (err) {
+      alert(err.message || 'Upload failed');
+    } finally {
+      setUploading(prev => ({ ...prev, [imgId]: false }));
+    }
+  };
+
   // ── Images ──────────────────────────────────────────────────────────
   const addImage = () => {
     if (form.images.length >= MAX_IMAGES) return;
