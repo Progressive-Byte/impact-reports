@@ -41,29 +41,32 @@ const Sidebar = ({ section, setSection, setSidebarOpen, reportCount = null, mobi
       <nav className="flex-1 px-3 py-4 overflow-y-auto">
         <p className="text-[11px] font-black text-[#909098] uppercase tracking-widest px-3 mb-2">Platform</p>
         <div className="space-y-0.5">
-          {visibleNav.map(({ id, label, icon, badge }) => (
-            <button
-              key={id}
-              onClick={() => { setSection(id); setSidebarOpen(false); }}
-              className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[14px] font-bold transition-all duration-150 ${
-                section === id
-                  ? 'bg-[#E52321] text-white'
-                  : 'text-[#909098] hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <SafeIcon icon={icon} className="text-base flex-shrink-0" />
-                {label}
-              </div>
-              {badge !== null && (
-                <span className={`text-[10px] font-black rounded-full px-2.5 py-0.5 min-w-[20px] text-center ${
-                  section === id ? 'bg-white/25 text-white' : 'bg-[#E52321] text-white'
-                }`}>
-                  {badge}
-                </span>
-              )}
-            </button>
-          ))}
+          {visibleNav.map(({ id, label, icon }) => {
+            const badge = id === 'reports' ? reportCount : null;
+            return (
+              <button
+                key={id}
+                onClick={() => { setSection(id); setSidebarOpen(false); }}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[14px] font-bold transition-all duration-150 ${
+                  section === id
+                    ? 'bg-[#E52321] text-white'
+                    : 'text-[#909098] hover:text-white hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <SafeIcon icon={icon} className="text-base flex-shrink-0" />
+                  {label}
+                </div>
+                {badge !== null && (
+                  <span className={`text-[10px] font-black rounded-full px-2.5 py-0.5 min-w-[20px] text-center ${
+                    section === id ? 'bg-white/25 text-white' : 'bg-[#E52321] text-white'
+                  }`}>
+                    {badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </nav>
 
