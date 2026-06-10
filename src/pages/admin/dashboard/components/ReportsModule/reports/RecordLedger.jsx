@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import SafeIcon from '../../../../../../common/SafeIcon';
+import Pagination from '../../../../../admin/dashboard/common/Pagination';
 import TableHead from './TableHead';
 import ReportSkeletonRow from './ReportSkeletonRow';
+import LedgerToolbar from './LedgerToolbar';
+
+const SKELETON_ROWS = 5;
 
 const STATUS_STYLES = {
   pending:   'bg-yellow-50 text-yellow-700 border border-yellow-200',
@@ -12,24 +16,22 @@ const STATUS_STYLES = {
 const ROW_GRID = 'grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_auto] gap-4 items-center px-6';
 
 const RecordLedger = ({
+  // data
   reports = [],
   loading = false,
-  search  = '',
-  sort    = 'recent',
+  meta    = null,
+  // filter state
+  inputSearch, setInputSearch, isDebouncing,
+  urlSearch, urlStatus, urlSort,
+  // handlers
+  onStatusChange, onSortChange, onPageChange, onRefresh,
+  // table actions
   isSuperAdmin,
   onEdit,
   onDelete,
 }) => {
   const [confirmId, setConfirmId] = useState(null);
-
-  // Status filter is server-side; only search + sort are applied client-side
-  const entries = reports
-    .filter(r => (r.projectName || '').toLowerCase().includes(search.toLowerCase()))
-    .sort((a, b) =>
-      sort === 'recent'
-        ? new Date(b.createdAt) - new Date(a.createdAt)
-        : new Date(a.createdAt) - new Date(b.createdAt)
-    );
+  const showSkeleton = loading || isDebouncing;
 
   const handleConfirmDelete = (id) => {
     onDelete?.(id);
@@ -38,18 +40,92 @@ const RecordLedger = ({
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+
+      {/* Toolbar row */}
+      <LedgerToolbar
+        inputSearch={inputSearch}
+        setInputSearch={setInputSearch}
+        isDebouncing={isDebouncing}
+        urlSearch={urlSearch}
+        urlStatus={urlStatus}
+        urlSort={urlSort}
+        meta={meta}
+        loading={loading}
+        onStatusChange={onStatusChange}
+        onSortChange={onSortChange}
+        onRefresh={onRefresh}
+      />
+
+      {/* Active filter pills */}
+      {(urlSearch || urlStatus !== 'all') && !showSkeleton && (
+        <div className="flex items-center gap-2 px-6 py-2.5 border-b border-gray-100 bg-gray-50/60">
+          <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Filters:</span>
+
+          {urlSearch && (
+            <span className="flex items-center gap-1.5 bg-white border border-gray-200 text-xs font-bold text-gray-600 px-3 py-1 rounded-full">
+              <SafeIcon icon="FiSearch" className="text-[10px] text-gray-400" />
+              &quot;{urlSearch}&quot;
+              <button onClick={() => setInputSearch('')} className="text-gray-300 hover:text-gray-500 ml-0.5">
+                <SafeIcon icon="FiX" className="text-[10px]" />
+              </button>
+            </span>
+          )}
+
+          {urlStatus !== 'all' && (
+            <span className="flex items-center gap-1.5 bg-white border border-gray-200 text-xs font-bold text-gray-600 px-3 py-1 rounded-full capitalize">
+              <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                urlStatus === 'published' ? 'bg-green-500'
+                : urlStatus === 'pending' ? 'bg-yellow-400'
+                : 'bg-gray-400'
+              }`} />
+              {urlStatus}
+              <button onClick={() => onStatusChange('all')} className="text-gray-300 hover:text-gray-500 ml-0.5">
+                <SafeIcon icon="FiX" className="text-[10px]" />
+              </button>
+            </span>
+          )}
+
+          {meta && (
+            <span className="text-[11px] text-gray-400 ml-auto">
+              {meta.total} result{meta.total !== 1 ? 's' : ''}
+            </span>
+          )}
+        </div>
+      )}
+
+      {/* Table header */}
       <TableHead />
 
+      {/* Rows */}
       <div className="divide-y divide-gray-100">
-        {loading ? (
-          Array.from({ length: 5 }).map((_, i) => <ReportSkeletonRow key={i} />)
-        ) : entries.length === 0 ? (
+        {showSkeleton ? (
+          Array.from({ length: meta?.limit ?? SKELETON_ROWS }).map((_, i) => (
+            <ReportSkeletonRow key={i} />
+          ))
+        ) : reports.length === 0 ? (
           <div className="px-6 py-14 text-center">
-            <SafeIcon icon="FiClipboard" className="text-gray-200 text-3xl mx-auto mb-3" />
-            <p className="text-sm text-gray-400">No reports found.</p>
+            <SafeIcon
+              icon={urlSearch ? 'FiSearch' : 'FiClipboard'}
+              className="text-gray-200 text-3xl mx-auto mb-3"
+            />
+            <p className="text-sm text-gray-400">
+              {urlSearch
+                ? `No reports matching "${urlSearch}"`
+                : urlStatus !== 'all'
+                  ? `No ${urlStatus} reports found.`
+                  : 'No reports yet.'}
+            </p>
+            {(urlSearch || urlStatus !== 'all') && (
+              <button
+                onClick={() => { setInputSearch(''); onStatusChange('all'); }}
+                className="mt-3 text-sm font-bold text-[#E52321] hover:underline"
+              >
+                Clear filters
+              </button>
+            )}
           </div>
         ) : (
-          entries.map(entry => {
+          reports.map(entry => {
             const assigneeNames = (entry.assignedTo || [])
               .map(a => a.username || a.email)
               .join(', ');
@@ -119,6 +195,8 @@ const RecordLedger = ({
           })
         )}
       </div>
+
+      <Pagination meta={meta} onPageChange={onPageChange} label="reports" />
     </div>
   );
 };
