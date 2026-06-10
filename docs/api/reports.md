@@ -257,13 +257,20 @@ Each `milestones` item:
 | `title` | string | Yes      | Milestone title          |
 | `notes` | string | —        | Additional notes         |
 
+**`location`**
+
+| Field       | Type     | Required | Description                                              |
+| ----------- | -------- | :------: | -------------------------------------------------------- |
+| `countries` | string[] | Yes      | Clean country names e.g. `["India","Kenya"]`             |
+| `locations` | array    | Yes      | Each item: `{ country: string, address: string }`. At least one per selected country. |
+
 ### Response `200`
 
 ```json
 { "report": { /* updated Report object */ } }
 ```
 
-When `media` step is saved and all four steps are complete, `status` becomes `"published"`. Otherwise `"draft"`.
+When `location` step is saved and all four steps are complete, `status` becomes `"published"`. Otherwise `"draft"`.
 
 ### Role protection
 
