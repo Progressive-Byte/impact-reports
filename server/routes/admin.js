@@ -1,10 +1,68 @@
 import express from 'express';
 import Admin from '../models/Admin.js';
+import Report from '../models/Report.js';
 import { protect } from '../middleware/auth.js';
 import { parsePagination, buildMeta } from '../utils/pagination.js';
 
 const router = express.Router();
 router.use(protect);
+
+// GET /api/admin/dashboard — role-scoped dashboard stats
+router.get('/dashboard', async (req, res) => {
+  try {
+    const isSuperAdmin = req.admin.role === 'superadmin';
+    const reportFilter = isSuperAdmin ? {} : { assignedTo: req.admin._id };
+
+    const [published, pendingDraft, rawReports] = await Promise.all([
+      Report.countDocuments({ ...reportFilter, status: 'published' }),
+      Report.countDocuments({ ...reportFilter, status: { $in: ['pending', 'draft'] } }),
+      Report.find(reportFilter)
+        .select('countries livesImpacted projectName status updatedAt')
+        .lean(),
+    ]);
+
+    // Per-country beneficiary aggregation
+    const countryMap = {};
+    let totalLivesImpacted = 0;
+    rawReports.forEach(r => {
+      totalLivesImpacted += r.livesImpacted || 0;
+      if (!r.countries?.length || !r.livesImpacted) return;
+      const perCountry = Math.round(r.livesImpacted / r.countries.length);
+      r.countries.forEach(c => {
+        countryMap[c] = (countryMap[c] || 0) + perCountry;
+      });
+    });
+    const regionData = Object.entries(countryMap)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([country, livesImpacted]) => ({ country, livesImpacted }));
+
+    // Recent report activity for Content Feed
+    const recentActivity = [...rawReports]
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+      .slice(0, 5)
+      .map(r => ({ projectName: r.projectName, status: r.status, updatedAt: r.updatedAt }));
+
+    const result = {
+      reportStats: { published, pendingDraft, total: rawReports.length },
+      totalLivesImpacted,
+      regionData,
+      recentActivity,
+    };
+
+    if (isSuperAdmin) {
+      const [totalAdmins, activeAdmins] = await Promise.all([
+        Admin.countDocuments(),
+        Admin.countDocuments({ isActive: true }),
+      ]);
+      result.adminStats = { total: totalAdmins, active: activeAdmins };
+    }
+
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 // GET /api/admin/stats
 router.get('/stats', async (req, res) => {
