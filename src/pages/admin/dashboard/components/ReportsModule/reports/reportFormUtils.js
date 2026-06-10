@@ -10,7 +10,8 @@ export const BLANK_FORM = {
   women:             0,
   men:               0,
   deliverables:      [{ id: 1, label: '', count: '', icon: '', description: '' }],
-  galleryUrl:        '',
+  images:            [{ id: 1, url: '' }],
+  videoUrl:          '',
   milestones:        [{ id: 1, date: '', title: '', notes: '' }],
 };
 
