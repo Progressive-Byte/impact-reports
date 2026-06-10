@@ -1,12 +1,11 @@
 import SafeIcon from "../../../../common/SafeIcon";
 import { useAdminAuth } from "../../../../context/AdminAuthContext";
-import { reports } from "../../../../data/mockData";
 
 const NAV = [
-  { id: 'overview', label: 'Admin Dashboard', icon: 'FiGrid',     badge: null,            superadminOnly: false },
-  { id: 'reports',  label: 'Reports Module',  icon: 'FiFileText', badge: reports.length,  superadminOnly: false },
-  { id: 'users',    label: 'User Management', icon: 'FiUsers',    badge: null,            superadminOnly: true  },
-  { id: 'settings', label: 'Settings',        icon: 'FiSettings', badge: null,            superadminOnly: true  },
+  { id: 'overview', label: 'Admin Dashboard', icon: 'FiGrid',     superadminOnly: false },
+  { id: 'reports',  label: 'Reports Module',  icon: 'FiFileText', superadminOnly: false },
+  { id: 'users',    label: 'User Management', icon: 'FiUsers',    superadminOnly: true  },
+  { id: 'settings', label: 'Settings',        icon: 'FiSettings', superadminOnly: true  },
 ];
 
 const STATUS_ITEMS = [
