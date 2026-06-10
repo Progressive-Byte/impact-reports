@@ -186,6 +186,8 @@ const ReportsModule = ({ onCountChange }) => {
           saving={saving}
           onBack={handleBack}
           onNext={handleNext}
+          isSuperAdmin={isSuperAdmin}
+          fieldErrors={fieldErrors}
         />
       ) : (
         <RecordLedger
