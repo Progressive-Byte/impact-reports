@@ -47,8 +47,12 @@ const reportSchema = new mongoose.Schema(
     videoUrl:          { type: String, default: '' },
     milestones:        { type: [milestoneSchema], default: [] },
 
+    // Country & Location step
+    countries:         [{ type: String }],
+    locations:         { type: [locationSchema], default: [] },
+
     // Completed step tracking
-    stepsCompleted:    [{ type: String, enum: ['general', 'narrative', 'metrics', 'media'] }],
+    stepsCompleted:    [{ type: String, enum: ['general', 'narrative', 'metrics', 'media', 'location'] }],
   },
   { timestamps: true }
 );
