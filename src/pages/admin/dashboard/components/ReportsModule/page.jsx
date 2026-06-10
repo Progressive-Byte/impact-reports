@@ -87,9 +87,13 @@ const ReportsModule = ({ onCountChange }) => {
   };
 
   const handleNext = async () => {
-    if (!form.projectName.trim() && stepKey === 'general') {
-      return toast.error('Project name is required');
+    const errors = validateStep(stepKey, form, isSuperAdmin);
+    if (Object.keys(errors).length) {
+      setFieldErrors(errors);
+      toast.error('Please fix the highlighted fields');
+      return;
     }
+    setFieldErrors({});
     setSaving(true);
     try {
       const payload = buildStepPayload[stepKey](form);
