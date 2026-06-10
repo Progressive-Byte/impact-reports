@@ -222,12 +222,21 @@ Save the data for one wizard step. Marks the step complete and updates the repor
 
 **`metrics`**
 
-| Field          | Type                            | Description                 |
-| -------------- | ------------------------------- | --------------------------- |
-| `children`     | number                          | Children demographic %      |
-| `women`        | number                          | Women demographic %         |
-| `men`          | number                          | Men demographic %           |
-| `deliverables` | `[{ label: string, count: number }]` | Custom metrics         |
+| Field          | Type     | Required | Description                    |
+| -------------- | -------- | :------: | ------------------------------ |
+| `children`     | number   | —        | Children demographic %         |
+| `women`        | number   | —        | Women demographic %            |
+| `men`          | number   | —        | Men demographic %              |
+| `deliverables` | array    | Yes      | At least one item required (see below) |
+
+Each `deliverables` item:
+
+| Field         | Type   | Required | Description                                       |
+| ------------- | ------ | :------: | ------------------------------------------------- |
+| `label`       | string | Yes      | Metric name (e.g. `"Solar Wells"`)                |
+| `count`       | number | Yes      | Verified volume (must be > 0)                     |
+| `icon`        | string | —        | Feather icon name (e.g. `"FiSun"`). Defaults to `"FiBox"` in the UI. |
+| `description` | string | —        | Short description shown below the label on the public report page |
 
 **`media`**
 
