@@ -4,6 +4,8 @@ import SafeIcon from '../../../../../../common/SafeIcon';
 const MultiSelect = ({
   label,
   required,
+  error,
+  readOnly,
   value = [],
   onChange,
   options = [],
@@ -30,9 +32,36 @@ const MultiSelect = ({
     onChange(value.filter(v => v !== id));
   };
 
-  const filtered  = options.filter(o => o.label.toLowerCase().includes(search.toLowerCase()));
-  const selected  = options.filter(o => value.includes(o.value));
+  const filtered = options.filter(o => o.label.toLowerCase().includes(search.toLowerCase()));
+  const selected = options.filter(o => value.includes(o.value));
 
+  // ── Read-only display ──────────────────────────────────────────────
+  if (readOnly) {
+    return (
+      <div>
+        {label && (
+          <label className="flex items-center gap-1.5 mb-1.5 text-sm font-medium text-gray-700">
+            {label}
+            <SafeIcon icon="FiLock" className="text-[10px] text-gray-400" />
+          </label>
+        )}
+        <div className="w-full min-h-[46px] flex flex-wrap items-center gap-1.5 border border-gray-200 rounded-xl px-4 py-2 bg-gray-50">
+          {selected.length > 0 ? selected.map(o => (
+            <span
+              key={o.value}
+              className="inline-flex items-center bg-gray-100 text-gray-600 border border-gray-200 text-xs font-bold px-2.5 py-1 rounded-lg"
+            >
+              {o.label}
+            </span>
+          )) : (
+            <span className="text-gray-400 text-sm">—</span>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Editable ───────────────────────────────────────────────────────
   return (
     <div className="relative" ref={ref}>
       {label && (
@@ -41,12 +70,15 @@ const MultiSelect = ({
         </label>
       )}
 
-      {/* Trigger */}
       <button
         type="button"
         onClick={() => setOpen(v => !v)}
         className={`w-full min-h-[46px] flex items-center justify-between border rounded-xl px-4 py-2 text-sm text-left bg-white transition-colors ${
-          open ? 'border-[#E52321] ring-[3px] ring-[#fdecec]' : 'border-gray-200 hover:border-gray-300'
+          error
+            ? 'border-red-400'
+            : open
+              ? 'border-[#E52321] ring-[3px] ring-[#fdecec]'
+              : 'border-gray-200 hover:border-gray-300'
         }`}
       >
         <div className="flex flex-wrap gap-1.5 flex-1 py-0.5">
@@ -70,7 +102,8 @@ const MultiSelect = ({
         />
       </button>
 
-      {/* Dropdown */}
+      {error && <p className="mt-1.5 text-xs text-red-500 font-medium">{error}</p>}
+
       {open && (
         <div className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
           <div className="p-2 border-b border-gray-100">
