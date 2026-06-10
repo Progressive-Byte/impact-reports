@@ -19,7 +19,7 @@ import { buildStepPayload, reportToForm } from './reports/reportFormUtils';
 const STEP_KEYS    = ['general', 'narrative', 'metrics', 'media'];
 const STEP_CONTENT = [GeneralTab, NarrativeTab, MetricsTab, MediaTimelineTab];
 
-const ReportsModule = () => {
+const ReportsModule = ({ onCountChange }) => {
   const { admin }    = useAdminAuth();
   const isSuperAdmin = admin?.role === 'superadmin';
 
