@@ -10,6 +10,11 @@ const deliverableSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const locationSchema = new mongoose.Schema(
+  { country: { type: String, default: '' }, address: { type: String, default: '' } },
+  { _id: false }
+);
+
 const milestoneSchema = new mongoose.Schema(
   { date: String, title: String, notes: String },
   { _id: false }
