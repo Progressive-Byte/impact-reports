@@ -47,8 +47,9 @@ const ReportsModule = ({ onCountChange }) => {
     handleStatusChange, handleSortChange, handlePageChange,
   } = useReportFilters();
 
-  const [saving,     setSaving]     = useState(false);
-  const [showCreate, setShowCreate] = useState(false);
+  const [saving,      setSaving]      = useState(false);
+  const [showCreate,  setShowCreate]  = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
 
   // Drive list fetch whenever URL filter params change
   useEffect(() => {
