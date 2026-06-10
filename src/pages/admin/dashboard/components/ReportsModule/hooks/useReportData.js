@@ -75,5 +75,6 @@ export function useReportData() {
     adminOptions,
     loadingList, loadingReport,
     fetchReports,
+    loadAdminOptions,
   };
 }
