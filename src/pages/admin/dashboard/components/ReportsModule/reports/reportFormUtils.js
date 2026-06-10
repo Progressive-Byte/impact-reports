@@ -94,7 +94,12 @@ export const buildStepPayload = {
     children:     Number(f.children) || 0,
     women:        Number(f.women) || 0,
     men:          Number(f.men) || 0,
-    deliverables: f.deliverables.map(({ label, count }) => ({ label, count: Number(count) || 0 })),
+    deliverables: f.deliverables.map(({ label, count, icon, description }) => ({
+      label,
+      count:       Number(count) || 0,
+      icon:        icon        || '',
+      description: description || '',
+    })),
   }),
   media:     (f) => ({
     galleryUrl: f.galleryUrl,
