@@ -1,5 +1,6 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
 import { Input } from './FormField';
+import IconPicker from './IconPicker';
 
 const MetricsTab = ({ form, update, fieldErrors = {} }) => {
   const addDeliverable = () =>
