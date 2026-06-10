@@ -241,10 +241,19 @@ Each `deliverables` item:
 
 **`media`**
 
-| Field        | Type                                       | Description            |
-| ------------ | ------------------------------------------ | ---------------------- |
-| `galleryUrl` | string                                     | Cloudinary / S3 URL    |
-| `milestones` | `[{ date: string, title: string, notes: string }]` | Timeline entries |
+| Field        | Type     | Required | Description                                               |
+| ------------ | -------- | :------: | --------------------------------------------------------- |
+| `images`     | array    | Yes      | At least 1, max 10. Each item: `{ url: string }`          |
+| `videoUrl`   | string   | —        | YouTube / Vimeo / S3 video link (optional)                |
+| `milestones` | array    | Yes      | At least one item with `date` + `title` (see below)       |
+
+Each `milestones` item:
+
+| Field   | Type   | Required | Description              |
+| ------- | ------ | :------: | ------------------------ |
+| `date`  | string | Yes      | Date or timeframe label  |
+| `title` | string | Yes      | Milestone title          |
+| `notes` | string | —        | Additional notes         |
 
 ### Response `200`
 
