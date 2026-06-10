@@ -33,18 +33,10 @@ const MetricsTab = ({ form, update, fieldErrors = {} }) => {
             <div key={d.id} className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-3">
               {/* Row 1: icon picker + label + count + delete */}
               <div className="flex items-center gap-3">
-                {/* Icon preview + name input */}
-                <div className="flex items-center gap-2 w-52 flex-shrink-0">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center flex-shrink-0">
-                    <SafeIcon icon={d.icon || 'FiBox'} className="text-[#E52321] text-lg" />
-                  </div>
-                  <Input
-                    placeholder="e.g. FiBox"
-                    value={d.icon}
-                    onChange={e => updateDeliverable(d.id, 'icon', e.target.value)}
-                    className="flex-1"
-                  />
-                </div>
+                <IconPicker
+                  value={d.icon}
+                  onChange={val => updateDeliverable(d.id, 'icon', val)}
+                />
 
                 <Input
                   placeholder="Metric Label (e.g. Solar Wells)"
