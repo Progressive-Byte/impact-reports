@@ -13,6 +13,8 @@ export const BLANK_FORM = {
   images:            [{ id: 1, url: '' }],
   videoUrl:          '',
   milestones:        [{ id: 1, date: '', title: '', notes: '' }],
+  countries:         [],
+  locations:         [],
 };
 
 export const reportToForm = (report) => ({
@@ -36,6 +38,8 @@ export const reportToForm = (report) => ({
   images:            (report.images || []).map((img, i) => ({ id: i + 1, url: img.url || '' })),
   videoUrl:          report.videoUrl || '',
   milestones:        (report.milestones || []).map((m, i) => ({ ...m, id: i + 1 })),
+  countries:         report.countries || [],
+  locations:         (report.locations || []).map((l, i) => ({ id: i + 1, country: l.country || '', address: l.address || '' })),
 });
 
 export function validateStep(stepKey, form, isSuperAdmin = true) {
@@ -66,10 +70,22 @@ export function validateStep(stepKey, form, isSuperAdmin = true) {
 
     case 'media': {
       const validImages = form.images.filter(img => img.url.trim());
-      if (!validImages.length)        errors.images = 'Add at least one image URL';
-      if (validImages.length > 10)    errors.images = 'Maximum 10 images allowed';
+      if (!validImages.length)     errors.images = 'Add at least one image URL';
+      if (validImages.length > 10) errors.images = 'Maximum 10 images allowed';
       const validMilestones = form.milestones.filter(m => m.date.trim() && m.title.trim());
       if (!validMilestones.length) errors.milestones = 'Add at least one milestone with a date and title';
+      break;
+    }
+
+    case 'location': {
+      if (!form.countries.length) {
+        errors.countries = 'Select at least one country';
+      } else {
+        form.countries.forEach(country => {
+          const hasLoc = form.locations.some(l => l.country === country && l.address.trim());
+          if (!hasLoc) errors[`loc_${country}`] = 'Add at least one location';
+        });
+      }
       break;
     }
 
@@ -107,5 +123,11 @@ export const buildStepPayload = {
     images:    f.images.filter(img => img.url.trim()).map(({ url }) => ({ url })),
     videoUrl:  f.videoUrl.trim(),
     milestones: f.milestones.map(({ date, title, notes }) => ({ date, title, notes })),
+  }),
+  location:  (f) => ({
+    countries: f.countries,
+    locations: f.locations
+      .filter(l => l.address.trim())
+      .map(({ country, address }) => ({ country, address: address.trim() })),
   }),
 };
