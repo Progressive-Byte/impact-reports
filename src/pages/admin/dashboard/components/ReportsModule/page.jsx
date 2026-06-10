@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAdminAuth } from '../../../../../context/AdminAuthContext';
@@ -8,12 +8,12 @@ import CreateReportModal from './reports/CreateReportModal';
 import RecordLedger from './reports/RecordLedger';
 import ReportSectionHeader from './reports/ReportSectionHeader';
 import WizardShell from './reports/WizardShell';
-import LedgerToolbar from './reports/LedgerToolbar';
 import GeneralTab from './reports/GeneralTab';
 import NarrativeTab from './reports/NarrativeTab';
 import MetricsTab from './reports/MetricsTab';
 import MediaTimelineTab from './reports/MediaTimelineTab';
 import { useReportData } from './hooks/useReportData';
+import { useReportFilters } from './hooks/useReportFilters';
 import { buildStepPayload, reportToForm } from './reports/reportFormUtils';
 
 const STEP_KEYS    = ['general', 'narrative', 'metrics', 'media'];
@@ -33,16 +33,29 @@ const ReportsModule = () => {
   const {
     form, setForm,
     reports,
+    meta, stats,
     adminOptions,
     loadingList, loadingReport,
     fetchReports,
   } = useReportData();
 
-  const [saving,       setSaving]       = useState(false);
-  const [showCreate,   setShowCreate]   = useState(false);
-  const [ledgerFilter, setLedgerFilter] = useState('all');
-  const [ledgerSearch, setLedgerSearch] = useState('');
-  const [ledgerSort,   setLedgerSort]   = useState('recent');
+  const {
+    urlSearch, urlStatus, urlSort, urlPage,
+    inputSearch, setInputSearch,
+    isDebouncing,
+    handleStatusChange, handleSortChange, handlePageChange,
+  } = useReportFilters();
+
+  const [saving,     setSaving]     = useState(false);
+  const [showCreate, setShowCreate] = useState(false);
+
+  // Drive list fetch whenever URL filter params change
+  useEffect(() => {
+    if (!isWizard) {
+      fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urlSearch, urlStatus, urlSort, urlPage, isWizard]);
 
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
@@ -55,7 +68,7 @@ const ReportsModule = () => {
   };
 
   const handleBack = () => {
-    if (step === 1) { goToList(); setLedgerFilter('all'); fetchReports('all'); }
+    if (step === 1) goToList();
     else goToStep(STEP_KEYS[stepIndex - 1]);
   };
 
@@ -73,7 +86,6 @@ const ReportsModule = () => {
       if (stepKey === 'media') {
         toast.success('Report submitted successfully');
         goToList();
-        fetchReports();
       } else {
         setForm(reportToForm(data.report));
         toast.success('Step saved');
@@ -88,28 +100,37 @@ const ReportsModule = () => {
 
   const handleCreated = () => {
     setShowCreate(false);
-    setLedgerFilter('all');
-    fetchReports('all');
+    fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
   };
 
   const handleDelete = async (id) => {
     try {
       await adminApiRequest(`/api/reports/${id}`, { method: 'DELETE' });
       toast.success('Report deleted');
-      fetchReports(ledgerFilter);
+      // Go back a page if we just deleted the only item on a non-first page
+      const wouldBeEmpty = reports.length === 1 && urlPage > 1;
+      if (wouldBeEmpty) {
+        handlePageChange(urlPage - 1);
+      } else {
+        fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
+      }
     } catch (err) {
       toast.error(err.message || 'Failed to delete');
     }
   };
 
-  const stats = useMemo(() => {
-    const total = reports.reduce((s, r) => s + (r.livesImpacted || 0), 0);
+  const statCards = useMemo(() => {
+    const avg = stats.count ? Math.round(stats.totalLives / stats.count) : 0;
     return {
-      globalLives:   total.toLocaleString(),
-      ledgerEntries: reports.length,
-      avgImpact:     reports.length ? Math.round(total / reports.length).toLocaleString() : '0',
+      globalLives:   stats.totalLives.toLocaleString(),
+      ledgerEntries: stats.count.toLocaleString(),
+      avgImpact:     avg.toLocaleString(),
     };
-  }, [reports]);
+  }, [stats]);
+
+  const handleRefresh = useCallback(() => {
+    fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
+  }, [fetchReports, urlStatus, urlSearch, urlSort, urlPage]);
 
   return (
     <div className="space-y-5">
@@ -122,9 +143,9 @@ const ReportsModule = () => {
 
       {!isWizard && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <StatCard icon="FiGlobe"      label="Global Lives Reached" value={stats.globalLives}   iconBg="bg-gray-100" />
-          <StatCard icon="FiClipboard"  label="Ledger Entries"       value={stats.ledgerEntries} iconBg="bg-gray-100" />
-          <StatCard icon="FiTrendingUp" label="Avg Impact / Node"    value={stats.avgImpact}     iconBg="bg-green-50" />
+          <StatCard icon="FiGlobe"      label="Global Lives Reached" value={statCards.globalLives}   iconBg="bg-gray-100" />
+          <StatCard icon="FiClipboard"  label="Ledger Entries"       value={statCards.ledgerEntries} iconBg="bg-gray-100" />
+          <StatCard icon="FiTrendingUp" label="Avg Impact / Node"    value={statCards.avgImpact}     iconBg="bg-green-50" />
         </div>
       )}
 
@@ -132,7 +153,7 @@ const ReportsModule = () => {
         isWizard={isWizard}
         isSuperAdmin={isSuperAdmin}
         projectName={form.projectName}
-        onBack={() => { goToList(); setLedgerFilter('all'); fetchReports('all'); }}
+        onBack={goToList}
         onNewReport={() => setShowCreate(true)}
       />
 
@@ -149,26 +170,24 @@ const ReportsModule = () => {
           onNext={handleNext}
         />
       ) : (
-        <div className="space-y-4">
-          <LedgerToolbar
-            activeFilter={ledgerFilter}
-            onFilterChange={(f) => { setLedgerFilter(f); fetchReports(f); }}
-            loadingList={loadingList}
-            search={ledgerSearch}
-            onSearchChange={setLedgerSearch}
-            sort={ledgerSort}
-            onSortChange={setLedgerSort}
-          />
-          <RecordLedger
-            reports={reports}
-            loading={loadingList}
-            search={ledgerSearch}
-            sort={ledgerSort}
-            isSuperAdmin={isSuperAdmin}
-            onEdit={openWizard}
-            onDelete={handleDelete}
-          />
-        </div>
+        <RecordLedger
+          reports={reports}
+          loading={loadingList}
+          meta={meta}
+          inputSearch={inputSearch}
+          setInputSearch={setInputSearch}
+          isDebouncing={isDebouncing}
+          urlSearch={urlSearch}
+          urlStatus={urlStatus}
+          urlSort={urlSort}
+          onStatusChange={handleStatusChange}
+          onSortChange={handleSortChange}
+          onPageChange={handlePageChange}
+          onRefresh={handleRefresh}
+          isSuperAdmin={isSuperAdmin}
+          onEdit={openWizard}
+          onDelete={handleDelete}
+        />
       )}
     </div>
   );
