@@ -14,7 +14,7 @@ import MetricsTab from './reports/MetricsTab';
 import MediaTimelineTab from './reports/MediaTimelineTab';
 import { useReportData } from './hooks/useReportData';
 import { useReportFilters } from './hooks/useReportFilters';
-import { buildStepPayload, reportToForm } from './reports/reportFormUtils';
+import { buildStepPayload, reportToForm, validateStep } from './reports/reportFormUtils';
 
 const STEP_KEYS    = ['general', 'narrative', 'metrics', 'media'];
 const STEP_CONTENT = [GeneralTab, NarrativeTab, MetricsTab, MediaTimelineTab];
