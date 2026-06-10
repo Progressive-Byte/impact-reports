@@ -102,7 +102,8 @@ export const buildStepPayload = {
     })),
   }),
   media:     (f) => ({
-    galleryUrl: f.galleryUrl,
+    images:    f.images.filter(img => img.url.trim()).map(({ url }) => ({ url })),
+    videoUrl:  f.videoUrl.trim(),
     milestones: f.milestones.map(({ date, title, notes }) => ({ date, title, notes })),
   }),
 };
