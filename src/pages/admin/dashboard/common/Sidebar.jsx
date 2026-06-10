@@ -16,7 +16,7 @@ const STATUS_ITEMS = [
 
 export { NAV };
 
-const Sidebar = ({ section, setSection, setSidebarOpen, mobile = false }) => {
+const Sidebar = ({ section, setSection, setSidebarOpen, reportCount = null, mobile = false }) => {
   const { admin } = useAdminAuth();
   const isSuperAdmin = admin?.role === 'superadmin';
 
