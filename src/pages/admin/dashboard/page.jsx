@@ -166,7 +166,7 @@ const AdminOverview = () => {
         <main className="flex-1 p-5 sm:p-7">
           {section === 'overview' && <AdminDashboard />}
 
-          {section === 'reports' && <ReportsModule />}
+          {section === 'reports' && <ReportsModule onCountChange={setReportCount} />}
 
           {section === 'users' && <UserManager />}
           {section === 'settings' && <Settings />}
