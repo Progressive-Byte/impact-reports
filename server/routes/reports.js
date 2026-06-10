@@ -53,10 +53,12 @@ async function findProjectAssigneeConflicts(projectName, assigneeIds, excludeRep
   return `${names} ${taken.size === 1 ? 'is' : 'are'} already assigned to "${projectName.trim()}"`;
 }
 
-// ── GET /api/reports?status= ─────────────────────────────────────────
+// ── GET /api/reports?status=&q=&sort=recent|oldest&page=&limit= ──────
 router.get('/', async (req, res) => {
   try {
-    const { status } = req.query;
+    const { status, q, sort } = req.query;
+    const { page, limit, skip } = parsePagination(req.query, { defaultLimit: 10, maxLimit: 100 });
+    const sortOrder = sort === 'oldest' ? 'createdAt' : '-createdAt';
 
     const filter = req.admin.role === 'superadmin'
       ? {}
@@ -65,12 +67,22 @@ router.get('/', async (req, res) => {
     if (status && ['pending', 'draft', 'published'].includes(status)) {
       filter.status = status;
     }
+    if (q?.trim()) {
+      filter.projectName = new RegExp(q.trim(), 'i');
+    }
 
-    const reports = await Report.find(filter)
-      .populate(POPULATE)
-      .sort('-createdAt');
+    const [reports, total, agg] = await Promise.all([
+      Report.find(filter).populate(POPULATE).sort(sortOrder).skip(skip).limit(limit),
+      Report.countDocuments(filter),
+      Report.aggregate([{ $match: filter }, { $group: { _id: null, lives: { $sum: '$livesImpacted' } } }]),
+    ]);
 
-    res.json({ reports });
+    const totalLives = agg[0]?.lives ?? 0;
+    res.json({
+      reports,
+      meta:  buildMeta({ page, limit, total }),
+      stats: { totalLives, count: total },
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
