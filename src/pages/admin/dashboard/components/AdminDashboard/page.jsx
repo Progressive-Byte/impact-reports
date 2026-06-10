@@ -1,50 +1,82 @@
-import { useMemo, useState } from 'react';
-import { reports } from '../../../../../data/mockData';
-import { cleanCountryName } from '../../../../../utils/location';
+import { useState, useEffect } from 'react';
 import SafeIcon from '../../../../../common/SafeIcon';
 import { TrendLine } from '../../../../../common/SvgIcon';
+import { adminApiRequest } from '../../../../../services/adminApi';
+import { useAdminAuth } from '../../../../../context/AdminAuthContext';
 
 const SYSTEM_LOGS = [
-  { tag: 'SYS',  tagClass: 'bg-gray-600 text-gray-200',     time: '10:42:01', msg: 'Supabase connection established.' },
-  { tag: 'AUTH', tagClass: 'bg-green-600 text-white',        time: '10:45:12', msg: "Admin user 'j.doe' authenticated." },
-  { tag: 'WARN', tagClass: 'bg-yellow-400 text-yellow-900',  time: '11:02:44', msg: "High latency detected on 'impact_reports' bucket." },
-  { tag: 'SYS',  tagClass: 'bg-gray-600 text-gray-200',     time: '11:15:00', msg: 'Routine backup completed successfully.' },
+  { tag: 'SYS',  tagClass: 'bg-gray-600 text-gray-200',    time: '10:42:01', msg: 'MongoDB connection established.' },
+  { tag: 'AUTH', tagClass: 'bg-green-600 text-white',       time: '10:45:12', msg: 'Admin session authenticated via JWT.' },
+  { tag: 'SYS',  tagClass: 'bg-gray-600 text-gray-200',    time: '11:15:00', msg: 'Routine backup completed successfully.' },
 ];
 
-const CONTENT_LOGS = [
-  { tag: 'PUB',  tagClass: 'bg-blue-500 text-white',         time: '11:20:31', msg: "Report 'Jordan Q2 Field Survey' published." },
-  { tag: 'EDIT', tagClass: 'bg-purple-500 text-white',       time: '11:18:09', msg: "Draft updated by 'a.khan'." },
-  { tag: 'FLAG', tagClass: 'bg-yellow-400 text-yellow-900',  time: '11:05:52', msg: '4 reports flagged for field verification.' },
-];
+function fmt(n) {
+  return n == null ? '—' : Number(n).toLocaleString();
+}
 
+function timeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1)  return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24)  return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
+const STATUS_TAG = {
+  published: { label: 'PUB',  cls: 'bg-blue-500 text-white' },
+  draft:     { label: 'EDIT', cls: 'bg-purple-500 text-white' },
+  pending:   { label: 'PEND', cls: 'bg-yellow-400 text-yellow-900' },
+};
+
+const Skeleton = ({ className = '' }) => (
+  <div className={`bg-gray-100 rounded-lg animate-pulse ${className}`} />
+);
 
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('system');
+  const { admin } = useAdminAuth();
+  const isSuperAdmin = admin?.role === 'superadmin';
+
+  const [dashStats, setDashStats]   = useState(null);
+  const [loading, setLoading]       = useState(true);
+  const [activeTab, setActiveTab]   = useState('system');
   const [require2FA, setRequire2FA] = useState(true);
 
-  const regionData = useMemo(() => {
-    const map = {};
-    reports.forEach((r) => {
-      r.countries.forEach((c) => {
-        const name = cleanCountryName(c);
-        map[name] = (map[name] || 0) + Math.round(r.metrics.beneficiaries / r.countries.length);
-      });
-    });
-    return Object.entries(map)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 6);
+  useEffect(() => {
+    adminApiRequest('/api/admin/dashboard')
+      .then(data => setDashStats(data))
+      .catch(() => {})
+      .finally(() => setLoading(false));
   }, []);
 
-  const maxVal = regionData[0]?.[1] || 1;
-  const logs = activeTab === 'system' ? SYSTEM_LOGS : CONTENT_LOGS;
+  const regionData = dashStats?.regionData ?? [];
+  const maxVal = regionData[0]?.livesImpacted || 1;
+
+  const contentLogs = (dashStats?.recentActivity ?? []).map(r => {
+    const tag = STATUS_TAG[r.status] ?? STATUS_TAG.pending;
+    return {
+      tag:      tag.label,
+      tagClass: tag.cls,
+      time:     timeAgo(r.updatedAt),
+      msg:      `"${r.projectName}" — ${r.status}`,
+    };
+  });
+  const logs = activeTab === 'system' ? SYSTEM_LOGS : contentLogs;
 
   return (
     <div className="space-y-6">
       {/* Page title */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-black text-[#0B0D0F] tracking-tight">IT Admin Dashboard</h1>
-          <p className="text-sm text-gray-400 mt-0.5">Global configuration &amp; system telemetry</p>
+          <h1 className="text-2xl font-black text-[#0B0D0F] tracking-tight">
+            {isSuperAdmin ? 'IT Admin Dashboard' : `${admin?.username ?? 'My'} Dashboard`}
+          </h1>
+          <p className="text-sm text-gray-400 mt-0.5">
+            {isSuperAdmin
+              ? 'Global configuration & system telemetry'
+              : 'Your assigned reports & activity'}
+          </p>
         </div>
         <button className="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors shadow-sm">
           <SafeIcon icon="FiDownload" className="text-sm" />
@@ -54,115 +86,176 @@ const AdminDashboard = () => {
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {/* Database Load */}
-        <div className="bg-white border border-gray-200 rounded-3xl p-7 shadow-sm flex flex-col justify-between min-h-[220px]">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
-                <SafeIcon icon="FiDatabase" className="text-gray-500 text-base" />
-              </div>
-              <span className="text-sm font-semibold text-gray-500">Database Load</span>
-            </div>
-            <span className="flex items-center gap-1.5 text-[11px] font-bold text-green-700 bg-green-50 border border-green-200 rounded-full px-2.5 py-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-              Online
-            </span>
-          </div>
 
-          <div>
-            <div className="flex items-end gap-1 mb-3">
-              <span className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">24.5</span>
-              <span className="text-2xl font-black text-gray-400 mb-1">%</span>
-            </div>
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-              <div className="h-full bg-green-500 rounded-full" style={{ width: '24.5%' }} />
-            </div>
-          </div>
-
-          <div>
-            <div className="h-px bg-gray-100 mb-4" />
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Server Uptime</p>
-                <p className="text-base font-black text-[#0B0D0F]">99.98%</p>
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Network Latency</p>
-                <p className="text-base font-black text-[#0B0D0F]">12 ms</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Reports Status */}
+        {/* ── Reports Status ──────────────────────────────────────────── */}
         <div className="bg-white border border-gray-200 rounded-3xl p-7 shadow-sm flex flex-col justify-between min-h-[220px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
                 <SafeIcon icon="FiClipboard" className="text-gray-500 text-base" />
               </div>
-              <span className="text-sm font-semibold text-gray-500">Reports Status</span>
+              <span className="text-sm font-semibold text-gray-500">
+                {isSuperAdmin ? 'Reports Status' : 'My Reports'}
+              </span>
             </div>
             <div className="flex items-center gap-1.5">
               <TrendLine up={true} />
-              <span className="text-[12px] font-black text-green-600">+12%</span>
+              <span className="text-[12px] font-black text-green-600">
+                {loading ? '—' : `${fmt(dashStats?.reportStats?.total)} total`}
+              </span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-6">
             <div>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Published</p>
-              <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">
-                {reports.length.toLocaleString()}
-              </p>
+              {loading
+                ? <Skeleton className="h-12 w-16" />
+                : <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">
+                    {fmt(dashStats?.reportStats?.published)}
+                  </p>
+              }
             </div>
             <div>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Pending</p>
-              <div className="flex items-end gap-2">
-                <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">12</p>
-                <span className="text-[10px] font-bold text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-md px-2 py-0.5 mb-1">
-                  Review
-                </span>
-              </div>
+              {loading
+                ? <Skeleton className="h-12 w-16" />
+                : <div className="flex items-end gap-2">
+                    <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">
+                      {fmt(dashStats?.reportStats?.pendingDraft)}
+                    </p>
+                    {(dashStats?.reportStats?.pendingDraft ?? 0) > 0 && (
+                      <span className="text-[10px] font-bold text-yellow-700 bg-yellow-50 border border-yellow-200 rounded-md px-2 py-0.5 mb-1">
+                        Review
+                      </span>
+                    )}
+                  </div>
+              }
             </div>
           </div>
-
           <div className="h-px bg-transparent" />
         </div>
 
-        {/* Active Staff */}
+        {/* ── Lives Impacted ──────────────────────────────────────────── */}
         <div className="bg-white border border-gray-200 rounded-3xl p-7 shadow-sm flex flex-col justify-between min-h-[220px]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
-                <SafeIcon icon="FiUsers" className="text-[#E52321] text-base" />
+                <SafeIcon icon="FiHeart" className="text-[#E52321] text-base" />
               </div>
-              <span className="text-sm font-semibold text-gray-500">Active Staff</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <TrendLine up={false} />
-              <span className="text-[12px] font-black text-[#E52321]">-2%</span>
+              <span className="text-sm font-semibold text-gray-500">Lives Impacted</span>
             </div>
           </div>
 
-          <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">89</p>
+          {loading
+            ? <Skeleton className="h-14 w-32 mt-2" />
+            : <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">
+                {fmt(dashStats?.totalLivesImpacted)}
+              </p>
+          }
 
           <div>
             <div className="h-px bg-gray-100 mb-4" />
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Verified Today</p>
-                <p className="text-base font-black text-[#0B0D0F]">31</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Countries</p>
+                <p className="text-base font-black text-[#0B0D0F]">
+                  {loading ? '—' : fmt(regionData.length)}
+                </p>
               </div>
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">In Field</p>
-                <p className="text-base font-black text-[#0B0D0F]">58</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+                  {isSuperAdmin ? 'Total Reports' : 'Assigned'}
+                </p>
+                <p className="text-base font-black text-[#0B0D0F]">
+                  {loading ? '—' : fmt(dashStats?.reportStats?.total)}
+                </p>
               </div>
             </div>
           </div>
         </div>
+
+        {/* ── Active Staff (superadmin) / My Progress (admin) ─────────── */}
+        <div className="bg-white border border-gray-200 rounded-3xl p-7 shadow-sm flex flex-col justify-between min-h-[220px]">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+                <SafeIcon icon={isSuperAdmin ? 'FiUsers' : 'FiUser'} className="text-gray-500 text-base" />
+              </div>
+              <span className="text-sm font-semibold text-gray-500">
+                {isSuperAdmin ? 'Active Staff' : 'My Progress'}
+              </span>
+            </div>
+            {isSuperAdmin && (
+              <div className="flex items-center gap-1.5">
+                <TrendLine up={true} />
+                <span className="text-[12px] font-black text-green-600">
+                  {loading ? '—' : `${fmt(dashStats?.adminStats?.active)} active`}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {isSuperAdmin ? (
+            <>
+              {loading
+                ? <Skeleton className="h-14 w-24 mt-2" />
+                : <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">
+                    {fmt(dashStats?.adminStats?.total)}
+                  </p>
+              }
+              <div>
+                <div className="h-px bg-gray-100 mb-4" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Users</p>
+                    <p className="text-base font-black text-[#0B0D0F]">
+                      {loading ? '—' : fmt(dashStats?.adminStats?.total)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Active</p>
+                    <p className="text-base font-black text-[#0B0D0F]">
+                      {loading ? '—' : fmt(dashStats?.adminStats?.active)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              {loading
+                ? <Skeleton className="h-14 w-24 mt-2" />
+                : <p className="text-5xl font-black text-[#0B0D0F] tracking-tighter leading-none">
+                    {fmt(dashStats?.reportStats?.published)}
+                    <span className="text-lg font-bold text-gray-400 ml-2">
+                      / {fmt(dashStats?.reportStats?.total)}
+                    </span>
+                  </p>
+              }
+              <div>
+                <div className="h-px bg-gray-100 mb-4" />
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Published</p>
+                    <p className="text-base font-black text-[#0B0D0F]">
+                      {loading ? '—' : fmt(dashStats?.reportStats?.published)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">In Progress</p>
+                    <p className="text-base font-black text-[#0B0D0F]">
+                      {loading ? '—' : fmt(dashStats?.reportStats?.pendingDraft)}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
       </div>
-      
+
       <div className="flex gap-5 items-start">
         {/* System Log / Content Feed */}
         <div className="flex-[3] min-w-0 bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
@@ -178,24 +271,43 @@ const AdminDashboard = () => {
                 }`}
               >
                 {label}
+                {id === 'content' && (dashStats?.recentActivity?.length ?? 0) > 0 && (
+                  <span className="ml-2 text-[10px] font-black bg-[#E52321] text-white rounded-full px-1.5 py-0.5">
+                    {dashStats.recentActivity.length}
+                  </span>
+                )}
               </button>
             ))}
           </div>
           <div className="m-5 bg-[#0f1114] rounded-2xl p-6 min-h-[340px] font-mono">
-            <div className="space-y-4">
-              {logs.map((entry, i) => (
-                <div key={i} className="flex items-start gap-3">
-                  <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-black min-w-[42px] flex-shrink-0 ${entry.tagClass}`}>
-                    {entry.tag}
-                  </span>
-                  <span className="text-gray-500 text-[13px] flex-shrink-0 tabular-nums">{entry.time}</span>
-                  <span className="text-gray-200 text-[13px] leading-relaxed">{entry.msg}</span>
-                </div>
-              ))}
-              <div className="flex items-center pt-1">
-                <span className="inline-block w-2 h-4 bg-green-400 animate-pulse rounded-sm" />
+            {loading && activeTab === 'content' ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="flex items-start gap-3">
+                    <div className="h-5 w-10 bg-gray-700 rounded animate-pulse" />
+                    <div className="h-4 w-16 bg-gray-800 rounded animate-pulse" />
+                    <div className="h-4 flex-1 bg-gray-800 rounded animate-pulse" />
+                  </div>
+                ))}
               </div>
-            </div>
+            ) : logs.length === 0 ? (
+              <p className="text-gray-500 text-sm">No activity yet.</p>
+            ) : (
+              <div className="space-y-4">
+                {logs.map((entry, i) => (
+                  <div key={i} className="flex items-start gap-3">
+                    <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded text-[10px] font-black min-w-[42px] flex-shrink-0 ${entry.tagClass}`}>
+                      {entry.tag}
+                    </span>
+                    <span className="text-gray-500 text-[13px] flex-shrink-0 tabular-nums">{entry.time}</span>
+                    <span className="text-gray-200 text-[13px] leading-relaxed">{entry.msg}</span>
+                  </div>
+                ))}
+                <div className="flex items-center pt-1">
+                  <span className="inline-block w-2 h-4 bg-green-400 animate-pulse rounded-sm" />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -204,43 +316,63 @@ const AdminDashboard = () => {
           {/* Active Regions */}
           <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
             <div className="flex items-center gap-2.5 mb-5">
-              <div className='w-10 h-10 bg-[#f1f1f3] rounded-xl flex items-center justify-center flex-shrink-0'>
+              <div className="w-10 h-10 bg-[#f1f1f3] rounded-xl flex items-center justify-center flex-shrink-0">
                 <SafeIcon icon="FiGlobe" className="text-gray-400 text-base" />
               </div>
               <h3 className="text-sm font-black text-[#0B0D0F]">Active Regions</h3>
             </div>
-            <div className="divide-y divide-gray-100">
-              {regionData.map(([name, val], i) => (
-                <div key={name} className="py-3 first:pt-0 last:pb-0 flex items-center gap-3">
-                  <span className="text-[11px] font-bold text-gray-400 w-5 flex-shrink-0">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-sm font-semibold text-[#0B0D0F]">{name}</span>
-                      <span className="text-sm font-bold text-[#0B0D0F]">{val.toLocaleString()}</span>
-                    </div>
-                    <div className="w-[90%] h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-[#E52321] rounded-full"
-                        style={{ width: `${(val / maxVal) * 100}%` }}
-                      />
+
+            {loading ? (
+              <div className="space-y-3">
+                {[1, 2, 3, 4].map(i => (
+                  <div key={i} className="py-2 flex items-center gap-3">
+                    <Skeleton className="w-5 h-3" />
+                    <div className="flex-1">
+                      <Skeleton className="h-3 w-24 mb-2" />
+                      <Skeleton className="h-1.5 w-full" />
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : regionData.length === 0 ? (
+              <p className="text-sm text-gray-400 text-center py-6">No location data yet.</p>
+            ) : (
+              <div className="divide-y divide-gray-100">
+                {regionData.map(({ country, livesImpacted }, i) => (
+                  <div key={country} className="py-3 first:pt-0 last:pb-0 flex items-center gap-3">
+                    <span className="text-[11px] font-bold text-gray-400 w-5 flex-shrink-0">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1.5">
+                        <span className="text-sm font-semibold text-[#0B0D0F]">{country}</span>
+                        <span className="text-sm font-bold text-[#0B0D0F]">{livesImpacted.toLocaleString()}</span>
+                      </div>
+                      <div className="w-[90%] h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-[#E52321] rounded-full"
+                          style={{ width: `${(livesImpacted / maxVal) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
             <div className="border-t border-gray-100 mt-3 pt-4">
-              <button className="text-[#E52321] text-xs font-black hover:underline w-full text-center">
-                View all 50+ global nodes →
-              </button>
+              <p className="text-[#E52321] text-xs font-black text-center">
+                {regionData.length > 0
+                  ? `${regionData.length} region${regionData.length !== 1 ? 's' : ''} tracked`
+                  : 'No regions yet'}
+              </p>
             </div>
           </div>
 
           {/* Platform Configuration */}
           <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
             <div className="flex items-center gap-2.5 mb-5">
-              <div className='w-10 h-10 bg-[#f1f1f3] rounded-xl flex items-center justify-center flex-shrink-0'>
+              <div className="w-10 h-10 bg-[#f1f1f3] rounded-xl flex items-center justify-center flex-shrink-0">
                 <SafeIcon icon="FiShield" className="text-gray-400 text-base" />
               </div>
               <div>
@@ -260,7 +392,7 @@ const AdminDashboard = () => {
                 </div>
               </div>
               <button
-                onClick={() => setRequire2FA((v) => !v)}
+                onClick={() => setRequire2FA(v => !v)}
                 className={`relative flex-shrink-0 w-11 h-6 rounded-full transition-colors duration-200 ml-3 ${
                   require2FA ? 'bg-green-500' : 'bg-gray-200'
                 }`}
