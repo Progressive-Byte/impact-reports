@@ -280,10 +280,18 @@ const ReportDetail = () => {
                 className={locationViewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4' : 'flex flex-col space-y-3'}
               >
                 <AnimatePresence mode="popLayout">
-                  {report.countries.map((location, idx) => (
+                  {(report.locations?.length > 0
+                    ? report.locations
+                    : report.countries.map(c => ({ address: c, lat: '', lng: '' }))
+                  ).map((loc, idx) => {
+                    const name   = loc.address || loc;
+                    const coords = (loc.lat && loc.lng)
+                      ? `${Number(loc.lat).toFixed(4)}, ${Number(loc.lng).toFixed(4)}`
+                      : getGpsData(name, report.region);
+                    return (
                     <motion.div
                       layout
-                      key={`${location}-${idx}`}
+                      key={`${name}-${idx}`}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.95 }}
@@ -294,12 +302,13 @@ const ReportDetail = () => {
                       </div>
                       <div className="flex flex-col text-left overflow-hidden">
                         <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 truncate">
-                          {getGpsData(location, report.region)}
+                          {coords}
                         </span>
-                        <span className="text-sm font-bold text-[#0B0D0F] truncate">{location}</span>
+                        <span className="text-sm font-bold text-[#0B0D0F] truncate">{name}</span>
                       </div>
                     </motion.div>
-                  ))}
+                    );
+                  })}
                 </AnimatePresence>
               </motion.div>
             </div>
