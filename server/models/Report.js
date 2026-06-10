@@ -38,7 +38,8 @@ const reportSchema = new mongoose.Schema(
     deliverables:      { type: [deliverableSchema], default: [] },
 
     // Media & Timeline step
-    galleryUrl:        { type: String, default: '' },
+    images:            { type: [{ url: { type: String, default: '' } }], default: [], _id: false },
+    videoUrl:          { type: String, default: '' },
     milestones:        { type: [milestoneSchema], default: [] },
 
     // Completed step tracking
