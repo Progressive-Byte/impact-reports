@@ -18,6 +18,7 @@ const app = express();
 
 app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:4173'], credentials: true }));
 app.use(express.json());
+app.use('/api', (_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
