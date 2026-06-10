@@ -174,7 +174,7 @@ const UserManager = () => {
           </div>
         )}
 
-        <Pagination meta={meta} onPageChange={handlePageChange} />
+        <Pagination meta={meta} onPageChange={handlePageChange} label="users" />
       </div>
     </div>
   );
