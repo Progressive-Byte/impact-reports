@@ -1,7 +1,10 @@
+import { useRef, useState } from 'react';
 import SafeIcon from '../../../../../../common/SafeIcon';
 import { Input, Textarea } from './FormField';
+import { adminApiRequest } from '../../../../../../services/adminApi';
 
-const MAX_IMAGES = 10;
+const MAX_IMAGES  = 10;
+const MAX_SIZE_MB = 5;
 
 const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
   // ── Images ──────────────────────────────────────────────────────────
