@@ -65,11 +65,14 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
     form.locations.filter(l => l.country === country && l.address.trim()).map(l => l.address);
 
   const handleStateChange = (country, selectedStates) => {
+    const coords  = coordMap[country] || {};
     const others  = form.locations.filter(l => l.country !== country);
     const newLocs = selectedStates.map((address, i) => ({
-      id: Date.now() + i + Math.random(),
+      id:      Date.now() + i + Math.random(),
       country,
       address,
+      lat:     coords[address]?.lat || '',
+      lng:     coords[address]?.lng || '',
     }));
     update('locations', [...others, ...newLocs]);
   };
