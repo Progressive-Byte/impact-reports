@@ -12,6 +12,7 @@ import GeneralTab from './reports/GeneralTab';
 import NarrativeTab from './reports/NarrativeTab';
 import MetricsTab from './reports/MetricsTab';
 import MediaTimelineTab from './reports/MediaTimelineTab';
+import CountryLocationTab from './reports/CountryLocationTab';
 import { useReportData } from './hooks/useReportData';
 import { useReportFilters } from './hooks/useReportFilters';
 import { buildStepPayload, reportToForm, validateStep } from './reports/reportFormUtils';
