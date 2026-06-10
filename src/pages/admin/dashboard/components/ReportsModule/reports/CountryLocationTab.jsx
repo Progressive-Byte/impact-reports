@@ -1,33 +1,29 @@
+import { useMemo } from 'react';
+import { Country, State } from 'country-state-city';
 import SafeIcon from '../../../../../../common/SafeIcon';
 import { Input } from './FormField';
 import MultiSelect from './MultiSelect';
+import SearchableSelect from './SearchableSelect';
 
-const COUNTRY_OPTIONS = [
-  'Afghanistan','Algeria','Angola','Armenia','Azerbaijan',
-  'Bangladesh','Bolivia','Burkina Faso','Burundi',
-  'Cambodia','Cameroon','Central African Republic','Chad','Colombia','Comoros','Congo','Côte d\'Ivoire',
-  'Democratic Republic of Congo','Djibouti','Dominican Republic',
-  'Ecuador','Egypt','El Salvador','Eritrea','Ethiopia',
-  'Gaza','Georgia','Ghana','Guatemala','Guinea','Guinea-Bissau',
-  'Haiti','Honduras',
-  'India','Indonesia','Iraq',
-  'Jordan',
-  'Kazakhstan','Kenya','Kyrgyzstan',
-  'Laos','Lebanon','Liberia','Libya',
-  'Madagascar','Malawi','Mali','Mauritania','Mozambique','Myanmar',
-  'Nepal','Nicaragua','Niger','Nigeria',
-  'Pakistan','Palestine','Panama','Papua New Guinea','Peru','Philippines',
-  'Rwanda',
-  'Senegal','Sierra Leone','Somalia','South Sudan','Sri Lanka','Sudan','Syria',
-  'Tajikistan','Tanzania','Thailand','Timor-Leste','Togo','Tunisia','Turkey',
-  'Uganda','Ukraine','Uzbekistan',
-  'Venezuela','Vietnam',
-  'West Bank',
-  'Yemen',
-  'Zambia','Zimbabwe',
-].map(c => ({ value: c, label: c }));
+// Build once at module level — not inside the component
+const ALL_COUNTRIES   = Country.getAllCountries();
+const COUNTRY_OPTIONS = ALL_COUNTRIES.map(c => ({ value: c.name, label: c.name }));
+const ISO_BY_NAME     = Object.fromEntries(ALL_COUNTRIES.map(c => [c.name, c.isoCode]));
+
+function getStateOptions(countryName) {
+  const iso = ISO_BY_NAME[countryName];
+  if (!iso) return [];
+  return State.getStatesOfCountry(iso).map(s => ({ value: s.name, label: s.name }));
+}
 
 const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
+  // Pre-compute state options per selected country (memoised on country selection)
+  const stateMap = useMemo(() => {
+    const map = {};
+    form.countries.forEach(c => { map[c] = getStateOptions(c); });
+    return map;
+  }, [form.countries]);
+
   const handleCountryChange = (newCountries) => {
     const kept  = form.locations.filter(l => newCountries.includes(l.country));
     const taken = new Set(kept.map(l => l.country));
@@ -49,7 +45,7 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
 
   return (
     <div className="space-y-5">
-      {/* Country selector */}
+      {/* Country multi-selector — all countries from library */}
       <MultiSelect
         label="Project Countries"
         required
@@ -68,8 +64,11 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
           </p>
 
           {form.countries.map(country => {
-            const countryLocs = form.locations.filter(l => l.country === country);
-            const locError    = fieldErrors[`loc_${country}`];
+            const countryLocs  = form.locations.filter(l => l.country === country);
+            const stateOptions = stateMap[country] ?? [];
+            const hasStates    = stateOptions.length > 0;
+            const locError     = fieldErrors[`loc_${country}`];
+            const filledCount  = countryLocs.filter(l => l.address.trim()).length;
 
             return (
               <div key={country} className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-3">
@@ -81,8 +80,13 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
                     </div>
                     <span className="text-sm font-black text-[#0B0D0F]">{country}</span>
                     <span className="text-xs text-gray-400 font-medium">
-                      {countryLocs.filter(l => l.address.trim()).length} location{countryLocs.filter(l => l.address.trim()).length !== 1 ? 's' : ''}
+                      {filledCount} location{filledCount !== 1 ? 's' : ''}
                     </span>
+                    {hasStates && (
+                      <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">
+                        · {stateOptions.length} states/provinces
+                      </span>
+                    )}
                   </div>
                   {locError && (
                     <p className="text-xs text-red-500 font-medium">{locError}</p>
@@ -96,12 +100,24 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
                       <div className="w-7 h-7 rounded-lg bg-white border border-gray-200 flex items-center justify-center flex-shrink-0">
                         <SafeIcon icon="FiMapPin" className="text-[#E52321] text-xs" />
                       </div>
-                      <Input
-                        placeholder={`Location ${idx + 1} — Province, City or District`}
-                        value={loc.address}
-                        onChange={e => updateLocation(loc.id, e.target.value)}
-                        className="flex-1"
-                      />
+
+                      {hasStates ? (
+                        <SearchableSelect
+                          value={loc.address}
+                          onChange={val => updateLocation(loc.id, val)}
+                          options={stateOptions}
+                          placeholder={`State / Province ${idx + 1}`}
+                          className="flex-1"
+                        />
+                      ) : (
+                        <Input
+                          placeholder={`Location ${idx + 1} — City, District or Region`}
+                          value={loc.address}
+                          onChange={e => updateLocation(loc.id, e.target.value)}
+                          className="flex-1"
+                        />
+                      )}
+
                       <button
                         onClick={() => removeLocation(loc.id)}
                         disabled={countryLocs.length === 1}
@@ -118,8 +134,8 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
                   className="w-full border border-dashed border-gray-200 rounded-xl py-2.5 text-sm text-[#76767e] font-semibold hover:bg-red-50 hover:border-[#E52321] hover:text-[#E52321] transition-colors flex items-center justify-center gap-2"
                 >
                   <SafeIcon icon="FiPlus" className="text-xs" />
-                  Add location in {country}
-                </button>
+                  Add {hasStates ? 'state / province' : 'location'} in {country}
+</button>
               </div>
             );
           })}
