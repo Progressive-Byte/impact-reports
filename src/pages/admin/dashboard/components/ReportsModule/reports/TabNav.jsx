@@ -5,6 +5,7 @@ export const STEPS = [
   { id: 2, label: 'Narrative' },
   { id: 3, label: 'Metrics' },
   { id: 4, label: 'Media & Timeline' },
+  { id: 5, label: 'Country & Location' },
 ];
 
 const StepIndicator = ({ current }) => (
