@@ -48,11 +48,11 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 
 **Status values**
 
-| Status      | When set                                               |
-| ----------- | ------------------------------------------------------ |
-| `pending`   | Just created — no step saved yet                       |
-| `draft`     | At least one step saved but not all four               |
-| `published` | All four steps saved (after final `media` step submit) |
+| Status      | When set                                                    |
+| ----------- | ----------------------------------------------------------- |
+| `pending`   | Just created — no step saved yet                            |
+| `draft`     | At least one step saved but not all five                    |
+| `published` | All five steps saved (after final `location` step submit)   |
 
 ---
 
