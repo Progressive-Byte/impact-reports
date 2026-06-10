@@ -39,7 +39,13 @@ export const reportToForm = (report) => ({
   videoUrl:          report.videoUrl || '',
   milestones:        (report.milestones || []).map((m, i) => ({ ...m, id: i + 1 })),
   countries:         report.countries || [],
-  locations:         (report.locations || []).map((l, i) => ({ id: i + 1, country: l.country || '', address: l.address || '' })),
+  locations:         (report.locations || []).map((l, i) => ({
+    id:      i + 1,
+    country: l.country || '',
+    address: l.address || '',
+    lat:     l.lat     || '',
+    lng:     l.lng     || '',
+  })),
 });
 
 export function validateStep(stepKey, form, isSuperAdmin = true) {
