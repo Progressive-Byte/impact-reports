@@ -19,9 +19,18 @@ const AdminOverview = () => {
     ? ['overview', 'reports', 'users', 'settings']
     : ['overview', 'reports'];
   const section = VALID.includes(rawSection) ? rawSection : 'overview';
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen,  setSidebarOpen]  = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [reportCount,  setReportCount]  = useState(null);
   const userMenuRef = useRef(null);
+
+  const fetchReportCount = useCallback(() => {
+    adminApiRequest('/api/reports?limit=1')
+      .then(data => setReportCount(data.stats?.count ?? null))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => { fetchReportCount(); }, [fetchReportCount]);
 
   useEffect(() => {
     const handleClick = (e) => {
