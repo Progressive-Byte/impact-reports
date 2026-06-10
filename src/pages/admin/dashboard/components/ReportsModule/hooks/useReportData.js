@@ -10,6 +10,8 @@ export function useReportData() {
 
   const [form,          setForm]          = useState(BLANK_FORM);
   const [reports,       setReports]       = useState([]);
+  const [meta,          setMeta]          = useState(null);
+  const [stats,         setStats]         = useState({ totalLives: 0, count: 0 });
   const [adminOptions,  setAdminOptions]  = useState([]);
   const [loadingList,   setLoadingList]   = useState(true);
   const [loadingReport, setLoadingReport] = useState(false);
@@ -23,25 +25,26 @@ export function useReportData() {
       .catch(() => {});
   }, []);
 
-  // Fetch report list (optional status filter)
-  const fetchReports = useCallback(async (status = 'all') => {
+  // Fetch report list with server-side search, filter, sort, and pagination
+  const fetchReports = useCallback(async ({ status = 'all', q = '', sort = 'recent', page = 1 } = {}) => {
     setLoadingList(true);
     try {
-      const qs   = status !== 'all' ? `?status=${status}` : '';
+      const params = new URLSearchParams();
+      if (status !== 'all') params.set('status', status);
+      if (q)                params.set('q',      q);
+      if (sort !== 'recent') params.set('sort',  sort);
+      if (page > 1)          params.set('page',  String(page));
+      const qs   = params.toString() ? `?${params}` : '';
       const data = await adminApiRequest(`/api/reports${qs}`);
       setReports(data.reports || []);
+      setMeta(data.meta   ?? null);
+      setStats(data.stats ?? { totalLives: 0, count: 0 });
     } catch (err) {
       toast.error(err.message || 'Failed to load reports');
     } finally {
       setLoadingList(false);
     }
   }, []);
-
-  // Fetch list only when not in wizard
-  useEffect(() => {
-    if (!reportId) fetchReports('all');
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reportId]);
 
   // Load single report when entering wizard
   useEffect(() => {
@@ -60,6 +63,7 @@ export function useReportData() {
   return {
     form, setForm,
     reports, setReports,
+    meta, stats,
     adminOptions,
     loadingList, loadingReport,
     fetchReports,
