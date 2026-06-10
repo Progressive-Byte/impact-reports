@@ -1,7 +1,12 @@
 import mongoose from 'mongoose';
 
 const deliverableSchema = new mongoose.Schema(
-  { label: String, count: Number },
+  {
+    label:       { type: String, default: '' },
+    count:       { type: Number, default: 0 },
+    icon:        { type: String, default: '' },
+    description: { type: String, default: '' },
+  },
   { _id: false }
 );
 
