@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.js';
 import adminRoutes from './routes/admin.js';
 import inviteRoutes from './routes/invite.js';
 import reportRoutes from './routes/reports.js';
+import uploadRoutes from './routes/upload.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 dotenv.config({ path: join(__dirname, '.env') });
