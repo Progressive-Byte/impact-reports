@@ -38,6 +38,8 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
   "images":          [{ "url": "https://cdn.example.com/photo1.jpg" }, { "url": "https://cdn.example.com/photo2.jpg" }],
   "videoUrl":        "https://youtube.com/watch?v=abc123",
   "milestones":      [{ "date": "2025-01", "title": "Phase 1", "notes": "..." }],
+  "countries":       ["India", "Kenya"],
+  "locations":       [{ "country": "India", "address": "Uttar Pradesh" }, { "country": "Kenya", "address": "Nairobi" }],
   "stepsCompleted":  ["general", "narrative"],
   "createdAt":       "2026-06-08T10:00:00.000Z",
   "updatedAt":       "2026-06-08T12:00:00.000Z"
@@ -198,9 +200,9 @@ Save the data for one wizard step. Marks the step complete and updates the repor
 
 ### URL parameters
 
-| Param      | Values                                    |
-| ---------- | ----------------------------------------- |
-| `stepName` | `general` \| `narrative` \| `metrics` \| `media` |
+| Param      | Values                                                           |
+| ---------- | ---------------------------------------------------------------- |
+| `stepName` | `general` \| `narrative` \| `metrics` \| `media` \| `location` |
 
 ### Request bodies per step
 
