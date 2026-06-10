@@ -20,7 +20,7 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
     try {
       const formData = new FormData();
       formData.append('file', file);
-      const data = await adminApiRequest('/api/upload', { method: 'POST', body: formData, json: false });
+      const data = await adminApiRequest('/api/upload', { method: 'POST', body: formData });
       updateImage(imgId, data.url);
     } catch (err) {
       alert(err.message || 'Upload failed');
