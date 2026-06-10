@@ -25,7 +25,13 @@ export const reportToForm = (report) => ({
   children:          report.children ?? 0,
   women:             report.women ?? 0,
   men:               report.men ?? 0,
-  deliverables:      (report.deliverables || []).map((d, i) => ({ ...d, id: i + 1 })),
+  deliverables:      (report.deliverables || []).map((d, i) => ({
+    id:          i + 1,
+    label:       d.label       || '',
+    count:       d.count       ?? '',
+    icon:        d.icon        || '',
+    description: d.description || '',
+  })),
   galleryUrl:        report.galleryUrl || '',
   milestones:        (report.milestones || []).map((m, i) => ({ ...m, id: i + 1 })),
 });
