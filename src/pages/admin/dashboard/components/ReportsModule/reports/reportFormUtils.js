@@ -9,7 +9,7 @@ export const BLANK_FORM = {
   children:          0,
   women:             0,
   men:               0,
-  deliverables:      [{ id: 1, label: '', count: '' }],
+  deliverables:      [{ id: 1, label: '', count: '', icon: '', description: '' }],
   galleryUrl:        '',
   milestones:        [{ id: 1, date: '', title: '', notes: '' }],
 };
