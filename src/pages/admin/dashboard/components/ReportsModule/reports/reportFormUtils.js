@@ -33,7 +33,8 @@ export const reportToForm = (report) => ({
     icon:        d.icon        || '',
     description: d.description || '',
   })),
-  galleryUrl:        report.galleryUrl || '',
+  images:            (report.images || []).map((img, i) => ({ id: i + 1, url: img.url || '' })),
+  videoUrl:          report.videoUrl || '',
   milestones:        (report.milestones || []).map((m, i) => ({ ...m, id: i + 1 })),
 });
 
