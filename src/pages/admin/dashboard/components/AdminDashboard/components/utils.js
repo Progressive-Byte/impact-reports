@@ -1,7 +1,3 @@
-export const Skeleton = ({ className = '' }) => (
-  <div className={`bg-gray-100 rounded-lg animate-pulse ${className}`} />
-);
-
 export function fmt(n) {
   return n == null ? '—' : Number(n).toLocaleString();
 }
