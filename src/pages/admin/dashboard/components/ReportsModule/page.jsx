@@ -70,7 +70,10 @@ const ReportsModule = ({ onCountChange }) => {
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
   const goToList = useCallback(() => setSearchParams({}, { replace: true }), [setSearchParams]);
-  const goToStep = useCallback((key) => setSearchParams({ reportId, step: key }, { replace: true }), [reportId, setSearchParams]);
+  const goToStep = useCallback((key) => {
+    setFieldErrors({});
+    setSearchParams({ reportId, step: key }, { replace: true });
+  }, [reportId, setSearchParams]);
 
   const openWizard = (report) => {
     loadAdminOptions();
