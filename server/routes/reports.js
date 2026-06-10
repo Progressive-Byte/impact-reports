@@ -188,6 +188,15 @@ function validateStepPayload(stepName, body, isSuperAdmin) {
       if (!validMilestones.length) return 'Add at least one milestone with a date and title';
       break;
     }
+    case 'location': {
+      if (!body.countries?.length) return 'Select at least one country';
+      const countriesWithLoc = new Set(
+        (body.locations || []).filter(l => l.address?.trim()).map(l => l.country)
+      );
+      const missing = body.countries.filter(c => !countriesWithLoc.has(c));
+      if (missing.length) return `Add at least one location for: ${missing.join(', ')}`;
+      break;
+    }
   }
   return null;
 }
