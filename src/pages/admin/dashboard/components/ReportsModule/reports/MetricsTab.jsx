@@ -2,9 +2,6 @@ import SafeIcon from '../../../../../../common/SafeIcon';
 import { Input } from './FormField';
 
 const MetricsTab = ({ form, update, fieldErrors = {} }) => {
-  const total = (Number(form.children) || 0) + (Number(form.women) || 0) + (Number(form.men) || 0);
-  const isValid = total === 100;
-
   const addDeliverable = () =>
     update('deliverables', [...form.deliverables, { id: Date.now(), label: '', count: '', icon: '', description: '' }]);
   const removeDeliverable = (id) =>
