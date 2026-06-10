@@ -17,8 +17,8 @@ import { useReportData } from './hooks/useReportData';
 import { useReportFilters } from './hooks/useReportFilters';
 import { buildStepPayload, reportToForm, validateStep } from './reports/reportFormUtils';
 
-const STEP_KEYS    = ['general', 'narrative', 'metrics', 'media'];
-const STEP_CONTENT = [GeneralTab, NarrativeTab, MetricsTab, MediaTimelineTab];
+const STEP_KEYS    = ['general', 'narrative', 'metrics', 'media', 'location'];
+const STEP_CONTENT = [GeneralTab, NarrativeTab, MetricsTab, MediaTimelineTab, CountryLocationTab];
 
 const ReportsModule = ({ onCountChange }) => {
   const { admin }    = useAdminAuth();
