@@ -3,7 +3,11 @@ import StepIndicator, { STEPS } from './TabNav';
 
 const TOTAL_STEPS = STEPS.length;
 
-const WizardShell = ({ step, loading, form, update, adminOptions, StepContent, saving, onBack, onNext }) => (
+const WizardShell = ({
+  step, loading, form, update, adminOptions,
+  StepContent, saving, onBack, onNext,
+  isSuperAdmin = true, fieldErrors = {},
+}) => (
   <div className="bg-white border border-gray-200 rounded-3xl shadow-sm">
 
     {/* Step indicator */}
@@ -20,7 +24,13 @@ const WizardShell = ({ step, loading, form, update, adminOptions, StepContent, s
           ))}
         </div>
       ) : (
-        <StepContent form={form} update={update} adminOptions={adminOptions} />
+        <StepContent
+          form={form}
+          update={update}
+          adminOptions={adminOptions}
+          isSuperAdmin={isSuperAdmin}
+          fieldErrors={fieldErrors}
+        />
       )}
     </div>
 
