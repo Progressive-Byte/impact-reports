@@ -1,5 +1,5 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
-import { Skeleton } from './utils';
+import Skeleton from './Skeleton';
 
 const StatCard = ({ icon, iconBg = 'bg-gray-100', iconColor = 'text-gray-500', title, badge, loading, children, footer }) => (
   <div className="bg-white border border-gray-200 rounded-3xl p-7 shadow-sm flex flex-col justify-between min-h-[220px]">
