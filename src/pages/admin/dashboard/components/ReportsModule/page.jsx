@@ -57,6 +57,14 @@ const ReportsModule = ({ onCountChange }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlSearch, urlStatus, urlSort, urlPage, isWizard]);
 
+  // Keep sidebar badge in sync with the total unfiltered count
+  useEffect(() => {
+    if (stats.count > 0 && !urlSearch && urlStatus === 'all') {
+      onCountChange?.(stats.count);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stats.count]);
+
   const update = (key, value) => setForm(prev => ({ ...prev, [key]: value }));
 
   const goToList = useCallback(() => setSearchParams({}, { replace: true }), [setSearchParams]);
