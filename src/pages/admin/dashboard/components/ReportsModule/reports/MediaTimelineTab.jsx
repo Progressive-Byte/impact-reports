@@ -1,7 +1,7 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
 import { Input, Textarea } from './FormField';
 
-const MediaTimelineTab = ({ form, update }) => {
+const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
   const addMilestone = () =>
     update('milestones', [...form.milestones, { id: Date.now(), date: '', title: '', notes: '' }]);
   const removeMilestone = (id) =>
@@ -12,14 +12,20 @@ const MediaTimelineTab = ({ form, update }) => {
   return (
     <div className="space-y-6">
       <Input
-        label="Gallery Images URL (Cloudinary / S3)"
+        label="Gallery Images URL (Cloudinary / S3)" required
         placeholder="https://..."
         value={form.galleryUrl}
         onChange={e => update('galleryUrl', e.target.value)}
+        error={fieldErrors.galleryUrl}
       />
 
       <div>
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Project Milestones</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Project Milestones <span className="text-[#E52321]">*</span></p>
+          {fieldErrors.milestones && (
+            <p className="text-xs text-red-500 font-medium">{fieldErrors.milestones}</p>
+          )}
+        </div>
         <div className="space-y-3">
           {form.milestones.map((m) => (
             <div key={m.id} className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-3">
