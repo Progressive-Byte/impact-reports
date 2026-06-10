@@ -70,7 +70,7 @@ List admin accounts with server-side search, status filter, and pagination.
 | Param    | Type    | Default | Description                                                         |
 | -------- | ------- | :-----: | ------------------------------------------------------------------- |
 | `page`   | integer | `1`     | Page number                                                         |
-| `limit`  | integer | `10`    | Items per page (max 100)                                            |
+| `limit`  | integer | `1`     | Items per page (max 100)                                            |
 | `q`      | string  | —       | Search term — matches `username`, `email`, or `region` (case-insensitive regex) |
 | `status` | string  | —       | `active` or `inactive` — omit to return all                        |
 

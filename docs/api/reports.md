@@ -55,31 +55,49 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 
 ## `GET /api/reports`
 
-List all reports accessible to the caller. Superadmin gets all; admin gets only assigned reports. Results are sorted newest first.
+List reports accessible to the caller with server-side search, filter, sort, and pagination. Superadmin gets all; admin gets only assigned reports.
 
 ### Query parameters
 
-| Param    | Type   | Required | Description                                                             |
-| -------- | ------ | :------: | ----------------------------------------------------------------------- |
-| `status` | string | No       | Filter by status: `pending`, `draft`, or `published`. Omit for all.    |
+| Param    | Type    | Default  | Description                                                          |
+| -------- | ------- | :------: | -------------------------------------------------------------------- |
+| `status` | string  | —        | Filter by status: `pending`, `draft`, or `published`. Omit for all. |
+| `q`      | string  | —        | Case-insensitive substring search on `projectName`.                  |
+| `sort`   | string  | `recent` | Sort order: `recent` (newest first) or `oldest`.                     |
+| `page`   | integer | `1`      | Page number (1-based).                                               |
+| `limit`  | integer | `1`      | Items per page (max `100`).                                          |
 
 ### Response `200`
 
 ```json
 {
-  "reports": [ /* array of Report objects */ ]
+  "reports": [ /* array of Report objects for this page */ ],
+  "meta": {
+    "page": 1,
+    "limit": 10,
+    "total": 42,
+    "pages": 5,
+    "hasPrev": false,
+    "hasNext": true
+  },
+  "stats": {
+    "totalLives": 128400,
+    "count": 42
+  }
 }
 ```
+
+`stats` aggregates across **all matching reports** (ignoring pagination), so it stays accurate regardless of which page is shown.
 
 ### curl
 
 ```bash
-# All reports
+# All reports, page 1
 curl http://localhost:5000/api/reports \
   -H "Authorization: Bearer $TOKEN"
 
-# Only published reports
-curl "http://localhost:5000/api/reports?status=published" \
+# Search + status filter + sort
+curl "http://localhost:5000/api/reports?q=winter&status=published&sort=oldest&page=2" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
