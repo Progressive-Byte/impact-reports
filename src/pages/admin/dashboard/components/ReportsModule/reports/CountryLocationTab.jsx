@@ -22,6 +22,22 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
     return map;
   }, [form.countries]);
 
+  // lat/lng lookup: { countryName → { stateName → { lat, lng } } }
+  const coordMap = useMemo(() => {
+    const map = {};
+    form.countries.forEach(c => {
+      const iso = ISO_BY_NAME[c];
+      if (!iso) return;
+      map[c] = Object.fromEntries(
+        State.getStatesOfCountry(iso).map(s => [
+          s.name,
+          { lat: s.latitude || '', lng: s.longitude || '' },
+        ])
+      );
+    });
+    return map;
+  }, [form.countries]);
+
   // ── Country selection ──────────────────────────────────────────────
   const handleCountryChange = (newCountries) => {
     const kept    = form.locations.filter(l => newCountries.includes(l.country));
