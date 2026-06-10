@@ -102,7 +102,7 @@ const ReportsModule = ({ onCountChange }) => {
         method: 'PATCH',
         body:   JSON.stringify(payload),
       });
-      if (stepKey === 'media') {
+      if (stepKey === 'location') {
         toast.success('Report submitted successfully');
         goToList();
       } else {
