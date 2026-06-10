@@ -89,7 +89,7 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
               : countryLocs.filter(l => l.address.trim()).length;
 
             return (
-              <div key={country} className="border border-gray-200 rounded-xl overflow-hidden">
+              <div key={country} className="border border-gray-200 rounded-xl">
                 {/* Country header bar */}
                 <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100">
                   <div className="flex items-center gap-2.5">

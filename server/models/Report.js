@@ -11,7 +11,12 @@ const deliverableSchema = new mongoose.Schema(
 );
 
 const locationSchema = new mongoose.Schema(
-  { country: { type: String, default: '' }, address: { type: String, default: '' } },
+  {
+    country: { type: String, default: '' },
+    address: { type: String, default: '' },
+    lat:     { type: String, default: '' },
+    lng:     { type: String, default: '' },
+  },
   { _id: false }
 );
 
