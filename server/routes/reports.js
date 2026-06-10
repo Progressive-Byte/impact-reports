@@ -158,6 +158,39 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// Per-step backend validation — returns null (valid) or an error message string
+function validateStepPayload(stepName, body, isSuperAdmin) {
+  switch (stepName) {
+    case 'general':
+      if (isSuperAdmin) {
+        if (!body.projectName?.trim())                      return 'Project name is required';
+        if (!Array.isArray(body.assignedTo) || !body.assignedTo.length) return 'At least one assignee is required';
+      }
+      if (!body.projectLead?.trim())                        return 'Project lead is required';
+      if (!body.fiscalYear)                                 return 'Fiscal year is required';
+      if (!body.livesImpacted || Number(body.livesImpacted) <= 0) return 'Lives impacted must be greater than 0';
+      break;
+    case 'narrative':
+      if (!body.projectBackground?.trim())  return 'Project background is required';
+      if (!body.strategicResponse?.trim())  return 'Strategic response is required';
+      break;
+    case 'metrics': {
+      const total = (Number(body.children) || 0) + (Number(body.women) || 0) + (Number(body.men) || 0);
+      if (total !== 100) return `Demographic split is ${total}% — must total exactly 100%`;
+      const valid = (body.deliverables || []).filter(d => d.label?.trim() && Number(d.count) > 0);
+      if (!valid.length) return 'Add at least one deliverable with a label and count';
+      break;
+    }
+    case 'media': {
+      if (!body.galleryUrl?.trim()) return 'Gallery URL is required';
+      const valid = (body.milestones || []).filter(m => m.date?.trim() && m.title?.trim());
+      if (!valid.length) return 'Add at least one milestone with a date and title';
+      break;
+    }
+  }
+  return null;
+}
+
 // ── PATCH /api/reports/:id/step/:stepName ────────────────────────────
 router.patch('/:id/step/:stepName', async (req, res) => {
   try {
@@ -172,13 +205,26 @@ router.patch('/:id/step/:stepName', async (req, res) => {
       return res.status(403).json({ message: 'Access denied' });
     }
 
-    // Validate assignedTo on the general step
-    if (stepName === 'general' && Array.isArray(req.body.assignedTo)) {
+    const isSuperAdmin = req.admin.role === 'superadmin';
+
+    // Block admin role from changing protected fields
+    if (!isSuperAdmin && stepName === 'general') {
+      if (req.body.projectName !== undefined) delete req.body.projectName;
+      if (req.body.assignedTo  !== undefined) delete req.body.assignedTo;
+    }
+
+    // Per-step payload validation
+    const validationError = validateStepPayload(stepName, req.body, isSuperAdmin);
+    if (validationError) {
+      return res.status(400).json({ message: validationError });
+    }
+
+    // Validate assignedTo uniqueness + conflict check (superadmin only)
+    if (isSuperAdmin && stepName === 'general' && Array.isArray(req.body.assignedTo)) {
       const unique = [...new Set(req.body.assignedTo.map(String))];
       if (unique.length !== req.body.assignedTo.length) {
         return res.status(400).json({ message: 'Duplicate assignees are not allowed' });
       }
-      // Use the incoming projectName if it's being updated, otherwise fall back to the stored one
       const nameToCheck = (req.body.projectName ?? report.projectName).trim();
       const conflict    = await findProjectAssigneeConflicts(nameToCheck, unique, req.params.id);
       if (conflict) return res.status(400).json({ message: conflict });
