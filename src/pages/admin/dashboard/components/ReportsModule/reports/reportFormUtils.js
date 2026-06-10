@@ -134,6 +134,11 @@ export const buildStepPayload = {
     countries: f.countries,
     locations: f.locations
       .filter(l => l.address.trim())
-      .map(({ country, address }) => ({ country, address: address.trim() })),
+      .map(({ country, address, lat, lng }) => ({
+        country,
+        address: address.trim(),
+        lat:     lat || '',
+        lng:     lng || '',
+      })),
   }),
 };
