@@ -1,5 +1,5 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
-import { Skeleton } from './utils';
+import Skeleton from './Skeleton';
 
 const ActiveRegions = ({ regionData = [], loading }) => {
   const maxVal = regionData[0]?.livesImpacted || 1;
