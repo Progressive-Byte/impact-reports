@@ -24,10 +24,14 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
 
   // ── Country selection ──────────────────────────────────────────────
   const handleCountryChange = (newCountries) => {
-    // Keep only locations that still have a selected country
-    const kept = form.locations.filter(l => newCountries.includes(l.country));
+    const kept    = form.locations.filter(l => newCountries.includes(l.country));
+    const covered = new Set(kept.map(l => l.country));
+    // For newly added countries that have NO state data, seed one blank text row
+    const seeds   = newCountries
+      .filter(c => !covered.has(c) && getStateOptions(c).length === 0)
+      .map(c => ({ id: Date.now() + Math.random(), country: c, address: '' }));
     update('countries', newCountries);
-    update('locations', kept);
+    update('locations', [...kept, ...seeds]);
   };
 
   // ── Location helpers (used by free-text fallback) ──────────────────
