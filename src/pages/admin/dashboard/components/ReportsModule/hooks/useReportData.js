@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { adminApiRequest } from '../../../../../../services/adminApi';
@@ -16,14 +16,22 @@ export function useReportData() {
   const [loadingList,   setLoadingList]   = useState(true);
   const [loadingReport, setLoadingReport] = useState(false);
 
-  // Load admin users once for "Assigned To" dropdowns
-  useEffect(() => {
-    adminApiRequest('/api/admin/admins?role=admin&limit=100')
+  // Track in-flight admin options request to avoid duplicate calls
+  const adminOptionsLoadingRef = useRef(false);
+
+  // Lazy-load admin users for "Assigned To" dropdowns.
+  // Called only when the wizard or Create modal is about to open.
+  const loadAdminOptions = useCallback(() => {
+    if (adminOptions.length > 0 || adminOptionsLoadingRef.current) return;
+    adminOptionsLoadingRef.current = true;
+    adminApiRequest('/api/admin/admins?limit=100')
       .then(data => setAdminOptions(
         (data.items || []).map(a => ({ value: a._id, label: a.username || a.email }))
       ))
-      .catch(() => {});
-  }, []);
+      .catch(() => {})
+      .finally(() => { adminOptionsLoadingRef.current = false; });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adminOptions.length]);
 
   // Fetch report list with server-side search, filter, sort, and pagination
   const fetchReports = useCallback(async ({ status = 'all', q = '', sort = 'recent', page = 1 } = {}) => {
