@@ -14,7 +14,7 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
   const handleFileSelect = async (imgId, file) => {
     if (!file) return;
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      alert(`File is too large. Maximum size is ${MAX_SIZE_MB} MB.`);
+      toast.error(`File is too large. Maximum size is ${MAX_SIZE_MB} MB.`);
       return;
     }
     setUploading(prev => ({ ...prev, [imgId]: true }));
@@ -24,7 +24,7 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
       const data = await adminApiRequest('/api/upload', { method: 'POST', body: formData });
       updateImage(imgId, data.url);
     } catch (err) {
-      alert(err.message || 'Upload failed');
+      toast.error(err.message || 'Upload failed');
     } finally {
       setUploading(prev => ({ ...prev, [imgId]: false }));
     }
