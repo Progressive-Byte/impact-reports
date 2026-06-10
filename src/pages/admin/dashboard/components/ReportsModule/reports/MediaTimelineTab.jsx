@@ -72,23 +72,45 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
         <div className="space-y-2">
           {form.images.map((img, idx) => (
             <div key={img.id} className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+              {/* Thumbnail preview */}
+              <div className="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {img.url.trim() ? (
-                  <img
-                    src={img.url}
-                    alt=""
-                    className="w-8 h-8 rounded-lg object-cover"
-                    onError={e => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
-                  />
-                ) : null}
-                <SafeIcon icon="FiImage" className="text-gray-400 text-sm" style={{ display: img.url.trim() ? 'none' : 'block' }} />
+                  <img src={img.url} alt="" className="w-full h-full object-cover" onError={e => { e.target.style.display='none'; }} />
+                ) : (
+                  <SafeIcon icon="FiImage" className="text-gray-400 text-sm" />
+                )}
               </div>
+
+              {/* URL input */}
               <Input
-                placeholder={`Image URL ${idx + 1} (Cloudinary / S3 / https://...)`}
+                placeholder={`Image ${idx + 1} URL (paste or upload →)`}
                 value={img.url}
                 onChange={e => updateImage(img.id, e.target.value)}
                 className="flex-1"
               />
+
+              {/* Upload from device */}
+              <input
+                ref={el => fileInputRef.current[img.id] = el}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                className="hidden"
+                onChange={e => handleFileSelect(img.id, e.target.files[0])}
+              />
+              <button
+                type="button"
+                onClick={() => fileInputRef.current[img.id]?.click()}
+                disabled={uploading[img.id]}
+                title={`Upload image (max ${MAX_SIZE_MB} MB)`}
+                className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-[#E52321] border border-gray-200 rounded-xl bg-white transition-colors flex-shrink-0 disabled:opacity-50"
+              >
+                {uploading[img.id]
+                  ? <div className="w-4 h-4 border-2 border-[#E52321] border-t-transparent rounded-full animate-spin" />
+                  : <SafeIcon icon="FiUpload" className="text-sm" />
+                }
+              </button>
+
+              {/* Delete row */}
               <button
                 onClick={() => removeImage(img.id)}
                 disabled={form.images.length === 1}
