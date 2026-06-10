@@ -37,6 +37,7 @@ const ReportsModule = ({ onCountChange }) => {
     adminOptions,
     loadingList, loadingReport,
     fetchReports,
+    loadAdminOptions,
   } = useReportData();
 
   const {
