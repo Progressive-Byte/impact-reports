@@ -38,6 +38,20 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
     return map;
   }, [form.countries]);
 
+  // Auto-fill lat/lng from library for locations that have an address but empty coords
+  // (happens when an existing report is loaded — DB may have empty lat/lng from before coords were tracked)
+  useEffect(() => {
+    const needsFill = form.locations.some(l => l.address && (!l.lat || !l.lng));
+    if (!needsFill) return;
+    const filled = form.locations.map(l => {
+      if (!l.address || (l.lat && l.lng)) return l;
+      const coords = coordMap[l.country]?.[l.address];
+      if (!coords?.lat) return l;
+      return { ...l, lat: coords.lat, lng: coords.lng };
+    });
+    update('locations', filled);
+  }, [coordMap]); // eslint-disable-line react-hooks/exhaustive-deps
+
   // ── Country selection ──────────────────────────────────────────────
   const handleCountryChange = (newCountries) => {
     const kept    = form.locations.filter(l => newCountries.includes(l.country));
