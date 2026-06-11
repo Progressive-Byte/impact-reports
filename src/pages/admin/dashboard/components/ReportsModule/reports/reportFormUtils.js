@@ -3,6 +3,7 @@ export const BLANK_FORM = {
   assignedTo:        [],
   projectLead:       '',
   fiscalYear:        'FY25',
+  region:            '',
   sector:            '',
   livesImpacted:     0,
   projectBackground: '',
