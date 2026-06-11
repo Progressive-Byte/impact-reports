@@ -28,6 +28,7 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
   "status":          "draft",
   "projectLead":     "Ali Hassan",
   "fiscalYear":      "FY25",
+  "region":          "South Asia",
   "sector":          "Healthcare",
   "livesImpacted":   4800,
   "projectBackground": "...",
@@ -209,14 +210,15 @@ Save the data for one wizard step. Marks the step complete and updates the repor
 
 **`general`**
 
-| Field           | Type     | Description                         |
-| --------------- | -------- | ----------------------------------- |
-| `projectName`   | string   | Project name                        |
-| `assignedTo`    | string[] | Array of Admin `_id` strings        |
-| `projectLead`   | string   | Lead person name                    |
-| `fiscalYear`    | string   | e.g. `"FY25"`                       |
-| `sector`        | string   | Free-text sector e.g. `"Healthcare"` |
-| `livesImpacted` | number   | Number of lives impacted            |
+| Field           | Type     | Required      | Description                                                |
+| --------------- | -------- | :-----------: | ---------------------------------------------------------- |
+| `projectName`   | string   | Superadmin    | Project name                                               |
+| `assignedTo`    | string[] | Superadmin    | Array of Admin `_id` strings                               |
+| `projectLead`   | string   | Yes           | Lead person name                                           |
+| `fiscalYear`    | string   | Yes           | e.g. `"FY25"`                                              |
+| `region`        | string   | Yes           | One of: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global` |
+| `sector`        | string   | Yes           | Free-text sector e.g. `"Healthcare"`                       |
+| `livesImpacted` | number   | Yes (> 0)     | Number of lives impacted                                   |
 
 **`narrative`**
 
