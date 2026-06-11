@@ -24,7 +24,7 @@ function shapeCard(r) {
   return {
     id:       r._id.toString(),
     title:    r.projectName,
-    image:    r.images?.[0]?.url || '',
+    image:    r.thumbnail || r.images?.[0]?.url || '',
     region,
     sector:   r.sector   || '',
     year:     deriveYear(r.fiscalYear),
@@ -71,7 +71,7 @@ router.get('/reports', async (req, res) => {
         .sort(sortOrder)
         .skip(skip)
         .limit(limit)
-        .select('projectName images region sector fiscalYear projectBackground livesImpacted countries locations'),
+        .select('projectName images thumbnail region sector fiscalYear projectBackground livesImpacted countries locations'),
       Report.countDocuments(filter),
     ]);
 
