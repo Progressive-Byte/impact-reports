@@ -169,6 +169,7 @@ function validateStepPayload(stepName, body, isSuperAdmin) {
       }
       if (!body.projectLead?.trim())                        return 'Project lead is required';
       if (!body.fiscalYear)                                 return 'Fiscal year is required';
+      if (!body.sector?.trim())                             return 'Sector is required';
       if (!body.livesImpacted || Number(body.livesImpacted) <= 0) return 'Lives impacted must be greater than 0';
       break;
     case 'narrative':
