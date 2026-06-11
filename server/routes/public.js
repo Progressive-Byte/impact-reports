@@ -116,15 +116,22 @@ router.get('/stats', async (req, res) => {
 router.get('/filters', async (req, res) => {
   try {
     const base = { status: 'published' };
-    const [regions, sectors, countries, fiscalYears] = await Promise.all([
-      Report.distinct('region',     { ...base, region:    { $ne: '' } }),
+    const [allReports, sectors, countries, fiscalYears] = await Promise.all([
+      Report.find(base).select('region countries'),
       Report.distinct('sector',     { ...base, sector:    { $ne: '' } }),
       Report.distinct('countries',  base),
       Report.distinct('fiscalYear', { ...base, fiscalYear: { $ne: '' } }),
     ]);
 
+    // Derive region from countries for reports that don't have it stored yet
+    const regionSet = new Set();
+    for (const r of allReports) {
+      const reg = r.region || deriveRegion(r.countries);
+      if (reg && reg !== 'Global') regionSet.add(reg);
+    }
+
     res.json({
-      regions:   regions.sort(),
+      regions:   [...regionSet].sort(),
       sectors:   sectors.sort(),
       countries: countries.filter(Boolean).sort(),
       years:     [...new Set(fiscalYears.map(deriveYear).filter(Boolean))].sort().reverse(),
