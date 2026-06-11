@@ -80,6 +80,7 @@ const ReportsModule = ({ onCountChange }) => {
 
   const openWizard = (report) => {
     loadAdminOptions();
+    loadRegionOptions();
     setForm(reportToForm(report));
     setSearchParams({ reportId: report._id, step: 'general' }, { replace: true });
   };
