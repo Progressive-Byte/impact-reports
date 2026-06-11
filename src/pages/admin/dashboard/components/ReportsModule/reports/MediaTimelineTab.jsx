@@ -5,7 +5,7 @@ import { Input, Textarea } from './FormField';
 import { adminApiRequest } from '../../../../../../services/adminApi';
 
 const MAX_IMAGES  = 10;
-const MAX_SIZE_MB = 5;
+const MAX_SIZE_MB = 2;
 
 const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
   const fileInputRef              = useRef({});
