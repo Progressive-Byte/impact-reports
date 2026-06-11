@@ -111,6 +111,7 @@ export const buildStepPayload = {
     assignedTo:    f.assignedTo,
     projectLead:   f.projectLead,
     fiscalYear:    f.fiscalYear,
+    sector:        f.sector,
     livesImpacted: Number(f.livesImpacted) || 0,
   }),
   narrative: (f) => ({
