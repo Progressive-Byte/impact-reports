@@ -307,7 +307,7 @@ When the caller's role is `admin` (not `superadmin`), `projectName` and `assigne
 curl -X PATCH "http://localhost:5000/api/reports/6650a1b2c3d4e5f607a8b9c2/step/general" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"projectName":"Winter Relief Alpha","assignedTo":["6650a1b2..."],"projectLead":"Ali Hassan","fiscalYear":"FY25","livesImpacted":4800}'
+  -d '{"projectName":"Winter Relief Alpha","assignedTo":["6650a1b2..."],"projectLead":"Ali Hassan","fiscalYear":"FY25","region":"South Asia","sector":"Healthcare","livesImpacted":4800}'
 
 # Submit final step
 curl -X PATCH "http://localhost:5000/api/reports/6650a1b2c3d4e5f607a8b9c2/step/media" \
