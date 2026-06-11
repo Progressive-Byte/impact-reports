@@ -47,7 +47,7 @@ router.get('/reports', async (req, res) => {
     const countryArr = [req.query.country].flat().filter(Boolean);
     const yearArr    = [req.query.year   ].flat().filter(Boolean);
 
-    const { page, limit, skip } = parsePagination(req.query, { defaultLimit: 1, maxLimit: 48 });
+    const { page, limit, skip } = parsePagination(req.query, { defaultLimit: 12, maxLimit: 48 });
     const sortOrder = sort === 'oldest' ? 'createdAt' : '-createdAt';
 
     const filter = { status: 'published' };
