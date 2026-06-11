@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import SafeIcon from '../../../../common/SafeIcon';
 import ReportCard from './ReportCard';
 import ReportListRow from './ReportListRow';
-import Pagination from '../../../admin/dashboard/common/Pagination';
+import Pagination from '@/common/Pagination';
 
 const ReportResults = ({ reports, loading, viewMode, meta, onPageChange }) => (
   <div className={`transition-opacity duration-200 ${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
