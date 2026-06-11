@@ -61,16 +61,10 @@ router.get('/reports', async (req, res) => {
         { countries:         new RegExp(q.trim(), 'i') },
       ];
     }
+    if (regionArr.length)  filter.region    = { $in: regionArr };
     if (sectorArr.length)  filter.sector    = { $in: sectorArr };
     if (countryArr.length) filter.countries = { $in: countryArr };
     if (yearArr.length)    filter.fiscalYear = { $in: yearArr.map(yearToFiscal) };
-    // region filter: match stored region OR the report has no region but countries resolve to it
-    if (regionArr.length) {
-      filter.$or = [
-        ...(filter.$or || []),
-        { region: { $in: regionArr } },
-      ];
-    }
 
     const [reports, total] = await Promise.all([
       Report.find(filter)
