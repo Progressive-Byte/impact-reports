@@ -285,6 +285,11 @@ router.patch('/:id/step/:stepName', async (req, res) => {
       }
     }
 
+    // Auto-derive region from selected countries on the location step
+    if (stepName === 'location' && report.countries.length) {
+      report.region = deriveRegion(report.countries);
+    }
+
     // Track completed step
     if (!report.stepsCompleted.includes(stepName)) {
       report.stepsCompleted.push(stepName);
