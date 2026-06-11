@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './Layout';
-import Portal from './pages/frontend/portal/page';
-import ReportDetail from './pages/frontend/report-detail/page';
+import Portal from './pages/web/portal/page';
+import ReportDetail from './pages/web/report-detail/page';
 import AdminLogin from './pages/admin/login/page';
 import AdminRegister from './pages/admin/register/page';
 import AdminDashboard from './pages/admin/dashboard/page';
