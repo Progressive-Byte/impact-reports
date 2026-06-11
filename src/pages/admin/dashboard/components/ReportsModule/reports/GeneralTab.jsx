@@ -3,7 +3,6 @@ import CustomSelect from './CustomSelect';
 import MultiSelect from './MultiSelect';
 
 const FISCAL_YEARS = ['FY23', 'FY24', 'FY25', 'FY26'].map(v => ({ value: v, label: v }));
-const SECTORS = ['WASH', 'Education', 'Healthcare', 'Emergency Relief', 'Livelihoods'].map(v => ({ value: v, label: v }));
 
 const GeneralTab = ({ form, update, adminOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
