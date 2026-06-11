@@ -61,7 +61,6 @@ export function validateStep(stepKey, form, isSuperAdmin = true) {
       }
       if (!form.projectLead.trim())     errors.projectLead     = 'Project lead is required';
       if (!form.fiscalYear)             errors.fiscalYear      = 'Fiscal year is required';
-      if (!form.region)                 errors.region          = 'Region is required';
       if (!form.sector)                 errors.sector          = 'Sector is required';
       if (!form.livesImpacted || Number(form.livesImpacted) <= 0)
         errors.livesImpacted = 'Lives impacted must be greater than 0';
