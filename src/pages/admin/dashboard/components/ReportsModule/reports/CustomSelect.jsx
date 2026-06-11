@@ -50,6 +50,8 @@ const CustomSelect = ({
         />
       </button>
 
+      {error && <p className="mt-1.5 text-xs text-red-500 font-medium">{error}</p>}
+
       {/* Dropdown */}
       {open && (
         <div className="absolute left-0 right-0 top-full mt-1.5 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden">
