@@ -51,6 +51,14 @@ const Portal = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.toString()]);
 
+  // Scroll results section into view when the page number changes (not on initial load)
+  useEffect(() => {
+    if (prevPageRef.current !== urlPage) {
+      prevPageRef.current = urlPage;
+      resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [urlPage]);
+
   // Handle SearchModal redirect: ?filter=value&type=category → proper URL params
   useEffect(() => {
     const urlFilter = searchParams.get('filter');
