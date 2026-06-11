@@ -5,7 +5,7 @@ import InviteModal from './components/InviteModal';
 import EditUserModal from './components/EditUserModal';
 import UserRow from './components/UserRow';
 import UserSkeletonRow from './components/UserSkeletonRow';
-import Pagination from './components/Pagination';
+import Pagination from '@/common/Pagination';
 import UserToolbar from './components/UserToolbar';
 import ActiveFilterPills from './components/ActiveFilterPills';
 import BulkActionBar from './components/BulkActionBar';
