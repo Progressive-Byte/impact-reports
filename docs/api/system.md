@@ -47,7 +47,10 @@ Creates one account if none exists yet:
 | `SMTP_PORT`      | No       | SMTP port (default `587`)                                |
 | `SMTP_USER`      | No       | SMTP username / API key                                  |
 | `SMTP_PASS`      | No       | SMTP password                                            |
-| `SMTP_FROM`      | No       | From address on outgoing emails                          |
+| `SMTP_FROM`               | No       | From address on outgoing emails                     |
+| `CLOUDINARY_CLOUD_NAME`   | Yes*     | Cloudinary cloud name (`*` required for image uploads) |
+| `CLOUDINARY_API_KEY`      | Yes*     | Cloudinary API key                                  |
+| `CLOUDINARY_API_SECRET`   | Yes*     | Cloudinary API secret                               |
 
 ---
 
