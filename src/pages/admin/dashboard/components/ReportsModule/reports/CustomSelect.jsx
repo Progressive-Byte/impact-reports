@@ -8,6 +8,7 @@ const CustomSelect = ({
   onChange,
   options = [],
   placeholder = 'Select an option...',
+  error,
   className = '',
 }) => {
   const [open, setOpen] = useState(false);
