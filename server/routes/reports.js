@@ -16,7 +16,7 @@ const STEP_FIELDS = {
   general:   ['projectName', 'assignedTo', 'projectLead', 'fiscalYear', 'region', 'sector', 'livesImpacted'],
   narrative: ['projectBackground', 'strategicResponse'],
   metrics:   ['children', 'women', 'men', 'deliverables'],
-  media:     ['images', 'videoUrl', 'milestones'],
+  media:     ['images', 'thumbnail', 'videoUrl', 'milestones'],
   location:  ['countries', 'locations'],
 };
 
