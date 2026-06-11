@@ -22,7 +22,7 @@ Content-Type: `multipart/form-data`
 
 **Constraints:**
 - Allowed types: `image/jpeg`, `image/png`, `image/webp`, `image/gif`
-- Maximum file size: **5 MB**
+- Maximum file size: **2 MB**
 
 ### Response `200`
 
@@ -37,7 +37,7 @@ The returned URL is relative. Prepend the server origin to get the full URL (e.g
 | Status | Condition                                    |
 | ------ | -------------------------------------------- |
 | `400`  | No file field in request                     |
-| `400`  | File exceeds 5 MB limit                      |
+| `400`  | File exceeds 2 MB limit                      |
 | `400`  | File type not allowed                        |
 | `401`  | Missing or invalid Bearer token              |
 
