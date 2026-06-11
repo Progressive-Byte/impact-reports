@@ -176,7 +176,7 @@ const ReportsModule = ({ onCountChange }) => {
         isSuperAdmin={isSuperAdmin}
         projectName={form.projectName}
         onBack={goToList}
-        onNewReport={() => { loadAdminOptions(); setShowCreate(true); }}
+        onNewReport={() => { loadAdminOptions(); loadRegionOptions(); setShowCreate(true); }}
       />
 
       {isWizard ? (
