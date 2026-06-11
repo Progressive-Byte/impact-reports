@@ -25,7 +25,7 @@ All four endpoints that return report data use the same card shape:
 {
   "id":       "664abc123...",
   "title":    "Winter Relief Alpha",
-  "image":    "/uploads/abc123.jpg",
+  "image":    "https://res.cloudinary.com/dt1oakyjz/image/upload/v.../impact-reports/abc123.jpg",
   "region":   "South Asia",
   "sector":   "WASH",
   "year":     "2025",
