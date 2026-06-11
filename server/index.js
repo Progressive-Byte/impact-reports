@@ -28,6 +28,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/invite', inviteRoutes);
 app.use('/api/reports', reportRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/public', publicRoutes);
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', timestamp: new Date() }));
 
