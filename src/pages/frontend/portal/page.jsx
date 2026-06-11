@@ -23,8 +23,6 @@ const Portal = () => {
   const [expandedGroups, setExpandedGroups] = useState(ALL_CLOSED);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const resultsSectionRef = useRef(null);
-  const prevPageRef       = useRef(urlPage);
 
   const {
     urlSearch, urlPage, filters,
@@ -32,6 +30,9 @@ const Portal = () => {
     handleFilterToggle, handlePageChange, clearFilters,
     activeFilterCount, activeFilterChips,
   } = usePortalFilters();
+
+  const resultsSectionRef = useRef(null);
+  const prevPageRef       = useRef(urlPage);
 
   const {
     reports, meta, stats, filterOptions,

@@ -39,7 +39,7 @@ const ReportResults = ({ reports, loading, viewMode, meta, onPageChange }) => (
     )}
 
     {meta && meta.pages > 1 && (
-      // <div className="mt-8 bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
+      <div className="mt-8 bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
         <Pagination meta={meta} onPageChange={onPageChange} label="reports" />
       // </div>
     )}
