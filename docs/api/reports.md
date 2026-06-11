@@ -68,7 +68,7 @@ List reports accessible to the caller with server-side search, filter, sort, and
 | `q`      | string  | —        | Case-insensitive substring search on `projectName`.                  |
 | `sort`   | string  | `recent` | Sort order: `recent` (newest first) or `oldest`.                     |
 | `page`   | integer | `1`      | Page number (1-based).                                               |
-| `limit`  | integer | `1`      | Items per page (max `100`).                                          |
+| `limit`  | integer | `10`     | Items per page (max `100`).                                          |
 
 ### Response `200`
 
