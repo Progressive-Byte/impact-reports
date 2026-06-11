@@ -2,7 +2,6 @@ import express from 'express';
 import Report from '../models/Report.js';
 import { protect } from '../middleware/auth.js';
 import { parsePagination, buildMeta } from '../utils/pagination.js';
-import { deriveRegion } from '../utils/regionUtils.js';
 
 const router = express.Router();
 router.use(protect);
