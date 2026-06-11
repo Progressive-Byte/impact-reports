@@ -41,14 +41,14 @@ const GeneralTab = ({ form, update, adminOptions = [], isSuperAdmin = true, fiel
       />
     </div>
     <div className="grid grid-cols-2 gap-5">
-      <CustomSelect
+      <Input
         label="Sector" required
+        placeholder="e.g. WASH, Education, Healthcare"
         value={form.sector}
-        onChange={val => update('sector', val)}
-        options={SECTORS}
-        placeholder="Select a sector..."
+        onChange={e => update('sector', e.target.value)}
         error={fieldErrors.sector}
-      /></div>
+      />
+    </div>
     <div className="grid grid-cols-1 gap-5">
       <Input
         label="Lives Impacted" required
