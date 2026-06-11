@@ -35,6 +35,7 @@ const reportSchema = new mongoose.Schema(
     // General step
     projectLead:       { type: String, default: '' },
     fiscalYear:        { type: String, default: 'FY25' },
+    sector:            { type: String, default: '' },
     livesImpacted:     { type: Number, default: 0 },
 
     // Narrative step
