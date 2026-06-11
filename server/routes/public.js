@@ -19,12 +19,13 @@ function yearToFiscal(year) {
 }
 
 function shapeCard(r) {
-  const bg = r.projectBackground || '';
+  const bg     = r.projectBackground || '';
+  const region = r.region || deriveRegion(r.countries);
   return {
     id:       r._id.toString(),
     title:    r.projectName,
     image:    r.images?.[0]?.url || '',
-    region:   r.region   || '',
+    region,
     sector:   r.sector   || '',
     year:     deriveYear(r.fiscalYear),
     summary:  bg.length > 200 ? bg.slice(0, 200).trimEnd() + '…' : bg,
