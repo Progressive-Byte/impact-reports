@@ -136,8 +136,9 @@ export const buildStepPayload = {
     })),
   }),
   media:     (f) => ({
-    images:    f.images.filter(img => img.url.trim()).map(({ url }) => ({ url })),
-    videoUrl:  f.videoUrl.trim(),
+    images:     f.images.filter(img => img.url.trim()).map(({ url }) => ({ url })),
+    thumbnail:  f.thumbnail || '',
+    videoUrl:   f.videoUrl.trim(),
     milestones: f.milestones.map(({ date, title, notes }) => ({ date, title, notes })),
   }),
   location:  (f) => ({
