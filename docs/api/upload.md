@@ -64,8 +64,3 @@ CLOUDINARY_API_SECRET=your_api_secret
 
 Get these values from your Cloudinary dashboard → **Settings → Access Keys**.
 
----
-
-## Backward compatibility
-
-Files uploaded before Cloudinary was added are stored in `server/uploads/` and served as static assets at `/uploads/<filename>`. These continue to work — the static file serving in `server/index.js` is kept in place.
