@@ -14,11 +14,13 @@ export function useReportData() {
   const [meta,          setMeta]          = useState(null);
   const [stats,         setStats]         = useState({ totalLives: 0, count: 0 });
   const [adminOptions,  setAdminOptions]  = useState([]);
+  const [regionOptions, setRegionOptions] = useState([]);
   const [loadingList,   setLoadingList]   = useState(true);
   const [loadingReport, setLoadingReport] = useState(false);
 
-  // Track in-flight admin options request to avoid duplicate calls
-  const adminOptionsLoadingRef = useRef(false);
+  // Track in-flight requests to avoid duplicate calls
+  const adminOptionsLoadingRef  = useRef(false);
+  const regionOptionsLoadingRef = useRef(false);
 
   // Lazy-load admin users for "Assigned To" dropdowns.
   // Called only when the wizard or Create modal is about to open.
