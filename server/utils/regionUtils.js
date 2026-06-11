@@ -1,36 +1,37 @@
 import { Country } from 'country-state-city';
+import { AFRICA, MIDDLE_EAST, SOUTH_ASIA, SOUTHEAST_ASIA, GLOBAL } from '../config/regions.js';
 
 // ISO 3166-1 alpha-2 code → organization region
 const ISO_TO_REGION = {
   // South Asia
-  AF: 'South Asia', BD: 'South Asia', BT: 'South Asia',
-  IN: 'South Asia', MV: 'South Asia', NP: 'South Asia',
-  PK: 'South Asia', LK: 'South Asia',
+  AF: SOUTH_ASIA,  BD: SOUTH_ASIA,  BT: SOUTH_ASIA,
+  IN: SOUTH_ASIA,  MV: SOUTH_ASIA,  NP: SOUTH_ASIA,
+  PK: SOUTH_ASIA,  LK: SOUTH_ASIA,
   // Middle East / MENA
-  AE: 'Middle East', BH: 'Middle East', DZ: 'Middle East',
-  EG: 'Middle East', IQ: 'Middle East', IR: 'Middle East',
-  JO: 'Middle East', KW: 'Middle East', LB: 'Middle East',
-  LY: 'Middle East', MA: 'Middle East', OM: 'Middle East',
-  PS: 'Middle East', QA: 'Middle East', SA: 'Middle East',
-  SD: 'Middle East', SY: 'Middle East', TN: 'Middle East',
-  TR: 'Middle East', YE: 'Middle East',
+  AE: MIDDLE_EAST, BH: MIDDLE_EAST, DZ: MIDDLE_EAST,
+  EG: MIDDLE_EAST, IQ: MIDDLE_EAST, IR: MIDDLE_EAST,
+  JO: MIDDLE_EAST, KW: MIDDLE_EAST, LB: MIDDLE_EAST,
+  LY: MIDDLE_EAST, MA: MIDDLE_EAST, OM: MIDDLE_EAST,
+  PS: MIDDLE_EAST, QA: MIDDLE_EAST, SA: MIDDLE_EAST,
+  SD: MIDDLE_EAST, SY: MIDDLE_EAST, TN: MIDDLE_EAST,
+  TR: MIDDLE_EAST, YE: MIDDLE_EAST,
   // Africa
-  AO: 'Africa', BF: 'Africa', BI: 'Africa', BJ: 'Africa',
-  BW: 'Africa', CD: 'Africa', CF: 'Africa', CG: 'Africa',
-  CI: 'Africa', CM: 'Africa', DJ: 'Africa', ER: 'Africa',
-  ET: 'Africa', GA: 'Africa', GH: 'Africa', GM: 'Africa',
-  GN: 'Africa', GQ: 'Africa', GW: 'Africa', KE: 'Africa',
-  LR: 'Africa', LS: 'Africa', MG: 'Africa', ML: 'Africa',
-  MR: 'Africa', MW: 'Africa', MZ: 'Africa', NA: 'Africa',
-  NE: 'Africa', NG: 'Africa', RW: 'Africa', SL: 'Africa',
-  SN: 'Africa', SO: 'Africa', SS: 'Africa', SZ: 'Africa',
-  TD: 'Africa', TG: 'Africa', TZ: 'Africa', UG: 'Africa',
-  ZA: 'Africa', ZM: 'Africa', ZW: 'Africa',
+  AO: AFRICA, BF: AFRICA, BI: AFRICA, BJ: AFRICA,
+  BW: AFRICA, CD: AFRICA, CF: AFRICA, CG: AFRICA,
+  CI: AFRICA, CM: AFRICA, DJ: AFRICA, ER: AFRICA,
+  ET: AFRICA, GA: AFRICA, GH: AFRICA, GM: AFRICA,
+  GN: AFRICA, GQ: AFRICA, GW: AFRICA, KE: AFRICA,
+  LR: AFRICA, LS: AFRICA, MG: AFRICA, ML: AFRICA,
+  MR: AFRICA, MW: AFRICA, MZ: AFRICA, NA: AFRICA,
+  NE: AFRICA, NG: AFRICA, RW: AFRICA, SL: AFRICA,
+  SN: AFRICA, SO: AFRICA, SS: AFRICA, SZ: AFRICA,
+  TD: AFRICA, TG: AFRICA, TZ: AFRICA, UG: AFRICA,
+  ZA: AFRICA, ZM: AFRICA, ZW: AFRICA,
   // Southeast Asia
-  BN: 'Southeast Asia', ID: 'Southeast Asia', KH: 'Southeast Asia',
-  LA: 'Southeast Asia', MM: 'Southeast Asia', MY: 'Southeast Asia',
-  PH: 'Southeast Asia', SG: 'Southeast Asia', TH: 'Southeast Asia',
-  TL: 'Southeast Asia', VN: 'Southeast Asia',
+  BN: SOUTHEAST_ASIA, ID: SOUTHEAST_ASIA, KH: SOUTHEAST_ASIA,
+  LA: SOUTHEAST_ASIA, MM: SOUTHEAST_ASIA, MY: SOUTHEAST_ASIA,
+  PH: SOUTHEAST_ASIA, SG: SOUTHEAST_ASIA, TH: SOUTHEAST_ASIA,
+  TL: SOUTHEAST_ASIA, VN: SOUTHEAST_ASIA,
 };
 
 // Build name → ISO lookup from country-state-city data at module load
@@ -39,12 +40,12 @@ const NAME_TO_ISO = Object.fromEntries(
 );
 
 export function deriveRegion(countries) {
-  if (!countries?.length) return 'Global';
+  if (!countries?.length) return GLOBAL;
   const regions = [...new Set(
     countries.map(name => {
       const iso = NAME_TO_ISO[name.toLowerCase()];
-      return (iso && ISO_TO_REGION[iso]) || 'Global';
+      return (iso && ISO_TO_REGION[iso]) || GLOBAL;
     })
   )];
-  return regions.length === 1 ? regions[0] : 'Global';
+  return regions.length === 1 ? regions[0] : GLOBAL;
 }
