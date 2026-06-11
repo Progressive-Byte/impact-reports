@@ -41,14 +41,6 @@ const GeneralTab = ({ form, update, adminOptions = [], isSuperAdmin = true, fiel
       />
     </div>
     <div className="grid grid-cols-2 gap-5">
-      <CustomSelect
-        label="Region" required
-        value={form.region}
-        onChange={val => update('region', val)}
-        options={REGIONS}
-        placeholder="Select a region..."
-        error={fieldErrors.region}
-      />
       <Input
         label="Sector" required
         placeholder="e.g. WASH, Education, Healthcare"
