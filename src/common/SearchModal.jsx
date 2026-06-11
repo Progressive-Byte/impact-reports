@@ -1,12 +1,11 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import SafeIcon from './SafeIcon';
-import { reports, taxonomies } from '../data/mockData';
-import { cleanCountryName } from '../utils/location';
+import { publicApiRequest } from '../services/publicApi';
 
 const SearchModal = ({ isOpen, onClose }) => {
-  const [query, setQuery] = useState('');
+  const [query,       setQuery]       = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
   const inputRef = useRef(null);
@@ -18,31 +17,19 @@ const SearchModal = ({ isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  const availableCountries = useMemo(() => {
-    const all = reports.flatMap(r => r.countries.map(cleanCountryName));
-    return [...new Set(all)].sort();
-  }, []);
-
   useEffect(() => {
-    const searchTerm = query.trim().toLowerCase();
-    if (searchTerm.length > 1) {
-      const pool = [
-        ...availableCountries.map(c => ({ label: c, type: 'country', icon: 'FiFlag' })),
-        ...taxonomies.regions.map(r => ({ label: r, type: 'region', icon: 'FiGlobe' })),
-        ...taxonomies.sectors.map(s => ({ label: s, type: 'sector', icon: 'FiBox' })),
-        ...taxonomies.years.map(y => ({ label: y, type: 'year', icon: 'FiCalendar' })),
-        ...reports.map(r => ({ label: r.title, type: 'report', id: r.id, icon: 'FiFileText' }))
-      ];
+    const searchTerm = query.trim();
+    if (searchTerm.length < 2) { setSuggestions([]); return; }
 
-      const filtered = pool.filter(item => 
-        item.label.toLowerCase().includes(searchTerm)
-      ).slice(0, 8);
-
-      setSuggestions(filtered);
-    } else {
-      setSuggestions([]);
-    }
-  }, [query, availableCountries]);
+    let cancelled = false;
+    const t = setTimeout(async () => {
+      try {
+        const data = await publicApiRequest(`/api/public/search?q=${encodeURIComponent(searchTerm)}`);
+        if (!cancelled) setSuggestions(data.results || []);
+      } catch { /* ignore */ }
+    }, 200);
+    return () => { cancelled = true; clearTimeout(t); };
+  }, [query]);
 
   const handleSelect = (item) => {
     if (item.type === 'report') {
