@@ -35,7 +35,6 @@ const SearchModal = ({ isOpen, onClose }) => {
     if (item.type === 'report') {
       navigate(`/report/${item.id}`);
     } else {
-      // Map selection to URL state for Portal to handle
       navigate(`/?filter=${encodeURIComponent(item.label)}&type=${item.type}`);
     }
     setQuery('');
