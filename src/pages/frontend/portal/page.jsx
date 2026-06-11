@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { usePublicReports } from '../../../hooks/usePublicReports';
 import { usePortalFilters } from '../../../hooks/usePortalFilters';
