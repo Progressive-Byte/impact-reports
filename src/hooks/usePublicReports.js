@@ -1,11 +1,6 @@
 import { useState, useCallback } from 'react';
 import { publicApiRequest } from '../services/publicApi';
 
-export async function fetchRegionOptions() {
-  const data = await publicApiRequest('/api/config/regions');
-  return (data.regions || []).map(r => ({ value: r, label: r }));
-}
-
 export function usePublicReports() {
   const [reports,       setReports]       = useState([]);
   const [meta,          setMeta]          = useState(null);
