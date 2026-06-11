@@ -90,8 +90,10 @@ export function useReportData() {
     reports, setReports,
     meta, stats,
     adminOptions,
+    regionOptions,
     loadingList, loadingReport,
     fetchReports,
     loadAdminOptions,
+    loadRegionOptions,
   };
 }
