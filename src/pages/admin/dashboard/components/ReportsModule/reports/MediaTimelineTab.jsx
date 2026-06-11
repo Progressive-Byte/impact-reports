@@ -75,57 +75,76 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
           </div>
         </div>
 
+        {form.thumbnail && (
+          <p className="text-[10px] text-amber-600 font-semibold mb-2 flex items-center gap-1">
+            <SafeIcon icon="FiStar" className="text-xs" /> Thumbnail set — shown as the report card image on the portal
+          </p>
+        )}
         <div className="space-y-2">
-          {form.images.map((img, idx) => (
-            <div key={img.id} className="flex items-center gap-3">
-              {/* Thumbnail preview */}
-              <div className="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
-                {img.url.trim() ? (
-                  <img src={img.url} alt="" className="w-full h-full object-cover" onError={e => { e.target.style.display='none'; }} />
-                ) : (
-                  <SafeIcon icon="FiImage" className="text-gray-400 text-sm" />
-                )}
+          {form.images.map((img, idx) => {
+            const isThumbnail = img.url.trim() && img.url === form.thumbnail;
+            return (
+              <div key={img.id} className={`flex items-center gap-3 rounded-xl transition-colors ${isThumbnail ? 'bg-amber-50 ring-1 ring-amber-300 px-2 -mx-2' : ''}`}>
+                {/* Image preview */}
+                <div className="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                  {img.url.trim() ? (
+                    <img src={img.url} alt="" className="w-full h-full object-cover" onError={e => { e.target.style.display='none'; }} />
+                  ) : (
+                    <SafeIcon icon="FiImage" className="text-gray-400 text-sm" />
+                  )}
+                </div>
+
+                {/* URL input */}
+                <Input
+                  placeholder={`Image ${idx + 1} URL (paste or upload →)`}
+                  value={img.url}
+                  onChange={e => updateImage(img.id, e.target.value)}
+                  className="flex-1"
+                />
+
+                {/* Set as thumbnail */}
+                <button
+                  type="button"
+                  onClick={() => img.url.trim() && setThumbnail(img.url)}
+                  disabled={!img.url.trim()}
+                  title={isThumbnail ? 'Remove as thumbnail' : 'Set as report thumbnail'}
+                  className={`w-10 h-10 flex items-center justify-center border rounded-xl transition-colors flex-shrink-0 disabled:opacity-30 disabled:cursor-not-allowed ${isThumbnail ? 'bg-amber-50 border-amber-300 text-amber-500' : 'bg-white border-gray-200 text-gray-400 hover:text-amber-500 hover:border-amber-300'}`}
+                >
+                  <SafeIcon icon={isThumbnail ? 'FiStar' : 'FiStar'} className="text-sm" />
+                </button>
+
+                {/* Upload from device */}
+                <input
+                  ref={el => fileInputRef.current[img.id] = el}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/gif"
+                  className="hidden"
+                  onChange={e => handleFileSelect(img.id, e.target.files[0])}
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current[img.id]?.click()}
+                  disabled={uploading[img.id]}
+                  title={`Upload image (max ${MAX_SIZE_MB} MB)`}
+                  className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-[#E52321] border border-gray-200 rounded-xl bg-white transition-colors flex-shrink-0 disabled:opacity-50"
+                >
+                  {uploading[img.id]
+                    ? <div className="w-4 h-4 border-2 border-[#E52321] border-t-transparent rounded-full animate-spin" />
+                    : <SafeIcon icon="FiUpload" className="text-sm" />
+                  }
+                </button>
+
+                {/* Delete row */}
+                <button
+                  onClick={() => removeImage(img.id)}
+                  disabled={form.images.length === 1}
+                  className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#E52321] border border-gray-200 rounded-xl bg-white transition-colors flex-shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <SafeIcon icon="FiTrash2" className="text-sm" />
+                </button>
               </div>
-
-              {/* URL input */}
-              <Input
-                placeholder={`Image ${idx + 1} URL (paste or upload →)`}
-                value={img.url}
-                onChange={e => updateImage(img.id, e.target.value)}
-                className="flex-1"
-              />
-
-              {/* Upload from device */}
-              <input
-                ref={el => fileInputRef.current[img.id] = el}
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                className="hidden"
-                onChange={e => handleFileSelect(img.id, e.target.files[0])}
-              />
-              <button
-                type="button"
-                onClick={() => fileInputRef.current[img.id]?.click()}
-                disabled={uploading[img.id]}
-                title={`Upload image (max ${MAX_SIZE_MB} MB)`}
-                className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-[#E52321] border border-gray-200 rounded-xl bg-white transition-colors flex-shrink-0 disabled:opacity-50"
-              >
-                {uploading[img.id]
-                  ? <div className="w-4 h-4 border-2 border-[#E52321] border-t-transparent rounded-full animate-spin" />
-                  : <SafeIcon icon="FiUpload" className="text-sm" />
-                }
-              </button>
-
-              {/* Delete row */}
-              <button
-                onClick={() => removeImage(img.id)}
-                disabled={form.images.length === 1}
-                className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#E52321] border border-gray-200 rounded-xl bg-white transition-colors flex-shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                <SafeIcon icon="FiTrash2" className="text-sm" />
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <button
