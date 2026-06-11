@@ -35,10 +35,15 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
     if (form.images.length >= MAX_IMAGES) return;
     update('images', [...form.images, { id: Date.now(), url: '' }]);
   };
-  const removeImage = (id) =>
-    update('images', form.images.filter(img => img.id !== id));
+  const removeImage = (id) => {
+    const img = form.images.find(i => i.id === id);
+    if (img && img.url === form.thumbnail) update('thumbnail', '');
+    update('images', form.images.filter(i => i.id !== id));
+  };
   const updateImage = (id, val) =>
     update('images', form.images.map(img => img.id === id ? { ...img, url: val } : img));
+  const setThumbnail = (url) =>
+    update('thumbnail', form.thumbnail === url ? '' : url);
 
   // ── Milestones ──────────────────────────────────────────────────────
   const addMilestone = () =>
