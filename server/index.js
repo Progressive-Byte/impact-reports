@@ -1,4 +1,4 @@
-import dotenv from 'dotenv';
+import './bootstrap.js'; // must be first — loads .env before any other module reads process.env
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import express from 'express';
@@ -13,7 +13,6 @@ import publicRoutes from './routes/public.js';
 import configRoutes from './routes/config.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: join(__dirname, '.env') });
 
 connectDB();
 
