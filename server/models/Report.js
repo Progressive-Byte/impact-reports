@@ -51,6 +51,7 @@ const reportSchema = new mongoose.Schema(
 
     // Media & Timeline step
     images:            { type: [{ url: { type: String, default: '' } }], default: [], _id: false },
+    thumbnail:         { type: String, default: '' },
     videoUrl:          { type: String, default: '' },
     milestones:        { type: [milestoneSchema], default: [] },
 
