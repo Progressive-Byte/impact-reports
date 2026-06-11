@@ -292,7 +292,7 @@ When the caller's role is `admin` (not `superadmin`), `projectName` and `assigne
 
 | Step        | Required                                                                 |
 | ----------- | ------------------------------------------------------------------------ |
-| `general`   | `projectLead`, `fiscalYear`, `livesImpacted > 0`; plus `projectName` and `assignedTo` for superadmin |
+| `general`   | `projectLead`, `fiscalYear`, `sector`, `livesImpacted > 0`; plus `projectName` and `assignedTo` for superadmin |
 | `narrative` | `projectBackground`, `strategicResponse`                                 |
 | `metrics`   | At least one deliverable with a non-empty `label` and `count > 0`        |
 | `media`     | At least one `images[].url`; max 10 images; at least one milestone with `date` and `title` |
