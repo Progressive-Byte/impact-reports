@@ -36,6 +36,20 @@ export function useReportData() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adminOptions.length]);
 
+  // Lazy-load region options from the backend config endpoint.
+  // Called only when the wizard is about to open.
+  const loadRegionOptions = useCallback(() => {
+    if (regionOptions.length > 0 || regionOptionsLoadingRef.current) return;
+    regionOptionsLoadingRef.current = true;
+    publicApiRequest('/api/config/regions')
+      .then(data => setRegionOptions(
+        (data.regions || []).map(r => ({ value: r, label: r }))
+      ))
+      .catch(() => {})
+      .finally(() => { regionOptionsLoadingRef.current = false; });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [regionOptions.length]);
+
   // Fetch report list with server-side search, filter, sort, and pagination
   const fetchReports = useCallback(async ({ status = 'all', q = '', sort = 'recent', page = 1 } = {}) => {
     setLoadingList(true);
