@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import SafeIcon from '../../../../../../common/SafeIcon';
-import Pagination from '../../../common/Pagination';
+import Pagination from '@/common/Pagination';
 import TableHead from './TableHead';
 import ReportSkeletonRow from './ReportSkeletonRow';
 import LedgerToolbar from './LedgerToolbar';
