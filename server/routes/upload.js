@@ -38,10 +38,14 @@ router.post('/', upload.single('file'), (req, res) => {
 
 // multer / cloudinary error handler
 router.use((err, _req, res, _next) => {
+  console.error('[upload error]', err);
   if (err.code === 'LIMIT_FILE_SIZE') {
     return res.status(400).json({ message: `File too large — maximum size is ${MAX_SIZE_MB} MB` });
   }
-  res.status(400).json({ message: err.message || 'Upload failed' });
+  const message = err.http_code
+    ? `Cloudinary error ${err.http_code}: ${err.message}`
+    : (err.message || 'Upload failed');
+  res.status(400).json({ message });
 });
 
 export default router;
