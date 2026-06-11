@@ -110,7 +110,7 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
                   title={isThumbnail ? 'Remove as thumbnail' : 'Set as report thumbnail'}
                   className={`w-10 h-10 flex items-center justify-center border rounded-xl transition-colors flex-shrink-0 disabled:opacity-30 disabled:cursor-not-allowed ${isThumbnail ? 'bg-amber-50 border-amber-300 text-amber-500' : 'bg-white border-gray-200 text-gray-400 hover:text-amber-500 hover:border-amber-300'}`}
                 >
-                  <SafeIcon icon={isThumbnail ? 'FiStar' : 'FiStar'} className="text-sm" />
+                  <SafeIcon icon={isThumbnail ? 'FiStar' : 'FiBookmark'} className="text-sm" />
                 </button>
 
                 {/* Upload from device */}
