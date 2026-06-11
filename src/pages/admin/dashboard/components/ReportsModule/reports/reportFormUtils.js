@@ -114,6 +114,7 @@ export const buildStepPayload = {
     assignedTo:    f.assignedTo,
     projectLead:   f.projectLead,
     fiscalYear:    f.fiscalYear,
+    region:        f.region,
     sector:        f.sector,
     livesImpacted: Number(f.livesImpacted) || 0,
   }),
