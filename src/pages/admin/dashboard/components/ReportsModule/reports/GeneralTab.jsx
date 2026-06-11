@@ -41,6 +41,15 @@ const GeneralTab = ({ form, update, adminOptions = [], isSuperAdmin = true, fiel
         options={FISCAL_YEARS}
       />
     </div>
+    <div className="grid grid-cols-2 gap-5">
+      <CustomSelect
+        label="Sector" required
+        value={form.sector}
+        onChange={val => update('sector', val)}
+        options={SECTORS}
+        placeholder="Select a sector..."
+        error={fieldErrors.sector}
+      /></div>
     <div className="grid grid-cols-1 gap-5">
       <Input
         label="Lives Impacted" required
