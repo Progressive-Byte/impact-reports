@@ -8,7 +8,7 @@ import { protect } from '../middleware/auth.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const UPLOADS_DIR = join(__dirname, '..', 'uploads');
 
-const MAX_SIZE_MB = 5;
+const MAX_SIZE_MB = 2;
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, UPLOADS_DIR),
