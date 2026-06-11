@@ -122,7 +122,7 @@ Returns all distinct values available for each filter dimension. Use this to pop
 
 All arrays are alphabetically sorted except `years`, which is newest-first.
 
-**Note:** `regions` is computed by deriving the region from each report's countries list for any report that does not have a stored region value. This ensures the filter list is always populated even for older data.
+**Note:** `regions` reflects the values admins have selected from the fixed taxonomy (`Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global`). For reports saved before the region field existed, the endpoint derives the region from the `countries` list as a backward-compatibility fallback.
 
 ---
 
