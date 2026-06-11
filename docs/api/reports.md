@@ -270,7 +270,7 @@ Each `milestones` item:
 { "report": { /* updated Report object */ } }
 ```
 
-When `location` step is saved and all four steps are complete, `status` becomes `"published"`. Otherwise `"draft"`.
+When `location` step is saved and all five steps are complete, `status` becomes `"published"`. Otherwise `"draft"`.
 
 ### Role protection
 
