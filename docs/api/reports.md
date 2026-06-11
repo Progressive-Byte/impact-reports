@@ -28,6 +28,7 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
   "status":          "draft",
   "projectLead":     "Ali Hassan",
   "fiscalYear":      "FY25",
+  "sector":          "Healthcare",
   "livesImpacted":   4800,
   "projectBackground": "...",
   "strategicResponse": "...",
@@ -214,6 +215,7 @@ Save the data for one wizard step. Marks the step complete and updates the repor
 | `assignedTo`    | string[] | Array of Admin `_id` strings        |
 | `projectLead`   | string   | Lead person name                    |
 | `fiscalYear`    | string   | e.g. `"FY25"`                       |
+| `sector`        | string   | Free-text sector e.g. `"Healthcare"` |
 | `livesImpacted` | number   | Number of lives impacted            |
 
 **`narrative`**
