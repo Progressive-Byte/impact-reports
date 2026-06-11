@@ -23,6 +23,7 @@ export const reportToForm = (report) => ({
   assignedTo:        (report.assignedTo || []).map(a => String(a._id ?? a)),
   projectLead:       report.projectLead || '',
   fiscalYear:        report.fiscalYear || 'FY25',
+  sector:            report.sector || '',
   livesImpacted:     report.livesImpacted ?? 0,
   projectBackground: report.projectBackground || '',
   strategicResponse: report.strategicResponse || '',
