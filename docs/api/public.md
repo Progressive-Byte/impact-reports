@@ -40,7 +40,7 @@ All four endpoints that return report data use the same card shape:
 
 **Notes:**
 - `year` is converted from the internal `fiscalYear` field (`"FY25"` → `"2025"`).
-- `region` falls back to a value derived from `countries` (via ISO 3166 subregion lookup) if the report's region field is blank.
+- `region` is the value set by the admin in the General step. Allowed values: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global`. Reports saved before the region field was introduced fall back to a value derived from their `countries` list.
 - `image` is the URL of the first uploaded image, or `""` if none.
 - `summary` is truncated to 200 characters with a trailing `…` if needed.
 
