@@ -10,7 +10,7 @@ Mounted at `/api/upload`. All routes require `Authorization: Bearer <token>`.
 
 ## `POST /api/upload`
 
-Upload a single image file. Used by the report wizard's Media step to attach photos to a report.
+Upload a single image file. Files are stored on **Cloudinary** and served via Cloudinary's CDN. Used by the report wizard's Media step to attach photos to a report.
 
 ### Request
 
@@ -23,14 +23,15 @@ Content-Type: `multipart/form-data`
 **Constraints:**
 - Allowed types: `image/jpeg`, `image/png`, `image/webp`, `image/gif`
 - Maximum file size: **2 MB**
+- Stored in the `impact-reports/` folder on Cloudinary with `quality: auto` and `fetch_format: auto` transformations applied
 
 ### Response `200`
 
 ```json
-{ "url": "/uploads/1781083833558-401384.jpeg" }
+{ "url": "https://res.cloudinary.com/<cloud_name>/image/upload/v.../impact-reports/<id>.jpg" }
 ```
 
-The returned URL is relative. Prepend the server origin to get the full URL (e.g. `http://localhost:5000/uploads/...`). Files are served as static assets from `server/uploads/`.
+The returned URL is a full Cloudinary CDN URL. Store it directly — no server prefix needed.
 
 ### Errors
 
@@ -48,3 +49,23 @@ curl -X POST http://localhost:5000/api/upload \
   -H "Authorization: Bearer $TOKEN" \
   -F "file=@/path/to/photo.jpg"
 ```
+
+---
+
+## Setup
+
+Add the following to `server/.env`:
+
+```
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+Get these values from your Cloudinary dashboard → **Settings → Access Keys**.
+
+---
+
+## Backward compatibility
+
+Files uploaded before Cloudinary was added are stored in `server/uploads/` and served as static assets at `/uploads/<filename>`. These continue to work — the static file serving in `server/index.js` is kept in place.
