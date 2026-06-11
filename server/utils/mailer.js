@@ -3,11 +3,6 @@ import nodemailer from 'nodemailer';
 async function sendMail({ to, subject, text, html }) {
   // No SMTP configured → print to console (dev fallback)
   if (!process.env.SMTP_HOST) {
-    console.log('\n[EMAIL] ─────────────────────────────────────');
-    console.log(`  To:      ${to}`);
-    console.log(`  Subject: ${subject}`);
-    console.log(`  Body:    ${text}`);
-    console.log('──────────────────────────────────────────────\n');
     return;
   }
 
