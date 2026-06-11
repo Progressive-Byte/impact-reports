@@ -45,8 +45,8 @@ const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], isSup
         label="Region" required
         value={form.region}
         onChange={val => update('region', val)}
-        options={REGIONS}
-        placeholder="Select region..."
+        options={regionOptions}
+        placeholder={regionOptions.length ? 'Select region...' : 'Loading…'}
         error={fieldErrors.region}
       />
       <Input
