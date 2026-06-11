@@ -38,7 +38,7 @@ const CustomSelect = ({
         type="button"
         onClick={() => setOpen(v => !v)}
         className={`w-full flex items-center justify-between border rounded-xl px-4 py-3 text-sm text-left bg-white transition-colors ${
-          open ? 'border-[#E52321]' : 'border-gray-200 hover:border-gray-300'
+          open ? 'border-[#E52321]' : error ? 'border-red-400' : 'border-gray-200 hover:border-gray-300'
         }`}
       >
         <span className={isEmpty ? 'text-gray-400' : 'text-gray-700'}>
