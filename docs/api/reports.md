@@ -251,6 +251,7 @@ Each `deliverables` item:
 | Field        | Type     | Required | Description                                               |
 | ------------ | -------- | :------: | --------------------------------------------------------- |
 | `images`     | array    | Yes      | At least 1, max 10. Each item: `{ url: string }`          |
+| `thumbnail`  | string   | —        | Cloudinary URL of the chosen report thumbnail. Must be one of the URLs in `images[]`. Falls back to `images[0].url` in the public API if not set. |
 | `videoUrl`   | string   | —        | YouTube / Vimeo / S3 video link (optional)                |
 | `milestones` | array    | Yes      | At least one item with `date` + `title` (see below)       |
 
