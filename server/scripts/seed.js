@@ -23,10 +23,6 @@ async function seed() {
     isActive: true,
   });
 
-  console.log('✓ Default admin created:');
-  console.log('  Username : admin');
-  console.log('  Password : admin123');
-  console.log('  Role     : superadmin');
   process.exit(0);
 }
 
