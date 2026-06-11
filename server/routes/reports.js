@@ -13,12 +13,48 @@ const POPULATE = [
 
 // Which fields each step is allowed to update
 const STEP_FIELDS = {
-  general:   ['projectName', 'assignedTo', 'projectLead', 'fiscalYear', 'region', 'sector', 'livesImpacted'],
+  general:   ['projectName', 'assignedTo', 'projectLead', 'fiscalYear', 'sector', 'livesImpacted'],
   narrative: ['projectBackground', 'strategicResponse'],
   metrics:   ['children', 'women', 'men', 'deliverables'],
   media:     ['images', 'videoUrl', 'milestones'],
   location:  ['countries', 'locations'],
 };
+
+// Country → region mapping for auto-derivation on the location step
+const COUNTRY_REGION = {
+  // South Asia
+  Afghanistan: 'South Asia', Bangladesh: 'South Asia', Bhutan: 'South Asia',
+  India: 'South Asia', Maldives: 'South Asia', Nepal: 'South Asia',
+  Pakistan: 'South Asia', 'Sri Lanka': 'South Asia',
+  // Middle East
+  Egypt: 'Middle East', Iran: 'Middle East', Iraq: 'Middle East',
+  Jordan: 'Middle East', Kuwait: 'Middle East', Lebanon: 'Middle East',
+  Libya: 'Middle East', Oman: 'Middle East', Palestine: 'Middle East',
+  Qatar: 'Middle East', 'Saudi Arabia': 'Middle East', Syria: 'Middle East',
+  Turkey: 'Middle East', 'United Arab Emirates': 'Middle East',
+  Yemen: 'Middle East', Sudan: 'Middle East', Gaza: 'Middle East',
+  'West Bank': 'Middle East', Morocco: 'Middle East', Tunisia: 'Middle East',
+  // Africa
+  Algeria: 'Africa', Angola: 'Africa', Cameroon: 'Africa', Chad: 'Africa',
+  'Democratic Republic of the Congo': 'Africa', Djibouti: 'Africa',
+  Ethiopia: 'Africa', Ghana: 'Africa', Guinea: 'Africa', Kenya: 'Africa',
+  Madagascar: 'Africa', Malawi: 'Africa', Mali: 'Africa', Mauritania: 'Africa',
+  Mozambique: 'Africa', Niger: 'Africa', Nigeria: 'Africa', Rwanda: 'Africa',
+  Senegal: 'Africa', 'Sierra Leone': 'Africa', Somalia: 'Africa',
+  'South Sudan': 'Africa', Tanzania: 'Africa', Uganda: 'Africa',
+  Zambia: 'Africa', Zimbabwe: 'Africa', 'Burkina Faso': 'Africa',
+  'Central African Republic': 'Africa', Congo: 'Africa', Eritrea: 'Africa',
+  // Southeast Asia
+  Cambodia: 'Southeast Asia', Indonesia: 'Southeast Asia', Laos: 'Southeast Asia',
+  Malaysia: 'Southeast Asia', Myanmar: 'Southeast Asia', Philippines: 'Southeast Asia',
+  Thailand: 'Southeast Asia', 'Timor-Leste': 'Southeast Asia', Vietnam: 'Southeast Asia',
+};
+
+function deriveRegion(countries) {
+  if (!countries?.length) return 'Global';
+  const regions = [...new Set(countries.map(c => COUNTRY_REGION[c] || 'Global'))];
+  return regions.length === 1 ? regions[0] : 'Global';
+}
 
 const ALL_STEPS = Object.keys(STEP_FIELDS);
 
