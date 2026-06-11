@@ -2,9 +2,10 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'react-router-dom';
 import SafeIcon from '../../../common/SafeIcon';
-import { reports, taxonomies } from '../../../data/mockData';
-import { cleanCountryName } from '../../../utils/location';
+import { usePublicReports } from '../../../hooks/usePublicReports';
+import { publicApiRequest } from '../../../services/publicApi';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
+import Pagination from '../../admin/dashboard/common/Pagination';
 import FilterGroup from './components/FilterGroup';
 import ReportCard from './components/ReportCard';
 import ReportListRow from './components/ReportListRow';
@@ -13,23 +14,46 @@ const EMPTY_FILTERS = { region: [], sector: [], year: [], country: [] };
 
 const Portal = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [filters, setFilters] = useLocalStorage('portalFilters', EMPTY_FILTERS);
-  const [viewMode, setViewMode] = useLocalStorage('reportViewMode', 'grid');
+  const [filters, setFilters]           = useLocalStorage('portalFilters', EMPTY_FILTERS);
+  const [viewMode, setViewMode]         = useLocalStorage('reportViewMode', 'grid');
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [suggestions, setSuggestions] = useState([]);
+  const [searchQuery,     setSearchQuery]     = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [suggestions,     setSuggestions]     = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const searchContainerRef = useRef(null);
+
+  const urlPage = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 
   const [expandedGroups, setExpandedGroups] = useState({
     Regions: false, Countries: false, Sectors: false, Years: false,
   });
 
-  const availableCountries = useMemo(() => {
-    const all = reports.flatMap((r) => r.countries.map(cleanCountryName));
-    return [...new Set(all)].sort();
+  const {
+    reports, meta, stats, filterOptions,
+    loading,
+    fetchReports, fetchStats, loadFilterOptions,
+  } = usePublicReports();
+
+  // On mount: load stats and filter options once
+  useEffect(() => {
+    fetchStats();
+    loadFilterOptions();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Debounce search query → debouncedSearch
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(searchQuery), 400);
+    return () => clearTimeout(t);
+  }, [searchQuery]);
+
+  // Fetch reports whenever filters, debounced search, or page changes
+  useEffect(() => {
+    fetchReports({ q: debouncedSearch, filters, page: urlPage });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, filters, urlPage]);
 
   // Lock body scroll when mobile filter sheet is open
   useEffect(() => {
@@ -39,9 +63,9 @@ const Portal = () => {
 
   // Apply filter/search params pushed by SearchModal
   useEffect(() => {
-    const urlQuery = searchParams.get('search');
+    const urlQuery  = searchParams.get('search');
     const urlFilter = searchParams.get('filter');
-    const urlType = searchParams.get('type');
+    const urlType   = searchParams.get('type');
 
     if (urlQuery && !urlType) {
       setSearchQuery(urlQuery);
@@ -53,6 +77,7 @@ const Portal = () => {
       searchParams.delete('type');
       setSearchParams(searchParams);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   // Close suggestions on outside click
@@ -66,33 +91,40 @@ const Portal = () => {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // Debounced search suggestions
+  // Fetch search suggestions from API
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const query = searchQuery.trim().toLowerCase();
-      if (query.length > 1) {
-        const pool = [
-          ...availableCountries.map((c) => ({ label: c, type: 'country', icon: 'FiFlag' })),
-          ...taxonomies.regions.map((r) => ({ label: r, type: 'region', icon: 'FiGlobe' })),
-          ...taxonomies.sectors.map((s) => ({ label: s, type: 'sector', icon: 'FiBox' })),
-          ...taxonomies.years.map((y) => ({ label: y, type: 'year', icon: 'FiCalendar' })),
-        ];
-        const filtered = pool
-          .filter((item) => item.label.toLowerCase().includes(query) && !filters[item.type].includes(item.label))
-          .slice(0, 8);
-        setSuggestions(filtered);
-        setShowSuggestions(filtered.length > 0);
-      } else {
-        setSuggestions([]);
-        setShowSuggestions(false);
-      }
+    const query = searchQuery.trim();
+    if (query.length < 2) { setSuggestions([]); setShowSuggestions(false); return; }
+
+    let cancelled = false;
+    const t = setTimeout(async () => {
+      try {
+        const data = await publicApiRequest(`/api/public/search?q=${encodeURIComponent(query)}`);
+        if (!cancelled) {
+          const filtered = (data.results || []).filter(
+            item => !(filters[item.type] || []).includes(item.label)
+          );
+          setSuggestions(filtered);
+          setShowSuggestions(filtered.length > 0);
+        }
+      } catch { /* ignore */ }
     }, 200);
-    return () => clearTimeout(timer);
-  }, [searchQuery, availableCountries, filters]);
+    return () => { cancelled = true; clearTimeout(t); };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, filters]);
+
+  const resetPage = () => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      next.delete('page');
+      return next;
+    }, { replace: true });
+  };
 
   const handleFilterChange = (category, value) => {
+    resetPage();
     setFilters((prev) => {
-      const key = category.toLowerCase();
+      const key     = category.toLowerCase();
       const current = prev[key] || [];
       return {
         ...prev,
@@ -104,7 +136,7 @@ const Portal = () => {
   const toggleGroup = (title) => {
     setExpandedGroups((prev) => {
       const isOpen = prev[title];
-      const reset = { Regions: false, Countries: false, Sectors: false, Years: false };
+      const reset  = { Regions: false, Countries: false, Sectors: false, Years: false };
       return isOpen ? reset : { ...reset, [title]: true };
     });
   };
@@ -115,37 +147,44 @@ const Portal = () => {
     setSearchParams({});
   };
 
-  const globalMetrics = useMemo(() => {
-    const totalLives = reports.reduce((acc, r) => acc + r.metrics.beneficiaries, 0);
-    const uniqueRegions = new Set(reports.map((r) => r.region)).size;
-    return [
-      { label: 'Countries Supported', value: `${uniqueRegions * 4}+`, icon: 'FiGlobe', description: 'Active across 4 major regions' },
-      { label: 'Projects Delivered', value: reports.length.toLocaleString(), icon: 'FiCheckCircle', description: 'Verified field initiatives' },
-      { label: 'Total Lives Impacted', value: `${totalLives.toLocaleString()}+`, icon: 'FiUsers', description: 'Individuals reached globally' },
-    ];
-  }, []);
+  const handlePageChange = (page) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      if (page <= 1) next.delete('page');
+      else           next.set('page', String(page));
+      return next;
+    }, { replace: true });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
-  const filteredReports = useMemo(() => {
-    return reports.filter((report) => {
-      const cleanedCountries = report.countries.map(cleanCountryName);
-      return (
-        (filters.region.length === 0 || filters.region.includes(report.region)) &&
-        (filters.sector.length === 0 || filters.sector.includes(report.sector)) &&
-        (filters.year.length === 0 || filters.year.includes(report.year)) &&
-        (filters.country.length === 0 || cleanedCountries.some((c) => filters.country.includes(c))) &&
-        (report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          report.summary.toLowerCase().includes(searchQuery.toLowerCase()))
-      );
-    });
-  }, [filters, searchQuery]);
+  const globalMetrics = useMemo(() => [
+    {
+      label: 'Countries Supported',
+      value: stats.totalCountries > 0 ? `${stats.totalCountries}+` : '—',
+      icon: 'FiGlobe',
+      description: 'Active across major regions',
+    },
+    {
+      label: 'Projects Delivered',
+      value: stats.totalProjects > 0 ? stats.totalProjects.toLocaleString() : '—',
+      icon: 'FiCheckCircle',
+      description: 'Verified field initiatives',
+    },
+    {
+      label: 'Total Lives Impacted',
+      value: stats.totalLives > 0 ? `${stats.totalLives.toLocaleString()}+` : '—',
+      icon: 'FiUsers',
+      description: 'Individuals reached globally',
+    },
+  ], [stats]);
 
-  const activeFilterCount =
-    filters.region.length + filters.sector.length + filters.year.length + filters.country.length;
-
+  const activeFilterCount = filters.region.length + filters.sector.length + filters.year.length + filters.country.length;
   const activeFilterChips = [...filters.region, ...filters.sector, ...filters.year, ...filters.country];
 
-  const expandAllGroups = () => setExpandedGroups({ Regions: true, Countries: true, Sectors: true, Years: true });
+  const expandAllGroups   = () => setExpandedGroups({ Regions: true, Countries: true, Sectors: true, Years: true });
   const collapseAllGroups = () => setExpandedGroups({ Regions: false, Countries: false, Sectors: false, Years: false });
+
+  const totalResults = meta?.total ?? reports.length;
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen">
@@ -210,7 +249,7 @@ const Portal = () => {
             type="text"
             placeholder="Search by Country, Region, Sector, or Year"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => { setSearchQuery(e.target.value); resetPage(); }}
             onFocus={() => searchQuery.length > 1 && setShowSuggestions(suggestions.length > 0)}
             className="w-full bg-white border border-gray-100 rounded-2xl py-4 sm:py-5 pl-12 sm:pl-14 pr-5 sm:pr-6 text-sm font-medium shadow-xl shadow-black/5 focus:ring-2 focus:ring-[#E52321]/10 transition-all outline-none"
           />
@@ -229,7 +268,15 @@ const Portal = () => {
                 {suggestions.map((s, idx) => (
                   <button
                     key={idx}
-                    onClick={() => { handleFilterChange(s.type, s.label); setSearchQuery(''); setShowSuggestions(false); }}
+                    onClick={() => {
+                      if (s.type === 'report') {
+                        window.location.href = `/report/${s.id}`;
+                      } else {
+                        handleFilterChange(s.type, s.label);
+                      }
+                      setSearchQuery('');
+                      setShowSuggestions(false);
+                    }}
                     className="w-full px-5 sm:px-6 py-3 sm:py-4 text-left text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[#E52321] flex items-center transition-all duration-200 group"
                   >
                     <div className="w-8 h-8 rounded-lg bg-gray-50 group-hover:bg-[#E52321]/10 flex items-center justify-center mr-4 transition-colors flex-shrink-0">
@@ -247,7 +294,7 @@ const Portal = () => {
           </AnimatePresence>
         </div>
 
-        {/* Mobile filter trigger row — hidden on lg+ */}
+        {/* Mobile filter trigger row */}
         <div className="flex lg:hidden items-center gap-3 mb-8 overflow-hidden">
           <button
             onClick={() => setIsMobileFilterOpen(true)}
@@ -284,7 +331,7 @@ const Portal = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-          {/* Desktop sidebar — hidden on mobile */}
+          {/* Desktop sidebar */}
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden sticky top-28">
               <div className="p-6 border-b border-gray-50 flex items-center justify-between">
@@ -295,19 +342,15 @@ const Portal = () => {
                   <h3 className="text-[11px] font-black text-[#0B0D0F] uppercase tracking-widest">Filters</h3>
                 </div>
                 <div className="flex items-center gap-4">
-                  <button onClick={expandAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">
-                    Expand
-                  </button>
-                  <button onClick={collapseAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">
-                    Collapse
-                  </button>
+                  <button onClick={expandAllGroups}   className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">Expand</button>
+                  <button onClick={collapseAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">Collapse</button>
                 </div>
               </div>
               <div className="p-6 space-y-4">
-                <FilterGroup title="Regions" options={taxonomies.regions} selected={filters.region} isOpen={expandedGroups.Regions} onToggle={() => toggleGroup('Regions')} onOptionToggle={(v) => handleFilterChange('region', v)} />
-                <FilterGroup title="Countries" options={availableCountries} selected={filters.country} isOpen={expandedGroups.Countries} onToggle={() => toggleGroup('Countries')} onOptionToggle={(v) => handleFilterChange('country', v)} />
-                <FilterGroup title="Sectors" options={taxonomies.sectors} selected={filters.sector} isOpen={expandedGroups.Sectors} onToggle={() => toggleGroup('Sectors')} onOptionToggle={(v) => handleFilterChange('sector', v)} />
-                <FilterGroup title="Years" options={taxonomies.years} selected={filters.year} isOpen={expandedGroups.Years} onToggle={() => toggleGroup('Years')} onOptionToggle={(v) => handleFilterChange('year', v)} />
+                <FilterGroup title="Regions"   options={filterOptions.regions}   selected={filters.region}  isOpen={expandedGroups.Regions}   onToggle={() => toggleGroup('Regions')}   onOptionToggle={(v) => handleFilterChange('region',  v)} />
+                <FilterGroup title="Countries" options={filterOptions.countries} selected={filters.country} isOpen={expandedGroups.Countries} onToggle={() => toggleGroup('Countries')} onOptionToggle={(v) => handleFilterChange('country', v)} />
+                <FilterGroup title="Sectors"   options={filterOptions.sectors}   selected={filters.sector}  isOpen={expandedGroups.Sectors}   onToggle={() => toggleGroup('Sectors')}   onOptionToggle={(v) => handleFilterChange('sector',  v)} />
+                <FilterGroup title="Years"     options={filterOptions.years}     selected={filters.year}    isOpen={expandedGroups.Years}     onToggle={() => toggleGroup('Years')}     onOptionToggle={(v) => handleFilterChange('year',    v)} />
               </div>
               {activeFilterCount > 0 && (
                 <div className="px-6 pb-6">
@@ -328,7 +371,7 @@ const Portal = () => {
               <div className="text-left">
                 <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Results</p>
                 <p className="text-sm font-black text-[#0B0D0F] tabular-nums">
-                  {filteredReports.length.toLocaleString()} report{filteredReports.length === 1 ? '' : 's'}
+                  {loading ? '…' : `${totalResults.toLocaleString()} report${totalResults === 1 ? '' : 's'}`}
                 </p>
               </div>
               <div className="flex bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100">
@@ -347,35 +390,44 @@ const Portal = () => {
               </div>
             </div>
 
-            <motion.div
-              layout
-              className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6' : 'flex flex-col space-y-4'}
-            >
-              <AnimatePresence mode="popLayout">
-                {filteredReports.map((report) => (
-                  <motion.div
-                    layout
-                    key={report.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    {viewMode === 'grid' ? <ReportCard report={report} /> : <ReportListRow report={report} />}
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </motion.div>
+            <div className={`transition-opacity duration-200 ${loading ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
+              <motion.div
+                layout
+                className={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6' : 'flex flex-col space-y-4'}
+              >
+                <AnimatePresence mode="popLayout">
+                  {reports.map((report) => (
+                    <motion.div
+                      layout
+                      key={report.id}
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      transition={{ duration: 0.25 }}
+                    >
+                      {viewMode === 'grid' ? <ReportCard report={report} /> : <ReportListRow report={report} />}
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </motion.div>
 
-            {filteredReports.length === 0 && (
-              <div className="text-center py-20 sm:py-28 bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)]">
-                <div className="w-16 h-16 bg-[#E52321]/10 border border-[#E52321]/15 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                  <SafeIcon icon="FiInbox" className="text-2xl text-[#E52321]" />
+              {!loading && reports.length === 0 && (
+                <div className="text-center py-20 sm:py-28 bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)]">
+                  <div className="w-16 h-16 bg-[#E52321]/10 border border-[#E52321]/15 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <SafeIcon icon="FiInbox" className="text-2xl text-[#E52321]" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">No Reports Found</h3>
+                  <p className="text-gray-500 max-w-xs mx-auto">
+                    Try adjusting your filters or search terms to find what you're looking for.
+                  </p>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">No Reports Found</h3>
-                <p className="text-gray-500 max-w-xs mx-auto">
-                  Try adjusting your filters or search terms to find what you're looking for.
-                </p>
+              )}
+            </div>
+
+            {/* Pagination */}
+            {meta && meta.pages > 1 && (
+              <div className="mt-8 bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
+                <Pagination meta={meta} onPageChange={handlePageChange} label="reports" />
               </div>
             )}
           </div>
@@ -401,12 +453,9 @@ const Portal = () => {
               transition={{ type: 'spring', damping: 32, stiffness: 300 }}
               className="fixed bottom-0 left-0 right-0 z-[80] lg:hidden bg-white rounded-t-[2rem] max-h-[88vh] flex flex-col shadow-[0_-20px_60px_rgba(0,0,0,0.15)]"
             >
-              {/* Drag handle */}
               <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
                 <div className="w-10 h-1.5 rounded-full bg-gray-200" />
               </div>
-
-              {/* Sheet header */}
               <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between flex-shrink-0">
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
@@ -420,24 +469,16 @@ const Portal = () => {
                   )}
                 </div>
                 <div className="flex items-center gap-4">
-                  <button onClick={expandAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">
-                    Expand
-                  </button>
-                  <button onClick={collapseAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">
-                    Collapse
-                  </button>
+                  <button onClick={expandAllGroups}   className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">Expand</button>
+                  <button onClick={collapseAllGroups} className="text-[9px] font-bold uppercase text-gray-400 hover:text-[#E52321] transition-colors">Collapse</button>
                 </div>
               </div>
-
-              {/* Scrollable filter groups */}
               <div className="flex-1 overflow-y-auto p-5 space-y-4">
-                <FilterGroup title="Regions" options={taxonomies.regions} selected={filters.region} isOpen={expandedGroups.Regions} onToggle={() => toggleGroup('Regions')} onOptionToggle={(v) => handleFilterChange('region', v)} />
-                <FilterGroup title="Countries" options={availableCountries} selected={filters.country} isOpen={expandedGroups.Countries} onToggle={() => toggleGroup('Countries')} onOptionToggle={(v) => handleFilterChange('country', v)} />
-                <FilterGroup title="Sectors" options={taxonomies.sectors} selected={filters.sector} isOpen={expandedGroups.Sectors} onToggle={() => toggleGroup('Sectors')} onOptionToggle={(v) => handleFilterChange('sector', v)} />
-                <FilterGroup title="Years" options={taxonomies.years} selected={filters.year} isOpen={expandedGroups.Years} onToggle={() => toggleGroup('Years')} onOptionToggle={(v) => handleFilterChange('year', v)} />
+                <FilterGroup title="Regions"   options={filterOptions.regions}   selected={filters.region}  isOpen={expandedGroups.Regions}   onToggle={() => toggleGroup('Regions')}   onOptionToggle={(v) => handleFilterChange('region',  v)} />
+                <FilterGroup title="Countries" options={filterOptions.countries} selected={filters.country} isOpen={expandedGroups.Countries} onToggle={() => toggleGroup('Countries')} onOptionToggle={(v) => handleFilterChange('country', v)} />
+                <FilterGroup title="Sectors"   options={filterOptions.sectors}   selected={filters.sector}  isOpen={expandedGroups.Sectors}   onToggle={() => toggleGroup('Sectors')}   onOptionToggle={(v) => handleFilterChange('sector',  v)} />
+                <FilterGroup title="Years"     options={filterOptions.years}     selected={filters.year}    isOpen={expandedGroups.Years}     onToggle={() => toggleGroup('Years')}     onOptionToggle={(v) => handleFilterChange('year',    v)} />
               </div>
-
-              {/* Action buttons */}
               <div className="p-5 border-t border-gray-100 flex-shrink-0">
                 <div className={`grid gap-3 ${activeFilterCount > 0 ? 'grid-cols-2' : 'grid-cols-1'}`}>
                   {activeFilterCount > 0 && (
@@ -452,7 +493,7 @@ const Portal = () => {
                     onClick={() => setIsMobileFilterOpen(false)}
                     className="py-4 rounded-2xl bg-[#0B0D0F] text-white font-black text-[10px] uppercase tracking-[0.25em] hover:bg-[#E52321] active:scale-95 transition-all"
                   >
-                    Show {filteredReports.length} result{filteredReports.length === 1 ? '' : 's'}
+                    Show {totalResults} result{totalResults === 1 ? '' : 's'}
                   </button>
                 </div>
               </div>
