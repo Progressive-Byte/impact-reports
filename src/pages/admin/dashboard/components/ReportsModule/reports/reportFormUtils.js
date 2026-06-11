@@ -13,6 +13,7 @@ export const BLANK_FORM = {
   men:               0,
   deliverables:      [{ id: 1, label: '', count: '', icon: '', description: '' }],
   images:            [{ id: 1, url: '' }],
+  thumbnail:         '',
   videoUrl:          '',
   milestones:        [{ id: 1, date: '', title: '', notes: '' }],
   countries:         [],
