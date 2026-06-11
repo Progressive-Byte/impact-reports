@@ -28,6 +28,7 @@ const WizardShell = ({
           form={form}
           update={update}
           adminOptions={adminOptions}
+          regionOptions={regionOptions}
           isSuperAdmin={isSuperAdmin}
           fieldErrors={fieldErrors}
         />
