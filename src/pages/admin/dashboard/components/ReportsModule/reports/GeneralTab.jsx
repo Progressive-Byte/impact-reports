@@ -3,9 +3,8 @@ import CustomSelect from './CustomSelect';
 import MultiSelect from './MultiSelect';
 
 const FISCAL_YEARS = ['FY23', 'FY24', 'FY25', 'FY26'].map(v => ({ value: v, label: v }));
-const REGIONS      = ['Africa', 'Middle East', 'South Asia', 'Southeast Asia', 'Global'].map(v => ({ value: v, label: v }));
 
-const GeneralTab = ({ form, update, adminOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
+const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
     <div className="grid grid-cols-2 gap-5">
       <Input
