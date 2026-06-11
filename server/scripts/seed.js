@@ -9,11 +9,9 @@ dotenv.config({ path: join(__dirname, '../.env') });
 
 async function seed() {
   await mongoose.connect(process.env.MONGODB_URI);
-  console.log('Connected to MongoDB Atlas');
 
   const existing = await Admin.findOne({ username: 'admin' });
   if (existing) {
-    console.log('✓ Default admin already exists — skipping seed');
     process.exit(0);
   }
 
