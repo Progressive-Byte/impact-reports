@@ -21,3 +21,7 @@ All endpoints below require a valid `Bearer` token.
 ## Invite Flow
 
 - [Invite](api/invite.md) — Send invite emails, validate invite tokens, and complete registration.
+
+## File Uploads
+
+- [Upload](api/upload.md) — Upload report images (used by the Media wizard step).
