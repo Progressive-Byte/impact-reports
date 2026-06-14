@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import Admin from '../models/Admin.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: join(__dirname, '../.env') });
+dotenv.config({ path: join(__dirname, '../../.env') });
 
 async function seed() {
   await mongoose.connect(process.env.MONGODB_URI);
