@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SafeIcon from '../../../common/SafeIcon';
-import { reports } from '../../../data/mockData';
+import { fetchReport } from '../../../services/publicApi';
 import { cleanCountryName, getGpsData } from '../../../utils/location';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
 import CollapsibleSection from '../../../common/CollapsibleSection';
@@ -14,9 +14,13 @@ import TimelineItem from './components/TimelineItem';
 import ProjectBrief from './components/ProjectBrief';
 import ProjectCountries from './components/ProjectCountries';
 
+const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=1200&q=80';
+
 const ReportDetail = () => {
   const { id } = useParams();
-  const report = useMemo(() => reports.find((r) => r.id === id), [id]);
+  const [report, setReport] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [locationViewMode, setLocationViewMode] = useLocalStorage('locationViewMode', 'grid');
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [openSections, setOpenSections] = useState({
@@ -31,6 +35,17 @@ const ReportDetail = () => {
   useEffect(() => { window.scrollTo(0, 0); }, [id]);
 
   useEffect(() => {
+    if (!id) return;
+    setLoading(true);
+    setError(null);
+    setReport(null);
+    fetchReport(id)
+      .then(setReport)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  useEffect(() => {
     const handleEsc = (e) => { if (e.key === 'Escape') setSelectedMedia(null); };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
@@ -38,15 +53,32 @@ const ReportDetail = () => {
 
   const uniqueCountries = useMemo(() => {
     if (!report) return [];
-    return [...new Set(report.countries.map(cleanCountryName))].sort();
+    return [...new Set((report.countries || []).map(cleanCountryName))].sort();
+  }, [report]);
+
+  // Build ordered media list: video first (if any), then images
+  const fieldReports = useMemo(() => {
+    if (!report) return [];
+    const items = [];
+    if (report.videoUrl) items.push({ type: 'video', url: report.videoUrl });
+    (report.images || []).forEach((img) => items.push({ type: 'image', url: img.url }));
+    return items;
   }, [report]);
 
   const handleImageError = (e) => {
     e.target.onerror = null;
-    e.target.src = 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=600&q=80';
+    e.target.src = FALLBACK_IMAGE;
   };
 
-  if (!id || !report) {
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F9FAFB]">
+        <div className="w-12 h-12 border-4 border-gray-200 border-t-[#E52321] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error || !report) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-[#F9FAFB] text-center px-4">
         <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mb-6">
@@ -59,6 +91,14 @@ const ReportDetail = () => {
       </div>
     );
   }
+
+  const activeLocations = report.locations?.length || report.countries?.length || 0;
+  const heroSummary = report.projectBackground
+    ? (report.projectBackground.length > 200
+        ? report.projectBackground.slice(0, 200).trimEnd() + '…'
+        : report.projectBackground)
+    : '';
+  const hasDemographics = (report.demographics?.men || 0) + (report.demographics?.women || 0) + (report.demographics?.children || 0) > 0;
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen pb-24 font-sans overflow-x-hidden">
@@ -77,7 +117,12 @@ const ReportDetail = () => {
             transition={{ duration: 0.6 }}
             className="relative rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-[0_30px_80px_rgba(0,0,0,0.12)]"
           >
-            <img src={report.image} alt={report.title} className="absolute inset-0 w-full h-full object-cover" />
+            <img
+              src={report.image || FALLBACK_IMAGE}
+              alt={report.title}
+              onError={handleImageError}
+              className="absolute inset-0 w-full h-full object-cover"
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
             <div className="relative z-10 p-6 sm:p-10 flex flex-col justify-end min-h-[360px] sm:min-h-[420px]">
               <div className="flex flex-wrap items-center gap-3 mb-5">
@@ -85,7 +130,7 @@ const ReportDetail = () => {
                   { icon: 'FiMapPin', label: report.region },
                   { icon: 'FiLayers', label: report.sector },
                   { icon: 'FiCalendar', label: report.year },
-                ].map(({ icon, label }) => (
+                ].filter(({ label }) => label).map(({ icon, label }) => (
                   <span key={label} className="inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-md border border-white/30 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#0B0D0F] shadow-[0_14px_35px_rgba(0,0,0,0.35)]">
                     <SafeIcon icon={icon} className="text-sm text-[#E52321]" />
                     {label}
@@ -98,19 +143,20 @@ const ReportDetail = () => {
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-[1.05] max-w-4xl text-left">
                 {report.title}
               </h1>
-              <p className="mt-4 text-sm sm:text-base md:text-lg text-white/80 max-w-3xl leading-relaxed text-left">
-                {report.summary}
-              </p>
+              {heroSummary && (
+                <p className="mt-4 text-sm sm:text-base md:text-lg text-white/80 max-w-3xl leading-relaxed text-left">
+                  {heroSummary}
+                </p>
+              )}
             </div>
           </motion.div>
         </div>
 
         {/* Stats bar */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
-          <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-            <StatTile title="LIVES IMPACTED" value={report.metrics.beneficiaries.toLocaleString()} icon="FiUsers" />
-            <StatTile title="PROJECT BUDGET" value={`$${report.metrics.budget.toLocaleString()}`} icon="FiDollarSign" />
-            <StatTile title="ACTIVE LOCATIONS" value={report.metrics.locations} icon="FiMapPin" />
+          <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+            <StatTile title="LIVES IMPACTED" value={(report.livesImpacted || 0).toLocaleString()} icon="FiUsers" />
+            <StatTile title="ACTIVE LOCATIONS" value={activeLocations} icon="FiMapPin" />
           </div>
         </div>
       </div>
@@ -121,137 +167,119 @@ const ReportDetail = () => {
           <div className="lg:col-span-2 space-y-10 sm:space-y-12">
             <ProjectBrief report={report} />
 
-            <CollapsibleSection title="Project Deliverables" isOpen={openSections.deliverables} onToggle={() => toggleSection('deliverables')}>
-              <div className="p-6 sm:p-8 space-y-3">
-                {report.itemsDelivered.map((item, idx) => <DeliverableRow key={idx} item={item} />)}
-              </div>
-            </CollapsibleSection>
+            {report.deliverables?.length > 0 && (
+              <CollapsibleSection title="Project Deliverables" isOpen={openSections.deliverables} onToggle={() => toggleSection('deliverables')}>
+                <div className="p-6 sm:p-8 space-y-3">
+                  {report.deliverables.map((item, idx) => <DeliverableRow key={idx} item={item} />)}
+                </div>
+              </CollapsibleSection>
+            )}
 
-            <CollapsibleSection title="Implementation Timeline" isOpen={openSections.timeline} onToggle={() => toggleSection('timeline')}>
-              <div className="px-6 sm:px-10 py-8">
-                <div className="relative pl-8 sm:pl-10">
-                  <div className="absolute left-3 sm:left-3.5 top-2 bottom-2 w-px bg-[#E52321] z-0" />
-                  <div className="space-y-0">
-                    {report.milestones.map((milestone, idx) => (
-                      <TimelineItem key={idx} milestone={milestone} isLast={idx === report.milestones.length - 1} />
-                    ))}
+            {report.milestones?.length > 0 && (
+              <CollapsibleSection title="Implementation Timeline" isOpen={openSections.timeline} onToggle={() => toggleSection('timeline')}>
+                <div className="px-6 sm:px-10 py-8">
+                  <div className="relative pl-8 sm:pl-10">
+                    <div className="absolute left-3 sm:left-3.5 top-2 bottom-2 w-px bg-[#E52321] z-0" />
+                    <div className="space-y-0">
+                      {report.milestones.map((milestone, idx) => (
+                        <TimelineItem key={idx} milestone={milestone} isLast={idx === report.milestones.length - 1} />
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </CollapsibleSection>
+              </CollapsibleSection>
+            )}
           </div>
 
           {/* Sidebar */}
           <div className="space-y-8 lg:sticky lg:top-28 self-start">
-            {/* Demographics */}
-            <section>
-              <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
-                <div className="p-6 flex items-center gap-3 border-b border-gray-50">
-                  <div className="w-10 h-10 rounded-2xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
-                    <SafeIcon icon="FiUsers" className="text-[#E52321] text-lg" />
-                  </div>
-                  <h2 className="text-[11px] font-black text-[#0B0D0F] uppercase tracking-widest">Recipient Demographics</h2>
-                </div>
-                <div className="p-6 space-y-6">
-                  <DemographicRow label="Men" percentage={report.demographics.men} icon="FiUser" color="bg-gray-300" />
-                  <DemographicRow label="Women" percentage={report.demographics.women} icon="FiUser" color="bg-[#0B0D0F]" />
-                  <DemographicRow label="Children (< 18)" percentage={report.demographics.children} icon="FiSmile" color="bg-[#E52321]" />
-                </div>
-              </div>
-            </section>
-
-            {/* Testimonial */}
-            <section>
-              <motion.div
-                whileHover={{ y: -4 }}
-                transition={{ type: 'spring', stiffness: 320, damping: 26 }}
-                className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden"
-              >
-                <div className="p-6 border-b border-gray-50 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
-                    <SafeIcon icon="FiMessageSquare" className="text-[#E52321] text-lg" />
-                  </div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Testimonial</p>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center flex-shrink-0">
-                      <SafeIcon icon="FiQuote" className="text-[#E52321] text-xl" />
+            {hasDemographics && (
+              <section>
+                <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
+                  <div className="p-6 flex items-center gap-3 border-b border-gray-50">
+                    <div className="w-10 h-10 rounded-2xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
+                      <SafeIcon icon="FiUsers" className="text-[#E52321] text-lg" />
                     </div>
-                    <p className="text-base sm:text-lg font-semibold text-[#0B0D0F] leading-relaxed">
-                      "{report.testimonial.quote}"
-                    </p>
+                    <h2 className="text-[11px] font-black text-[#0B0D0F] uppercase tracking-widest">Recipient Demographics</h2>
                   </div>
-                  <div className="mt-6 pt-6 border-t border-gray-100 flex items-center gap-4">
-                    <img
-                      src={report.testimonial.image}
-                      alt={report.testimonial.author}
-                      onError={handleImageError}
-                      className="w-12 h-12 rounded-2xl object-cover border border-gray-100 flex-shrink-0"
-                    />
-                    <div className="min-w-0 text-left">
-                      <p className="font-black text-[#0B0D0F] text-sm sm:text-base leading-none truncate">{report.testimonial.author}</p>
-                      <p className="mt-1 text-[10px] text-gray-500 uppercase tracking-[0.25em] font-black truncate">{report.testimonial.role}</p>
-                    </div>
+                  <div className="p-6 space-y-6">
+                    <DemographicRow label="Men" percentage={report.demographics.men} icon="FiUser" color="bg-gray-300" />
+                    <DemographicRow label="Women" percentage={report.demographics.women} icon="FiUser" color="bg-[#0B0D0F]" />
+                    <DemographicRow label="Children (< 18)" percentage={report.demographics.children} icon="FiSmile" color="bg-[#E52321]" />
                   </div>
                 </div>
-              </motion.div>
-            </section>
+              </section>
+            )}
           </div>
         </div>
 
         <div className="mt-20 space-y-10 sm:space-y-12">
           {/* Field documentation */}
-          <motion.section
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-[0_18px_50px_rgba(0,0,0,0.05)] border border-gray-100"
-          >
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-              <div className="flex items-start gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#0B0D0F] text-white flex items-center justify-center flex-shrink-0">
-                  <SafeIcon icon="FiCamera" className="text-2xl" />
+          {fieldReports.length > 0 && (
+            <motion.section
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-[0_18px_50px_rgba(0,0,0,0.05)] border border-gray-100"
+            >
+              <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-2xl bg-[#0B0D0F] text-white flex items-center justify-center flex-shrink-0">
+                    <SafeIcon icon="FiCamera" className="text-2xl" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight text-left uppercase">Field Documentation</h2>
+                    <p className="text-gray-500 mt-1 text-left text-sm">Verified visual evidence from our active ground teams.</p>
+                  </div>
                 </div>
-                <div>
-                  <h2 className="text-2xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight text-left uppercase">Field Documentation</h2>
-                  <p className="text-gray-500 mt-1 text-left text-sm">Verified visual evidence from our active ground teams.</p>
+                <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full border border-gray-100 self-start md:self-auto">
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span className="text-[10px] font-black text-green-700 uppercase tracking-widest">Live Updates</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full border border-gray-100 self-start md:self-auto">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                <span className="text-[10px] font-black text-green-700 uppercase tracking-widest">Live Updates</span>
-              </div>
-            </div>
 
-            <div className="flex flex-col lg:flex-row gap-5 mb-5">
-              <div
-                className="lg:w-2/3 relative rounded-2xl overflow-hidden min-h-[300px] md:min-h-[450px] group cursor-pointer shadow-lg"
-                data-cursor-label={report.fieldReports[0].type === 'video' ? 'PLAY' : 'VIEW'}
-                onClick={() => setSelectedMedia(report.fieldReports[0])}
-              >
-                <img src={report.fieldReports[0].url} alt="Feature field" className="w-full h-full absolute inset-0 object-cover group-hover:scale-105 transition-transform duration-1000" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 shadow-2xl">
-                    <SafeIcon icon={report.fieldReports[0].type === 'video' ? 'FiPlay' : 'FiMaximize2'} className="text-white text-3xl ml-0.5" />
+              <div className="flex flex-col lg:flex-row gap-5">
+                <div
+                  className="lg:w-2/3 relative rounded-2xl overflow-hidden min-h-[300px] md:min-h-[450px] group cursor-pointer shadow-lg"
+                  data-cursor-label={fieldReports[0].type === 'video' ? 'PLAY' : 'VIEW'}
+                  onClick={() => setSelectedMedia(fieldReports[0])}
+                >
+                  <img
+                    src={fieldReports[0].url}
+                    alt="Feature field"
+                    onError={handleImageError}
+                    className="w-full h-full absolute inset-0 object-cover group-hover:scale-105 transition-transform duration-1000"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 shadow-2xl">
+                      <SafeIcon icon={fieldReports[0].type === 'video' ? 'FiPlay' : 'FiMaximize2'} className="text-white text-3xl ml-0.5" />
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="lg:w-1/3 grid grid-cols-2 lg:grid-cols-1 gap-5">
-                {[report.fieldReports[1], report.fieldReports[2]].map((fr, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded-2xl overflow-hidden shadow-md h-full min-h-[140px] cursor-pointer group"
-                    data-cursor-label="VIEW"
-                    onClick={() => setSelectedMedia(fr)}
-                  >
-                    <img src={fr.url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="" />
+
+                {fieldReports.length > 1 && (
+                  <div className="lg:w-1/3 grid grid-cols-2 lg:grid-cols-1 gap-5">
+                    {fieldReports.slice(1, 3).map((fr, idx) => (
+                      <div
+                        key={idx}
+                        className="rounded-2xl overflow-hidden shadow-md h-full min-h-[140px] cursor-pointer group"
+                        data-cursor-label="VIEW"
+                        onClick={() => setSelectedMedia(fr)}
+                      >
+                        <img
+                          src={fr.url}
+                          onError={handleImageError}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                          alt=""
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
-            </div>
-          </motion.section>
+            </motion.section>
+          )}
 
           <ProjectCountries countries={uniqueCountries} region={report.region} isOpen={openSections.countries} onToggle={() => toggleSection('countries')} />
 
@@ -282,31 +310,31 @@ const ReportDetail = () => {
                 <AnimatePresence mode="popLayout">
                   {(report.locations?.length > 0
                     ? report.locations
-                    : report.countries.map(c => ({ address: c, lat: '', lng: '' }))
+                    : (report.countries || []).map((c) => ({ address: c, lat: '', lng: '' }))
                   ).map((loc, idx) => {
                     const name   = loc.address || loc;
                     const coords = (loc.lat && loc.lng)
                       ? `${Number(loc.lat).toFixed(4)}, ${Number(loc.lng).toFixed(4)}`
                       : getGpsData(name, report.region);
                     return (
-                    <motion.div
-                      layout
-                      key={`${name}-${idx}`}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.95 }}
-                      className={`bg-gray-50/50 rounded-2xl border border-gray-100 flex items-center group transition-all duration-300 ${locationViewMode === 'grid' ? 'p-5' : 'p-4'}`}
-                    >
-                      <div className="w-10 h-10 bg-white border border-gray-100 flex items-center justify-center mr-4 shadow-sm group-hover:bg-[#E52321] group-hover:text-white transition-colors duration-300 flex-shrink-0">
-                        <SafeIcon icon="FiMapPin" className="text-sm text-[#E52321] group-hover:text-white transition-colors" />
-                      </div>
-                      <div className="flex flex-col text-left overflow-hidden">
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 truncate">
-                          {coords}
-                        </span>
-                        <span className="text-sm font-bold text-[#0B0D0F] truncate">{name}</span>
-                      </div>
-                    </motion.div>
+                      <motion.div
+                        layout
+                        key={`${name}-${idx}`}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        className={`bg-gray-50/50 rounded-2xl border border-gray-100 flex items-center group transition-all duration-300 ${locationViewMode === 'grid' ? 'p-5' : 'p-4'}`}
+                      >
+                        <div className="w-10 h-10 bg-white border border-gray-100 flex items-center justify-center mr-4 shadow-sm group-hover:bg-[#E52321] group-hover:text-white transition-colors duration-300 flex-shrink-0">
+                          <SafeIcon icon="FiMapPin" className="text-sm text-[#E52321] group-hover:text-white transition-colors" />
+                        </div>
+                        <div className="flex flex-col text-left overflow-hidden">
+                          <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 truncate">
+                            {coords}
+                          </span>
+                          <span className="text-sm font-bold text-[#0B0D0F] truncate">{name}</span>
+                        </div>
+                      </motion.div>
                     );
                   })}
                 </AnimatePresence>
