@@ -5,7 +5,7 @@ const TOTAL_STEPS = STEPS.length;
 
 const WizardShell = ({
   step, loading, form, update, adminOptions, regionOptions,
-  StepContent, saving, onBack, onNext,
+  StepContent, saving, onBack, onNext, onStepClick,
   isSuperAdmin = true, fieldErrors = {},
 }) => (
   <div className="bg-white border border-gray-200 rounded-3xl shadow-sm">
