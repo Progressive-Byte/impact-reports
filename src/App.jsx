@@ -35,7 +35,7 @@ function App() {
           />
           {/* Public routes — wrapped in Layout */}
           <Route path="/" element={<Layout><Portal /></Layout>} />
-          <Route path="/report/:id" element={<Layout><ReportDetail /></Layout>} />
+          <Route path="/report/:slug" element={<Layout><ReportDetail /></Layout>} />
         </Routes>
       </Router>
     </AdminAuthProvider>
