@@ -3,7 +3,6 @@ import SafeIcon from '../../../../common/SafeIcon';
 import DemographicRow from './DemographicRow';
 
 const DemographicsCard = ({ demographics }) => {
-  console.log('Rendering DemographicsCard with:', demographics);
   return (
     <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
       <div className="p-6 flex items-center gap-3 border-b border-gray-50">
