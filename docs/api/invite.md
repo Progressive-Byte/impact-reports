@@ -78,7 +78,7 @@ Example:
 ### curl
 
 ```bash
-curl -X POST http://localhost:5000/api/invite \
+curl -X POST http://localhost:5173/api/invite \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"email":"newuser@example.com","role":"admin","region":"global"}'
@@ -116,7 +116,7 @@ Check whether an invite token is valid before showing the registration form. Cal
 ### curl
 
 ```bash
-curl "http://localhost:5000/api/invite/validate?token=<64-char-token>"
+curl "http://localhost:5173/api/invite/validate?token=<64-char-token>"
 ```
 
 ---
@@ -163,7 +163,7 @@ Example:
 ### curl
 
 ```bash
-curl -X POST http://localhost:5000/api/invite/register \
+curl -X POST http://localhost:5173/api/invite/register \
   -H "Content-Type: application/json" \
   -d '{
     "token":    "<64-char-token>",
@@ -184,7 +184,7 @@ SMTP_PORT=587
 SMTP_USER=<mailtrap_user>
 SMTP_PASS=<mailtrap_pass>
 SMTP_FROM=noreply@impact-reports.local
-APP_URL=http://localhost:5173
+APP_URL=http://localhost:5174
 ```
 
 **Console fallback** — if `SMTP_HOST` is not set the server prints the invite details to the terminal instead of sending an email. Useful for local development:
@@ -194,5 +194,5 @@ APP_URL=http://localhost:5173
 [MAILER] INVITE EMAIL
 To:      newuser@example.com
 Subject: You're invited to Impact Reports Admin
-Link:    http://localhost:5173/admin/register?token=<token>
+Link:    http://localhost:5174/admin/register?token=<token>
 ```

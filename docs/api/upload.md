@@ -45,7 +45,7 @@ The returned URL is a full Cloudinary CDN URL. Store it directly — no server p
 ### curl
 
 ```bash
-curl -X POST http://localhost:5000/api/upload \
+curl -X POST http://localhost:5173/api/upload \
   -H "Authorization: Bearer $TOKEN" \
   -F "file=@/path/to/photo.jpg"
 ```

@@ -47,7 +47,7 @@ Example:
 ### curl
 
 ```bash
-curl -X PUT http://localhost:5000/api/admin/settings/password \
+curl -X PUT http://localhost:5173/api/admin/settings/password \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"currentPassword":"admin123","newPassword":"newSecure456"}'
@@ -103,7 +103,7 @@ Returns the updated admin object (no `password` field).
 ### curl
 
 ```bash
-curl -X PUT http://localhost:5000/api/admin/settings/profile \
+curl -X PUT http://localhost:5173/api/admin/settings/profile \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"username":"new_username"}'

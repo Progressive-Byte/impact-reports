@@ -99,11 +99,11 @@ List reports accessible to the caller with server-side search, filter, sort, and
 
 ```bash
 # All reports, page 1
-curl http://localhost:5000/api/reports \
+curl http://localhost:5173/api/reports \
   -H "Authorization: Bearer $TOKEN"
 
 # Search + status filter + sort
-curl "http://localhost:5000/api/reports?q=winter&status=published&sort=oldest&page=2" \
+curl "http://localhost:5173/api/reports?q=winter&status=published&sort=oldest&page=2" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -128,7 +128,7 @@ Search existing project names for autocomplete in the Create modal.
 ### curl
 
 ```bash
-curl "http://localhost:5000/api/reports/search?q=winter" \
+curl "http://localhost:5173/api/reports/search?q=winter" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -170,7 +170,7 @@ Returns the created Report object (with `assignedTo` and `createdBy` populated).
 ### curl
 
 ```bash
-curl -X POST http://localhost:5000/api/reports \
+curl -X POST http://localhost:5173/api/reports \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"projectName":"Winter Relief Alpha","assignedTo":["6650a1b2c3d4e5f607a8b9c0"]}'
@@ -306,13 +306,13 @@ When the caller's role is `admin` (not `superadmin`), `projectName` and `assigne
 
 ```bash
 # Save general step
-curl -X PATCH "http://localhost:5000/api/reports/6650a1b2c3d4e5f607a8b9c2/step/general" \
+curl -X PATCH "http://localhost:5173/api/reports/6650a1b2c3d4e5f607a8b9c2/step/general" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"projectName":"Winter Relief Alpha","assignedTo":["6650a1b2..."],"projectLead":"Ali Hassan","fiscalYear":"FY25","region":"South Asia","sector":"Healthcare","livesImpacted":4800}'
 
 # Submit final step
-curl -X PATCH "http://localhost:5000/api/reports/6650a1b2c3d4e5f607a8b9c2/step/media" \
+curl -X PATCH "http://localhost:5173/api/reports/6650a1b2c3d4e5f607a8b9c2/step/media" \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"galleryUrl":"https://...","milestones":[{"date":"2025-01","title":"Phase 1","notes":"Delivered"}]}'
@@ -340,6 +340,6 @@ Permanently delete a report. Only `superadmin` can call this.
 ### curl
 
 ```bash
-curl -X DELETE http://localhost:5000/api/reports/6650a1b2c3d4e5f607a8b9c2 \
+curl -X DELETE http://localhost:5173/api/reports/6650a1b2c3d4e5f607a8b9c2 \
   -H "Authorization: Bearer $TOKEN"
 ```

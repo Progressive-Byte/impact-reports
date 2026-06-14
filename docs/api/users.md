@@ -55,7 +55,7 @@ Returns high-level counts for the dashboard overview card.
 ### curl
 
 ```bash
-curl http://localhost:5000/api/admin/stats \
+curl http://localhost:5173/api/admin/stats \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -106,11 +106,11 @@ List admin accounts with server-side search, status filter, and pagination.
 
 ```bash
 # First page, all users
-curl "http://localhost:5000/api/admin/admins" \
+curl "http://localhost:5173/api/admin/admins" \
   -H "Authorization: Bearer $TOKEN"
 
 # Search active users, page 2
-curl "http://localhost:5000/api/admin/admins?q=sadek&status=active&page=2&limit=10" \
+curl "http://localhost:5173/api/admin/admins?q=sadek&status=active&page=2&limit=10" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -155,7 +155,7 @@ Returns the created admin object (no `password` field).
 ### curl
 
 ```bash
-curl -X POST http://localhost:5000/api/admin/admins \
+curl -X POST http://localhost:5173/api/admin/admins \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"username":"newadmin","email":"new@example.com","password":"secure123","role":"admin"}'
@@ -207,7 +207,7 @@ Returns the updated admin object.
 ### curl
 
 ```bash
-curl -X PUT http://localhost:5000/api/admin/admins/6650a1b2c3d4e5f607a8b9c0 \
+curl -X PUT http://localhost:5173/api/admin/admins/6650a1b2c3d4e5f607a8b9c0 \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"username":"sadek_updated","role":"superadmin"}'
@@ -252,7 +252,7 @@ Returns the updated admin object.
 ### curl
 
 ```bash
-curl -X PATCH http://localhost:5000/api/admin/admins/6650a1b2c3d4e5f607a8b9c0/role \
+curl -X PATCH http://localhost:5173/api/admin/admins/6650a1b2c3d4e5f607a8b9c0/role \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"role":"admin"}'
@@ -285,7 +285,7 @@ Returns the updated admin object with the new `isActive` value.
 
 ```bash
 # Toggles isActive: active → suspended or suspended → active
-curl -X PATCH http://localhost:5000/api/admin/admins/6650a1b2c3d4e5f607a8b9c0/toggle \
+curl -X PATCH http://localhost:5173/api/admin/admins/6650a1b2c3d4e5f607a8b9c0/toggle \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -319,6 +319,6 @@ Permanently remove an admin account from the database. This action is irreversib
 ### curl
 
 ```bash
-curl -X DELETE http://localhost:5000/api/admin/admins/6650a1b2c3d4e5f607a8b9c0 \
+curl -X DELETE http://localhost:5173/api/admin/admins/6650a1b2c3d4e5f607a8b9c0 \
   -H "Authorization: Bearer $TOKEN"
 ```

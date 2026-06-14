@@ -60,7 +60,7 @@ Example:
 ### curl
 
 ```bash
-curl -X POST http://localhost:5000/api/auth/login \
+curl -X POST http://localhost:5173/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```
@@ -68,7 +68,7 @@ curl -X POST http://localhost:5000/api/auth/login \
 Capture the token into a shell variable for follow-up requests:
 
 ```bash
-TOKEN=$(curl -s -X POST http://localhost:5000/api/auth/login \
+TOKEN=$(curl -s -X POST http://localhost:5173/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}' | jq -r '.token')
 ```
@@ -109,6 +109,6 @@ Headers: `Authorization: Bearer <token>`
 ### curl
 
 ```bash
-curl http://localhost:5000/api/auth/me \
+curl http://localhost:5173/api/auth/me \
   -H "Authorization: Bearer $TOKEN"
 ```

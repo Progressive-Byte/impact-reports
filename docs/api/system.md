@@ -6,8 +6,8 @@
 | --------------- | ------------------------------------------------------------- |
 | Runtime         | Node.js + Express (ES modules)                                |
 | Database        | MongoDB Atlas via Mongoose                                    |
-| Default port    | `5000` — override with `PORT` env var                         |
-| CORS origins    | `http://localhost:5173`, `http://localhost:4173`              |
+| Default port    | `5173` — override with `PORT` env var                         |
+| CORS origins    | `http://localhost:5174`, `http://localhost:4173`              |
 | Content-Type    | `application/json`                                            |
 
 ### Start
@@ -41,7 +41,7 @@ Creates one account if none exists yet:
 | `MONGODB_URI`    | Yes      | MongoDB Atlas connection string                          |
 | `JWT_SECRET`     | Yes      | Secret used to sign JWTs                                 |
 | `JWT_EXPIRES_IN` | Yes      | Token lifetime — e.g. `24h`                              |
-| `PORT`           | No       | HTTP port (default `5000`)                               |
+| `PORT`           | No       | HTTP port (default `5173`)                               |
 | `APP_URL`        | No       | Frontend origin — used in invite email links             |
 | `SMTP_HOST`      | No       | SMTP host — omit to use console fallback                 |
 | `SMTP_PORT`      | No       | SMTP port (default `587`)                                |
