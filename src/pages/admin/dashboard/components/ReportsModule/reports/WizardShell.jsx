@@ -12,7 +12,7 @@ const WizardShell = ({
 
     {/* Step indicator */}
     <div className="px-8 pt-7 pb-6 border-b border-gray-100">
-      <StepIndicator current={step} />
+      <StepIndicator current={step} completedSteps={form.stepsCompleted || []} onStepClick={onStepClick} />
     </div>
 
     {/* Step content */}
