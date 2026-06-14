@@ -2,11 +2,25 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import SafeIcon from '../../../../common/SafeIcon';
 
+function getYoutubeId(url) {
+  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+function getYoutubeThumbnail(url) {
+  const id = getYoutubeId(url);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+}
+
 const FieldDocumentation = ({ fieldReports, onImageError, onMediaSelect }) => {
   if (!fieldReports.length) return null;
 
   const featured = fieldReports[0];
   const secondary = fieldReports.slice(1, 3);
+
+  const featuredSrc = featured.type === 'video'
+    ? (getYoutubeThumbnail(featured.url) || '')
+    : featured.url;
 
   return (
     <motion.section
