@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import SafeIcon from '../../../common/SafeIcon';
 import { fetchReport } from '../../../services/publicApi';
@@ -18,6 +18,7 @@ const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1557682250-33bd709cbe8
 
 const ReportDetail = () => {
   const { slug } = useParams();
+  const navigate  = useNavigate();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -54,6 +55,13 @@ const ReportDetail = () => {
 
     return () => { cancelled = true; };
   }, [slug]);
+
+  // Replace ObjectId in the URL with the human-readable slug once the report loads
+  useEffect(() => {
+    if (report?.slug && report.slug !== slug) {
+      navigate(`/report/${report.slug}`, { replace: true });
+    }
+  }, [report, slug, navigate]);
 
   useEffect(() => {
     const handleEsc = (e) => { if (e.key === 'Escape') setSelectedMedia(null); };
