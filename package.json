@@ -14,7 +14,8 @@
     "server": "node server/index.js",
     "server:dev": "nodemon server/index.js",
     "start": "NODE_ENV=production node server/index.js",
-    "seed": "node server/scripts/seed.js"
+    "seed": "node server/scripts/seed.js",
+    "migrate:slug": "node server/scripts/migrateSlug.js"
   },
   "dependencies": {
     "@questlabs/react-sdk": "^2.2.92",
