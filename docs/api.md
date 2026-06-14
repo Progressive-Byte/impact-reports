@@ -25,3 +25,7 @@ All endpoints below require a valid `Bearer` token.
 ## File Uploads
 
 - [Upload](api/upload.md) — Upload report images (used by the Media wizard step).
+
+## Configuration
+
+- [Config](api/config.md) — Public config endpoints (region taxonomy).
