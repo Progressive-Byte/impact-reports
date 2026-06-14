@@ -98,8 +98,6 @@ router.get('/reports/:idOrSlug', async (req, res) => {
     const report = await Report.findOne(filter);
     if (!report) return res.status(404).json({ message: 'Report not found' });
 
-    const total = (report.men || 0) + (report.women || 0) + (report.children || 0);
-    const pct = (n) => (total > 0 ? Math.round(((n || 0) / total) * 100) : 0);
     const region = report.region || deriveRegion(report.countries);
 
     res.json({
@@ -116,9 +114,9 @@ router.get('/reports/:idOrSlug', async (req, res) => {
       strategicResponse: report.strategicResponse || '',
       livesImpacted:     report.livesImpacted     || 0,
       demographics: {
-        men:      pct(report.men),
-        women:    pct(report.women),
-        children: pct(report.children),
+        men:      report.men      || 0,
+        women:    report.women    || 0,
+        children: report.children || 0,
       },
       deliverables: report.deliverables || [],
       milestones:   (report.milestones || []).map((m) => ({
