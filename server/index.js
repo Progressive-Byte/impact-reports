@@ -19,7 +19,7 @@ connectDB();
 
 const app = express();
 
-const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173').split(',').map(s => s.trim());
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5174').split(',').map(s => s.trim());
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use('/api', (_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
@@ -51,5 +51,5 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5173;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

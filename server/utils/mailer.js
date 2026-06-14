@@ -29,7 +29,7 @@ async function sendMail({ to, subject, text, html }) {
 }
 
 export async function sendInviteEmail({ to, token }) {
-  const appUrl = process.env.APP_URL || 'http://localhost:5173';
+  const appUrl = process.env.APP_URL || 'http://localhost:5174';
   const link = `${appUrl}/admin/register?token=${token}`;
 
   await sendMail({

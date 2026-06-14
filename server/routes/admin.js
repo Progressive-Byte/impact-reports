@@ -3,6 +3,7 @@ import Admin from '../models/Admin.js';
 import Report from '../models/Report.js';
 import { protect } from '../middleware/auth.js';
 import { parsePagination, buildMeta } from '../utils/pagination.js';
+import { toSlug, uniqueSlug } from '../utils/slugUtils.js';
 
 const router = express.Router();
 router.use(protect);
@@ -239,6 +240,35 @@ router.put('/settings/profile', async (req, res) => {
     if (err.code === 11000) {
       return res.status(400).json({ message: 'Username or email already in use' });
     }
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// POST /api/admin/backfill-slugs — superadmin only, fixes reports missing a real slug
+router.post('/backfill-slugs', async (req, res) => {
+  try {
+    if (req.admin.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Only superadmin can run this' });
+    }
+    const isObjectId = /^[a-f\d]{24}$/i;
+    const reports = await Report.find({
+      $or: [
+        { slug: { $exists: false } },
+        { slug: '' },
+        { slug: { $regex: /^[a-f\d]{24}$/i } },
+      ],
+    });
+
+    const fixed = [];
+    for (const report of reports) {
+      const slug = await uniqueSlug(Report, toSlug(report.projectName), report._id);
+      report.slug = slug;
+      await report.save();
+      fixed.push({ id: report._id, name: report.projectName, slug });
+    }
+
+    res.json({ fixed: fixed.length, reports: fixed });
+  } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
