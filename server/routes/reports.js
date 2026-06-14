@@ -1,7 +1,9 @@
 import express from 'express';
 import Report from '../models/Report.js';
+import Counter from '../models/Counter.js';
 import { protect } from '../middleware/auth.js';
 import { parsePagination, buildMeta } from '../utils/pagination.js';
+import { toSlug, uniqueSlug } from '../utils/slugUtils.js';
 
 const router = express.Router();
 router.use(protect);
