@@ -36,7 +36,7 @@ const ReportCard = ({ report }) => (
             <p className="text-[10px] font-black uppercase tracking-widest text-white/60">Impact</p>
             <p className="text-lg font-black text-white tracking-tight">{report.metrics.beneficiaries.toLocaleString()}</p>
           </div>
-          <Link to={`/report/${report.id}`} className="inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-[#E52321] border border-white/10 hover:border-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all">
+          <Link to={`/report/${report.slug || report.id}`} className="inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-[#E52321] border border-white/10 hover:border-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all">
             <SafeIcon icon="FiArrowRight" className="text-base" />
           </Link>
         </div>
