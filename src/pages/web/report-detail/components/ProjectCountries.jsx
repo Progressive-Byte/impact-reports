@@ -1,8 +1,9 @@
-import React from 'react';
-import { MapContainer, TileLayer, Marker, Tooltip } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import { Country } from 'country-state-city';
 import SafeIcon from '../../../../common/SafeIcon';
 import CollapsibleSection from '../../../../common/CollapsibleSection';
 
@@ -13,27 +14,34 @@ L.Marker.prototype.options.icon = L.icon({
   iconAnchor: [12, 41],
 });
 
-const REGION_MAP_CENTERS = {
-  Africa:          [0.0236,   37.9062],
-  'Middle East':   [32.0,     35.0],
-  'South Asia':    [20.5937,  78.9629],
-  'Southeast Asia':[1.3521,   103.8198],
-  Global:          [20.0,     0.0],
-};
+// Build a name→[lat,lng] lookup from the full country-state-city dataset
+const COUNTRY_COORDS_DB = {};
+Country.getAllCountries().forEach((c) => {
+  if (c.latitude && c.longitude) {
+    COUNTRY_COORDS_DB[c.name] = [parseFloat(c.latitude), parseFloat(c.longitude)];
+  }
+});
 
-const COUNTRY_COORDS = {
-  Kenya:      [1.2921,   36.8219],  Ethiopia:   [9.145,    40.4897],
-  Tanzania:   [-6.369,   34.8888],  Uganda:     [1.3733,   32.2903],
-  Palestine:  [31.9522,  35.2332],  Lebanon:    [33.8547,  35.8623],
-  Syria:      [34.8021,  38.9968],  India:      [20.5937,  78.9629],
-  Indonesia:  [-0.7893,  113.9213], Vietnam:    [14.0583,  108.2772],
-  Thailand:   [15.87,    100.9925], Cambodia:   [12.5657,  104.991],
-  Laos:       [19.8563,  102.4955], Philippines:[12.8797,  121.774],
-  Myanmar:    [21.9162,  95.956],
+function getCountryPos(name) {
+  return COUNTRY_COORDS_DB[name] || null;
+}
+
+// Fits the map viewport to all markers after render
+const FitBounds = ({ positions }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (!positions.length) return;
+    if (positions.length === 1) {
+      map.setView(positions[0], 5);
+    } else {
+      map.fitBounds(L.latLngBounds(positions), { padding: [40, 40] });
+    }
+  }, [positions, map]);
+  return null;
 };
 
 const ProjectCountries = ({ countries, region, isOpen, onToggle }) => {
-  const center = REGION_MAP_CENTERS[region] || REGION_MAP_CENTERS.Global;
+  const positions = countries.map(getCountryPos).filter(Boolean);
 
   return (
     <CollapsibleSection
@@ -65,8 +73,8 @@ const ProjectCountries = ({ countries, region, isOpen, onToggle }) => {
 
           <div className="lg:col-span-2 relative rounded-[2rem] overflow-hidden shadow-lg min-h-[400px] border border-gray-100">
             <MapContainer
-              center={center}
-              zoom={region === 'Global' ? 2 : 4}
+              center={[20, 0]}
+              zoom={2}
               scrollWheelZoom={false}
               style={{ height: '100%', width: '100%', zIndex: 1 }}
             >
@@ -74,8 +82,9 @@ const ProjectCountries = ({ countries, region, isOpen, onToggle }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution="&copy; OpenStreetMap"
               />
+              <FitBounds positions={positions} />
               {countries.map((country) => {
-                const pos = COUNTRY_COORDS[country];
+                const pos = getCountryPos(country);
                 if (!pos) return null;
                 return (
                   <Marker key={country} position={pos}>
