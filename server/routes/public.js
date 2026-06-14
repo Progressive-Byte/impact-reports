@@ -101,6 +101,7 @@ router.get('/reports/:id', async (req, res) => {
       region,
       sector:            report.sector            || '',
       year:              deriveYear(report.fiscalYear),
+      projectLead:       report.projectLead       || '',
       projectBackground: report.projectBackground || '',
       strategicResponse: report.strategicResponse || '',
       livesImpacted:     report.livesImpacted     || 0,
