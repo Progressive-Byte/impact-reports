@@ -194,23 +194,52 @@ const ReportDetail = () => {
 
           {/* Sidebar */}
           <div className="space-y-8 lg:sticky lg:top-28 self-start">
-            {hasDemographics && (
-              <section>
-                <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
-                  <div className="p-6 flex items-center gap-3 border-b border-gray-50">
-                    <div className="w-10 h-10 rounded-2xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
-                      <SafeIcon icon="FiUsers" className="text-[#E52321] text-lg" />
-                    </div>
-                    <h2 className="text-[11px] font-black text-[#0B0D0F] uppercase tracking-widest">Recipient Demographics</h2>
-                  </div>
-                  <div className="p-6 space-y-6">
-                    <DemographicRow label="Men" percentage={report.demographics.men} icon="FiUser" color="bg-gray-300" />
-                    <DemographicRow label="Women" percentage={report.demographics.women} icon="FiUser" color="bg-[#0B0D0F]" />
-                    <DemographicRow label="Children (< 18)" percentage={report.demographics.children} icon="FiSmile" color="bg-[#E52321]" />
-                  </div>
+
+            {/* Project meta card */}
+            <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
+              <div className="p-6 border-b border-gray-50 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
+                  <SafeIcon icon="FiInfo" className="text-[#E52321] text-lg" />
                 </div>
-              </section>
+                <h2 className="text-[11px] font-black text-[#0B0D0F] uppercase tracking-widest">Project Details</h2>
+              </div>
+              <div className="p-6 space-y-4">
+                {[
+                  { label: 'Sector',       value: report.sector,      icon: 'FiLayers'   },
+                  { label: 'Fiscal Year',  value: report.year,        icon: 'FiCalendar' },
+                  { label: 'Region',       value: report.region,      icon: 'FiGlobe'    },
+                  { label: 'Project Lead', value: report.projectLead, icon: 'FiUser'     },
+                ].filter(({ value }) => value).map(({ label, value, icon }) => (
+                  <div key={label} className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center flex-shrink-0">
+                      <SafeIcon icon={icon} className="text-gray-400 text-sm" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{label}</p>
+                      <p className="text-sm font-bold text-[#0B0D0F] truncate">{value}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Recipient demographics */}
+            {hasDemographics && (
+              <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
+                <div className="p-6 flex items-center gap-3 border-b border-gray-50">
+                  <div className="w-10 h-10 rounded-2xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
+                    <SafeIcon icon="FiUsers" className="text-[#E52321] text-lg" />
+                  </div>
+                  <h2 className="text-[11px] font-black text-[#0B0D0F] uppercase tracking-widest">Recipient Demographics</h2>
+                </div>
+                <div className="p-6 space-y-6">
+                  <DemographicRow label="Men"           percentage={report.demographics.men}      icon="FiUser"  color="bg-gray-300"   />
+                  <DemographicRow label="Women"         percentage={report.demographics.women}    icon="FiUser"  color="bg-[#0B0D0F]"  />
+                  <DemographicRow label="Children (< 18)" percentage={report.demographics.children} icon="FiSmile" color="bg-[#E52321]" />
+                </div>
+              </div>
             )}
+
           </div>
         </div>
 
