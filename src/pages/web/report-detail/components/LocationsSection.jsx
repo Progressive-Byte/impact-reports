@@ -40,7 +40,7 @@ const LocationsSection = ({ report, isOpen, onToggle }) => {
         </div>
       }
     >
-      <div className="px-6 sm:px-10 pt-6 pb-10">
+      <div className="p-6 sm:p-10">
 
         {/* Country filter pills — only show when there are multiple countries */}
         {countries.length > 2 && (
@@ -86,20 +86,16 @@ const LocationsSection = ({ report, isOpen, onToggle }) => {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.18 }}
-                  className={`bg-gray-50/50 rounded-2xl border border-gray-100 flex items-center group transition-all duration-300 hover:border-[#E52321]/20 hover:shadow-sm ${viewMode === 'grid' ? 'p-5' : 'p-4'}`}
+                  className={`bg-gray-50/50 rounded-2xl border border-gray-100 flex items-center group transition-all duration-300 ${viewMode === 'grid' ? 'p-5' : 'p-4'}`}
                 >
-                  <div className="w-10 h-10 bg-white border border-gray-100 flex items-center justify-center mr-4 shadow-sm group-hover:bg-[#E52321] group-hover:text-white transition-colors duration-300 flex-shrink-0 rounded-xl">
+                  <div className="w-10 h-10 bg-white border border-gray-100 flex items-center justify-center mr-4 shadow-sm group-hover:bg-[#E52321] group-hover:text-white transition-colors duration-300 flex-shrink-0">
                     <SafeIcon icon="FiMapPin" className="text-sm text-[#E52321] group-hover:text-white transition-colors" />
                   </div>
-                  <div className="flex flex-col text-left overflow-hidden min-w-0">
+                  <div className="flex flex-col text-left overflow-hidden">
                     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-0.5 truncate">
                       {coords}
                     </span>
                     <span className="text-sm font-bold text-[#0B0D0F] truncate">{name}</span>
-                    {loc.country && viewMode === 'list' && (
-                      <span className="text-[10px] text-gray-400 font-medium mt-0.5">{loc.country}</span>
-                    )}
                   </div>
                 </motion.div>
               );
