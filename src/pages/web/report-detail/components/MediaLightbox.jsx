@@ -2,6 +2,11 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SafeIcon from '../../../../common/SafeIcon';
 
+function getYoutubeEmbedUrl(url) {
+  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1` : null;
+}
+
 const MediaLightbox = ({ media, title, onClose }) => (
   <AnimatePresence>
     {media && (
