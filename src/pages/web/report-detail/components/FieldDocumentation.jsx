@@ -52,7 +52,7 @@ const FieldDocumentation = ({ fieldReports, onImageError, onMediaSelect }) => {
           onClick={() => onMediaSelect(featured)}
         >
           <img
-            src={featured.url}
+            src={featuredSrc}
             alt="Feature field"
             onError={onImageError}
             className="w-full h-full absolute inset-0 object-cover group-hover:scale-105 transition-transform duration-1000"
