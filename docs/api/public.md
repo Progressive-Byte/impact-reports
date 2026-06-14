@@ -11,6 +11,7 @@ Base path: `/api/public`
 | Method | Path               | Description                                  |
 | ------ | ------------------ | -------------------------------------------- |
 | GET    | `/reports`         | Paginated, filterable report list             |
+| GET    | `/reports/:id`     | Full detail for a single published report     |
 | GET    | `/stats`           | Aggregate counters for the hero metrics strip |
 | GET    | `/filters`         | Distinct filter option lists                  |
 | GET    | `/search`          | Autocomplete for search modal / search bar    |
