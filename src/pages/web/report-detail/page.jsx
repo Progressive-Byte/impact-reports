@@ -17,7 +17,7 @@ import ProjectCountries from './components/ProjectCountries';
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=1200&q=80';
 
 const ReportDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
