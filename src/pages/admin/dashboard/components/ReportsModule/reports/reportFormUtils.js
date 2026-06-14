@@ -44,6 +44,7 @@ export const reportToForm = (report) => ({
   thumbnail:         report.thumbnail || '',
   videoUrl:          report.videoUrl || '',
   milestones:        (report.milestones || []).map((m, i) => ({ ...m, id: i + 1 })),
+  stepsCompleted:    report.stepsCompleted || [],
   countries:         report.countries || [],
   locations:         (report.locations || []).map((l, i) => ({
     id:      i + 1,
