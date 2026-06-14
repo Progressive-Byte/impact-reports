@@ -1,11 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SafeIcon from '../../../../common/SafeIcon';
-
-function getYoutubeEmbedUrl(url) {
-  const match = url.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1` : null;
-}
+import { getEmbedUrl } from '../../../../utils/videoUtils';
 
 const MediaLightbox = ({ media, title, onClose }) => (
   <AnimatePresence>
@@ -32,21 +28,24 @@ const MediaLightbox = ({ media, title, onClose }) => (
             <SafeIcon icon="FiX" className="text-2xl group-hover:rotate-90 transition-transform" />
           </button>
 
-          {media.type === 'video' ? (
-            <div className="w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl">
-              {getYoutubeEmbedUrl(media.url) ? (
+          {media.type === 'video' ? (() => {
+            const embedUrl = getEmbedUrl(media.url);
+            return embedUrl ? (
+              <div className="w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl">
                 <iframe
-                  src={getYoutubeEmbedUrl(media.url)}
+                  src={embedUrl}
                   className="w-full h-full"
-                  allow="autoplay; encrypted-media; fullscreen"
+                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
                   allowFullScreen
                   title="Field footage"
                 />
-              ) : (
+              </div>
+            ) : (
+              <div className="w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl">
                 <video src={media.url} controls autoPlay className="w-full h-full" />
-              )}
-            </div>
-          ) : (
+              </div>
+            );
+          })() : (
             <img
               src={media.url}
               className="max-w-full max-h-[85vh] object-contain rounded-xl shadow-2xl border border-white/10"
