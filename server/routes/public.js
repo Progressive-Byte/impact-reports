@@ -22,13 +22,15 @@ function shapeCard(r) {
   const bg     = r.projectBackground || '';
   const region = r.region || deriveRegion(r.countries);
   return {
-    id:       r._id.toString(),
-    title:    r.projectName,
-    image:    r.thumbnail || r.images?.[0]?.url || '',
+    id:        r._id.toString(),
+    slug:      r.slug      || r._id.toString(),
+    projectId: r.projectId || '',
+    title:     r.projectName,
+    image:     r.thumbnail || r.images?.[0]?.url || '',
     region,
-    sector:   r.sector   || '',
-    year:     deriveYear(r.fiscalYear),
-    summary:  bg.length > 200 ? bg.slice(0, 200).trimEnd() + '…' : bg,
+    sector:    r.sector   || '',
+    year:      deriveYear(r.fiscalYear),
+    summary:   bg.length > 200 ? bg.slice(0, 200).trimEnd() + '…' : bg,
     countries: r.countries || [],
     metrics: {
       beneficiaries: r.livesImpacted || 0,
