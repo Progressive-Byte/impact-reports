@@ -39,11 +39,21 @@ const ReportDetail = () => {
     setLoading(true);
     setError(null);
     setReport(null);
-    fetchReport(slug)
-      .then(setReport)
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [id]);
+
+    let cancelled = false;
+    (async () => {
+      try {
+        const data = await fetchReport(slug);
+        if (!cancelled) setReport(data);
+      } catch (err) {
+        if (!cancelled) setError(err.message || 'Failed to load report');
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [slug]);
 
   useEffect(() => {
     const handleEsc = (e) => { if (e.key === 'Escape') setSelectedMedia(null); };
