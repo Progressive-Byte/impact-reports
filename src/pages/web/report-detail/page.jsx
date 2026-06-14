@@ -32,14 +32,14 @@ const ReportDetail = () => {
 
   const toggleSection = (key) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  useEffect(() => { window.scrollTo(0, 0); }, [id]);
+  useEffect(() => { window.scrollTo(0, 0); }, [slug]);
 
   useEffect(() => {
-    if (!id) return;
+    if (!slug) return;
     setLoading(true);
     setError(null);
     setReport(null);
-    fetchReport(id)
+    fetchReport(slug)
       .then(setReport)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
