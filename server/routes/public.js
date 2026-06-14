@@ -84,6 +84,48 @@ router.get('/reports', async (req, res) => {
   }
 });
 
+// ── GET /api/public/reports/:id ─────────────────────────────────────
+router.get('/reports/:id', async (req, res) => {
+  try {
+    const report = await Report.findOne({ _id: req.params.id, status: 'published' });
+    if (!report) return res.status(404).json({ message: 'Report not found' });
+
+    const total = (report.men || 0) + (report.women || 0) + (report.children || 0);
+    const pct = (n) => (total > 0 ? Math.round(((n || 0) / total) * 100) : 0);
+    const region = report.region || deriveRegion(report.countries);
+
+    res.json({
+      id:                report._id.toString(),
+      title:             report.projectName,
+      image:             report.thumbnail || report.images?.[0]?.url || '',
+      region,
+      sector:            report.sector            || '',
+      year:              deriveYear(report.fiscalYear),
+      projectBackground: report.projectBackground || '',
+      strategicResponse: report.strategicResponse || '',
+      livesImpacted:     report.livesImpacted     || 0,
+      demographics: {
+        men:      pct(report.men),
+        women:    pct(report.women),
+        children: pct(report.children),
+      },
+      deliverables: report.deliverables || [],
+      milestones:   (report.milestones || []).map((m) => ({
+        date:        m.date  || '',
+        title:       m.title || '',
+        description: m.notes || '',
+      })),
+      images:    report.images    || [],
+      videoUrl:  report.videoUrl  || '',
+      countries: report.countries || [],
+      locations: report.locations || [],
+    });
+  } catch (err) {
+    if (err.name === 'CastError') return res.status(404).json({ message: 'Report not found' });
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // ── GET /api/public/stats ────────────────────────────────────────────
 router.get('/stats', async (req, res) => {
   try {
