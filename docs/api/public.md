@@ -188,6 +188,7 @@ Returns `404` if the report does not exist or is not `published`.
   "region":            "Middle East",
   "sector":            "Healthcare",
   "year":              "2025",
+  "projectLead":       "Dr. Ahmed Hassan",
   "projectBackground": "Full text of project background...",
   "strategicResponse": "Full text of strategic response...",
   "livesImpacted":     120000,
