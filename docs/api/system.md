@@ -45,6 +45,7 @@ Creates one account if none exists yet:
 | `APP_URL`        | No       | Frontend origin — used in invite email links             |
 | `SMTP_HOST`      | No       | SMTP host — omit to use console fallback                 |
 | `SMTP_PORT`      | No       | SMTP port (default `587`)                                |
+| `SMTP_SECURE`    | No       | Set `true` for TLS on port 465 (default `false`)         |
 | `SMTP_USER`      | No       | SMTP username / API key                                  |
 | `SMTP_PASS`      | No       | SMTP password                                            |
 | `SMTP_FROM`               | No       | From address on outgoing emails                     |
