@@ -163,3 +163,56 @@ Result breakdown (max 8 total):
 - Up to 2 matching regions
 
 If `q` is empty, returns `{ "results": [] }`.
+
+---
+
+## `GET /api/public/reports/:id`
+
+Returns the full detail payload for a single published report. Used by the report detail page.
+
+### Path parameters
+
+| Param | Description                |
+| ----- | -------------------------- |
+| `id`  | MongoDB ObjectId of the report |
+
+Returns `404` if the report does not exist or is not `published`.
+
+### Response `200`
+
+```json
+{
+  "id":                "664abc123...",
+  "title":             "Emergency Medical Support",
+  "image":             "https://res.cloudinary.com/...",
+  "region":            "Middle East",
+  "sector":            "Healthcare",
+  "year":              "2025",
+  "projectBackground": "Full text of project background...",
+  "strategicResponse": "Full text of strategic response...",
+  "livesImpacted":     120000,
+  "demographics": {
+    "men":      30,
+    "women":    40,
+    "children": 30
+  },
+  "deliverables": [
+    { "label": "Mobile Clinics Deployed", "count": 5, "icon": "FiTruck", "description": "" }
+  ],
+  "milestones": [
+    { "date": "Jan 2025", "title": "Rapid Deployment", "description": "First mobile clinic operational within 48 hours." }
+  ],
+  "images":    [{ "url": "https://res.cloudinary.com/..." }],
+  "videoUrl":  "",
+  "countries": ["Gaza", "Lebanon", "Palestine", "Syria"],
+  "locations": [
+    { "country": "Palestine", "address": "Gaza (North)", "lat": "31.5326", "lng": "34.4667" }
+  ]
+}
+```
+
+**Notes:**
+- `demographics` values are **percentages** (0–100), computed from the raw `men`/`women`/`children` counts stored on the report.
+- `milestones[].description` is mapped from the `notes` field in the database.
+- `image` follows the same fallback logic as the card endpoint: `thumbnail` → first `images[].url` → `""`.
+- `year` is derived from `fiscalYear` using the same `FY25 → 2025` conversion as the list endpoint.
