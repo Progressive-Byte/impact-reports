@@ -154,9 +154,10 @@ const ReportDetail = () => {
 
         {/* Stats bar */}
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
-          <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-gray-100">
-            <StatTile title="LIVES IMPACTED" value={(report.livesImpacted || 0).toLocaleString()} icon="FiUsers" />
-            <StatTile title="ACTIVE LOCATIONS" value={activeLocations} icon="FiMapPin" />
+          <div className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+            <StatTile title="LIVES IMPACTED"   value={(report.livesImpacted || 0).toLocaleString()} icon="FiUsers"  />
+            <StatTile title="COUNTRIES REACHED" value={(report.countries?.length || 0).toLocaleString()}            icon="FiGlobe"  />
+            <StatTile title="ACTIVE LOCATIONS" value={activeLocations}                                              icon="FiMapPin" />
           </div>
         </div>
       </div>
