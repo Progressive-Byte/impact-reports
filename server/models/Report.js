@@ -28,6 +28,8 @@ const milestoneSchema = new mongoose.Schema(
 const reportSchema = new mongoose.Schema(
   {
     projectName:       { type: String, required: true, trim: true },
+    slug:              { type: String, default: '', index: true },
+    projectId:         { type: String, default: '' },
     assignedTo:        [{ type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }],
     createdBy:         { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
     status:            { type: String, enum: ['pending', 'draft', 'published'], default: 'pending' },
