@@ -6,7 +6,7 @@ import Report from '../models/Report.js';
 import { toSlug, uniqueSlug } from '../utils/slugUtils.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: join(__dirname, '../.env') });
+dotenv.config({ path: join(__dirname, '../../.env') });
 
 const isObjectId = (s) => /^[a-f\d]{24}$/i.test(s);
 
