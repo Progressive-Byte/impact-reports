@@ -33,13 +33,18 @@ const MediaLightbox = ({ media, title, onClose }) => (
           </button>
 
           {media.type === 'video' ? (
-            <div className="w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl relative">
-              <img src={media.url} className="w-full h-full object-cover opacity-80" alt="Field footage" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-[#E52321] w-20 h-20 rounded-full flex items-center justify-center shadow-2xl">
-                  <SafeIcon icon="FiPlay" className="text-white text-3xl ml-1" />
-                </div>
-              </div>
+            <div className="w-full aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl">
+              {getYoutubeEmbedUrl(media.url) ? (
+                <iframe
+                  src={getYoutubeEmbedUrl(media.url)}
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media; fullscreen"
+                  allowFullScreen
+                  title="Field footage"
+                />
+              ) : (
+                <video src={media.url} controls autoPlay className="w-full h-full" />
+              )}
             </div>
           ) : (
             <img
