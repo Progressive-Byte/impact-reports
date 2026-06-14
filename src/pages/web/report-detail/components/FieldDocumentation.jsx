@@ -30,9 +30,9 @@ const VideoThumbnail = ({ url, onError, className }) => {
 const FieldDocumentation = ({ fieldReports, onImageError, onMediaSelect }) => {
   if (!fieldReports.length) return null;
 
-  const featured   = fieldReports[0];
-  const secondary  = fieldReports.slice(1, 3);
-  const isVideo    = (item) => item.type === 'video' || getVideoType(item.url) !== null;
+  const featured    = fieldReports[0];
+  const secondary   = fieldReports.slice(1, 3);
+  const additional  = fieldReports.slice(3);
 
   return (
     <motion.section
