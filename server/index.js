@@ -19,7 +19,8 @@ connectDB();
 
 const app = express();
 
-app.use(cors({ origin: ['http://localhost:5173', 'http://localhost:4173'], credentials: true }));
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173').split(',').map(s => s.trim());
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use('/api', (_req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
 
