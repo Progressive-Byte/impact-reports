@@ -5,7 +5,7 @@ const ProjectBrief = ({ report }) => {
   const [openSections, setOpenSections] = useState({ background: true, response: false });
   const toggle = (key) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const shortId = `REP-${report.id.slice(-6).toUpperCase()}`;
+  const shortId = report.projectId || `REP-${report.id.slice(-6).toUpperCase()}`;
 
   return (
     <section>
