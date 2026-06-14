@@ -123,6 +123,40 @@ const FieldDocumentation = ({ fieldReports, onImageError, onMediaSelect }) => {
           </div>
         )}
       </div>
+
+      {/* Additional images beyond the first 3 */}
+      {additional.length > 0 && (
+        <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {additional.map((fr, idx) => (
+            <div
+              key={idx}
+              className="relative rounded-2xl overflow-hidden shadow-md min-h-[140px] cursor-pointer group"
+              data-cursor-label={fr.type === 'video' ? 'PLAY' : 'VIEW'}
+              onClick={() => onMediaSelect(fr)}
+            >
+              {fr.type === 'video' ? (
+                <>
+                  <VideoThumbnail
+                    url={fr.url}
+                    onError={onImageError}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <SafeIcon icon="FiPlay" className="text-white text-2xl" />
+                  </div>
+                </>
+              ) : (
+                <img
+                  src={fr.url}
+                  onError={onImageError}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  alt=""
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </motion.section>
   );
 };
