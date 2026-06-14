@@ -37,7 +37,7 @@ const ReportListRow = ({ report }) => (
           </p>
         </div>
         <Link
-          to={`/report/${report.id}`}
+          to={`/report/${report.slug || report.id}`}
           className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0B0D0F] hover:bg-[#E52321] text-white px-6 py-3 text-[10px] font-black uppercase tracking-[0.25em] transition-all"
         >
           Report <SafeIcon icon="FiArrowRight" className="text-base" />
