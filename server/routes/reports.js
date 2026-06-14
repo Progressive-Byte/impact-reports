@@ -135,8 +135,13 @@ router.post('/', async (req, res) => {
     const conflict = await findProjectAssigneeConflicts(projectName, uniqueAssignees);
     if (conflict) return res.status(400).json({ message: conflict });
 
+    const seq  = await Counter.next('report');
+    const slug = await uniqueSlug(Report, toSlug(projectName.trim()));
+
     const created = await Report.create({
       projectName: projectName.trim(),
+      slug,
+      projectId:   `REP-${String(seq).padStart(3, '0')}`,
       assignedTo:  uniqueAssignees,
       createdBy:   req.admin._id,
     });
