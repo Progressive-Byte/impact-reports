@@ -86,10 +86,16 @@ router.get('/reports', async (req, res) => {
   }
 });
 
-// ── GET /api/public/reports/:id ─────────────────────────────────────
-router.get('/reports/:id', async (req, res) => {
+// ── GET /api/public/reports/:idOrSlug ────────────────────────────────
+// Accepts either a MongoDB ObjectId or a slug string.
+router.get('/reports/:idOrSlug', async (req, res) => {
   try {
-    const report = await Report.findOne({ _id: req.params.id, status: 'published' });
+    const { idOrSlug } = req.params;
+    const isObjectId = /^[a-f\d]{24}$/i.test(idOrSlug);
+    const filter = isObjectId
+      ? { _id: idOrSlug,  status: 'published' }
+      : { slug: idOrSlug, status: 'published' };
+    const report = await Report.findOne(filter);
     if (!report) return res.status(404).json({ message: 'Report not found' });
 
     const total = (report.men || 0) + (report.women || 0) + (report.children || 0);
