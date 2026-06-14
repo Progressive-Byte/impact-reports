@@ -191,6 +191,7 @@ const ReportsModule = ({ onCountChange }) => {
           saving={saving}
           onBack={handleBack}
           onNext={handleNext}
+          onStepClick={goToStep}
           isSuperAdmin={isSuperAdmin}
           fieldErrors={fieldErrors}
         />
