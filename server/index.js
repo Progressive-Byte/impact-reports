@@ -1,5 +1,6 @@
 import './bootstrap.js'; // must be first — loads .env before any other module reads process.env
 import { fileURLToPath } from 'url';
+import path from 'path';
 import { dirname, join } from 'path';
 import express from 'express';
 import cors from 'cors';
@@ -31,6 +32,18 @@ app.use('/api/public', publicRoutes);
 app.use('/api/config', configRoutes);
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', timestamp: new Date() }));
+
+const isProd = process.env.NODE_ENV === 'production';
+
+if (isProd) {
+  // serve built frontend only in production
+  app.use(express.static(path.join(__dirname, '../dist')));
+
+  app.get('*', (req, res) => {
+    if (req.path.startsWith('/api')) return;
+    res.sendFile(path.join(__dirname, '../dist/index.html'));
+  });
+}
 
 app.use((err, _req, res, _next) => {
   console.error(err.stack);
