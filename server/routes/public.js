@@ -137,7 +137,7 @@ router.get('/reports/:idOrSlug', async (req, res) => {
   }
 });
 
-// ── GET /api/public/stats ────────────────────────────────────────────
+// ── GET /api/public/stats ───────────────────────────────────────────
 router.get('/stats', async (req, res) => {
   try {
     const base = { status: 'published' };
