@@ -1,3 +1,7 @@
+export async function fetchReport(id) {
+  return publicApiRequest(`/api/public/reports/${id}`);
+}
+
 export async function publicApiRequest(endpoint) {
   const response = await fetch(endpoint);
 
