@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SafeIcon from '../../../../../../common/SafeIcon';
 
 const PlatformConfig = () => {
