@@ -161,12 +161,13 @@ Example:
 
 | Status | Condition                                         |
 | ------ | ------------------------------------------------- |
-| `400`  | Any of `token`, `username`, or `password` missing |
-| `400`  | `username` shorter than 3 characters              |
-| `400`  | `password` shorter than 6 characters              |
-| `400`  | Token not found, already used, or expired         |
-| `400`  | `username` already taken                          |
-| `400`  | Email already exists (duplicate key on `Admin`)   |
+| `400`  | Any of `token`, `username`, or `password` missing                                           |
+| `400`  | `username` shorter than 3 characters                                                        |
+| `400`  | `password` shorter than 6 characters                                                        |
+| `400`  | `password` does not meet strong password requirements (when `enforceStrongPasswords` is on) |
+| `400`  | Token not found, already used, or expired                                                   |
+| `400`  | `username` already taken                                                                    |
+| `400`  | Email already exists (duplicate key on `Admin`)                                             |
 
 ### curl
 
