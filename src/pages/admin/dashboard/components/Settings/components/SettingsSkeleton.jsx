@@ -1,4 +1,4 @@
-import { SkeletonCard } from '../../../../../common/Skeleton';
+import { SkeletonCard } from '../../../common/Skeleton';
 
 const SettingsSkeleton = () => (
   <div className="space-y-5">
