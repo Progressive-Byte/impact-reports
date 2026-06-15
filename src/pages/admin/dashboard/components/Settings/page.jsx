@@ -139,8 +139,9 @@ const Settings = () => {
       await adminApiRequest('/api/config/settings', {
         method: 'PATCH',
         body:   JSON.stringify({
-          defaultRegion:         general.region,
-          sessionTimeoutMinutes: Number(security.sessionTimeout),
+          defaultRegion:          general.region,
+          sessionTimeoutMinutes:  Number(security.sessionTimeout),
+          enforceStrongPasswords: security.strongPasswords,
         }),
       });
       toast.success('Settings saved successfully');
