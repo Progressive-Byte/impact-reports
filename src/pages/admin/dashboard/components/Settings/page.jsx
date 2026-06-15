@@ -246,10 +246,11 @@ const Settings = () => {
           <SettingCard icon="FiAlertTriangle" title="Danger Zone" danger>
             <ActionRow
               title="Export all data"
-              description="Download all reports as a CSV file"
+              description="Download all reports as CSV or Excel"
               label="Export"
               onClick={handleExport}
               loading={exporting}
+              extra={formatPicker}
             />
             <ActionRow
               title="Purge audit logs"
