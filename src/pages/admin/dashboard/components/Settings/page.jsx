@@ -6,8 +6,7 @@ import ToggleRow from './components/ToggleRow';
 import SelectRow from './components/SelectRow';
 import ActionRow from './components/ActionRow';
 import { publicApiRequest } from '../../../../../services/publicApi';
-
-export const DEFAULT_REGION_KEY = 'platform_defaultRegion';
+import { adminApiRequest } from '../../../../../services/adminApi';
 
 const TIMEOUT_OPTIONS = [
   { value: '15',  label: '15 minutes' },
@@ -30,9 +29,9 @@ const CURRENCY_OPTIONS = [
 ];
 
 const Settings = () => {
-  const [regionOptions,  setRegionOptions]  = useState([]);
-  const [loadingRegions, setLoadingRegions] = useState(true);
-  const [saving,         setSaving]         = useState(false);
+  const [regionOptions, setRegionOptions] = useState([]);
+  const [loading,       setLoading]       = useState(true);
+  const [saving,        setSaving]        = useState(false);
 
   const [security, setSecurity] = useState({
     require2fa:      true,
@@ -41,7 +40,7 @@ const Settings = () => {
   });
 
   const [general, setGeneral] = useState({
-    region:   localStorage.getItem(DEFAULT_REGION_KEY) || '',
+    region:   '',
     timezone: 'utc3',
     currency: 'usd',
   });
@@ -53,29 +52,37 @@ const Settings = () => {
   });
 
   useEffect(() => {
-    publicApiRequest('/api/config/regions')
-      .then(data => {
-        const opts = (data.regions || []).map(r => ({ value: r, label: r }));
+    Promise.all([
+      publicApiRequest('/api/config/regions'),
+      adminApiRequest('/api/config/settings'),
+    ])
+      .then(([regionsData, settingsData]) => {
+        const opts = (regionsData.regions || []).map(r => ({ value: r, label: r }));
         setRegionOptions(opts);
-        if (!localStorage.getItem(DEFAULT_REGION_KEY) && opts.length) {
-          setGeneral(p => ({ ...p, region: opts[0].value }));
-        }
+        const saved = settingsData.defaultRegion;
+        setGeneral(p => ({
+          ...p,
+          region: saved || (opts[0]?.value ?? ''),
+        }));
       })
-      .catch(() => toast.error('Failed to load regions'))
-      .finally(() => setLoadingRegions(false));
+      .catch(() => toast.error('Failed to load settings'))
+      .finally(() => setLoading(false));
   }, []);
 
   const setSec  = (key) => (val) => setSecurity(p => ({ ...p, [key]: val }));
   const setGen  = (key) => (val) => setGeneral(p => ({ ...p, [key]: val }));
   const setNote = (key) => (val) => setNotifications(p => ({ ...p, [key]: val }));
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setSaving(true);
     try {
-      localStorage.setItem(DEFAULT_REGION_KEY, general.region);
+      await adminApiRequest('/api/config/settings', {
+        method: 'PATCH',
+        body:   JSON.stringify({ defaultRegion: general.region }),
+      });
       toast.success('Settings saved successfully');
-    } catch {
-      toast.error('Failed to save settings');
+    } catch (err) {
+      toast.error(err.message || 'Failed to save settings');
     } finally {
       setSaving(false);
     }
@@ -90,7 +97,7 @@ const Settings = () => {
         </div>
         <button
           onClick={handleSave}
-          disabled={saving || loadingRegions}
+          disabled={saving || loading}
           className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-60"
         >
           {saving
@@ -133,7 +140,7 @@ const Settings = () => {
               value={general.region}
               onChange={setGen('region')}
               options={regionOptions}
-              loading={loadingRegions}
+              loading={loading}
             />
             <SelectRow
               title="Timezone"
