@@ -25,6 +25,28 @@ router.post('/login', async (req, res) => {
     }
     const valid = await admin.comparePassword(password);
     if (!valid) {
+      // Increment consecutive failed attempts
+      const updatedAdmin = await Admin.findByIdAndUpdate(
+        admin._id,
+        { $inc: { failedLoginAttempts: 1 } },
+        { new: true }
+      );
+      const attempts = updatedAdmin.failedLoginAttempts;
+
+      // Fire a notification if threshold reached and warning setting is on
+      if (attempts >= FAILED_LOGIN_THRESHOLD) {
+        const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+        if (settings?.failedLoginWarnings !== false) {
+          await Notification.create({
+            type:    'failed_login',
+            title:   'Failed-login warning',
+            message: `${attempts} consecutive failed login attempt${attempts === 1 ? '' : 's'} detected for account "${username}".`,
+          });
+          // Reset counter so the next threshold cycle starts fresh
+          await Admin.findByIdAndUpdate(admin._id, { $set: { failedLoginAttempts: 0 } });
+        }
+      }
+
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
@@ -33,7 +55,9 @@ router.post('/login', async (req, res) => {
     const sessionTimeoutMinutes = settings?.sessionTimeoutMinutes ?? 30;
     const expiresInSeconds      = sessionTimeoutMinutes * 60;
 
-    admin.lastLogin = new Date();
+    // Reset failed attempts on successful login
+    admin.lastLogin           = new Date();
+    admin.failedLoginAttempts = 0;
     await admin.save({ validateBeforeSave: false });
 
     res.json({
