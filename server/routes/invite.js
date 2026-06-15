@@ -2,8 +2,13 @@ import express from 'express';
 import crypto from 'crypto';
 import Invite from '../models/Invite.js';
 import Admin from '../models/Admin.js';
+import PlatformSettings from '../models/PlatformSettings.js';
 import { protect } from '../middleware/auth.js';
 import { sendInviteEmail } from '../utils/mailer.js';
+
+// Strong password: min 12 chars + at least one number + at least one symbol
+const isStrongPassword = (pw) =>
+  pw.length >= 12 && /[0-9]/.test(pw) && /[^a-zA-Z0-9]/.test(pw);
 
 const router = express.Router();
 
