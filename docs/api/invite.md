@@ -135,11 +135,11 @@ Complete registration using a valid invite token. Creates the admin account and 
 
 ### Request body
 
-| Field      | Type   | Required | Validation          | Description                           | Example              |
-| ---------- | ------ | :------: | ------------------- | ------------------------------------- | -------------------- |
-| `token`    | string | Yes      | non-empty           | 64-character raw token from email     | `"<64-char-token>"`  |
-| `username` | string | Yes      | min 3, unique       | Chosen login handle                   | `"my_username"`      |
-| `password` | string | Yes      | min 6 characters    | Chosen password (bcrypt hashed)       | `"welcome99"`        |
+| Field      | Type   | Required | Validation                                    | Description                           | Example              |
+| ---------- | ------ | :------: | --------------------------------------------- | ------------------------------------- | -------------------- |
+| `token`    | string | Yes      | non-empty                                     | 64-character raw token from email     | `"<64-char-token>"`  |
+| `username` | string | Yes      | min 3 chars, unique                           | Chosen login handle                   | `"my_username"`      |
+| `password` | string | Yes      | min 6 chars (min 12 + number + symbol if strong passwords enforced) | Chosen password (bcrypt hashed) | `"welcome99"` |
 
 Example:
 
