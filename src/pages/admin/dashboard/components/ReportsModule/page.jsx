@@ -250,6 +250,12 @@ const ReportsModule = ({ onCountChange }) => {
           isSuperAdmin={isSuperAdmin}
           onEdit={openWizard}
           onDelete={handleDelete}
+          selected={selected}
+          allSelected={allSelected}
+          selectedCount={selectedCount}
+          onToggleAll={toggleAll}
+          onToggleOne={toggleOne}
+          onBulkDelete={handleBulkDelete}
         />
       )}
     </div>
