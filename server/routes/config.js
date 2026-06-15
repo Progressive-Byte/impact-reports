@@ -58,4 +58,17 @@ router.patch('/settings', protect, async (req, res) => {
   }
 });
 
+// POST /api/config/send-weekly-digest — superadmin only, manual trigger for testing
+router.post('/send-weekly-digest', protect, async (req, res) => {
+  if (req.admin.role !== 'superadmin') {
+    return res.status(403).json({ message: 'Superadmin only' });
+  }
+  try {
+    await sendWeeklyDigest();
+    res.json({ message: 'Weekly digest sent' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;
