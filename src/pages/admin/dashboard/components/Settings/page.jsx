@@ -9,6 +9,7 @@ import ActionRow from './components/ActionRow';
 import SettingsSkeleton from './components/SettingsSkeleton';
 import { publicApiRequest } from '../../../../../services/publicApi';
 import { adminApiRequest } from '../../../../../services/adminApi';
+import { getCookie } from '../../../../../utils/cookies';
 
 const TIMEOUT_OPTIONS = [
   { value: '15',  label: '15 minutes' },
