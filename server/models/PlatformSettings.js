@@ -6,6 +6,7 @@ const platformSettingsSchema = new mongoose.Schema({
   sessionTimeoutMinutes:  { type: Number,  default: 30 },
   enforceStrongPasswords: { type: Boolean, default: false },
   failedLoginWarnings:    { type: Boolean, default: true },
+  weeklyDigest:           { type: Boolean, default: false },
 }, { timestamps: true });
 
 export default mongoose.model('PlatformSettings', platformSettingsSchema);
