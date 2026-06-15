@@ -77,6 +77,7 @@ const Settings = () => {
       setNotifications(p => ({
         ...p,
         failedLoginWarnings: settingsData.failedLoginWarnings ?? true,
+        weeklyDigest:        settingsData.weeklyDigest        ?? false,
       }));
     } catch {
       toast.error('Failed to load settings');
