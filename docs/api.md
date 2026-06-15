@@ -28,4 +28,4 @@ All endpoints below require a valid `Bearer` token.
 
 ## Configuration
 
-- [Config](api/config.md) — Public config endpoints (region taxonomy).
+- [Config](api/config.md) — Region taxonomy (public) and platform settings: default region read (any admin) and update (superadmin only).
