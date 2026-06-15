@@ -6,6 +6,7 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 | ------ | --------------------------------- | ----------- | ------------------------------------ | ---------------------------------------- |
 | GET    | `/api/reports`                    | Bearer      | —                                    | List reports (role-filtered)             |
 | GET    | `/api/reports/search`             | Bearer      | —                                    | Autocomplete project names (query: `q`) |
+| GET    | `/api/reports/export`             | Superadmin  | —                                    | Download all reports as CSV or Excel     |
 | POST   | `/api/reports`                    | Superadmin  | `projectName`, `assignedTo[]`        | Create report with status `pending`      |
 | GET    | `/api/reports/:id`                | Bearer      | —                                    | Get single report                        |
 | PATCH  | `/api/reports/:id/step/:stepName` | Bearer      | step fields (see below)              | Save one wizard step                     |
