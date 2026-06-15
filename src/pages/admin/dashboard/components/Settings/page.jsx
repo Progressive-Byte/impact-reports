@@ -97,23 +97,28 @@ const Settings = () => {
     failedLoginWarnings: true,
   });
 
-  useEffect(() => {
-    Promise.all([
-      publicApiRequest('/api/config/regions'),
-      adminApiRequest('/api/config/settings'),
-    ])
-      .then(([regionsData, settingsData]) => {
-        const opts = (regionsData.regions || []).map(r => ({ value: r, label: r }));
-        setRegionOptions(opts);
-        const saved = settingsData.defaultRegion;
-        setGeneral(p => ({
-          ...p,
-          region: saved || (opts[0]?.value ?? ''),
-        }));
-      })
-      .catch(() => toast.error('Failed to load settings'))
-      .finally(() => setLoading(false));
+  const fetchSettings = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [regionsData, settingsData] = await Promise.all([
+        publicApiRequest('/api/config/regions'),
+        adminApiRequest('/api/config/settings'),
+      ]);
+      const opts = (regionsData.regions || []).map(r => ({ value: r, label: r }));
+      setRegionOptions(opts);
+      const saved = settingsData.defaultRegion;
+      setGeneral(p => ({
+        ...p,
+        region: saved || (opts[0]?.value ?? ''),
+      }));
+    } catch {
+      toast.error('Failed to load settings');
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => { fetchSettings(); }, [fetchSettings]);
 
   const setSec  = (key) => (val) => setSecurity(p => ({ ...p, [key]: val }));
   const setGen  = (key) => (val) => setGeneral(p => ({ ...p, [key]: val }));
@@ -127,6 +132,7 @@ const Settings = () => {
         body:   JSON.stringify({ defaultRegion: general.region }),
       });
       toast.success('Settings saved successfully');
+      await fetchSettings();
     } catch (err) {
       toast.error(err.message || 'Failed to save settings');
     } finally {
