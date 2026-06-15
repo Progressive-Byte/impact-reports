@@ -203,7 +203,7 @@ const Settings = () => {
           </SettingCard>
         </div>
 
-      </div>
+      </div>}
     </div>
   );
 };
