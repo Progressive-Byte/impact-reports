@@ -9,7 +9,7 @@ export function useReportData() {
   const [searchParams, setSearchParams] = useSearchParams();
   const reportId = searchParams.get('reportId');
 
-  const [form,          setForm]          = useState(getBlankForm);
+  const [form,          setForm]          = useState(() => getBlankForm());
   const [reports,       setReports]       = useState([]);
   const [meta,          setMeta]          = useState(null);
   const [stats,         setStats]         = useState({ totalLives: 0, count: 0 });
@@ -18,12 +18,21 @@ export function useReportData() {
   const [loadingList,   setLoadingList]   = useState(true);
   const [loadingReport, setLoadingReport] = useState(false);
 
+  // Cached default region from platform settings (DB-backed)
+  const defaultRegionRef = useRef('');
+
   // Track in-flight requests to avoid duplicate calls
   const adminOptionsLoadingRef  = useRef(false);
   const regionOptionsLoadingRef = useRef(false);
 
+  // Fetch platform default region once on mount
+  useEffect(() => {
+    adminApiRequest('/api/config/settings')
+      .then(data => { defaultRegionRef.current = data.defaultRegion || ''; })
+      .catch(() => {});
+  }, []);
+
   // Lazy-load admin users for "Assigned To" dropdowns.
-  // Called only when the wizard or Create modal is about to open.
   const loadAdminOptions = useCallback(() => {
     if (adminOptions.length > 0 || adminOptionsLoadingRef.current) return;
     adminOptionsLoadingRef.current = true;
@@ -37,7 +46,6 @@ export function useReportData() {
   }, [adminOptions.length]);
 
   // Lazy-load region options from the backend config endpoint.
-  // Called only when the wizard is about to open.
   const loadRegionOptions = useCallback(() => {
     if (regionOptions.length > 0 || regionOptionsLoadingRef.current) return;
     regionOptionsLoadingRef.current = true;
@@ -71,12 +79,12 @@ export function useReportData() {
     }
   }, []);
 
-  // Load single report when entering wizard
+  // Load single report when entering wizard; fall back to DB default region when report has none
   useEffect(() => {
-    if (!reportId) { setForm(getBlankForm()); return; }
+    if (!reportId) { setForm(getBlankForm(defaultRegionRef.current)); return; }
     setLoadingReport(true);
     adminApiRequest(`/api/reports/${reportId}`)
-      .then(data => setForm(reportToForm(data.report)))
+      .then(data => setForm(reportToForm(data.report, defaultRegionRef.current)))
       .catch(err => {
         toast.error(err.message || 'Failed to load report');
         setSearchParams({}, { replace: true });
