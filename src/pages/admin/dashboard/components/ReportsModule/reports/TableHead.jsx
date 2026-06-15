@@ -1,4 +1,4 @@
-import Checkbox from '../../../../common/Checkbox';
+import Checkbox from '../../../common/Checkbox';
 
 const COLUMNS = ['Project', 'Lives Impacted', 'Status', 'Assignees', 'Date', 'Actions'];
 
