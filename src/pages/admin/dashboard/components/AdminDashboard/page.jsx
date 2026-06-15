@@ -29,21 +29,17 @@ const AdminDashboard = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-black text-[#0B0D0F] tracking-tight">
-            {isSuperAdmin ? 'IT Admin Dashboard' : `${admin?.username ?? 'My'} Dashboard`}
-          </h1>
-          <p className="text-sm text-gray-400 mt-0.5">
-            {isSuperAdmin ? 'Global configuration & system telemetry' : 'Your assigned reports & activity'}
-          </p>
-        </div>
-        <button className="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors shadow-sm">
-          <SafeIcon icon="FiDownload" className="text-sm" />
-          Export Logs
-        </button>
-      </div>
+      <PageHeader
+        heading="h1"
+        title={isSuperAdmin ? 'IT Admin Dashboard' : `${admin?.username ?? 'My'} Dashboard`}
+        subtitle={isSuperAdmin ? 'Global configuration & system telemetry' : 'Your assigned reports & activity'}
+        action={
+          <button className="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors shadow-sm">
+            <SafeIcon icon="FiDownload" className="text-sm" />
+            Export Logs
+          </button>
+        }
+      />
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
