@@ -321,6 +321,48 @@ curl -X PATCH "http://localhost:5173/api/reports/6650a1b2c3d4e5f607a8b9c2/step/m
 
 ---
 
+## `GET /api/reports/export`
+
+Download all reports (all statuses, all regions) as a flat file. Only `superadmin` can call this.
+
+### Query parameters
+
+| Param    | Type   | Default | Description                                          |
+| -------- | ------ | :-----: | ---------------------------------------------------- |
+| `format` | string | `csv`   | `csv` — plain text CSV; `excel` — `.xlsx` workbook   |
+
+### Response
+
+Returns a file download with the appropriate `Content-Disposition` header.
+
+- **CSV**: `Content-Type: text/csv`, filename `reports-export-YYYY-MM-DD.csv`
+- **Excel**: `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, filename `reports-export-YYYY-MM-DD.xlsx`
+
+Each row includes: `Project ID`, `Project Name`, `Slug`, `Status`, `Project Lead`, `Fiscal Year`, `Region`, `Sector`, `Lives Impacted`, `Countries`, `Project Background`, `Strategic Response`, `Children`, `Women`, `Men`, `Deliverables`, `Images Count`, `Thumbnail URL`, `Video URL`, `Milestones Count`, `Steps Completed`, `Assigned To`, `Created By`, `Created At`, `Updated At`.
+
+### Errors
+
+| Status | Condition                  |
+| ------ | -------------------------- |
+| `403`  | Caller is not `superadmin` |
+| `500`  | Export generation failed   |
+
+### curl
+
+```bash
+# Download as CSV
+curl "http://localhost:5173/api/reports/export?format=csv" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o reports.csv
+
+# Download as Excel
+curl "http://localhost:5173/api/reports/export?format=excel" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o reports.xlsx
+```
+
+---
+
 ## `DELETE /api/reports/:id`
 
 Permanently delete a report. Only `superadmin` can call this.
