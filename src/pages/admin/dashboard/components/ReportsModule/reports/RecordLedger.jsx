@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import SafeIcon from '../../../../../../common/SafeIcon';
-import Checkbox from '../../../../common/Checkbox';
+import Checkbox from '../../../common/Checkbox';
 import Pagination from '@/common/Pagination';
 import TableHead, { ROW_GRID } from './TableHead';
 import ReportSkeletonRow from './ReportSkeletonRow';
