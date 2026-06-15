@@ -12,6 +12,7 @@ import reportRoutes from './routes/reports.js';
 import uploadRoutes from './routes/upload.js';
 import publicRoutes from './routes/public.js';
 import configRoutes from './routes/config.js';
+import notificationRoutes from './routes/notifications.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
