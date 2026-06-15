@@ -8,8 +8,9 @@ const adminSchema = new mongoose.Schema(
     password: { type: String, required: true, minlength: 6 },
     role:     { type: String, enum: ['superadmin', 'admin'], default: 'admin' },
     region:   { type: String, default: 'global' },
-    isActive: { type: Boolean, default: true },
-    lastLogin:{ type: Date },
+    isActive:           { type: Boolean, default: true },
+    lastLogin:          { type: Date },
+    failedLoginAttempts:{ type: Number, default: 0 },
   },
   { timestamps: true }
 );
