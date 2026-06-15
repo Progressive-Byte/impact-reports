@@ -146,6 +146,7 @@ const Settings = () => {
           defaultRegion:          general.region,
           sessionTimeoutMinutes:  Number(security.sessionTimeout),
           enforceStrongPasswords: security.strongPasswords,
+          failedLoginWarnings:    notifications.failedLoginWarnings,
         }),
       });
       toast.success('Settings saved successfully');
