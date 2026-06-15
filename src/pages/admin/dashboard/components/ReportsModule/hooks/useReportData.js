@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { adminApiRequest } from '../../../../../../services/adminApi';
 import { publicApiRequest } from '../../../../../../services/publicApi';
-import { BLANK_FORM, reportToForm } from '../reports/reportFormUtils';
+import { getBlankForm, reportToForm } from '../reports/reportFormUtils';
 
 export function useReportData() {
   const [searchParams, setSearchParams] = useSearchParams();
