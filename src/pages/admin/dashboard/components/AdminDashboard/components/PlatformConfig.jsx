@@ -4,6 +4,7 @@ import SafeIcon from '../../../../../../common/SafeIcon';
 
 const PlatformConfig = () => {
   const [require2FA, setRequire2FA] = useState(true);
+  const navigate = useNavigate();
 
   return (
     <div className="bg-white border border-gray-200 rounded-3xl shadow-sm p-6">
