@@ -1,3 +1,5 @@
+import { DEFAULT_REGION_KEY } from '../../Settings/page';
+
 export const BLANK_FORM = {
   projectName:       '',
   assignedTo:        [],
