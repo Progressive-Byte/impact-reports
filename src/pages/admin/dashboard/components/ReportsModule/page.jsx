@@ -53,6 +53,30 @@ const ReportsModule = ({ onCountChange }) => {
   const [saving,      setSaving]      = useState(false);
   const [showCreate,  setShowCreate]  = useState(false);
   const [fieldErrors, setFieldErrors] = useState({});
+  const [selected,    setSelected]    = useState(new Set());
+
+  const prevFiltersRef = useRef({ search: urlSearch, status: urlStatus });
+
+  // Clear selection whenever filters change
+  useEffect(() => {
+    const prev = prevFiltersRef.current;
+    if (prev.search !== urlSearch || prev.status !== urlStatus) {
+      setSelected(new Set());
+      prevFiltersRef.current = { search: urlSearch, status: urlStatus };
+    }
+  }, [urlSearch, urlStatus]);
+
+  const allSelected   = reports.length > 0 && reports.every(r => selected.has(r._id));
+  const selectedCount = selected.size;
+
+  const toggleAll = () =>
+    setSelected(allSelected ? new Set() : new Set(reports.map(r => r._id)));
+
+  const toggleOne = (id) => {
+    const next = new Set(selected);
+    next.has(id) ? next.delete(id) : next.add(id);
+    setSelected(next);
+  };
 
   // Drive list fetch whenever URL filter params change
   useEffect(() => {
