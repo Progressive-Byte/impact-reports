@@ -20,17 +20,17 @@ export const BLANK_FORM = {
   locations:         [],
 };
 
-export const getBlankForm = () => ({
+export const getBlankForm = (defaultRegion = '') => ({
   ...BLANK_FORM,
-  region: localStorage.getItem(DEFAULT_REGION_KEY) || '',
+  region: defaultRegion,
 });
 
-export const reportToForm = (report) => ({
+export const reportToForm = (report, defaultRegion = '') => ({
   projectName:       report.projectName || '',
   assignedTo:        (report.assignedTo || []).map(a => String(a._id ?? a)),
   projectLead:       report.projectLead || '',
   fiscalYear:        report.fiscalYear || 'FY25',
-  region:            report.region     || localStorage.getItem(DEFAULT_REGION_KEY) || '',
+  region:            report.region     || defaultRegion,
   sector:            report.sector     || '',
   livesImpacted:     report.livesImpacted ?? 0,
   projectBackground: report.projectBackground || '',
