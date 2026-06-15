@@ -152,17 +152,30 @@ const ReportsModule = ({ onCountChange }) => {
   const handleDelete = async (id) => {
     try {
       await adminApiRequest(`/api/reports/${id}`, { method: 'DELETE' });
+      setSelected(prev => { const n = new Set(prev); n.delete(id); return n; });
       toast.success('Report deleted');
-      // Go back a page if we just deleted the only item on a non-first page
       const wouldBeEmpty = reports.length === 1 && urlPage > 1;
-      if (wouldBeEmpty) {
-        handlePageChange(urlPage - 1);
-      } else {
-        fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
-      }
+      if (wouldBeEmpty) handlePageChange(urlPage - 1);
+      else fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
     } catch (err) {
       toast.error(err.message || 'Failed to delete');
     }
+  };
+
+  const handleBulkDelete = async () => {
+    const ids = Array.from(selected);
+    if (!ids.length) return;
+    const results = await Promise.allSettled(
+      ids.map(id => adminApiRequest(`/api/reports/${id}`, { method: 'DELETE' }))
+    );
+    const failed = results.filter(r => r.status === 'rejected').length;
+    const deleted = ids.length - failed;
+    setSelected(new Set());
+    if (deleted > 0) toast.success(`${deleted} report${deleted !== 1 ? 's' : ''} deleted`);
+    if (failed > 0)  toast.error(`${failed} report${failed !== 1 ? 's' : ''} could not be deleted`);
+    const wouldBeEmpty = reports.length === ids.length && urlPage > 1;
+    if (wouldBeEmpty) handlePageChange(urlPage - 1);
+    else fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
   };
 
   const statCards = useMemo(() => {
