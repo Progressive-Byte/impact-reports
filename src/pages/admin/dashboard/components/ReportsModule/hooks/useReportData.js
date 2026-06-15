@@ -73,7 +73,7 @@ export function useReportData() {
 
   // Load single report when entering wizard
   useEffect(() => {
-    if (!reportId) { setForm(BLANK_FORM); return; }
+    if (!reportId) { setForm(getBlankForm()); return; }
     setLoadingReport(true);
     adminApiRequest(`/api/reports/${reportId}`)
       .then(data => setForm(reportToForm(data.report)))
