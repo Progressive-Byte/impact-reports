@@ -18,6 +18,7 @@ router.get('/settings', protect, async (_req, res) => {
       defaultRegion:          settings?.defaultRegion          || '',
       sessionTimeoutMinutes:  settings?.sessionTimeoutMinutes  ?? 30,
       enforceStrongPasswords: settings?.enforceStrongPasswords ?? false,
+      failedLoginWarnings:    settings?.failedLoginWarnings    ?? true,
     });
   } catch {
     res.status(500).json({ message: 'Failed to load settings' });
