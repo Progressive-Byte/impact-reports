@@ -111,13 +111,15 @@ router.get('/search', async (req, res) => {
   }
 });
 
-// ── GET /api/reports/export ──────────────────────────────────────────
+// ── GET /api/reports/export?format=csv|excel ─────────────────────────
 // Must be before /:id to avoid 'export' being treated as an id
 router.get('/export', async (req, res) => {
   if (req.admin.role !== 'superadmin') {
     return res.status(403).json({ message: 'Superadmin only' });
   }
   try {
+    const format = req.query.format === 'excel' ? 'excel' : 'csv';
+
     const reports = await Report.find({})
       .populate([
         { path: 'assignedTo', select: 'username email' },
@@ -126,54 +128,58 @@ router.get('/export', async (req, res) => {
       .sort({ createdAt: -1 })
       .lean();
 
+    const dateStr  = new Date().toISOString().split('T')[0];
+    const toRows   = (r) => ({
+      'Project ID':           r.projectId        ?? '',
+      'Project Name':         r.projectName      ?? '',
+      'Slug':                 r.slug             ?? '',
+      'Status':               r.status           ?? '',
+      'Project Lead':         r.projectLead      ?? '',
+      'Fiscal Year':          r.fiscalYear       ?? '',
+      'Region':               r.region           ?? '',
+      'Sector':               r.sector           ?? '',
+      'Lives Impacted':       r.livesImpacted    ?? 0,
+      'Countries':            (r.countries  || []).join('; '),
+      'Project Background':   r.projectBackground  ?? '',
+      'Strategic Response':   r.strategicResponse  ?? '',
+      'Children':             r.children ?? 0,
+      'Women':                r.women    ?? 0,
+      'Men':                  r.men      ?? 0,
+      'Deliverables':         (r.deliverables || []).map(d => `${d.label}(${d.count})`).join('; '),
+      'Images Count':         (r.images     || []).length,
+      'Thumbnail URL':        r.thumbnail  ?? '',
+      'Video URL':            r.videoUrl   ?? '',
+      'Milestones Count':     (r.milestones || []).length,
+      'Steps Completed':      (r.stepsCompleted || []).join('; '),
+      'Assigned To':          (r.assignedTo || []).map(a => a.username).join('; '),
+      'Created By':           r.createdBy?.username ?? '',
+      'Created At':           r.createdAt ? new Date(r.createdAt).toISOString() : '',
+      'Updated At':           r.updatedAt ? new Date(r.updatedAt).toISOString() : '',
+    });
+
+    const rowObjects = reports.map(toRows);
+
+    if (format === 'excel') {
+      const ws = XLSX.utils.json_to_sheet(rowObjects);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Reports');
+      const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      res.setHeader('Content-Disposition', `attachment; filename="reports-export-${dateStr}.xlsx"`);
+      return res.send(buf);
+    }
+
+    // CSV — escape fields that contain commas, quotes, or newlines
     const escape = (v) => {
       const s = v == null ? '' : String(v).replace(/"/g, '""');
       return /[",\n\r]/.test(s) ? `"${s}"` : s;
     };
-
-    const headers = [
-      'projectId', 'projectName', 'slug', 'status',
-      'projectLead', 'fiscalYear', 'region', 'sector', 'livesImpacted',
-      'countries', 'projectBackground', 'strategicResponse',
-      'children', 'women', 'men',
-      'deliverables', 'imagesCount', 'thumbnail', 'videoUrl',
-      'milestonesCount', 'stepsCompleted',
-      'assignedTo', 'createdBy', 'createdAt', 'updatedAt',
-    ];
-
-    const rows = reports.map(r => [
-      r.projectId,
-      r.projectName,
-      r.slug,
-      r.status,
-      r.projectLead,
-      r.fiscalYear,
-      r.region,
-      r.sector,
-      r.livesImpacted,
-      (r.countries || []).join('; '),
-      r.projectBackground,
-      r.strategicResponse,
-      r.children,
-      r.women,
-      r.men,
-      (r.deliverables || []).map(d => `${d.label}(${d.count})`).join('; '),
-      (r.images || []).length,
-      r.thumbnail,
-      r.videoUrl,
-      (r.milestones || []).length,
-      (r.stepsCompleted || []).join('; '),
-      (r.assignedTo || []).map(a => a.username).join('; '),
-      r.createdBy?.username || '',
-      r.createdAt ? new Date(r.createdAt).toISOString() : '',
-      r.updatedAt ? new Date(r.updatedAt).toISOString() : '',
-    ].map(escape).join(','));
-
-    const csv = [headers.join(','), ...rows].join('\n');
-    const filename = `reports-export-${new Date().toISOString().split('T')[0]}.csv`;
+    const keys = Object.keys(rowObjects[0] ?? {});
+    const csvRows = rowObjects.map(r => keys.map(k => escape(r[k])).join(','));
+    const csv = [keys.join(','), ...csvRows].join('\n');
 
     res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Disposition', `attachment; filename="reports-export-${dateStr}.csv"`);
     res.send(csv);
   } catch (err) {
     res.status(500).json({ message: 'Export failed' });
