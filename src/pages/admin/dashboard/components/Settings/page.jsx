@@ -148,6 +148,7 @@ const Settings = () => {
           sessionTimeoutMinutes:  Number(security.sessionTimeout),
           enforceStrongPasswords: security.strongPasswords,
           failedLoginWarnings:    notifications.failedLoginWarnings,
+          weeklyDigest:           notifications.weeklyDigest,
         }),
       });
       toast.success('Settings saved successfully');
