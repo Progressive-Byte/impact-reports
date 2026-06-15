@@ -32,12 +32,13 @@ router.patch('/settings', protect, async (req, res) => {
     return res.status(403).json({ message: 'Superadmin only' });
   }
   try {
-    const { defaultRegion, sessionTimeoutMinutes, enforceStrongPasswords, failedLoginWarnings } = req.body;
+    const { defaultRegion, sessionTimeoutMinutes, enforceStrongPasswords, failedLoginWarnings, weeklyDigest } = req.body;
     const update = {};
     if (defaultRegion          !== undefined) update.defaultRegion          = defaultRegion;
     if (sessionTimeoutMinutes  !== undefined) update.sessionTimeoutMinutes  = Number(sessionTimeoutMinutes);
     if (enforceStrongPasswords !== undefined) update.enforceStrongPasswords = Boolean(enforceStrongPasswords);
     if (failedLoginWarnings    !== undefined) update.failedLoginWarnings    = Boolean(failedLoginWarnings);
+    if (weeklyDigest           !== undefined) update.weeklyDigest           = Boolean(weeklyDigest);
 
     const settings = await PlatformSettings.findOneAndUpdate(
       { key: 'platform' },
@@ -49,6 +50,7 @@ router.patch('/settings', protect, async (req, res) => {
       sessionTimeoutMinutes:  settings.sessionTimeoutMinutes,
       enforceStrongPasswords: settings.enforceStrongPasswords,
       failedLoginWarnings:    settings.failedLoginWarnings,
+      weeklyDigest:           settings.weeklyDigest,
     });
   } catch {
     res.status(500).json({ message: 'Failed to save settings' });
