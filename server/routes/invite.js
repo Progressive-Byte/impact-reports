@@ -94,6 +94,13 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Password must be at least 6 characters' });
     }
 
+    const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+    if (settings?.enforceStrongPasswords && !isStrongPassword(password)) {
+      return res.status(400).json({
+        message: 'Password must be at least 12 characters and include a number and a symbol',
+      });
+    }
+
     const invite = await Invite.findOne({
       tokenHash: sha256(token),
       used: false,
