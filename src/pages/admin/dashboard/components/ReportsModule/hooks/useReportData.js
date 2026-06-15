@@ -9,7 +9,7 @@ export function useReportData() {
   const [searchParams, setSearchParams] = useSearchParams();
   const reportId = searchParams.get('reportId');
 
-  const [form,          setForm]          = useState(BLANK_FORM);
+  const [form,          setForm]          = useState(getBlankForm);
   const [reports,       setReports]       = useState([]);
   const [meta,          setMeta]          = useState(null);
   const [stats,         setStats]         = useState({ totalLives: 0, count: 0 });
