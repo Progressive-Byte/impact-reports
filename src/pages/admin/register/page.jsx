@@ -221,7 +221,7 @@ const AdminRegister = () => {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !pwValid}
               className="w-full bg-[#E52321] hover:bg-[#c91d1b] disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 rounded-2xl font-black text-[11px] uppercase tracking-[0.25em] transition-all mt-2 flex items-center justify-center gap-3 active:scale-95"
             >
               {loading ? (
