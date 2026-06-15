@@ -100,11 +100,19 @@ Check whether an invite token is valid before showing the registration form. Cal
 
 ```json
 {
-  "email":  "newuser@example.com",
-  "role":   "admin",
-  "region": "south_asia"
+  "email":                  "newuser@example.com",
+  "role":                   "admin",
+  "region":                 "south_asia",
+  "enforceStrongPasswords": true
 }
 ```
+
+| Field                    | Description                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------- |
+| `email`                  | Pre-filled on the registration form (read-only)                                                   |
+| `role`                   | Role the new account will receive                                                                 |
+| `region`                 | Region the new account will be assigned to                                                        |
+| `enforceStrongPasswords` | Mirrors the current platform setting. When `true`, the registration form shows a requirements checklist and the submit button is disabled until all checks pass |
 
 ### Errors
 
