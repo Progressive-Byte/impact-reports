@@ -3,6 +3,7 @@ import SearchModal from './common/SearchModal';
 import Header from './common/Header';
 import Footer from './common/Footer';
 import NavigationProgress from './common/NavigationProgress';
+import CustomCursor from './common/CustomCursor';
 
 const Layout = ({ children }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -22,6 +23,7 @@ const Layout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] font-sans text-gray-900 flex flex-col relative">
+      <CustomCursor />
       <NavigationProgress />
       <Header onSearchClick={handleSearchClick} />
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
