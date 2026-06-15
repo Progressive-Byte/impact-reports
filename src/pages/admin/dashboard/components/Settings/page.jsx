@@ -62,10 +62,13 @@ const Settings = () => {
       ]);
       const opts = (regionsData.regions || []).map(r => ({ value: r, label: r }));
       setRegionOptions(opts);
-      const saved = settingsData.defaultRegion;
       setGeneral(p => ({
         ...p,
-        region: saved || (opts[0]?.value ?? ''),
+        region: settingsData.defaultRegion || (opts[0]?.value ?? ''),
+      }));
+      setSecurity(p => ({
+        ...p,
+        sessionTimeout: String(settingsData.sessionTimeoutMinutes ?? 30),
       }));
     } catch {
       toast.error('Failed to load settings');
@@ -85,7 +88,10 @@ const Settings = () => {
     try {
       await adminApiRequest('/api/config/settings', {
         method: 'PATCH',
-        body:   JSON.stringify({ defaultRegion: general.region }),
+        body:   JSON.stringify({
+          defaultRegion:         general.region,
+          sessionTimeoutMinutes: Number(security.sessionTimeout),
+        }),
       });
       toast.success('Settings saved successfully');
       await fetchSettings();
