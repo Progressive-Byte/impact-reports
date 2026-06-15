@@ -15,7 +15,7 @@ Welcome to the API documentation for the **Nonprofit Impact Report Portal** admi
 All endpoints below require a valid `Bearer` token.
 
 - [Users](api/users.md) — Admin account listing, creation, role changes, status toggle, and deletion.
-- [Reports](api/reports.md) — Impact report lifecycle: create, step-by-step wizard save, list, and delete.
+- [Reports](api/reports.md) — Impact report lifecycle: create, step-by-step wizard save, list, export (CSV/Excel), and delete.
 - [Settings](api/settings.md) — Own password and own profile update.
 
 ## Invite Flow
