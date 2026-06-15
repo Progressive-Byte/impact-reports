@@ -74,6 +74,10 @@ const Settings = () => {
         sessionTimeout:  String(settingsData.sessionTimeoutMinutes ?? 30),
         strongPasswords: settingsData.enforceStrongPasswords ?? false,
       }));
+      setNotifications(p => ({
+        ...p,
+        failedLoginWarnings: settingsData.failedLoginWarnings ?? true,
+      }));
     } catch {
       toast.error('Failed to load settings');
     } finally {
