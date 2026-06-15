@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TrendLine } from '../../../../../common/SvgIcon';
 import SafeIcon from '../../../../../common/SafeIcon';
+import PageHeader from '../../common/PageHeader';
 import { adminApiRequest } from '../../../../../services/adminApi';
 import { useAdminAuth } from '../../../../../context/AdminAuthContext';
 import StatCard from './components/StatCard';
