@@ -171,9 +171,8 @@ const AdminRegister = () => {
                   type={showPw ? 'text' : 'password'}
                   value={form.password}
                   onChange={e => setForm(p => ({ ...p, password: e.target.value }))}
-                  placeholder="Min. 6 characters"
+                  placeholder={strong ? 'Min. 12 chars, number & symbol' : 'Min. 6 characters'}
                   required
-                  minLength={6}
                   className="w-full bg-white/5 border border-white/10 rounded-2xl pl-11 pr-12 py-3.5 text-white text-sm font-medium placeholder-gray-600 focus:outline-none focus:border-[#E52321]/50 focus:ring-1 focus:ring-[#E52321]/20 transition-all"
                 />
                 <button
@@ -184,6 +183,22 @@ const AdminRegister = () => {
                   <SafeIcon icon={showPw ? 'FiEyeOff' : 'FiEye'} className="text-base" />
                 </button>
               </div>
+
+              {/* Strong password checklist */}
+              {strong && form.password.length > 0 && (
+                <ul className="mt-2.5 space-y-1">
+                  {[
+                    { key: 'length', label: 'At least 12 characters' },
+                    { key: 'number', label: 'Contains a number' },
+                    { key: 'symbol', label: 'Contains a symbol (e.g. !@#$)' },
+                  ].map(({ key, label }) => (
+                    <li key={key} className={`flex items-center gap-2 text-[11px] font-medium transition-colors ${pwChecks[key] ? 'text-green-400' : 'text-gray-500'}`}>
+                      <SafeIcon icon={pwChecks[key] ? 'FiCheckCircle' : 'FiCircle'} className="text-xs flex-shrink-0" />
+                      {label}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             {/* Confirm */}
