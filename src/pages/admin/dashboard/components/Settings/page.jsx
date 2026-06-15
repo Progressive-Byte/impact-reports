@@ -71,7 +71,8 @@ const Settings = () => {
       }));
       setSecurity(p => ({
         ...p,
-        sessionTimeout: String(settingsData.sessionTimeoutMinutes ?? 30),
+        sessionTimeout:  String(settingsData.sessionTimeoutMinutes ?? 30),
+        strongPasswords: settingsData.enforceStrongPasswords ?? false,
       }));
     } catch {
       toast.error('Failed to load settings');
