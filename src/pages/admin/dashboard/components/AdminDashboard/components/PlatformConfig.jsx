@@ -40,7 +40,10 @@ const PlatformConfig = () => {
       </div>
 
       <div className="border-t border-gray-100 mt-4 pt-4">
-        <button className="text-[#E52321] text-xs font-black hover:underline w-full text-center">
+        <button
+          onClick={() => navigate('/admin/dashboard/settings')}
+          className="text-[#E52321] text-xs font-black hover:underline w-full text-center"
+        >
           Manage In Settings →
         </button>
       </div>
