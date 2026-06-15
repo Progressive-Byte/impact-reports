@@ -17,6 +17,7 @@ All endpoints below require a valid `Bearer` token.
 - [Users](api/users.md) — Admin account listing, creation, role changes, status toggle, and deletion.
 - [Reports](api/reports.md) — Impact report lifecycle: create, step-by-step wizard save, list, export (CSV/Excel), and delete.
 - [Settings](api/settings.md) — Own password and own profile update.
+- [Notifications](api/notifications.md) — In-app security notifications (failed-login warnings): list, mark one read, mark all read.
 
 ## Invite Flow
 
