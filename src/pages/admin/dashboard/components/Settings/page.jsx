@@ -96,8 +96,6 @@ const Settings = () => {
     }
   };
 
-  if (loading) return <SettingsSkeleton />;
-
   return (
     <div className="space-y-5">
       <PageHeader
@@ -106,7 +104,7 @@ const Settings = () => {
         action={
           <button
             onClick={handleSave}
-            disabled={saving}
+            disabled={saving || loading}
             className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-60"
           >
             {saving
@@ -117,6 +115,9 @@ const Settings = () => {
           </button>
         }
       />
+
+      {loading && <SettingsSkeleton />}
+      {loading && null}
 
       <div className="grid grid-cols-2 gap-5 items-start">
 
