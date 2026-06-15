@@ -67,7 +67,13 @@ router.get('/validate', async (req, res) => {
       return res.status(400).json({ message: 'This invite link is invalid or has expired' });
     }
 
-    res.json({ email: invite.email, role: invite.role, region: invite.region });
+    const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+    res.json({
+      email:                  invite.email,
+      role:                   invite.role,
+      region:                 invite.region,
+      enforceStrongPasswords: settings?.enforceStrongPasswords ?? false,
+    });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
