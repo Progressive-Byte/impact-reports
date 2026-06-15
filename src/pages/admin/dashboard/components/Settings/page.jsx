@@ -134,6 +134,8 @@ const Settings = () => {
     }
   };
 
+  if (loading) return <SettingsSkeleton />;
+
   return (
     <div className="space-y-5">
       <div className="flex items-start justify-between">
