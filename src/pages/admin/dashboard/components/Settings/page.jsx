@@ -84,6 +84,25 @@ const Settings = () => {
   const setGen  = (key) => (val) => setGeneral(p => ({ ...p, [key]: val }));
   const setNote = (key) => (val) => setNotifications(p => ({ ...p, [key]: val }));
 
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const csv = await adminApiRequest('/api/reports/export');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `reports-export-${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success('Export downloaded');
+    } catch (err) {
+      toast.error(err.message || 'Export failed');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
