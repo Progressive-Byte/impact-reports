@@ -22,12 +22,17 @@ export const BLANK_FORM = {
   locations:         [],
 };
 
+export const getBlankForm = () => ({
+  ...BLANK_FORM,
+  region: localStorage.getItem(DEFAULT_REGION_KEY) || '',
+});
+
 export const reportToForm = (report) => ({
   projectName:       report.projectName || '',
   assignedTo:        (report.assignedTo || []).map(a => String(a._id ?? a)),
   projectLead:       report.projectLead || '',
   fiscalYear:        report.fiscalYear || 'FY25',
-  region:            report.region     || '',
+  region:            report.region     || localStorage.getItem(DEFAULT_REGION_KEY) || '',
   sector:            report.sector     || '',
   livesImpacted:     report.livesImpacted ?? 0,
   projectBackground: report.projectBackground || '',
