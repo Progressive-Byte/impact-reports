@@ -1,58 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../common/SafeIcon';
+import PageHeader from '../../common/PageHeader';
 import SettingCard from './components/SettingCard';
 import ToggleRow from './components/ToggleRow';
 import SelectRow from './components/SelectRow';
 import ActionRow from './components/ActionRow';
+import SettingsSkeleton from './components/SettingsSkeleton';
 import { publicApiRequest } from '../../../../../services/publicApi';
 import { adminApiRequest } from '../../../../../services/adminApi';
-
-const SkeletonRow = ({ wide = false }) => (
-  <div className="flex items-center justify-between py-4">
-    <div className="space-y-2">
-      <div className="h-3.5 w-32 bg-gray-100 rounded-lg animate-pulse" />
-      <div className="h-2.5 w-48 bg-gray-100 rounded-lg animate-pulse" />
-    </div>
-    <div className={`h-9 ${wide ? 'w-44' : 'w-11'} bg-gray-100 rounded-xl animate-pulse flex-shrink-0`} />
-  </div>
-);
-
-const SkeletonCard = ({ rows = 3, wide = false }) => (
-  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-    <div className="flex items-center gap-2.5 mb-4 pb-4 border-b border-gray-50">
-      <div className="w-5 h-5 bg-gray-100 rounded-lg animate-pulse" />
-      <div className="h-4 w-24 bg-gray-100 rounded-lg animate-pulse" />
-    </div>
-    <div className="divide-y divide-gray-50">
-      {Array.from({ length: rows }).map((_, i) => (
-        <SkeletonRow key={i} wide={wide || i === rows - 1} />
-      ))}
-    </div>
-  </div>
-);
-
-const SettingsSkeleton = () => (
-  <div className="space-y-5">
-    <div className="flex items-start justify-between">
-      <div className="space-y-2">
-        <div className="h-7 w-28 bg-gray-100 rounded-xl animate-pulse" />
-        <div className="h-3.5 w-56 bg-gray-100 rounded-lg animate-pulse" />
-      </div>
-      <div className="h-10 w-36 bg-gray-100 rounded-xl animate-pulse" />
-    </div>
-    <div className="grid grid-cols-2 gap-5 items-start">
-      <div className="space-y-5">
-        <SkeletonCard rows={3} wide />
-        <SkeletonCard rows={3} wide />
-      </div>
-      <div className="space-y-5">
-        <SkeletonCard rows={3} />
-        <SkeletonCard rows={2} />
-      </div>
-    </div>
-  </div>
-);
 
 const TIMEOUT_OPTIONS = [
   { value: '15',  label: '15 minutes' },
@@ -144,23 +100,23 @@ const Settings = () => {
 
   return (
     <div className="space-y-5">
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-2xl font-black text-[#0B0D0F] tracking-tight">Settings</h2>
-          <p className="text-sm text-gray-400 mt-0.5">Security, notifications &amp; platform defaults</p>
-        </div>
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-60"
-        >
-          {saving
-            ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            : <SafeIcon icon="FiSave" className="text-base" />
-          }
-          Save Changes
-        </button>
-      </div>
+      <PageHeader
+        title="Settings"
+        subtitle="Security, notifications & platform defaults"
+        action={
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-60"
+          >
+            {saving
+              ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              : <SafeIcon icon="FiSave" className="text-base" />
+            }
+            Save Changes
+          </button>
+        }
+      />
 
       <div className="grid grid-cols-2 gap-5 items-start">
 
