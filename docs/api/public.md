@@ -166,15 +166,15 @@ If `q` is empty, returns `{ "results": [] }`.
 
 ---
 
-## `GET /api/public/reports/:id`
+## `GET /api/public/reports/:idOrSlug`
 
 Returns the full detail payload for a single published report. Used by the report detail page.
 
 ### Path parameters
 
-| Param | Description                |
-| ----- | -------------------------- |
-| `id`  | MongoDB ObjectId of the report |
+| Param       | Description                                           |
+| ----------- | ----------------------------------------------------- |
+| `idOrSlug`  | MongoDB ObjectId **or** URL slug (e.g. `winter-relief-alpha`) |
 
 Returns `404` if the report does not exist or is not `published`.
 
