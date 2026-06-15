@@ -8,6 +8,52 @@ import ActionRow from './components/ActionRow';
 import { publicApiRequest } from '../../../../../services/publicApi';
 import { adminApiRequest } from '../../../../../services/adminApi';
 
+const SkeletonRow = ({ wide = false }) => (
+  <div className="flex items-center justify-between py-4">
+    <div className="space-y-2">
+      <div className="h-3.5 w-32 bg-gray-100 rounded-lg animate-pulse" />
+      <div className="h-2.5 w-48 bg-gray-100 rounded-lg animate-pulse" />
+    </div>
+    <div className={`h-9 ${wide ? 'w-44' : 'w-11'} bg-gray-100 rounded-xl animate-pulse flex-shrink-0`} />
+  </div>
+);
+
+const SkeletonCard = ({ rows = 3, wide = false }) => (
+  <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <div className="flex items-center gap-2.5 mb-4 pb-4 border-b border-gray-50">
+      <div className="w-5 h-5 bg-gray-100 rounded-lg animate-pulse" />
+      <div className="h-4 w-24 bg-gray-100 rounded-lg animate-pulse" />
+    </div>
+    <div className="divide-y divide-gray-50">
+      {Array.from({ length: rows }).map((_, i) => (
+        <SkeletonRow key={i} wide={wide || i === rows - 1} />
+      ))}
+    </div>
+  </div>
+);
+
+const SettingsSkeleton = () => (
+  <div className="space-y-5">
+    <div className="flex items-start justify-between">
+      <div className="space-y-2">
+        <div className="h-7 w-28 bg-gray-100 rounded-xl animate-pulse" />
+        <div className="h-3.5 w-56 bg-gray-100 rounded-lg animate-pulse" />
+      </div>
+      <div className="h-10 w-36 bg-gray-100 rounded-xl animate-pulse" />
+    </div>
+    <div className="grid grid-cols-2 gap-5 items-start">
+      <div className="space-y-5">
+        <SkeletonCard rows={3} wide />
+        <SkeletonCard rows={3} wide />
+      </div>
+      <div className="space-y-5">
+        <SkeletonCard rows={3} />
+        <SkeletonCard rows={2} />
+      </div>
+    </div>
+  </div>
+);
+
 const TIMEOUT_OPTIONS = [
   { value: '15',  label: '15 minutes' },
   { value: '30',  label: '30 minutes' },
