@@ -145,7 +145,7 @@ const Settings = () => {
         </div>
         <button
           onClick={handleSave}
-          disabled={saving || loading}
+          disabled={saving}
           className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-60"
         >
           {saving
