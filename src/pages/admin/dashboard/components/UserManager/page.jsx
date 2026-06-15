@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../common/SafeIcon';
+import PageHeader from '../../common/PageHeader';
 import InviteModal from './components/InviteModal';
 import EditUserModal from './components/EditUserModal';
 import UserRow from './components/UserRow';
