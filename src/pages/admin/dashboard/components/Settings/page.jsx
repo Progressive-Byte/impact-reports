@@ -188,7 +188,6 @@ const Settings = () => {
               value={general.region}
               onChange={setGen('region')}
               options={regionOptions}
-              loading={loading}
             />
             <SelectRow
               title="Timezone"
