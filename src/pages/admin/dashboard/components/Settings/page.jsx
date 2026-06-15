@@ -53,7 +53,7 @@ const Settings = () => {
   const [notifications, setNotifications] = useState({
     emailAlerts:         true,
     weeklyDigest:        false,
-    failedLoginWarnings: true,
+    failedLoginWarnings: true,   // persisted in PlatformSettings
   });
 
   const fetchSettings = useCallback(async () => {
