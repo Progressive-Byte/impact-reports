@@ -94,20 +94,19 @@ const UserManager = () => {
         onUpdated={fetchUsers}
       />
 
-      {/* Page header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <h2 className="text-2xl font-black text-[#0B0D0F] tracking-tight">User Management</h2>
-          <p className="text-sm text-gray-400 mt-0.5">Access control &amp; IT operations</p>
-        </div>
-        <button
-          onClick={() => setShowInvite(true)}
-          className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors"
-        >
-          <SafeIcon icon="FiUserPlus" className="text-base" />
-          Invite User
-        </button>
-      </div>
+      <PageHeader
+        title="User Management"
+        subtitle="Access control & IT operations"
+        action={
+          <button
+            onClick={() => setShowInvite(true)}
+            className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors"
+          >
+            <SafeIcon icon="FiUserPlus" className="text-base" />
+            Invite User
+          </button>
+        }
+      />
 
       {/* Directory card */}
       <div className="bg-white border border-gray-200 rounded-2xl shadow-sm">
