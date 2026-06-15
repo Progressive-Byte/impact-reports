@@ -25,7 +25,7 @@ const AdminLogin = () => {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
-      login(data.token, data.admin);
+      login(data.token, data.admin, data.sessionTimeoutMinutes);
       navigate('/admin/dashboard');
     } catch (err) {
       setError(err.message);
