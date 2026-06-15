@@ -34,6 +34,7 @@ const Settings = () => {
   const [regionOptions, setRegionOptions] = useState([]);
   const [loading,       setLoading]       = useState(true);
   const [saving,        setSaving]        = useState(false);
+  const [exporting,     setExporting]     = useState(false);
 
   const [security, setSecurity] = useState({
     require2fa:      true,
