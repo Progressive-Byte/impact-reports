@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import SafeIcon from '../../../../../../common/SafeIcon';
+import Checkbox from '../../../../common/Checkbox';
 import Pagination from '@/common/Pagination';
-import TableHead from './TableHead';
+import TableHead, { ROW_GRID } from './TableHead';
 import ReportSkeletonRow from './ReportSkeletonRow';
 import LedgerToolbar from './LedgerToolbar';
 
@@ -13,10 +14,60 @@ const STATUS_STYLES = {
   published: 'bg-green-50 text-green-700 border border-green-200',
 };
 
-const ROW_GRID = 'grid grid-cols-[2fr_1fr_1fr_1.5fr_1fr_auto] gap-4 items-center px-6';
+// ── Bulk action bar (mirrors UserManager's BulkActionBar) ─────────────────────
+const BulkActionBar = ({ selectedCount, onBulkDelete }) => {
+  const [confirming, setConfirming] = useState(false);
+
+  const handleDelete = () => {
+    if (!confirming) { setConfirming(true); return; }
+    setConfirming(false);
+    onBulkDelete();
+  };
+
+  return (
+    <div className="flex items-center justify-between px-6 py-3 border-b border-gray-100 bg-gray-50/40">
+      <p className="text-sm font-medium text-gray-500">
+        Selected:{' '}
+        <span className={`font-black ${selectedCount > 0 ? 'text-[#E52321]' : 'text-gray-700'}`}>
+          {selectedCount}
+        </span>
+      </p>
+
+      <div className="flex items-center gap-2">
+        {confirming && (
+          <span className="text-xs text-gray-500 font-medium">
+            Delete {selectedCount} report{selectedCount !== 1 ? 's' : ''}?
+          </span>
+        )}
+        {confirming && (
+          <button
+            onClick={() => setConfirming(false)}
+            className="px-4 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 transition-colors"
+          >
+            Cancel
+          </button>
+        )}
+        <button
+          disabled={selectedCount === 0}
+          onClick={handleDelete}
+          className={`px-4 py-2 border rounded-xl text-xs font-bold transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+            confirming
+              ? 'border-red-400 bg-[#E52321] text-white hover:bg-[#c91d1b]'
+              : selectedCount > 0
+                ? 'border-red-200 text-[#E52321] hover:bg-red-50'
+                : 'border-gray-200 text-gray-400'
+          }`}
+        >
+          {confirming ? 'Confirm Delete' : 'Delete Selected'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// ── RecordLedger ──────────────────────────────────────────────────────────────
 
 const RecordLedger = ({
-  // data
   reports = [],
   loading = false,
   meta    = null,
@@ -25,10 +76,17 @@ const RecordLedger = ({
   urlSearch, urlStatus, urlSort,
   // handlers
   onStatusChange, onSortChange, onPageChange, onRefresh,
+  // selection
+  selected = new Set(),
+  allSelected = false,
+  selectedCount = 0,
+  onToggleAll,
+  onToggleOne,
   // table actions
   isSuperAdmin,
   onEdit,
   onDelete,
+  onBulkDelete,
 }) => {
   const [confirmId, setConfirmId] = useState(null);
   const showSkeleton = loading || isDebouncing;
@@ -41,7 +99,7 @@ const RecordLedger = ({
   return (
     <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
 
-      {/* Toolbar row */}
+      {/* Toolbar */}
       <LedgerToolbar
         inputSearch={inputSearch}
         setInputSearch={setInputSearch}
@@ -93,8 +151,16 @@ const RecordLedger = ({
         </div>
       )}
 
+      {/* Bulk action bar — visible to superadmin only */}
+      {isSuperAdmin && (
+        <BulkActionBar
+          selectedCount={selectedCount}
+          onBulkDelete={onBulkDelete}
+        />
+      )}
+
       {/* Table header */}
-      <TableHead />
+      <TableHead allSelected={allSelected} onToggleAll={onToggleAll} />
 
       {/* Rows */}
       <div className="divide-y divide-gray-100">
@@ -130,8 +196,24 @@ const RecordLedger = ({
               .map(a => a.username || a.email)
               .join(', ');
 
+            const isSelected = selected.has(entry._id);
+
             return (
-              <div key={entry._id} className={`${ROW_GRID} py-4 hover:bg-gray-50/60 transition-colors`}>
+              <div
+                key={entry._id}
+                className={`${ROW_GRID} py-4 transition-colors ${
+                  isSelected ? 'bg-red-50/30' : 'hover:bg-gray-50/60'
+                }`}
+              >
+                {/* Checkbox */}
+                {isSuperAdmin ? (
+                  <Checkbox
+                    checked={isSelected}
+                    onChange={() => onToggleOne?.(entry._id)}
+                  />
+                ) : (
+                  <span />
+                )}
 
                 <p className="text-sm font-bold text-[#0B0D0F] truncate">{entry.projectName}</p>
 
@@ -152,7 +234,7 @@ const RecordLedger = ({
                   {entry.createdAt ? entry.createdAt.slice(0, 10) : '—'}
                 </span>
 
-                {/* Actions */}
+                {/* Row actions */}
                 <div className="flex items-center gap-1 flex-shrink-0">
                   {confirmId === entry._id ? (
                     <>
