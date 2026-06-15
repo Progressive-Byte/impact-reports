@@ -11,7 +11,7 @@ const AdminRegister = () => {
   const navigate   = useNavigate();
   const token      = params.get('token') || '';
 
-  const [invite,   setInvite]   = useState(null);   // { email, role, region }
+  const [invite,   setInvite]   = useState(null);   // { email, role, region, enforceStrongPasswords }
   const [checking, setChecking] = useState(true);
   const [invalid,  setInvalid]  = useState('');
 
