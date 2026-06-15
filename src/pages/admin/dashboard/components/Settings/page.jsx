@@ -116,10 +116,7 @@ const Settings = () => {
         }
       />
 
-      {loading && <SettingsSkeleton />}
-      {loading && null}
-
-      <div className="grid grid-cols-2 gap-5 items-start">
+      {loading ? <SettingsSkeleton /> : <div className="grid grid-cols-2 gap-5 items-start">
 
         <div className="space-y-5">
           <SettingCard icon="FiShield" title="Security">
