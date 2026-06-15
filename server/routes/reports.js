@@ -110,6 +110,75 @@ router.get('/search', async (req, res) => {
   }
 });
 
+// ── GET /api/reports/export ──────────────────────────────────────────
+// Must be before /:id to avoid 'export' being treated as an id
+router.get('/export', async (req, res) => {
+  if (req.admin.role !== 'superadmin') {
+    return res.status(403).json({ message: 'Superadmin only' });
+  }
+  try {
+    const reports = await Report.find({})
+      .populate([
+        { path: 'assignedTo', select: 'username email' },
+        { path: 'createdBy',  select: 'username email' },
+      ])
+      .sort({ createdAt: -1 })
+      .lean();
+
+    const escape = (v) => {
+      const s = v == null ? '' : String(v).replace(/"/g, '""');
+      return /[",\n\r]/.test(s) ? `"${s}"` : s;
+    };
+
+    const headers = [
+      'projectId', 'projectName', 'slug', 'status',
+      'projectLead', 'fiscalYear', 'region', 'sector', 'livesImpacted',
+      'countries', 'projectBackground', 'strategicResponse',
+      'children', 'women', 'men',
+      'deliverables', 'imagesCount', 'thumbnail', 'videoUrl',
+      'milestonesCount', 'stepsCompleted',
+      'assignedTo', 'createdBy', 'createdAt', 'updatedAt',
+    ];
+
+    const rows = reports.map(r => [
+      r.projectId,
+      r.projectName,
+      r.slug,
+      r.status,
+      r.projectLead,
+      r.fiscalYear,
+      r.region,
+      r.sector,
+      r.livesImpacted,
+      (r.countries || []).join('; '),
+      r.projectBackground,
+      r.strategicResponse,
+      r.children,
+      r.women,
+      r.men,
+      (r.deliverables || []).map(d => `${d.label}(${d.count})`).join('; '),
+      (r.images || []).length,
+      r.thumbnail,
+      r.videoUrl,
+      (r.milestones || []).length,
+      (r.stepsCompleted || []).join('; '),
+      (r.assignedTo || []).map(a => a.username).join('; '),
+      r.createdBy?.username || '',
+      r.createdAt ? new Date(r.createdAt).toISOString() : '',
+      r.updatedAt ? new Date(r.updatedAt).toISOString() : '',
+    ].map(escape).join(','));
+
+    const csv = [headers.join(','), ...rows].join('\n');
+    const filename = `reports-export-${new Date().toISOString().split('T')[0]}.csv`;
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(csv);
+  } catch (err) {
+    res.status(500).json({ message: 'Export failed' });
+  }
+});
+
 // ── POST /api/reports ────────────────────────────────────────────────
 router.post('/', async (req, res) => {
   try {
