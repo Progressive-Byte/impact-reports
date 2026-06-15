@@ -1,22 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../common/SafeIcon';
 import SettingCard from './components/SettingCard';
 import ToggleRow from './components/ToggleRow';
 import SelectRow from './components/SelectRow';
 import ActionRow from './components/ActionRow';
+import { publicApiRequest } from '../../../../../services/publicApi';
+
+export const DEFAULT_REGION_KEY = 'platform_defaultRegion';
 
 const TIMEOUT_OPTIONS = [
   { value: '15',  label: '15 minutes' },
   { value: '30',  label: '30 minutes' },
   { value: '60',  label: '1 hour' },
   { value: '120', label: '2 hours' },
-];
-
-const REGION_OPTIONS = [
-  { value: 'global',         label: 'Global' },
-  { value: 'mena',           label: 'MENA' },
-  { value: 'eastern_europe', label: 'Eastern Europe' },
-  { value: 'asia_pacific',   label: 'Asia Pacific' },
 ];
 
 const TIMEZONE_OPTIONS = [
@@ -33,6 +30,10 @@ const CURRENCY_OPTIONS = [
 ];
 
 const Settings = () => {
+  const [regionOptions,  setRegionOptions]  = useState([]);
+  const [loadingRegions, setLoadingRegions] = useState(true);
+  const [saving,         setSaving]         = useState(false);
+
   const [security, setSecurity] = useState({
     require2fa:      true,
     strongPasswords: true,
@@ -40,7 +41,7 @@ const Settings = () => {
   });
 
   const [general, setGeneral] = useState({
-    region:   'global',
+    region:   localStorage.getItem(DEFAULT_REGION_KEY) || '',
     timezone: 'utc3',
     currency: 'usd',
   });
@@ -51,28 +52,57 @@ const Settings = () => {
     failedLoginWarnings: true,
   });
 
+  useEffect(() => {
+    publicApiRequest('/api/config/regions')
+      .then(data => {
+        const opts = (data.regions || []).map(r => ({ value: r, label: r }));
+        setRegionOptions(opts);
+        if (!localStorage.getItem(DEFAULT_REGION_KEY) && opts.length) {
+          setGeneral(p => ({ ...p, region: opts[0].value }));
+        }
+      })
+      .catch(() => toast.error('Failed to load regions'))
+      .finally(() => setLoadingRegions(false));
+  }, []);
+
   const setSec  = (key) => (val) => setSecurity(p => ({ ...p, [key]: val }));
   const setGen  = (key) => (val) => setGeneral(p => ({ ...p, [key]: val }));
   const setNote = (key) => (val) => setNotifications(p => ({ ...p, [key]: val }));
 
+  const handleSave = () => {
+    setSaving(true);
+    try {
+      localStorage.setItem(DEFAULT_REGION_KEY, general.region);
+      toast.success('Settings saved successfully');
+    } catch {
+      toast.error('Failed to save settings');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-5">
-      {/* Page header */}
       <div className="flex items-start justify-between">
         <div>
           <h2 className="text-2xl font-black text-[#0B0D0F] tracking-tight">Settings</h2>
           <p className="text-sm text-gray-400 mt-0.5">Security, notifications &amp; platform defaults</p>
         </div>
-        <button className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors">
-          <SafeIcon icon="FiSave" className="text-base" />
+        <button
+          onClick={handleSave}
+          disabled={saving || loadingRegions}
+          className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors disabled:opacity-60"
+        >
+          {saving
+            ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            : <SafeIcon icon="FiSave" className="text-base" />
+          }
           Save Changes
         </button>
       </div>
 
-      {/* 2-column grid */}
       <div className="grid grid-cols-2 gap-5 items-start">
 
-        {/* Left: Security + General */}
         <div className="space-y-5">
           <SettingCard icon="FiShield" title="Security">
             <ToggleRow
@@ -102,7 +132,8 @@ const Settings = () => {
               description="Applied to new reports & users"
               value={general.region}
               onChange={setGen('region')}
-              options={REGION_OPTIONS}
+              options={regionOptions}
+              loading={loadingRegions}
             />
             <SelectRow
               title="Timezone"
@@ -121,7 +152,6 @@ const Settings = () => {
           </SettingCard>
         </div>
 
-        {/* Right: Notifications + Danger Zone */}
         <div className="space-y-5">
           <SettingCard icon="FiBell" title="Notifications">
             <ToggleRow
