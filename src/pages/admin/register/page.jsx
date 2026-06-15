@@ -33,10 +33,22 @@ const AdminRegister = () => {
       .finally(() => setChecking(false));
   }, [token]);
 
+  const strong = invite?.enforceStrongPasswords ?? false;
+  const pwChecks = strong ? {
+    length:  form.password.length >= 12,
+    number:  /[0-9]/.test(form.password),
+    symbol:  /[^a-zA-Z0-9]/.test(form.password),
+  } : null;
+  const pwValid = !strong || (pwChecks.length && pwChecks.number && pwChecks.symbol);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (form.password !== form.confirm) {
       toast.error('Passwords do not match');
+      return;
+    }
+    if (!pwValid) {
+      toast.error('Password does not meet the strength requirements');
       return;
     }
 
