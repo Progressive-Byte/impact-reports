@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { TrendLine } from '../../../../../common/SvgIcon';
 import SafeIcon from '../../../../../common/SafeIcon';
 import PageHeader from '../../common/PageHeader';
 import { adminApiRequest } from '../../../../../services/adminApi';
 import { useAdminAuth } from '../../../../../context/AdminAuthContext';
+import { getCookie } from '../../../../../utils/cookies';
 import StatCard from './components/StatCard';
 import ActivityLog from './components/ActivityLog';
 import ActiveRegions from './components/ActiveRegions';
