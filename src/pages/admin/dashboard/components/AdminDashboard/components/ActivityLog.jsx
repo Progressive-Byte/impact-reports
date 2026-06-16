@@ -1,15 +1,30 @@
 import { useState } from 'react';
-import { SYSTEM_LOGS, STATUS_TAG, timeAgo } from './utils';
+import { STATUS_TAG, timeAgo } from './utils';
 
-const ActivityLog = ({ recentActivity = [], loading }) => {
+const SYS_TAG = {
+  login:  { label: 'LOGIN',  cls: 'bg-green-600 text-white' },
+  logout: { label: 'LOGOUT', cls: 'bg-orange-500 text-white' },
+};
+
+const ActivityLog = ({ recentActivity = [], activityLogs = [], loading }) => {
   const [activeTab, setActiveTab] = useState('system');
+
+  const systemLogs = activityLogs.map(log => {
+    const t = SYS_TAG[log.type] ?? SYS_TAG.login;
+    return {
+      tag:      t.label,
+      tagClass: t.cls,
+      time:     timeAgo(log.createdAt),
+      msg:      `${log.username} (${log.role}) ${log.type === 'login' ? 'logged in' : 'logged out'}`,
+    };
+  });
 
   const contentLogs = recentActivity.map(r => {
     const tag = STATUS_TAG[r.status] ?? STATUS_TAG.pending;
     return { tag: tag.label, tagClass: tag.cls, time: timeAgo(r.updatedAt), msg: `"${r.projectName}" — ${r.status}` };
   });
 
-  const logs = activeTab === 'system' ? SYSTEM_LOGS : contentLogs;
+  const logs = activeTab === 'system' ? systemLogs : contentLogs;
 
   return (
     <div className="flex-[3] min-w-0 bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
