@@ -15,6 +15,8 @@ Mounted at `/api/auth`.
 
 Authenticate with username and password. Returns a signed JWT that must be passed as `Authorization: Bearer <token>` on all protected routes.
 
+On success, a `login` event is written to the `ActivityLog` collection (username, role, client IP, timestamp). This event appears in the System Log on the Admin Dashboard.
+
 ### Request body
 
 | Field      | Type   | Required | Validation   | Description             | Example      |
