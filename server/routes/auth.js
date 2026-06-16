@@ -64,6 +64,8 @@ router.post('/login', async (req, res) => {
     admin.failedLoginAttempts = 0;
     await admin.save({ validateBeforeSave: false });
 
+    ActivityLog.create({ type: 'login', username: admin.username, role: admin.role, ip: clientIp(req) }).catch(() => {});
+
     res.json({
       token:                signToken(admin._id, expiresInSeconds),
       admin:                admin.toSafeObject(),
