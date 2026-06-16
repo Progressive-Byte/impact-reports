@@ -2,10 +2,12 @@
 
 Mounted at `/api/auth`.
 
-| Method | Path            | Auth   | Body                   | Notes                        |
-| ------ | --------------- | ------ | ---------------------- | ---------------------------- |
-| POST   | `/api/auth/login` | Public | `username`, `password` | Returns JWT + admin object   |
-| GET    | `/api/auth/me`    | Bearer | —                      | Returns current admin profile |
+| Method | Path                  | Auth   | Body                   | Notes                                      |
+| ------ | --------------------- | ------ | ---------------------- | ------------------------------------------ |
+| POST   | `/api/auth/login`     | Public | `username`, `password` | Returns JWT + admin object; writes login log |
+| GET    | `/api/auth/me`        | Bearer | —                      | Returns current admin profile              |
+| POST   | `/api/auth/logout`    | Bearer | —                      | Records logout event; session teardown is client-side |
+| GET    | `/api/auth/logs`      | Bearer | —                      | Last 50 login/logout events, newest first  |
 
 ---
 
