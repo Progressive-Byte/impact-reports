@@ -14,14 +14,18 @@ const AdminDashboard = () => {
   const { admin } = useAdminAuth();
   const isSuperAdmin = admin?.role === 'superadmin';
 
-  const [dashStats, setDashStats] = useState(null);
-  const [loading, setLoading]     = useState(true);
+  const [dashStats,   setDashStats]   = useState(null);
+  const [loading,     setLoading]     = useState(true);
+  const [activityLogs, setActivityLogs] = useState([]);
 
   useEffect(() => {
     adminApiRequest('/api/admin/dashboard')
       .then(data => setDashStats(data))
       .catch(() => {})
       .finally(() => setLoading(false));
+    adminApiRequest('/api/auth/logs')
+      .then(data => setActivityLogs(data.logs || []))
+      .catch(() => {});
   }, []);
 
   const rs         = dashStats?.reportStats;
