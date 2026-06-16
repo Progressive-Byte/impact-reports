@@ -204,3 +204,46 @@ Headers: `Authorization: Bearer <token>`
 curl http://localhost:5173/api/auth/logs \
   -H "Authorization: Bearer $TOKEN"
 ```
+
+---
+
+## `GET /api/auth/logs/export`
+
+Downloads **all** activity logs (no row limit) as a flat file. Only `superadmin` can call this. Used by the **Export Logs** button on the Admin Dashboard.
+
+### Query parameters
+
+| Param    | Type   | Default | Description                                        |
+| -------- | ------ | :-----: | -------------------------------------------------- |
+| `format` | string | `csv`   | `csv` — plain text CSV; `excel` — `.xlsx` workbook |
+
+### Response
+
+Returns a file download with the appropriate `Content-Disposition` header.
+
+- **CSV**: `Content-Type: text/csv`, filename `activity-logs-YYYY-MM-DD.csv`
+- **Excel**: `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, filename `activity-logs-YYYY-MM-DD.xlsx`
+
+Each row contains: `Type`, `Username`, `Role`, `IP`, `Timestamp`.
+
+### Errors
+
+| Status | Condition                          |
+| ------ | ---------------------------------- |
+| `401`  | Token missing, invalid, or expired |
+| `403`  | Caller is not `superadmin`         |
+| `500`  | Export generation failed           |
+
+### curl
+
+```bash
+# Download as CSV
+curl "http://localhost:5173/api/auth/logs/export?format=csv" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o activity-logs.csv
+
+# Download as Excel
+curl "http://localhost:5173/api/auth/logs/export?format=excel" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o activity-logs.xlsx
+```
