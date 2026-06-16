@@ -12,12 +12,6 @@ export function timeAgo(dateStr) {
   return `${Math.floor(hrs / 24)}d ago`;
 }
 
-export const SYSTEM_LOGS = [
-  { tag: 'SYS',  tagClass: 'bg-gray-600 text-gray-200',   time: '10:42:01', msg: 'MongoDB connection established.' },
-  { tag: 'AUTH', tagClass: 'bg-green-600 text-white',      time: '10:45:12', msg: 'Admin session authenticated via JWT.' },
-  { tag: 'SYS',  tagClass: 'bg-gray-600 text-gray-200',   time: '11:15:00', msg: 'Routine backup completed successfully.' },
-];
-
 export const STATUS_TAG = {
   published: { label: 'PUB',  cls: 'bg-blue-500 text-white' },
   draft:     { label: 'EDIT', cls: 'bg-purple-500 text-white' },
