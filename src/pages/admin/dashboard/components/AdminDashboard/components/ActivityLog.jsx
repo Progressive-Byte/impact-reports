@@ -47,7 +47,7 @@ const ActivityLog = ({ recentActivity = [], activityLogs = [], loading }) => {
         ))}
       </div>
 
-      <div className="m-5 bg-[#0f1114] rounded-2xl p-6 min-h-[340px] font-mono">
+      <div className="m-5 bg-[#0f1114] rounded-2xl p-6 h-[340px] overflow-y-auto font-mono scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
         {loading && activeTab === 'content' ? (
           <div className="space-y-4">
             {[1, 2, 3].map(i => (
