@@ -81,4 +81,22 @@ router.get('/me', protect, (req, res) => {
   res.json({ admin: req.admin });
 });
 
+// POST /api/auth/logout — records the logout event; session teardown is client-side
+router.post('/logout', protect, async (req, res) => {
+  try {
+    await ActivityLog.create({ type: 'logout', username: req.admin.username, role: req.admin.role, ip: clientIp(req) });
+  } catch { /* ignore */ }
+  res.json({ message: 'Logged out' });
+});
+
+// GET /api/auth/logs — last 50 login/logout events, newest first
+router.get('/logs', protect, async (_req, res) => {
+  try {
+    const logs = await ActivityLog.find().sort({ createdAt: -1 }).limit(50).lean();
+    res.json({ logs });
+  } catch {
+    res.status(500).json({ message: 'Failed to load activity logs' });
+  }
+});
+
 export default router;
