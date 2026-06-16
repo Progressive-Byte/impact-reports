@@ -100,4 +100,43 @@ router.get('/logs', protect, async (_req, res) => {
   }
 });
 
+// GET /api/auth/logs/export?format=csv|excel — superadmin only, downloads all logs
+router.get('/logs/export', protect, async (req, res) => {
+  if (req.admin.role !== 'superadmin') {
+    return res.status(403).json({ message: 'Superadmin only' });
+  }
+  try {
+    const logs = await ActivityLog.find().sort({ createdAt: -1 }).lean();
+    const format   = req.query.format === 'excel' ? 'excel' : 'csv';
+    const date     = new Date().toISOString().split('T')[0];
+    const filename = `activity-logs-${date}`;
+
+    const rows = logs.map(l => ({
+      Type:      l.type,
+      Username:  l.username,
+      Role:      l.role      || '',
+      IP:        l.ip        || '',
+      Timestamp: new Date(l.createdAt).toISOString(),
+    }));
+
+    if (format === 'csv') {
+      const header = 'Type,Username,Role,IP,Timestamp\n';
+      const body   = rows.map(r => `${r.Type},${r.Username},${r.Role},${r.IP},${r.Timestamp}`).join('\n');
+      res.setHeader('Content-Type', 'text/csv');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}.csv"`);
+      return res.send(header + body);
+    }
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Activity Logs');
+    const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}.xlsx"`);
+    return res.send(buf);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 export default router;
