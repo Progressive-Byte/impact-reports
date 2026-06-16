@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SafeIcon from '../../../../common/SafeIcon';
 
 const ReportCard = ({ report }) => (
-  <div className="group relative rounded-[2rem] overflow-hidden border border-gray-100 bg-[#000000] shadow-[0_18px_50px_rgba(0,0,0,0.06)] hover:shadow-[0_30px_80px_rgba(0,0,0,0.14)] transition-all duration-500 text-left">
+  <Link to={`/report/${report.slug || report.id}`} className="group relative rounded-[2rem] overflow-hidden border border-gray-100 bg-[#000000] shadow-[0_18px_50px_rgba(0,0,0,0.06)] hover:shadow-[0_30px_80px_rgba(0,0,0,0.14)] transition-all duration-500 text-left block cursor-pointer">
     <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10">
       <img src={report.image} alt={report.title} className="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-1000" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(0,0,0,0.65),transparent_100%)]" />
@@ -36,13 +36,13 @@ const ReportCard = ({ report }) => (
             <p className="text-[10px] font-black uppercase tracking-widest text-white/60">Impact</p>
             <p className="text-lg font-black text-white tracking-tight">{report.metrics.beneficiaries.toLocaleString()}</p>
           </div>
-          <Link to={`/report/${report.slug || report.id}`} className="inline-flex items-center gap-2 rounded-full bg-white/10 hover:bg-[#E52321] border border-white/10 hover:border-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white/10 group-hover:bg-[#E52321] border border-white/10 group-hover:border-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all">
             <SafeIcon icon="FiArrowRight" className="text-base" />
-          </Link>
+          </span>
         </div>
       </div>
     </div>
-  </div>
+  </Link>
 );
 
 export default ReportCard;
