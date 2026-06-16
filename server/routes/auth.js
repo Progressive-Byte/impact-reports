@@ -3,7 +3,11 @@ import jwt from 'jsonwebtoken';
 import Admin from '../models/Admin.js';
 import PlatformSettings from '../models/PlatformSettings.js';
 import Notification from '../models/Notification.js';
+import ActivityLog from '../models/ActivityLog.js';
 import { protect } from '../middleware/auth.js';
+
+const clientIp = (req) =>
+  req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
 
 const FAILED_LOGIN_THRESHOLD = 3;
 
