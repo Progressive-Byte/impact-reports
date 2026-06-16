@@ -78,7 +78,13 @@ export const AdminAuthProvider = ({ children }) => {
     startWatcher(sessionTimeoutMinutes);
   };
 
-  const logout   = () => clearSession();
+  const logout = () => {
+    const token = getCookie('adminToken');
+    if (token) {
+      fetch('/api/auth/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } }).catch(() => {});
+    }
+    clearSession();
+  };
   const getToken = () => getCookie('adminToken');
 
   return (
