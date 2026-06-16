@@ -116,3 +116,90 @@ Headers: `Authorization: Bearer <token>`
 curl http://localhost:5173/api/auth/me \
   -H "Authorization: Bearer $TOKEN"
 ```
+
+---
+
+## `POST /api/auth/logout`
+
+Records a `logout` event in the `ActivityLog` collection. Session teardown (cookie deletion, localStorage clear) is handled client-side — this endpoint only exists to persist the event for the System Log.
+
+Headers: `Authorization: Bearer <token>`
+
+### Response `200`
+
+```json
+{ "message": "Logged out" }
+```
+
+### Errors
+
+| Status | Condition                          |
+| ------ | ---------------------------------- |
+| `401`  | Token missing, invalid, or expired |
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/auth/logout \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
+## `GET /api/auth/logs`
+
+Returns the 50 most recent login/logout events across all admin accounts, newest first. Used to populate the **System Log** tab on the Admin Dashboard.
+
+Headers: `Authorization: Bearer <token>`
+
+### ActivityLog object
+
+```json
+{
+  "_id":       "6650a1b2c3d4e5f607a8b9e0",
+  "type":      "login",
+  "username":  "sadekur",
+  "role":      "admin",
+  "ip":        "127.0.0.1",
+  "createdAt": "2026-06-16T10:45:00.000Z",
+  "updatedAt": "2026-06-16T10:45:00.000Z"
+}
+```
+
+| Field      | Values              | Description                     |
+| ---------- | ------------------- | ------------------------------- |
+| `type`     | `login` / `logout`  | Event type                      |
+| `username` | string              | Admin username at time of event |
+| `role`     | `admin` / `superadmin` | Role at time of event        |
+| `ip`       | string              | Client IP (`x-forwarded-for` header takes precedence) |
+
+### Response `200`
+
+```json
+{
+  "logs": [
+    {
+      "_id":       "6650a1b2c3d4e5f607a8b9e0",
+      "type":      "login",
+      "username":  "sadekur",
+      "role":      "admin",
+      "ip":        "127.0.0.1",
+      "createdAt": "2026-06-16T10:45:00.000Z"
+    }
+  ]
+}
+```
+
+### Errors
+
+| Status | Condition                          |
+| ------ | ---------------------------------- |
+| `401`  | Token missing, invalid, or expired |
+| `500`  | Database error                     |
+
+### curl
+
+```bash
+curl http://localhost:5173/api/auth/logs \
+  -H "Authorization: Bearer $TOKEN"
+```
