@@ -16,9 +16,11 @@ const AdminDashboard = () => {
   const { admin } = useAdminAuth();
   const isSuperAdmin = admin?.role === 'superadmin';
 
-  const [dashStats,   setDashStats]   = useState(null);
-  const [loading,     setLoading]     = useState(true);
+  const [dashStats,    setDashStats]    = useState(null);
+  const [loading,      setLoading]      = useState(true);
   const [activityLogs, setActivityLogs] = useState([]);
+  const [exporting,    setExporting]    = useState(false);
+  const [exportFormat, setExportFormat] = useState('csv');
 
   useEffect(() => {
     adminApiRequest('/api/admin/dashboard')
@@ -29,6 +31,33 @@ const AdminDashboard = () => {
       .then(data => setActivityLogs(data.logs || []))
       .catch(() => {});
   }, []);
+
+  const handleExportLogs = async () => {
+    setExporting(true);
+    try {
+      const token    = getCookie('adminToken');
+      const response = await fetch(`/api/auth/logs/export?format=${exportFormat}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.message || 'Export failed');
+      }
+      const blob = await response.blob();
+      const ext  = exportFormat === 'excel' ? 'xlsx' : 'csv';
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement('a');
+      a.href     = url;
+      a.download = `activity-logs-${new Date().toISOString().split('T')[0]}.${ext}`;
+      a.click();
+      URL.revokeObjectURL(url);
+      toast.success('Logs exported');
+    } catch (err) {
+      toast.error(err.message || 'Export failed');
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const rs         = dashStats?.reportStats;
   const regionData = dashStats?.regionData ?? [];
