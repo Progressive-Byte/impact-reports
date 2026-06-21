@@ -26,7 +26,7 @@ const AdminLogin = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
       login(data.token, data.admin, data.sessionTimeoutMinutes);
-      navigate('/admin/dashboard');
+      navigate('/alkabirimpact/dashboard');
     } catch (err) {
       setError(err.message);
     } finally {
