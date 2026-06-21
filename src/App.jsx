@@ -5,6 +5,7 @@ import Portal from './pages/web/portal/page';
 import ReportDetail from './pages/web/report-detail/page';
 import AdminLogin from './pages/admin/login/page';
 import AdminRegister from './pages/admin/register/page';
+import AdminResetPassword from './pages/admin/reset-password/page';
 import AdminDashboard from './pages/admin/dashboard/page';
 import AdminProtectedRoute from './common/AdminProtectedRoute';
 import { AdminAuthProvider } from './context/AdminAuthContext';
