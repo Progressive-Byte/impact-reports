@@ -44,7 +44,7 @@ const AdminOverview = () => {
       <aside className="hidden lg:flex flex-col bg-[#1F1F22] border-r border-white/5 flex-shrink-0 w-64">
         <Sidebar
           section={section}
-          setSection={id => navigate(`/admin/dashboard/${id}`)}
+          setSection={id => navigate(`/alkabirimpact/dashboard/${id}`)}
           setSidebarOpen={setSidebarOpen}
           reportCount={reportCount}
         />
