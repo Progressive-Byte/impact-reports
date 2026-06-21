@@ -15,10 +15,10 @@ function App() {
       <Router>
         <Routes>
           {/* Admin routes — no public Layout */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin/register" element={<AdminRegister />} />
+          <Route path="/alkabirimpact/login" element={<AdminLogin />} />
+          <Route path="/alkabirimpact/register" element={<AdminRegister />} />
           <Route
-            path="/admin/dashboard"
+            path="/alkabirimpact/dashboard"
             element={
               <AdminProtectedRoute>
                 <AdminDashboard />
@@ -26,7 +26,7 @@ function App() {
             }
           />
           <Route
-            path="/admin/dashboard/:section"
+            path="/alkabirimpact/dashboard/:section"
             element={
               <AdminProtectedRoute>
                 <AdminDashboard />
