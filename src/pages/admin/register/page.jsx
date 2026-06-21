@@ -90,7 +90,7 @@ const AdminRegister = () => {
           <h2 className="text-xl font-black text-white mb-2">Invite Invalid</h2>
           <p className="text-gray-400 text-sm mb-6">{invalid}</p>
           <button
-            onClick={() => navigate('/admin/login')}
+            onClick={() => navigate('/alkabirimpact/login')}
             className="text-sm font-bold text-[#E52321] hover:underline"
           >
             Back to Login
