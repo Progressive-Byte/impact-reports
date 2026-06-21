@@ -12,7 +12,7 @@ const AdminProtectedRoute = ({ children }) => {
     );
   }
 
-  return admin ? children : <Navigate to="/admin/login" replace />;
+  return admin ? children : <Navigate to="/alkabirimpact/login" replace />;
 };
 
 export default AdminProtectedRoute;
