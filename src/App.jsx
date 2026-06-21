@@ -17,7 +17,6 @@ function App() {
           {/* Admin routes — no public Layout */}
           <Route path="/alkabirimpact/login" element={<AdminLogin />} />
           <Route path="/alkabirimpact/register" element={<AdminRegister />} />
-          <Route path="/alkabirimpact/reset-password" element={<AdminResetPassword />} />
           <Route
             path="/alkabirimpact/dashboard"
             element={
