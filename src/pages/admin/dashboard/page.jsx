@@ -34,8 +34,8 @@ const AdminOverview = () => {
 
   useEffect(() => { fetchReportCount(); }, [fetchReportCount]);
 
-  const handleLogout   = () => { logout(); navigate('/admin/login'); };
-  const handleNavigate = (id) => { navigate(`/admin/dashboard/${id}`); setSidebarOpen(false); };
+  const handleLogout   = () => { logout(); navigate('/alkabirimpact/login'); };
+  const handleNavigate = (id) => { navigate(`/alkabirimpact/dashboard/${id}`); setSidebarOpen(false); };
   const currentNav     = NAV.find(n => n.id === section);
 
   return (
