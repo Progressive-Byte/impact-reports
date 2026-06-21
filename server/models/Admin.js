@@ -11,10 +11,8 @@ const adminSchema = new mongoose.Schema(
     isActive:           { type: Boolean, default: true },
     lastLogin:          { type: Date },
     failedLoginAttempts:{ type: Number, default: 0 },
-    twoFactorCode:      { type: String },
-    twoFactorExpires:   { type: Date },
-    passwordResetToken: { type: String },
-    passwordResetExpires:{ type: Date },
+    resetOTPCode:       { type: String },
+    resetOTPExpires:    { type: Date },
   },
   { timestamps: true }
 );
