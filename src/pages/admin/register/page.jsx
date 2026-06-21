@@ -62,7 +62,7 @@ const AdminRegister = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Registration failed');
       toast.success('Account created! Redirecting to login…');
-      setTimeout(() => navigate('/admin/login'), 1800);
+      setTimeout(() => navigate('/alkabirimpact/login'), 1800);
     } catch (err) {
       toast.error(err.message);
     } finally {
