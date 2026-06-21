@@ -49,8 +49,8 @@ const UserMenu = ({ admin, onLogout }) => {
             className="absolute right-0 top-full mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden z-50"
           >
             {[
-              { icon: 'FiUser',     label: 'View Profile', path: '/admin/dashboard/settings' },
-              { icon: 'FiSettings', label: 'Settings',     path: '/admin/dashboard/settings' },
+              { icon: 'FiUser',     label: 'View Profile', path: '/alkabirimpact/dashboard/settings' },
+              { icon: 'FiSettings', label: 'Settings',     path: '/alkabirimpact/dashboard/settings' },
             ].map(({ icon, label, path }) => (
               <button
                 key={label}
