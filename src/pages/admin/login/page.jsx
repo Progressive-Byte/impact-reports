@@ -87,13 +87,13 @@ const AdminLogin = () => {
   };
 
   // ── 2FA ──
-  const handle2faVerify = async (code) => {
+  const handle2faVerify = async (code, method = 'email') => {
     clearError();
     setLoading(true);
     try {
       const res  = await fetch('/api/auth/verify-2fa', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: twoFaUsername, code }),
+        body: JSON.stringify({ username: twoFaUsername, code, method }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Verification failed');
@@ -101,8 +101,12 @@ const AdminLogin = () => {
       navigate('/alkabirimpact/dashboard');
     } catch (err) {
       setError(err.message);
-      setTwoFaOtp(['', '', '', '', '', '']);
-      setTimeout(() => twoFaRefs.current[0]?.focus(), 50);
+      if (method === 'email') {
+        setTwoFaOtp(['', '', '', '', '', '']);
+        setTimeout(() => twoFaRefs.current[0]?.focus(), 50);
+      } else {
+        setTwoFaCode('');
+      }
     } finally {
       setLoading(false);
     }
@@ -114,7 +118,7 @@ const AdminLogin = () => {
     next[idx]  = val.slice(-1);
     setTwoFaOtp(next);
     if (val && idx < 5) twoFaRefs.current[idx + 1]?.focus();
-    if (next.every(d => d !== '')) setTimeout(() => handle2faVerify(next.join('')), 60);
+    if (next.every(d => d !== '')) setTimeout(() => handle2faVerify(next.join(''), 'email'), 60);
   };
 
   const handle2faOtpKeyDown = (idx, e) => {
@@ -129,13 +133,23 @@ const AdminLogin = () => {
     pasted.split('').forEach((d, i) => { next[i] = d; });
     setTwoFaOtp(next);
     twoFaRefs.current[Math.min(pasted.length, 5)]?.focus();
-    if (pasted.length === 6) setTimeout(() => handle2faVerify(pasted), 60);
+    if (pasted.length === 6) setTimeout(() => handle2faVerify(pasted, 'email'), 60);
   };
 
   const handle2faOtpSubmit = (e) => {
     e.preventDefault();
     const code = twoFaOtp.join('');
-    if (code.length === 6) handle2faVerify(code);
+    if (code.length === 6) handle2faVerify(code, 'email');
+  };
+
+  const handle2faCodeChange = (val) => {
+    if (!/^\d*$/.test(val)) return;
+    setTwoFaCode(val.slice(0, 6));
+  };
+
+  const handle2faCodeSubmit = (e) => {
+    e.preventDefault();
+    if (twoFaCode.length === 6) handle2faVerify(twoFaCode, 'totp');
   };
 
   const handle2faResend = async () => {
