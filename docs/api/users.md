@@ -366,3 +366,33 @@ Permanently remove an admin account from the database. This action is irreversib
 curl -X DELETE http://localhost:5173/api/admin/admins/6650a1b2c3d4e5f607a8b9c0 \
   -H "Authorization: Bearer $TOKEN"
 ```
+
+---
+
+## `POST /api/admin/backfill-slugs`
+
+One-off maintenance endpoint. Iterates all `Report` documents that have no `slug` field and generates one from their `projectName` using the same `toSlug()` + `uniqueSlug()` logic used at creation time. Safe to run multiple times — reports with an existing slug are skipped.
+
+Requires **superadmin** role. Also available as `npm run backfill:slugs` from the CLI.
+
+### Response `200`
+
+```json
+{ "updated": 7 }
+```
+
+`updated` is the number of reports that received a new slug.
+
+### Errors
+
+| Status | Condition                   |
+| ------ | --------------------------- |
+| `403`  | Caller is not `superadmin`  |
+| `500`  | Database error              |
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/admin/backfill-slugs \
+  -H "Authorization: Bearer $TOKEN"
+```
