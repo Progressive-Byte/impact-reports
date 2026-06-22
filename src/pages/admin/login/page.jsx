@@ -34,7 +34,9 @@ const AdminLogin = () => {
   const [showNewPw,      setShowNewPw]      = useState(false);
   const [resending,      setResending]      = useState(false);
   const [twoFaUsername,  setTwoFaUsername]  = useState('');
+  const [twoFaMethods,   setTwoFaMethods]   = useState(['email']);
   const [twoFaOtp,       setTwoFaOtp]       = useState(['', '', '', '', '', '']);
+  const [twoFaCode,      setTwoFaCode]      = useState('');
   const [twoFaResending, setTwoFaResending] = useState(false);
 
   const otpRefs   = useRef([]);
