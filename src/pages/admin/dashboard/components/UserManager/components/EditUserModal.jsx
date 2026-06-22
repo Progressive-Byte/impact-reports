@@ -13,7 +13,8 @@ const REGION_OPTIONS = [
 ];
 
 const ROLE_OPTIONS = [
-  { value: 'admin',      label: 'Admin' },
+  { value: 'editor',     label: 'Editor' },
+  { value: 'viewer',     label: 'Viewer' },
   { value: 'superadmin', label: 'Superadmin' },
 ];
 
