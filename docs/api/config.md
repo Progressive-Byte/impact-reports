@@ -39,7 +39,8 @@ Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the 
   "sessionTimeoutMinutes":  30,
   "enforceStrongPasswords": false,
   "failedLoginWarnings":    true,
-  "weeklyDigest":           false
+  "weeklyDigest":           false,
+  "require2fa":             false
 }
 ```
 
@@ -50,6 +51,7 @@ Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the 
 | `enforceStrongPasswords` | boolean | `false` | When `true`, invite registration requires min 12 chars + number + symbol    |
 | `failedLoginWarnings`    | boolean | `true`  | When `true`, 3 consecutive wrong-password attempts create a notification    |
 | `weeklyDigest`           | boolean | `false` | When `true`, a summary email is sent to all superadmins every Monday 08:00  |
+| `require2fa`             | boolean | `false` | When `true`, all logins require a 6-digit OTP sent to the admin's email     |
 
 ---
 
