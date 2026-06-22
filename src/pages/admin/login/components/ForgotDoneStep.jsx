@@ -1,4 +1,4 @@
-import SafeIcon from '../../../common/SafeIcon';
+import SafeIcon from '../../../../common/SafeIcon';
 
 const ForgotDoneStep = () => (
   <div className="text-center py-4">
