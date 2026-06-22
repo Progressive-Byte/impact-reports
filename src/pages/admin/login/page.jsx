@@ -290,7 +290,8 @@ const AdminLogin = () => {
     handleLogin, handleForgotEmail,
     handleOtpChange, handleOtpKeyDown, handleOtpPaste, handleOtpSubmit,
     handleResendOtp, handleResetPassword,
-    twoFaOtp, twoFaRefs, twoFaResending,
+    twoFaMethods, twoFaOtp, twoFaRefs, twoFaResending,
+    twoFaCode, handle2faCodeChange, handle2faCodeSubmit,
     handle2faOtpChange, handle2faOtpKeyDown, handle2faOtpPaste, handle2faOtpSubmit,
     handle2faResend,
   };
