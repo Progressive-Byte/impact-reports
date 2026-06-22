@@ -59,6 +59,18 @@ router.post('/login', async (req, res) => {
     }
 
     const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+
+    // 2FA — send OTP and defer JWT until code is verified
+    if (settings?.require2fa) {
+      const code = String(Math.floor(100000 + Math.random() * 900000));
+      admin.loginOTPCode        = hashCode(code);
+      admin.loginOTPExpires     = new Date(Date.now() + 5 * 60 * 1000); // 5 min
+      admin.failedLoginAttempts = 0;
+      await admin.save({ validateBeforeSave: false });
+      sendLoginOTPEmail({ to: admin.email, code }).catch(() => {});
+      return res.json({ twoFaRequired: true });
+    }
+
     const sessionTimeoutMinutes = settings?.sessionTimeoutMinutes ?? 30;
     const expiresInSeconds      = sessionTimeoutMinutes * 60;
 
@@ -73,6 +85,65 @@ router.post('/login', async (req, res) => {
       admin:                admin.toSafeObject(),
       sessionTimeoutMinutes,
     });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// POST /api/auth/verify-2fa — validates login OTP, returns full JWT
+router.post('/verify-2fa', async (req, res) => {
+  try {
+    const { username, code } = req.body;
+    if (!username || !code) {
+      return res.status(400).json({ message: 'Username and code are required' });
+    }
+    const admin = await Admin.findOne({ username });
+    if (
+      !admin || !admin.isActive ||
+      !admin.loginOTPCode || !admin.loginOTPExpires ||
+      admin.loginOTPExpires < new Date()
+    ) {
+      return res.status(400).json({ message: 'Code is invalid or has expired' });
+    }
+    if (admin.loginOTPCode !== hashCode(code.trim())) {
+      return res.status(400).json({ message: 'Incorrect verification code' });
+    }
+
+    admin.loginOTPCode    = undefined;
+    admin.loginOTPExpires = undefined;
+    admin.lastLogin           = new Date();
+    admin.failedLoginAttempts = 0;
+    await admin.save({ validateBeforeSave: false });
+
+    ActivityLog.create({ type: 'login', username: admin.username, role: admin.role, ip: clientIp(req) }).catch(() => {});
+
+    const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+    const sessionTimeoutMinutes = settings?.sessionTimeoutMinutes ?? 30;
+    const expiresInSeconds      = sessionTimeoutMinutes * 60;
+
+    res.json({
+      token:                signToken(admin._id, expiresInSeconds),
+      admin:                admin.toSafeObject(),
+      sessionTimeoutMinutes,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// POST /api/auth/resend-2fa-otp — regenerates login OTP for an active 2FA session
+router.post('/resend-2fa-otp', async (req, res) => {
+  try {
+    const { username } = req.body;
+    const admin = await Admin.findOne({ username });
+    if (admin && admin.isActive) {
+      const code = String(Math.floor(100000 + Math.random() * 900000));
+      admin.loginOTPCode    = hashCode(code);
+      admin.loginOTPExpires = new Date(Date.now() + 5 * 60 * 1000);
+      await admin.save({ validateBeforeSave: false });
+      sendLoginOTPEmail({ to: admin.email, code }).catch(() => {});
+    }
+    res.json({ message: 'If a 2FA session is active, a new code has been sent.' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
