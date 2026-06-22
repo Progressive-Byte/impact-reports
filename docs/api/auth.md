@@ -263,3 +263,187 @@ curl "http://localhost:5173/api/auth/logs/export?format=excel" \
   -H "Authorization: Bearer $TOKEN" \
   -o activity-logs.xlsx
 ```
+
+---
+
+## `POST /api/auth/verify-2fa`
+
+Completes login when **Require 2FA** is enabled. Called after a successful `POST /login` that returned `{ twoFaRequired: true }`.
+
+### Request body
+
+| Field      | Type   | Required | Description                              |
+| ---------- | ------ | :------: | ---------------------------------------- |
+| `username` | string | Yes      | The username used in the login attempt   |
+| `code`     | string | Yes      | The 6-digit OTP sent to the admin email  |
+
+```json
+{ "username": "admin", "code": "482931" }
+```
+
+### Response `200`
+
+Same shape as the normal `POST /login` success response (token + admin + sessionTimeoutMinutes).
+
+### Errors
+
+| Status | Condition                                              |
+| ------ | ------------------------------------------------------ |
+| `400`  | `username` or `code` missing                           |
+| `400`  | No active 2FA session found, OTP expired, or wrong code |
+| `500`  | Database error                                         |
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/auth/verify-2fa \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","code":"482931"}'
+```
+
+---
+
+## `POST /api/auth/resend-2fa-otp`
+
+Regenerates and re-sends the login OTP during an active 2FA session. The previous code is invalidated and a fresh 5-minute window starts.
+
+Always returns `200` regardless of whether the username is valid, to avoid leaking account existence.
+
+### Request body
+
+| Field      | Type   | Required | Description                            |
+| ---------- | ------ | :------: | -------------------------------------- |
+| `username` | string | Yes      | The username of the 2FA session owner  |
+
+```json
+{ "username": "admin" }
+```
+
+### Response `200`
+
+```json
+{ "message": "If a 2FA session is active, a new code has been sent." }
+```
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/auth/resend-2fa-otp \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin"}'
+```
+
+---
+
+## `POST /api/auth/forgot-password`
+
+Sends a 6-digit OTP to the admin's registered email to begin the password reset flow. Always returns `200` regardless of whether the email is registered, to prevent account enumeration.
+
+The OTP expires in **10 minutes**. If the admin is found and active, the hashed OTP is stored on the `Admin` document in `resetOTPCode` / `resetOTPExpires` and cleared after successful verification.
+
+### Request body
+
+| Field   | Type   | Required | Description                       |
+| ------- | ------ | :------: | --------------------------------- |
+| `email` | string | Yes      | The admin's registered email      |
+
+```json
+{ "email": "admin@humanconcernusa.org" }
+```
+
+### Response `200`
+
+```json
+{ "message": "If that email is registered, a verification code has been sent." }
+```
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/auth/forgot-password \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@humanconcernusa.org"}'
+```
+
+---
+
+## `POST /api/auth/verify-reset-otp`
+
+Validates the 6-digit reset OTP. On success, returns a short-lived `resetToken` (JWT with `pendingReset: true`, valid for **15 minutes**) that must be passed to `POST /reset-password`.
+
+The OTP is cleared from the database immediately after successful verification.
+
+### Request body
+
+| Field   | Type   | Required | Description                    |
+| ------- | ------ | :------: | ------------------------------ |
+| `email` | string | Yes      | The admin's registered email   |
+| `code`  | string | Yes      | The 6-digit OTP from the email |
+
+```json
+{ "email": "admin@humanconcernusa.org", "code": "739201" }
+```
+
+### Response `200`
+
+```json
+{ "resetToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+```
+
+### Errors
+
+| Status | Condition                                            |
+| ------ | ---------------------------------------------------- |
+| `400`  | `email` or `code` missing                            |
+| `400`  | No OTP found, OTP expired, or incorrect code         |
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/auth/verify-reset-otp \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@humanconcernusa.org","code":"739201"}'
+```
+
+---
+
+## `POST /api/auth/reset-password`
+
+Sets a new password using the `resetToken` issued by `POST /verify-reset-otp`. The token is a single-use JWT (`pendingReset: true`) valid for 15 minutes.
+
+### Request body
+
+| Field        | Type   | Required | Validation        | Description                              |
+| ------------ | ------ | :------: | ----------------- | ---------------------------------------- |
+| `resetToken` | string | Yes      | valid JWT         | Token from `POST /verify-reset-otp`      |
+| `password`   | string | Yes      | min 6 characters  | The new password (hashed before storage) |
+
+```json
+{
+  "resetToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "password":   "newSecurePass123"
+}
+```
+
+### Response `200`
+
+```json
+{ "message": "Password updated successfully. You can now log in." }
+```
+
+### Errors
+
+| Status | Condition                                          |
+| ------ | -------------------------------------------------- |
+| `400`  | `resetToken` or `password` missing                 |
+| `400`  | Password shorter than 6 characters                 |
+| `400`  | Token expired, invalid signature, or not a reset token |
+| `400`  | Admin not found or inactive                        |
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/auth/reset-password \
+  -H "Content-Type: application/json" \
+  -d '{"resetToken":"<token>","password":"newSecurePass123"}'
+```
