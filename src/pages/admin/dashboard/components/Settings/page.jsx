@@ -71,6 +71,7 @@ const Settings = () => {
       }));
       setSecurity(p => ({
         ...p,
+        require2fa:      settingsData.require2fa             ?? false,
         sessionTimeout:  String(settingsData.sessionTimeoutMinutes ?? 30),
         strongPasswords: settingsData.enforceStrongPasswords ?? false,
       }));
