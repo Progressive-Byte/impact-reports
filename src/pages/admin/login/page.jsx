@@ -71,7 +71,9 @@ const AdminLogin = () => {
       if (!res.ok) throw new Error(data.message || 'Login failed');
       if (data.twoFaRequired) {
         setTwoFaUsername(form.username);
+        setTwoFaMethods(data.methods || ['email']);
         setTwoFaOtp(['', '', '', '', '', '']);
+        setTwoFaCode('');
         setStep('2fa-otp');
         return;
       }
