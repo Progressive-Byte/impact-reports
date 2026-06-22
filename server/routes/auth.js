@@ -118,27 +118,50 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// POST /api/auth/verify-2fa — validates login OTP, returns full JWT
+// POST /api/auth/verify-2fa — validates login OTP or TOTP code, returns full JWT
 router.post('/verify-2fa', async (req, res) => {
   try {
-    const { username, code } = req.body;
+    const { username, code, method = 'email' } = req.body;
     if (!username || !code) {
       return res.status(400).json({ message: 'Username and code are required' });
     }
+
     const admin = await Admin.findOne({ username });
-    if (
-      !admin || !admin.isActive ||
-      !admin.loginOTPCode || !admin.loginOTPExpires ||
-      admin.loginOTPExpires < new Date()
-    ) {
-      return res.status(400).json({ message: 'Code is invalid or has expired' });
-    }
-    if (admin.loginOTPCode !== hashCode(code.trim())) {
-      return res.status(400).json({ message: 'Incorrect verification code' });
+    if (!admin || !admin.isActive) {
+      return res.status(400).json({ message: 'Invalid session' });
     }
 
-    admin.loginOTPCode    = undefined;
-    admin.loginOTPExpires = undefined;
+    if (method === 'totp') {
+      // ── Authenticator app ──
+      const rate = totpRateCheck(username);
+      if (!rate.allowed) {
+        return res.status(429).json({
+          message: `Too many attempts. Try again in ${rate.remaining} minute${rate.remaining === 1 ? '' : 's'}.`,
+        });
+      }
+      if (!admin.totpEnabled || !admin.totpSecret) {
+        return res.status(400).json({ message: 'Authenticator app is not configured for this account' });
+      }
+      if (!authenticator.verify({ token: code.trim(), secret: admin.totpSecret })) {
+        return res.status(400).json({ message: 'Incorrect code. Check your authenticator app.' });
+      }
+      if (admin.totpLastUsedCode === code.trim()) {
+        return res.status(400).json({ message: 'This code has already been used. Wait for the next one.' });
+      }
+      admin.totpLastUsedCode = code.trim();
+      totpRateClear(username);
+    } else {
+      // ── Email OTP ──
+      if (!admin.loginOTPCode || !admin.loginOTPExpires || admin.loginOTPExpires < new Date()) {
+        return res.status(400).json({ message: 'Code is invalid or has expired' });
+      }
+      if (admin.loginOTPCode !== hashCode(code.trim())) {
+        return res.status(400).json({ message: 'Incorrect verification code' });
+      }
+      admin.loginOTPCode    = undefined;
+      admin.loginOTPExpires = undefined;
+    }
+
     admin.lastLogin           = new Date();
     admin.failedLoginAttempts = 0;
     await admin.save({ validateBeforeSave: false });
@@ -147,10 +170,9 @@ router.post('/verify-2fa', async (req, res) => {
 
     const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
     const sessionTimeoutMinutes = settings?.sessionTimeoutMinutes ?? 30;
-    const expiresInSeconds      = sessionTimeoutMinutes * 60;
 
     res.json({
-      token:                signToken(admin._id, expiresInSeconds),
+      token:                signToken(admin._id, sessionTimeoutMinutes * 60),
       admin:                admin.toSafeObject(),
       sessionTimeoutMinutes,
     });
