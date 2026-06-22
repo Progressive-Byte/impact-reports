@@ -14,6 +14,7 @@ import publicRoutes from './routes/public.js';
 import configRoutes from './routes/config.js';
 import notificationRoutes from './routes/notifications.js';
 import { startWeeklyDigestCron } from './cron/weeklyDigest.js';
+import { startLogArchivalCron } from './cron/logArchival.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
