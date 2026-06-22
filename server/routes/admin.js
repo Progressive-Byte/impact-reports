@@ -191,8 +191,8 @@ router.patch('/admins/:id/role', async (req, res) => {
       return res.status(403).json({ message: 'Only superadmin can change roles' });
     }
     const { role } = req.body;
-    if (!['superadmin', 'admin'].includes(role)) {
-      return res.status(400).json({ message: 'Role must be superadmin or admin' });
+    if (!['superadmin', 'editor', 'viewer'].includes(role)) {
+      return res.status(400).json({ message: 'Role must be superadmin, editor, or viewer' });
     }
     const admin = await Admin.findByIdAndUpdate(
       req.params.id,
