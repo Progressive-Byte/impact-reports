@@ -6,7 +6,8 @@ import CustomSelect from '../../ReportsModule/reports/CustomSelect';
 import { adminApiRequest } from '../../../../../../services/adminApi';
 
 const ROLE_OPTIONS = [
-  { value: 'admin',      label: 'Admin' },
+  { value: 'editor',     label: 'Editor' },
+  { value: 'viewer',     label: 'Viewer' },
   { value: 'superadmin', label: 'Superadmin' },
 ];
 
