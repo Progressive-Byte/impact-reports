@@ -18,7 +18,7 @@ const REGION_OPTIONS = [
   { value: 'asia_pacific',   label: 'Asia Pacific' },
 ];
 
-const INITIAL = { email: '', role: 'admin', region: 'global' };
+const INITIAL = { email: '', role: 'editor', region: 'global' };
 
 const InviteModal = ({ open, onClose, onInviteSent }) => {
   const [form,    setForm]    = useState(INITIAL);
