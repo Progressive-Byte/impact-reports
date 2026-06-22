@@ -379,6 +379,189 @@ curl -X DELETE http://localhost:5173/api/admin/admins/6650a1b2c3d4e5f607a8b9c0 \
 
 ---
 
+## `PUT /api/admin/settings/password`
+
+Change the authenticated admin's own password.
+
+### Request body
+
+| Field             | Type   | Required | Validation       | Description            |
+| ----------------- | ------ | :------: | ---------------- | ---------------------- |
+| `currentPassword` | string | Yes      | non-empty        | Existing password      |
+| `newPassword`     | string | Yes      | min 6 characters | Replacement password   |
+
+```json
+{ "currentPassword": "old123", "newPassword": "newSecure456" }
+```
+
+### Response `200`
+
+```json
+{ "message": "Password updated successfully" }
+```
+
+### Errors
+
+| Status | Condition                                   |
+| ------ | ------------------------------------------- |
+| `400`  | Missing fields or new password too short    |
+| `400`  | `currentPassword` is incorrect              |
+
+### curl
+
+```bash
+curl -X PUT http://localhost:5173/api/admin/settings/password \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"currentPassword":"old123","newPassword":"newSecure456"}'
+```
+
+---
+
+## `PUT /api/admin/settings/profile`
+
+Update the authenticated admin's own username and/or email.
+
+### Request body (all fields optional)
+
+| Field      | Type   | Required | Description           |
+| ---------- | ------ | :------: | --------------------- |
+| `username` | string | No       | New login handle      |
+| `email`    | string | No       | New contact email     |
+
+### Response `200`
+
+Returns the updated admin object (safe — no sensitive fields).
+
+### Errors
+
+| Status | Condition                            |
+| ------ | ------------------------------------ |
+| `400`  | Username or email already in use     |
+
+### curl
+
+```bash
+curl -X PUT http://localhost:5173/api/admin/settings/profile \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"username":"new_handle"}'
+```
+
+---
+
+## `POST /api/admin/settings/setup-totp`
+
+Begins authenticator app setup for the signed-in admin. Generates a new TOTP secret, stores it (unactivated — `totpEnabled: false`) on the Admin document, and returns a QR code to scan.
+
+The setup is **not active** until the admin completes `POST /verify-totp-setup` with a valid code. Calling this endpoint again before verifying will overwrite the previous secret.
+
+### Response `200`
+
+```json
+{
+  "qrDataUrl": "data:image/png;base64,iVBORw0KGgoAAAA...",
+  "secret":    "JBSWY3DPEHPK3PXP"
+}
+```
+
+| Field       | Description                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------------ |
+| `qrDataUrl` | Base64 PNG data URL — render directly in an `<img>` tag for the admin to scan with their authenticator |
+| `secret`    | Plain-text Base32 secret — shown as fallback for manual entry if camera is unavailable                 |
+
+> The `secret` must be treated as sensitive. It is returned only at setup time and is never returned again — it is stripped from all other API responses.
+
+### Errors
+
+| Status | Condition                          |
+| ------ | ---------------------------------- |
+| `401`  | Token missing, invalid, or expired |
+| `500`  | Secret generation or QR render failed |
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/admin/settings/setup-totp \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
+## `POST /api/admin/settings/verify-totp-setup`
+
+Confirms that the admin successfully scanned the QR code by submitting the first valid TOTP code from their authenticator app. On success, sets `totpEnabled: true` on the Admin document.
+
+### Request body
+
+| Field  | Type   | Required | Description                                     |
+| ------ | ------ | :------: | ----------------------------------------------- |
+| `code` | string | Yes      | 6-digit code currently shown in authenticator   |
+
+```json
+{ "code": "482931" }
+```
+
+### Response `200`
+
+```json
+{
+  "message": "Authenticator app enabled successfully",
+  "admin": { ...adminObject }
+}
+```
+
+Returns the full updated admin object. The client should update its local session with the new `totpEnabled: true` value.
+
+### Errors
+
+| Status | Condition                                              |
+| ------ | ------------------------------------------------------ |
+| `400`  | `code` missing                                         |
+| `400`  | No setup in progress (call `setup-totp` first)         |
+| `400`  | Incorrect code                                         |
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/admin/settings/verify-totp-setup \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"code":"482931"}'
+```
+
+---
+
+## `DELETE /api/admin/settings/disable-totp`
+
+Removes the authenticator app from the signed-in admin's account. Clears `totpSecret`, sets `totpEnabled: false`, and clears `totpLastUsedCode`. After this, if 2FA is required platform-wide, the admin will fall back to email OTP at next login.
+
+### Response `200`
+
+```json
+{
+  "message": "Authenticator app removed",
+  "admin": { ...adminObject }
+}
+```
+
+Returns the full updated admin object (`totpEnabled: false`).
+
+### Errors
+
+| Status | Condition                          |
+| ------ | ---------------------------------- |
+| `401`  | Token missing, invalid, or expired |
+
+### curl
+
+```bash
+curl -X DELETE http://localhost:5173/api/admin/settings/disable-totp \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
 ## `POST /api/admin/backfill-slugs`
 
 One-off maintenance endpoint. Iterates all `Report` documents that have no `slug` field and generates one from their `projectName` using the same `toSlug()` + `uniqueSlug()` logic used at creation time. Safe to run multiple times — reports with an existing slug are skipped.
