@@ -78,6 +78,11 @@ export const AdminAuthProvider = ({ children }) => {
     startWatcher(sessionTimeoutMinutes);
   };
 
+  const updateAdmin = (adminData) => {
+    localStorage.setItem(ADMIN_DATA_KEY, JSON.stringify(adminData));
+    setAdmin(adminData);
+  };
+
   const logout = () => {
     const token = getCookie('adminToken');
     if (token) {
