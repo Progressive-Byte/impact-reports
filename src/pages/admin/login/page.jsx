@@ -1,10 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLoginFlow } from './useLoginFlow';
-import LoginStep       from './LoginStep';
-import ForgotEmailStep from './ForgotEmailStep';
-import ForgotOtpStep   from './ForgotOtpStep';
-import ForgotResetStep from './ForgotResetStep';
-import ForgotDoneStep  from './ForgotDoneStep';
+import LoginStep       from './components/LoginStep';
+import ForgotEmailStep from './components/ForgotEmailStep';
+import ForgotOtpStep   from './components/ForgotOtpStep';
+import ForgotResetStep from './components/ForgotResetStep';
+import ForgotDoneStep  from './components/ForgotDoneStep';
 
 // Per-step enter/exit animation config
 const STEP_MOTION = {
