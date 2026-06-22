@@ -142,8 +142,7 @@ router.post('/verify-2fa', async (req, res) => {
       if (!admin.totpEnabled || !admin.totpSecret) {
         return res.status(400).json({ message: 'Authenticator app is not configured for this account' });
       }
-      const result = await authenticator.verify({ token: code.trim(), secret: admin.totpSecret });
-      if (!result?.valid) {
+      if (!verifyTOTP(code.trim(), admin.totpSecret)) {
         return res.status(400).json({ message: 'Incorrect code. Check your authenticator app.' });
       }
       if (admin.totpLastUsedCode === code.trim()) {
