@@ -4,19 +4,18 @@ Welcome to the API documentation for the **Nonprofit Impact Report Portal** admi
 
 ## General
 
-- [System](api/system.md) — Base URL, server setup, authentication scheme, error format, and pagination envelope.
+- [System](api/system.md) — Base URL, server setup, authentication scheme, error format, pagination envelope, background cron jobs, and activity log retention policy.
 
 ## Authentication
 
-- [Auth](api/auth.md) — Login, 2FA OTP verification, password reset flow (forgot → OTP → reset), current-admin profile, logout, and activity log export.
+- [Auth](api/auth.md) — Login, 2FA (email OTP + TOTP authenticator app), password reset flow, current-admin profile, logout, activity log display (30-day window), and activity log export (1-year or full-history scope).
 
 ## Admin — Protected
 
 All endpoints below require a valid `Bearer` token.
 
-- [Users](api/users.md) — Dashboard stats, admin account listing, creation, role changes, status toggle, deletion, and slug backfill.
+- [Users](api/users.md) — Dashboard stats, admin account listing, creation, role changes, status toggle, deletion, own password/profile update, TOTP authenticator app setup/verify/disable, and slug backfill.
 - [Reports](api/reports.md) — Impact report lifecycle: create, step-by-step wizard save, list, export (CSV/Excel), and delete.
-- [Settings](api/settings.md) — Own password and own profile update.
 - [Notifications](api/notifications.md) — In-app security notifications (failed-login warnings): list, mark one read, mark all read.
 
 ## Invite Flow
@@ -29,4 +28,4 @@ All endpoints below require a valid `Bearer` token.
 
 ## Configuration
 
-- [Config](api/config.md) — Region taxonomy (public), platform settings (default region, session timeout, strong passwords, failed-login warnings, weekly digest, require 2FA), and manual weekly digest trigger.
+- [Config](api/config.md) — Region taxonomy (public), platform settings (default region, session timeout, strong passwords, failed-login warnings, weekly digest, require 2FA with email OTP or TOTP), and manual weekly digest trigger.
