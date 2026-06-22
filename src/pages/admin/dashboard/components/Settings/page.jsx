@@ -182,6 +182,12 @@ const Settings = () => {
   };
 
   return (
+    <>
+    <AnimatePresence>
+      {showTotpModal && (
+        <TotpSetupModal onClose={() => setShowTotpModal(false)} />
+      )}
+    </AnimatePresence>
     <div className="space-y-5">
       <PageHeader
         title="Settings"
