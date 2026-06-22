@@ -7,7 +7,7 @@ import PlatformSettings from '../models/PlatformSettings.js';
 import Notification from '../models/Notification.js';
 import ActivityLog from '../models/ActivityLog.js';
 import { protect } from '../middleware/auth.js';
-import { sendResetOTPEmail } from '../utils/mailer.js';
+import { sendResetOTPEmail, sendLoginOTPEmail } from '../utils/mailer.js';
 
 const clientIp = (req) =>
   req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip || 'unknown';
