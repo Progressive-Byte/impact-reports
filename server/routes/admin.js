@@ -91,7 +91,7 @@ router.get('/admins', async (req, res) => {
     }
     if (status === 'active')   filter.isActive = true;
     if (status === 'inactive') filter.isActive = false;
-    if (role && ['superadmin', 'admin'].includes(role)) filter.role = role;
+    if (role && ['superadmin', 'editor', 'viewer'].includes(role)) filter.role = role;
 
     const [items, total] = await Promise.all([
       Admin.find(filter).select('-password').sort('-createdAt').skip(skip).limit(limit),
