@@ -41,6 +41,48 @@ Mounted at `/api/admin`. All routes require `Authorization: Bearer <token>`.
 
 ---
 
+## `GET /api/admin/dashboard`
+
+Returns role-scoped statistics used to populate the Admin Dashboard home view.
+
+- **`admin`** — sees only reports assigned to them (`assignedTo: req.admin._id`).
+- **`superadmin`** — sees all reports, plus an extra `adminStats` block.
+
+### Response `200`
+
+```json
+{
+  "reportStats": {
+    "published":   12,
+    "pendingDraft": 3,
+    "total":       15
+  },
+  "totalLivesImpacted": 48200,
+  "regionData": [
+    { "country": "Pakistan",  "livesImpacted": 12000 },
+    { "country": "Bangladesh","livesImpacted":  8500 }
+  ],
+  "recentActivity": [
+    { "projectName": "Clean Water Initiative", "status": "published", "updatedAt": "2026-06-20T09:00:00.000Z" }
+  ],
+  "adminStats": {
+    "total":  6,
+    "active": 5
+  }
+}
+```
+
+> `adminStats` is **only present** for `superadmin` callers. `regionData` returns up to 6 entries sorted by `livesImpacted` descending; values are estimated by distributing a report's `livesImpacted` evenly across its countries. `recentActivity` returns the 5 most recently updated reports.
+
+### curl
+
+```bash
+curl http://localhost:5173/api/admin/dashboard \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
 ## `GET /api/admin/stats`
 
 Returns high-level counts for the dashboard overview card.
