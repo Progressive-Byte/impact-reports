@@ -1,4 +1,6 @@
 import express from 'express';
+import { authenticator } from 'otplib';
+import QRCode from 'qrcode';
 import Admin from '../models/Admin.js';
 import Report from '../models/Report.js';
 import { protect } from '../middleware/auth.js';
