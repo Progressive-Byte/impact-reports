@@ -1,4 +1,4 @@
-import SafeIcon from '../../../common/SafeIcon';
+import SafeIcon from '../../../../common/SafeIcon';
 import { BackLink, ErrorBanner, Btn } from './LoginUI';
 
 const ForgotOtpStep = ({ flow }) => {
