@@ -12,7 +12,8 @@ import Settings from './components/Settings/page';
 
 const VALID_SECTIONS = {
   superadmin: ['overview', 'reports', 'users', 'settings'],
-  admin:      ['overview', 'reports'],
+  editor:     ['overview', 'reports'],
+  viewer:     ['overview'],
 };
 
 const AdminOverview = () => {
@@ -20,7 +21,7 @@ const AdminOverview = () => {
   const navigate = useNavigate();
   const { section: rawSection } = useParams();
 
-  const validSections = VALID_SECTIONS[admin?.role] ?? VALID_SECTIONS.admin;
+  const validSections = VALID_SECTIONS[admin?.role] ?? VALID_SECTIONS.editor;
   const section = validSections.includes(rawSection) ? rawSection : 'overview';
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
