@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import SafeIcon from '../../../common/SafeIcon';
+import SafeIcon from '../../../../common/SafeIcon';
 
 export const ErrorBanner = ({ message }) => (
   <motion.div
