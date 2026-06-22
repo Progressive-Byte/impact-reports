@@ -36,7 +36,7 @@ export function useReportData() {
   const loadAdminOptions = useCallback(() => {
     if (adminOptions.length > 0 || adminOptionsLoadingRef.current) return;
     adminOptionsLoadingRef.current = true;
-    adminApiRequest('/api/admin/admins?role=admin&limit=100')
+    adminApiRequest('/api/admin/admins?role=editor&limit=100')
       .then(data => setAdminOptions(
         (data.items || []).map(a => ({ value: a._id, label: a.username || a.email }))
       ))
