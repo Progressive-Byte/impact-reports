@@ -21,6 +21,7 @@ router.get('/settings', protect, async (_req, res) => {
       enforceStrongPasswords: settings?.enforceStrongPasswords ?? false,
       failedLoginWarnings:    settings?.failedLoginWarnings    ?? true,
       weeklyDigest:           settings?.weeklyDigest           ?? false,
+      require2fa:             settings?.require2fa             ?? false,
     });
   } catch {
     res.status(500).json({ message: 'Failed to load settings' });
