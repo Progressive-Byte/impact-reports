@@ -54,6 +54,7 @@ const AdminLogin = () => {
           <AnimatePresence mode="wait">
             <motion.div key={step} {...stepMotion}>
               {step === 'login'        && <LoginStep       flow={flow} />}
+              {step === '2fa-otp'      && <TwoFaStep       flow={flow} />}
               {step === 'forgot-email' && <ForgotEmailStep flow={flow} />}
               {step === 'forgot-otp'   && <ForgotOtpStep   flow={flow} />}
               {step === 'forgot-reset' && <ForgotResetStep flow={flow} />}
