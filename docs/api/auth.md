@@ -2,18 +2,18 @@
 
 Mounted at `/api/auth`.
 
-| Method | Path                          | Auth                | Body                        | Notes                                                      |
-| ------ | ----------------------------- | ------------------- | --------------------------- | ---------------------------------------------------------- |
-| POST   | `/api/auth/login`             | Public              | `username`, `password`      | Returns JWT (or `twoFaRequired: true` when 2FA is on)      |
-| POST   | `/api/auth/verify-2fa`        | Public              | `username`, `code`          | Submits 2FA OTP; returns JWT on success                    |
-| POST   | `/api/auth/resend-2fa-otp`    | Public              | `username`                  | Re-sends login OTP for an active 2FA session               |
-| POST   | `/api/auth/forgot-password`   | Public              | `email`                     | Sends 6-digit reset OTP to the registered email            |
-| POST   | `/api/auth/verify-reset-otp`  | Public              | `email`, `code`             | Validates reset OTP; returns a short-lived `resetToken`    |
-| POST   | `/api/auth/reset-password`    | Public              | `resetToken`, `password`    | Consumes reset token and sets a new password               |
-| GET    | `/api/auth/me`                | Bearer              | —                           | Returns current admin profile                              |
-| POST   | `/api/auth/logout`            | Bearer              | —                           | Records logout event; session teardown is client-side      |
-| GET    | `/api/auth/logs`              | Bearer              | —                           | Last 50 login/logout events, newest first                  |
-| GET    | `/api/auth/logs/export`       | Bearer (superadmin) | —                           | Download all activity logs as CSV or Excel                 |
+| Method | Path                          | Auth                | Body                                  | Notes                                                                    |
+| ------ | ----------------------------- | ------------------- | ------------------------------------- | ------------------------------------------------------------------------ |
+| POST   | `/api/auth/login`             | Public              | `username`, `password`                | Returns JWT — or `twoFaRequired: true` + `methods` when 2FA is on        |
+| POST   | `/api/auth/verify-2fa`        | Public              | `username`, `code`, `method?`         | Submits email OTP or TOTP code; returns JWT on success                   |
+| POST   | `/api/auth/resend-2fa-otp`    | Public              | `username`                            | Re-sends email OTP for an active 2FA session                             |
+| POST   | `/api/auth/forgot-password`   | Public              | `email`                               | Sends 6-digit reset OTP to the registered email                          |
+| POST   | `/api/auth/verify-reset-otp`  | Public              | `email`, `code`                       | Validates reset OTP; returns a short-lived `resetToken`                  |
+| POST   | `/api/auth/reset-password`    | Public              | `resetToken`, `password`              | Consumes reset token and sets a new password                             |
+| GET    | `/api/auth/me`                | Bearer              | —                                     | Returns current admin profile                                            |
+| POST   | `/api/auth/logout`            | Bearer              | —                                     | Records logout event; session teardown is client-side                    |
+| GET    | `/api/auth/logs`              | Bearer              | —                                     | Live events from the last 30 days (max 500), newest first, with `meta`   |
+| GET    | `/api/auth/logs/export`       | Bearer (superadmin) | —                                     | Download activity logs as CSV or Excel — 1-year or full-history scope    |
 
 ---
 
@@ -45,15 +45,16 @@ Example:
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "admin": {
-    "_id":       "6650a1b2c3d4e5f607a8b9c0",
-    "username":  "admin",
-    "email":     "admin@humanconcernusa.org",
-    "role":      "superadmin",
-    "region":    "global",
-    "isActive":  true,
-    "lastLogin": "2026-06-08T10:30:00.000Z",
-    "createdAt": "2026-01-15T08:00:00.000Z",
-    "updatedAt": "2026-06-08T10:30:00.000Z"
+    "_id":         "6650a1b2c3d4e5f607a8b9c0",
+    "username":    "admin",
+    "email":       "admin@humanconcernusa.org",
+    "role":        "superadmin",
+    "region":      "global",
+    "isActive":    true,
+    "totpEnabled": false,
+    "lastLogin":   "2026-06-08T10:30:00.000Z",
+    "createdAt":   "2026-01-15T08:00:00.000Z",
+    "updatedAt":   "2026-06-08T10:30:00.000Z"
   },
   "sessionTimeoutMinutes": 30
 }
@@ -64,10 +65,18 @@ Example:
 When `require2fa` is `true` in platform settings, credentials are accepted but **no JWT is returned yet**. The client must proceed to `POST /api/auth/verify-2fa`.
 
 ```json
-{ "twoFaRequired": true }
+{
+  "twoFaRequired": true,
+  "methods": ["totp", "email"]
+}
 ```
 
-A 6-digit OTP is emailed to the admin's registered address. It expires in **5 minutes**.
+`methods` lists which verification methods are available for this account:
+
+| Value   | Condition                                                        |
+| ------- | ---------------------------------------------------------------- |
+| `email` | Always included. A 6-digit OTP is sent to the admin's email **only if TOTP is not set up**. If TOTP is available, email OTP is sent on demand when the user requests it via `POST /resend-2fa-otp`. |
+| `totp`  | Included only when the admin has set up an authenticator app (`totpEnabled: true`). No email is sent automatically in this case. |
 
 > `password` is never included in any response.
 
@@ -96,6 +105,92 @@ TOKEN=$(curl -s -X POST http://localhost:5173/api/auth/login \
 
 ---
 
+## `POST /api/auth/verify-2fa`
+
+Completes login when **Require 2FA** is enabled. Called after a successful `POST /login` that returned `{ twoFaRequired: true }`.
+
+Supports two verification methods selected via the `method` field:
+
+| Method  | How it works                                                                                   |
+| ------- | ---------------------------------------------------------------------------------------------- |
+| `email` | 6-digit OTP sent to the admin's registered email. Hashed and stored in `Admin.loginOTPCode`, expires in 5 minutes. |
+| `totp`  | 6-digit TOTP from an authenticator app (Google Authenticator, Authy, etc.). Verified stateless via RFC 6238 HMAC-SHA1; replay attacks blocked via `Admin.totpLastUsedCode`. In-memory rate limiter: max 5 wrong attempts per 15-minute window. |
+
+### Request body
+
+| Field      | Type   | Required | Description                                                          |
+| ---------- | ------ | :------: | -------------------------------------------------------------------- |
+| `username` | string | Yes      | The username used in the login attempt                               |
+| `code`     | string | Yes      | The 6-digit verification code                                        |
+| `method`   | string | No       | `"email"` (default) or `"totp"`                                      |
+
+```json
+{ "username": "admin", "code": "482931", "method": "totp" }
+```
+
+### Response `200`
+
+Same shape as the normal `POST /login` success response (`token` + `admin` + `sessionTimeoutMinutes`).
+
+### Errors
+
+| Status | Condition                                                        |
+| ------ | ---------------------------------------------------------------- |
+| `400`  | `username` or `code` missing                                     |
+| `400`  | Email OTP expired, wrong OTP, or no active session               |
+| `400`  | TOTP not configured for account (`method: totp`)                 |
+| `400`  | Incorrect TOTP code                                              |
+| `400`  | TOTP code already used (replay attempt)                          |
+| `429`  | Too many TOTP attempts — try again in N minutes                  |
+
+### curl
+
+```bash
+# Email OTP
+curl -X POST http://localhost:5173/api/auth/verify-2fa \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","code":"482931","method":"email"}'
+
+# Authenticator app
+curl -X POST http://localhost:5173/api/auth/verify-2fa \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin","code":"482931","method":"totp"}'
+```
+
+---
+
+## `POST /api/auth/resend-2fa-otp`
+
+Regenerates and re-sends the login email OTP during an active 2FA session. The previous code is invalidated and a fresh 5-minute window starts. Also used when an admin switches to the Email tab while TOTP is available — the client calls this on tab switch to ensure a fresh code is in the inbox.
+
+Always returns `200` regardless of whether the username is valid, to avoid leaking account existence.
+
+### Request body
+
+| Field      | Type   | Required | Description                            |
+| ---------- | ------ | :------: | -------------------------------------- |
+| `username` | string | Yes      | The username of the 2FA session owner  |
+
+```json
+{ "username": "admin" }
+```
+
+### Response `200`
+
+```json
+{ "message": "If a 2FA session is active, a new code has been sent." }
+```
+
+### curl
+
+```bash
+curl -X POST http://localhost:5173/api/auth/resend-2fa-otp \
+  -H "Content-Type: application/json" \
+  -d '{"username":"admin"}'
+```
+
+---
+
 ## `GET /api/auth/me`
 
 Returns the profile of the currently authenticated admin. Useful for re-hydrating session state after a page refresh.
@@ -107,15 +202,16 @@ Headers: `Authorization: Bearer <token>`
 ```json
 {
   "admin": {
-    "_id":       "6650a1b2c3d4e5f607a8b9c0",
-    "username":  "admin",
-    "email":     "admin@humanconcernusa.org",
-    "role":      "superadmin",
-    "region":    "global",
-    "isActive":  true,
-    "lastLogin": "2026-06-08T10:30:00.000Z",
-    "createdAt": "2026-01-15T08:00:00.000Z",
-    "updatedAt": "2026-06-08T10:30:00.000Z"
+    "_id":         "6650a1b2c3d4e5f607a8b9c0",
+    "username":    "admin",
+    "email":       "admin@humanconcernusa.org",
+    "role":        "superadmin",
+    "region":      "global",
+    "isActive":    true,
+    "totpEnabled": true,
+    "lastLogin":   "2026-06-08T10:30:00.000Z",
+    "createdAt":   "2026-01-15T08:00:00.000Z",
+    "updatedAt":   "2026-06-08T10:30:00.000Z"
   }
 }
 ```
@@ -165,7 +261,7 @@ curl -X POST http://localhost:5173/api/auth/logout \
 
 ## `GET /api/auth/logs`
 
-Returns the 50 most recent login/logout events across all admin accounts, newest first. Used to populate the **System Log** tab on the Admin Dashboard.
+Returns live login/logout events from the **last 30 days**, newest first (max 500 rows). Only records where `archivedAt` is `null` are returned — records soft-archived after 1 year are excluded. Used to populate the **System Log** tab on the Admin Dashboard.
 
 Headers: `Authorization: Bearer <token>`
 
@@ -173,22 +269,24 @@ Headers: `Authorization: Bearer <token>`
 
 ```json
 {
-  "_id":       "6650a1b2c3d4e5f607a8b9e0",
-  "type":      "login",
-  "username":  "sadekur",
-  "role":      "admin",
-  "ip":        "127.0.0.1",
-  "createdAt": "2026-06-16T10:45:00.000Z",
-  "updatedAt": "2026-06-16T10:45:00.000Z"
+  "_id":        "6650a1b2c3d4e5f607a8b9e0",
+  "type":       "login",
+  "username":   "sadekur",
+  "role":       "admin",
+  "ip":         "127.0.0.1",
+  "archivedAt": null,
+  "createdAt":  "2026-06-16T10:45:00.000Z",
+  "updatedAt":  "2026-06-16T10:45:00.000Z"
 }
 ```
 
-| Field      | Values              | Description                     |
-| ---------- | ------------------- | ------------------------------- |
-| `type`     | `login` / `logout`  | Event type                      |
-| `username` | string              | Admin username at time of event |
-| `role`     | `admin` / `superadmin` | Role at time of event        |
-| `ip`       | string              | Client IP (`x-forwarded-for` header takes precedence) |
+| Field        | Values                  | Description                                            |
+| ------------ | ----------------------- | ------------------------------------------------------ |
+| `type`       | `login` / `logout`      | Event type                                             |
+| `username`   | string                  | Admin username at time of event                        |
+| `role`       | `admin` / `superadmin`  | Role at time of event                                  |
+| `ip`         | string                  | Client IP (`x-forwarded-for` header takes precedence)  |
+| `archivedAt` | `null` / ISO date       | `null` = live record; date = soft-archived after 1 year |
 
 ### Response `200`
 
@@ -196,16 +294,26 @@ Headers: `Authorization: Bearer <token>`
 {
   "logs": [
     {
-      "_id":       "6650a1b2c3d4e5f607a8b9e0",
-      "type":      "login",
-      "username":  "sadekur",
-      "role":      "admin",
-      "ip":        "127.0.0.1",
-      "createdAt": "2026-06-16T10:45:00.000Z"
+      "_id":        "6650a1b2c3d4e5f607a8b9e0",
+      "type":       "login",
+      "username":   "sadekur",
+      "role":       "admin",
+      "ip":         "127.0.0.1",
+      "archivedAt": null,
+      "createdAt":  "2026-06-16T10:45:00.000Z"
     }
-  ]
+  ],
+  "meta": {
+    "total":      42,
+    "windowDays": 30
+  }
 }
 ```
+
+| Meta field    | Description                                                    |
+| ------------- | -------------------------------------------------------------- |
+| `total`       | Total event count in the 30-day window (may exceed 500)        |
+| `windowDays`  | Always `30` — the display window in days                       |
 
 ### Errors
 
@@ -225,22 +333,33 @@ curl http://localhost:5173/api/auth/logs \
 
 ## `GET /api/auth/logs/export`
 
-Downloads **all** activity logs (no row limit) as a flat file. Only `superadmin` can call this. Used by the **Export Logs** button on the Admin Dashboard.
+Downloads activity logs as a flat file. Only `superadmin` can call this.
+
+### Log retention policy
+
+| State     | Condition                              | Visible in display | Included in export           |
+| --------- | -------------------------------------- | :----------------: | :---------------------------: |
+| Live      | `archivedAt: null`, ≤ 365 days old     | Yes (if ≤ 30 days) | `scope=year` and `scope=all` |
+| Archived  | `archivedAt` set by monthly cron       | No                 | `scope=all` only             |
+
+Records are **never permanently deleted**. The monthly archival cron (runs 02:00 on 1st of every month) soft-archives records older than 365 days by setting `archivedAt`.
 
 ### Query parameters
 
-| Param    | Type   | Default | Description                                        |
-| -------- | ------ | :-----: | -------------------------------------------------- |
-| `format` | string | `csv`   | `csv` — plain text CSV; `excel` — `.xlsx` workbook |
+| Param    | Type   | Default  | Description                                                                |
+| -------- | ------ | :------: | -------------------------------------------------------------------------- |
+| `format` | string | `csv`    | `csv` — plain text CSV; `excel` — `.xlsx` workbook                         |
+| `scope`  | string | `year`   | `year` — live records from the last 365 days; `all` — every record including archived (full audit trail) |
 
 ### Response
 
 Returns a file download with the appropriate `Content-Disposition` header.
 
-- **CSV**: `Content-Type: text/csv`, filename `activity-logs-YYYY-MM-DD.csv`
-- **Excel**: `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, filename `activity-logs-YYYY-MM-DD.xlsx`
+- **CSV**: `Content-Type: text/csv`, filename `activity-logs-{scope}-YYYY-MM-DD.csv`
+- **Excel**: `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, filename `activity-logs-{scope}-YYYY-MM-DD.xlsx`
 
-Each row contains: `Type`, `Username`, `Role`, `IP`, `Timestamp`.
+Each row contains: `Type`, `Username`, `Role`, `IP`, `Timestamp`, `Archived`.  
+`Archived` is blank for live records and an ISO timestamp for soft-archived records.
 
 ### Errors
 
@@ -253,84 +372,15 @@ Each row contains: `Type`, `Username`, `Role`, `IP`, `Timestamp`.
 ### curl
 
 ```bash
-# Download as CSV
-curl "http://localhost:5173/api/auth/logs/export?format=csv" \
+# Last 1 year — CSV (default)
+curl "http://localhost:5173/api/auth/logs/export?format=csv&scope=year" \
   -H "Authorization: Bearer $TOKEN" \
-  -o activity-logs.csv
+  -o activity-logs-year.csv
 
-# Download as Excel
-curl "http://localhost:5173/api/auth/logs/export?format=excel" \
+# Full history including archived — Excel
+curl "http://localhost:5173/api/auth/logs/export?format=excel&scope=all" \
   -H "Authorization: Bearer $TOKEN" \
-  -o activity-logs.xlsx
-```
-
----
-
-## `POST /api/auth/verify-2fa`
-
-Completes login when **Require 2FA** is enabled. Called after a successful `POST /login` that returned `{ twoFaRequired: true }`.
-
-### Request body
-
-| Field      | Type   | Required | Description                              |
-| ---------- | ------ | :------: | ---------------------------------------- |
-| `username` | string | Yes      | The username used in the login attempt   |
-| `code`     | string | Yes      | The 6-digit OTP sent to the admin email  |
-
-```json
-{ "username": "admin", "code": "482931" }
-```
-
-### Response `200`
-
-Same shape as the normal `POST /login` success response (token + admin + sessionTimeoutMinutes).
-
-### Errors
-
-| Status | Condition                                              |
-| ------ | ------------------------------------------------------ |
-| `400`  | `username` or `code` missing                           |
-| `400`  | No active 2FA session found, OTP expired, or wrong code |
-| `500`  | Database error                                         |
-
-### curl
-
-```bash
-curl -X POST http://localhost:5173/api/auth/verify-2fa \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin","code":"482931"}'
-```
-
----
-
-## `POST /api/auth/resend-2fa-otp`
-
-Regenerates and re-sends the login OTP during an active 2FA session. The previous code is invalidated and a fresh 5-minute window starts.
-
-Always returns `200` regardless of whether the username is valid, to avoid leaking account existence.
-
-### Request body
-
-| Field      | Type   | Required | Description                            |
-| ---------- | ------ | :------: | -------------------------------------- |
-| `username` | string | Yes      | The username of the 2FA session owner  |
-
-```json
-{ "username": "admin" }
-```
-
-### Response `200`
-
-```json
-{ "message": "If a 2FA session is active, a new code has been sent." }
-```
-
-### curl
-
-```bash
-curl -X POST http://localhost:5173/api/auth/resend-2fa-otp \
-  -H "Content-Type: application/json" \
-  -d '{"username":"admin"}'
+  -o activity-logs-all.xlsx
 ```
 
 ---
