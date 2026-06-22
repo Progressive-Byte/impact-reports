@@ -307,6 +307,7 @@ const Settings = () => {
 
       </div>}
     </div>
+    </>
   );
 };
 
