@@ -82,15 +82,21 @@ router.post('/login', async (req, res) => {
 
     const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
 
-    // 2FA — send OTP and defer JWT until code is verified
+    // 2FA — defer JWT; if TOTP not set up, always send email OTP immediately
     if (settings?.require2fa) {
-      const code = String(Math.floor(100000 + Math.random() * 900000));
-      admin.loginOTPCode        = hashCode(code);
-      admin.loginOTPExpires     = new Date(Date.now() + 5 * 60 * 1000); // 5 min
+      const methods = admin.totpEnabled ? ['totp', 'email'] : ['email'];
       admin.failedLoginAttempts = 0;
+
+      if (!admin.totpEnabled) {
+        // No authenticator app — send email OTP straight away
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        admin.loginOTPCode    = hashCode(code);
+        admin.loginOTPExpires = new Date(Date.now() + 5 * 60 * 1000);
+        sendLoginOTPEmail({ to: admin.email, code }).catch(() => {});
+      }
+
       await admin.save({ validateBeforeSave: false });
-      sendLoginOTPEmail({ to: admin.email, code }).catch(() => {});
-      return res.json({ twoFaRequired: true });
+      return res.json({ twoFaRequired: true, methods });
     }
 
     const sessionTimeoutMinutes = settings?.sessionTimeoutMinutes ?? 30;
