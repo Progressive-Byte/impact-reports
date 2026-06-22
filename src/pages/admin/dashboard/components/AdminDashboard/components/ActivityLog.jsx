@@ -6,7 +6,7 @@ const SYS_TAG = {
   logout: { label: 'LOGOUT', cls: 'bg-orange-500 text-white' },
 };
 
-const ActivityLog = ({ recentActivity = [], activityLogs = [], loading }) => {
+const ActivityLog = ({ recentActivity = [], activityLogs = [], logMeta = {}, loading }) => {
   const [activeTab, setActiveTab] = useState('system');
 
   const systemLogs = activityLogs.map(log => {
@@ -25,10 +25,13 @@ const ActivityLog = ({ recentActivity = [], activityLogs = [], loading }) => {
   });
 
   const logs = activeTab === 'system' ? systemLogs : contentLogs;
+  const windowDays = logMeta.windowDays ?? 30;
+  const total      = logMeta.total      ?? systemLogs.length;
 
   return (
     <div className="flex-[3] min-w-0 bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
-      <div className="flex border-b border-gray-100 px-6">
+      {/* Tab bar */}
+      <div className="flex items-center border-b border-gray-100 px-6">
         {[{ id: 'system', label: 'System Log' }, { id: 'content', label: 'Content Feed' }].map(({ id, label }) => (
           <button
             key={id}
@@ -45,8 +48,19 @@ const ActivityLog = ({ recentActivity = [], activityLogs = [], loading }) => {
             )}
           </button>
         ))}
+
+        {/* Context badge — only on system tab */}
+        {activeTab === 'system' && !loading && (
+          <span className="ml-auto text-[10px] font-bold text-gray-400 whitespace-nowrap">
+            Last {windowDays} days &middot; {total} event{total === 1 ? '' : 's'}
+            {total > activityLogs.length && (
+              <span className="text-gray-300"> (showing {activityLogs.length})</span>
+            )}
+          </span>
+        )}
       </div>
 
+      {/* Log terminal */}
       <div className="m-5 bg-[#0f1114] rounded-2xl p-6 h-[340px] overflow-y-auto font-mono scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
         {loading && activeTab === 'content' ? (
           <div className="space-y-4">
@@ -59,7 +73,7 @@ const ActivityLog = ({ recentActivity = [], activityLogs = [], loading }) => {
             ))}
           </div>
         ) : logs.length === 0 ? (
-          <p className="text-gray-500 text-sm">No activity yet.</p>
+          <p className="text-gray-500 text-sm">No activity in the last {windowDays} days.</p>
         ) : (
           <div className="space-y-4">
             {logs.map((entry, i) => (
@@ -76,6 +90,15 @@ const ActivityLog = ({ recentActivity = [], activityLogs = [], loading }) => {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Retention footnote */}
+      <div className="px-6 pb-4 flex items-center gap-1.5">
+        <span className="w-1.5 h-1.5 rounded-full bg-gray-300 flex-shrink-0" />
+        <p className="text-[10px] text-gray-400">
+          Displaying last {windowDays} days. 1-year history retained in database.
+          Records older than 365 days are soft-archived and remain downloadable.
+        </p>
       </div>
     </div>
   );
