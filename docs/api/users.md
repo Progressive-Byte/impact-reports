@@ -28,21 +28,26 @@ Mounted at `/api/admin`. All routes require `Authorization: Bearer <token>`.
 
 ```json
 {
-  "_id":       "6650a1b2c3d4e5f607a8b9c0",
-  "username":  "sadek",
-  "email":     "sadek@example.com",
-  "role":      "superadmin",
-  "region":    "global",
-  "isActive":  true,
-  "lastLogin": "2026-06-08T10:30:00.000Z",
-  "createdAt": "2026-01-15T08:00:00.000Z",
-  "updatedAt": "2026-06-08T10:30:00.000Z"
+  "_id":         "6650a1b2c3d4e5f607a8b9c0",
+  "username":    "sadek",
+  "email":       "sadek@example.com",
+  "role":        "superadmin",
+  "region":      "global",
+  "isActive":    true,
+  "totpEnabled": false,
+  "lastLogin":   "2026-06-08T10:30:00.000Z",
+  "createdAt":   "2026-01-15T08:00:00.000Z",
+  "updatedAt":   "2026-06-08T10:30:00.000Z"
 }
 ```
 
 **Role values:** `superadmin` | `admin`
 
 **Region values:** free string, default `"global"`. Common values: `"global"`, `"south_asia"`, `"middle_east"`, `"africa"`.
+
+**`totpEnabled`** — `true` when the admin has completed authenticator app setup. Clients use this to show/hide the TOTP option in the 2FA login flow and the "Remove" button in Settings.
+
+> The following sensitive fields are **never** returned in any response: `password`, `totpSecret`, `totpLastUsedCode`, `resetOTPCode`, `resetOTPExpires`, `loginOTPCode`, `loginOTPExpires`.
 
 ---
 
