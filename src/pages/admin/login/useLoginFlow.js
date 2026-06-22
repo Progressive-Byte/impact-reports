@@ -178,6 +178,72 @@ export function useLoginFlow() {
     }
   };
 
+  // ── 2FA handlers ──
+  const handle2faVerify = async (code) => {
+    clearError();
+    setLoading(true);
+    try {
+      const res  = await fetch('/api/auth/verify-2fa', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: twoFaUsername, code }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Verification failed');
+      login(data.token, data.admin, data.sessionTimeoutMinutes);
+      navigate('/alkabirimpact/dashboard');
+    } catch (err) {
+      setError(err.message);
+      setTwoFaOtp(['', '', '', '', '', '']);
+      setTimeout(() => twoFaRefs.current[0]?.focus(), 50);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handle2faOtpChange = (idx, val) => {
+    if (!/^\d*$/.test(val)) return;
+    const next = [...twoFaOtp];
+    next[idx]  = val.slice(-1);
+    setTwoFaOtp(next);
+    if (val && idx < 5) twoFaRefs.current[idx + 1]?.focus();
+    if (next.every(d => d !== '')) setTimeout(() => handle2faVerify(next.join('')), 60);
+  };
+
+  const handle2faOtpKeyDown = (idx, e) => {
+    if (e.key === 'Backspace' && !twoFaOtp[idx] && idx > 0) twoFaRefs.current[idx - 1]?.focus();
+  };
+
+  const handle2faOtpPaste = (e) => {
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (!pasted) return;
+    e.preventDefault();
+    const next = [...twoFaOtp];
+    pasted.split('').forEach((d, i) => { next[i] = d; });
+    setTwoFaOtp(next);
+    twoFaRefs.current[Math.min(pasted.length, 5)]?.focus();
+    if (pasted.length === 6) setTimeout(() => handle2faVerify(pasted), 60);
+  };
+
+  const handle2faOtpSubmit = (e) => {
+    e.preventDefault();
+    const code = twoFaOtp.join('');
+    if (code.length === 6) handle2faVerify(code);
+  };
+
+  const handle2faResend = async () => {
+    setTwoFaResending(true);
+    clearError();
+    try {
+      await fetch('/api/auth/resend-2fa-otp', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: twoFaUsername }),
+      });
+      setTwoFaOtp(['', '', '', '', '', '']);
+      setTimeout(() => twoFaRefs.current[0]?.focus(), 50);
+    } catch { /* server always returns 200 */ }
+    finally { setTwoFaResending(false); }
+  };
+
   return {
     step, setStep, clearError, goBackToLogin,
     form, setForm, showPw, setShowPw,
@@ -190,5 +256,9 @@ export function useLoginFlow() {
     handleLogin, handleForgotEmail,
     handleOtpChange, handleOtpKeyDown, handleOtpPaste, handleOtpSubmit,
     handleResendOtp, handleResetPassword,
+    // 2FA
+    twoFaOtp, twoFaRefs, twoFaResending,
+    handle2faOtpChange, handle2faOtpKeyDown, handle2faOtpPaste, handle2faOtpSubmit,
+    handle2faResend,
   };
 }
