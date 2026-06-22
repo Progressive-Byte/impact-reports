@@ -217,6 +217,14 @@ const Settings = () => {
               checked={security.require2fa}
               onChange={setSec('require2fa')}
             />
+            <ActionRow
+              title="Authenticator App"
+              description={admin?.totpEnabled ? 'Enabled — used at login when 2FA is required' : 'Not set up — adds a second verification method'}
+              label={admin?.totpEnabled ? 'Remove' : 'Set Up'}
+              danger={admin?.totpEnabled}
+              onClick={admin?.totpEnabled ? handleDisableTotp : () => setShowTotpModal(true)}
+              loading={disablingTotp}
+            />
             <ToggleRow
               title="Enforce strong passwords"
               description="Minimum 12 chars, symbols & numbers"
