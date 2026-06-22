@@ -39,7 +39,7 @@ Example:
 }
 ```
 
-### Response `200`
+### Response `200` — 2FA disabled (default)
 
 ```json
 {
@@ -54,9 +54,20 @@ Example:
     "lastLogin": "2026-06-08T10:30:00.000Z",
     "createdAt": "2026-01-15T08:00:00.000Z",
     "updatedAt": "2026-06-08T10:30:00.000Z"
-  }
+  },
+  "sessionTimeoutMinutes": 30
 }
 ```
+
+### Response `200` — 2FA enabled
+
+When `require2fa` is `true` in platform settings, credentials are accepted but **no JWT is returned yet**. The client must proceed to `POST /api/auth/verify-2fa`.
+
+```json
+{ "twoFaRequired": true }
+```
+
+A 6-digit OTP is emailed to the admin's registered address. It expires in **5 minutes**.
 
 > `password` is never included in any response.
 
