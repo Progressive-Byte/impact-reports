@@ -68,7 +68,7 @@ Requires **superadmin** role. All fields are optional — only provided fields a
 | `enforceStrongPasswords` | boolean | Toggle strong password requirement on invite registration                |
 | `failedLoginWarnings`    | boolean | Toggle failed-login notification creation                                |
 | `weeklyDigest`           | boolean | Toggle weekly digest email to superadmins                                |
-| `require2fa`             | boolean | When `true`, all logins require email OTP verification                   |
+| `require2fa`             | boolean | When `true`, all logins require 2FA (email OTP or TOTP)                  |
 
 Example:
 
