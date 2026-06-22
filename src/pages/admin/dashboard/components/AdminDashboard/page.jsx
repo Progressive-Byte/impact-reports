@@ -192,7 +192,7 @@ const AdminDashboard = () => {
 
       {/* Bottom row */}
       <div className="flex gap-5 items-start">
-        <ActivityLog recentActivity={dashStats?.recentActivity ?? []} activityLogs={activityLogs} loading={loading} />
+        <ActivityLog recentActivity={dashStats?.recentActivity ?? []} activityLogs={activityLogs} logMeta={logMeta} loading={loading} />
         <div className="flex-[2] flex-shrink-0 space-y-5">
           <ActiveRegions regionData={regionData} loading={loading} />
           <PlatformConfig />
