@@ -246,6 +246,61 @@ router.put('/settings/profile', async (req, res) => {
   }
 });
 
+// POST /api/admin/settings/setup-totp — generates TOTP secret + QR code for the signed-in admin
+router.post('/settings/setup-totp', async (req, res) => {
+  try {
+    const admin      = await Admin.findById(req.admin._id);
+    const secret     = authenticator.generateSecret();
+    const otpauthUri = authenticator.keyuri(admin.email, 'Impact Reports', secret);
+    const qrDataUrl  = await QRCode.toDataURL(otpauthUri);
+
+    admin.totpSecret  = secret;
+    admin.totpEnabled = false; // not active until the first code is verified
+    await admin.save({ validateBeforeSave: false });
+
+    res.json({ qrDataUrl, secret });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// POST /api/admin/settings/verify-totp-setup — confirms the scan worked; activates TOTP
+router.post('/settings/verify-totp-setup', async (req, res) => {
+  try {
+    const { code } = req.body;
+    if (!code) return res.status(400).json({ message: 'Code is required' });
+
+    const admin = await Admin.findById(req.admin._id);
+    if (!admin.totpSecret) {
+      return res.status(400).json({ message: 'No TOTP setup in progress. Start again.' });
+    }
+    if (!authenticator.verify({ token: code.trim(), secret: admin.totpSecret })) {
+      return res.status(400).json({ message: 'Incorrect code. Make sure you scanned the QR correctly.' });
+    }
+
+    admin.totpEnabled = true;
+    await admin.save({ validateBeforeSave: false });
+
+    res.json({ message: 'Authenticator app enabled successfully', admin: admin.toSafeObject() });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// DELETE /api/admin/settings/disable-totp — removes TOTP from the signed-in admin's account
+router.delete('/settings/disable-totp', async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.admin._id);
+    admin.totpSecret       = undefined;
+    admin.totpEnabled      = false;
+    admin.totpLastUsedCode = undefined;
+    await admin.save({ validateBeforeSave: false });
+    res.json({ message: 'Authenticator app removed', admin: admin.toSafeObject() });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // POST /api/admin/backfill-slugs — superadmin only, fixes reports missing a real slug
 router.post('/backfill-slugs', async (req, res) => {
   try {
