@@ -29,7 +29,7 @@ const EditUserModal = ({ user, open, onClose, onUpdated }) => {
         username: user.username || '',
         email:    user.email    || '',
         region:   user.region   || 'global',
-        role:     user.role     || 'admin',
+        role:     user.role     || 'editor',
       });
     }
   }, [user]);
