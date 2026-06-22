@@ -70,7 +70,8 @@ When a token expires the server returns `401`. The frontend listens for this and
 
 | Role         | Can access                                              |
 | ------------ | ------------------------------------------------------- |
-| `admin`      | Own profile/password, overview, reports                 |
+| `viewer`     | Overview only (read-only)                               |
+| `editor`     | Own profile/password, overview, reports                 |
 | `superadmin` | Everything — full user management, invite other admins  |
 
 ---
