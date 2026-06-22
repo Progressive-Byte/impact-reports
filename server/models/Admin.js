@@ -15,6 +15,9 @@ const adminSchema = new mongoose.Schema(
     resetOTPExpires:    { type: Date },
     loginOTPCode:       { type: String },
     loginOTPExpires:    { type: Date },
+    totpSecret:         { type: String },
+    totpEnabled:        { type: Boolean, default: false },
+    totpLastUsedCode:   { type: String },
   },
   { timestamps: true }
 );
