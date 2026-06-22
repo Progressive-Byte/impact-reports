@@ -6,7 +6,7 @@ const adminSchema = new mongoose.Schema(
     username: { type: String, required: true, unique: true, trim: true },
     email:    { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true, minlength: 6 },
-    role:     { type: String, enum: ['superadmin', 'admin'], default: 'admin' },
+    role:     { type: String, enum: ['superadmin', 'editor', 'viewer'], default: 'editor' },
     region:   { type: String, default: 'global' },
     isActive:           { type: Boolean, default: true },
     lastLogin:          { type: Date },
