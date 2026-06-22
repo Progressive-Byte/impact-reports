@@ -52,6 +52,12 @@ export function useLoginFlow() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
+      if (data.twoFaRequired) {
+        setTwoFaUsername(form.username);
+        setTwoFaOtp(['', '', '', '', '', '']);
+        setStep('2fa-otp');
+        return;
+      }
       login(data.token, data.admin, data.sessionTimeoutMinutes);
       navigate('/alkabirimpact/dashboard');
     } catch (err) {
