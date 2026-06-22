@@ -11,17 +11,24 @@ export function useLoginFlow() {
   const [showPw,       setShowPw]       = useState(false);
   const [error,        setError]        = useState('');
   const [loading,      setLoading]      = useState(false);
-  const [fpEmail,      setFpEmail]      = useState('');
-  const [fpOtp,        setFpOtp]        = useState(['', '', '', '', '', '']);
-  const [fpResetToken, setFpResetToken] = useState('');
-  const [fpPassword,   setFpPassword]   = useState({ password: '', confirm: '' });
-  const [showNewPw,    setShowNewPw]    = useState(false);
-  const [resending,    setResending]    = useState(false);
+  const [fpEmail,        setFpEmail]        = useState('');
+  const [fpOtp,          setFpOtp]          = useState(['', '', '', '', '', '']);
+  const [fpResetToken,   setFpResetToken]   = useState('');
+  const [fpPassword,     setFpPassword]     = useState({ password: '', confirm: '' });
+  const [showNewPw,      setShowNewPw]      = useState(false);
+  const [resending,      setResending]      = useState(false);
 
-  const otpRefs = useRef([]);
+  // 2FA state
+  const [twoFaUsername,  setTwoFaUsername]  = useState('');
+  const [twoFaOtp,       setTwoFaOtp]       = useState(['', '', '', '', '', '']);
+  const [twoFaResending, setTwoFaResending] = useState(false);
+
+  const otpRefs    = useRef([]);
+  const twoFaRefs  = useRef([]);
 
   useEffect(() => {
     if (step === 'forgot-otp') setTimeout(() => otpRefs.current[0]?.focus(), 80);
+    if (step === '2fa-otp')    setTimeout(() => twoFaRefs.current[0]?.focus(), 80);
   }, [step]);
 
   const clearError = () => setError('');
