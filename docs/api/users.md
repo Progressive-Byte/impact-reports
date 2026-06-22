@@ -2,15 +2,17 @@
 
 Mounted at `/api/admin`. All routes require `Authorization: Bearer <token>`.
 
-| Method | Path                              | Auth        | Body                                   | Notes                               |
-| ------ | --------------------------------- | ----------- | -------------------------------------- | ----------------------------------- |
-| GET    | `/api/admin/stats`                | Bearer      | —                                      | Total and active admin counts       |
-| GET    | `/api/admin/admins`               | Bearer      | —                                      | Paginated list with search + filter |
-| POST   | `/api/admin/admins`               | Superadmin  | `username`, `email`, `password`, `role?` | Create admin directly             |
-| PUT    | `/api/admin/admins/:id`           | Superadmin  | `username?`, `email?`, `role?`, `region?` | Full profile update              |
-| PATCH  | `/api/admin/admins/:id/role`      | Superadmin  | `role`                                 | Change role only                    |
-| PATCH  | `/api/admin/admins/:id/toggle`    | Superadmin  | —                                      | Toggle active ↔ suspended           |
-| DELETE | `/api/admin/admins/:id`           | Superadmin  | —                                      | Permanently delete admin            |
+| Method | Path                              | Auth        | Body                                      | Notes                               |
+| ------ | --------------------------------- | ----------- | ----------------------------------------- | ----------------------------------- |
+| GET    | `/api/admin/dashboard`            | Bearer      | —                                         | Role-scoped dashboard stats         |
+| GET    | `/api/admin/stats`                | Bearer      | —                                         | Total and active admin counts       |
+| GET    | `/api/admin/admins`               | Bearer      | —                                         | Paginated list with search + filter |
+| POST   | `/api/admin/admins`               | Superadmin  | `username`, `email`, `password`, `role?`  | Create admin directly               |
+| PUT    | `/api/admin/admins/:id`           | Superadmin  | `username?`, `email?`, `role?`, `region?` | Full profile update                 |
+| PATCH  | `/api/admin/admins/:id/role`      | Superadmin  | `role`                                    | Change role only                    |
+| PATCH  | `/api/admin/admins/:id/toggle`    | Superadmin  | —                                         | Toggle active ↔ suspended           |
+| DELETE | `/api/admin/admins/:id`           | Superadmin  | —                                         | Permanently delete admin            |
+| POST   | `/api/admin/backfill-slugs`       | Superadmin  | —                                         | One-off: generate slugs for reports that lack one |
 
 > **Superadmin** — endpoints marked `Superadmin` return `403` for `admin`-role callers.  
 > **Self-protection** — an admin cannot edit, toggle, or delete their own account.
