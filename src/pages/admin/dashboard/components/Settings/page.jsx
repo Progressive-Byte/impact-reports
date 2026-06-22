@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import toast from 'react-hot-toast';
+import { AnimatePresence } from 'framer-motion';
 import SafeIcon from '../../../../../common/SafeIcon';
 import PageHeader from '../../common/PageHeader';
 import SettingCard from './components/SettingCard';
@@ -7,9 +8,11 @@ import ToggleRow from './components/ToggleRow';
 import SelectRow from './components/SelectRow';
 import ActionRow from './components/ActionRow';
 import SettingsSkeleton from './components/SettingsSkeleton';
+import TotpSetupModal from './components/TotpSetupModal';
 import { publicApiRequest } from '../../../../../services/publicApi';
 import { adminApiRequest } from '../../../../../services/adminApi';
 import { getCookie } from '../../../../../utils/cookies';
+import { useAdminAuth } from '../../../../../context/AdminAuthContext';
 
 const TIMEOUT_OPTIONS = [
   { value: '15',  label: '15 minutes' },
