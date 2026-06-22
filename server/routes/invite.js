@@ -20,8 +20,8 @@ router.post('/', protect, async (req, res) => {
     const { email, role, region } = req.body;
 
     if (!email) return res.status(400).json({ message: 'Email is required' });
-    if (!['superadmin', 'admin'].includes(role)) {
-      return res.status(400).json({ message: 'Role must be superadmin or admin' });
+    if (!['superadmin', 'editor', 'viewer'].includes(role)) {
+      return res.status(400).json({ message: 'Role must be superadmin, editor, or viewer' });
     }
     if (role === 'superadmin' && req.admin.role !== 'superadmin') {
       return res.status(403).json({ message: 'Only superadmin can invite superadmins' });
