@@ -39,8 +39,8 @@ const Settings = () => {
   const [exportFormat,  setExportFormat]  = useState('csv');
 
   const [security, setSecurity] = useState({
-    require2fa:      true,
-    strongPasswords: true,
+    require2fa:      false,
+    strongPasswords: false,
     sessionTimeout:  '30',
   });
 
