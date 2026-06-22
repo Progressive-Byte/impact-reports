@@ -93,7 +93,7 @@ export const AdminAuthProvider = ({ children }) => {
   const getToken = () => getCookie('adminToken');
 
   return (
-    <AdminAuthContext.Provider value={{ admin, loading, login, logout, getToken }}>
+    <AdminAuthContext.Provider value={{ admin, loading, login, logout, getToken, updateAdmin }}>
       {children}
     </AdminAuthContext.Provider>
   );
