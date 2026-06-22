@@ -5,10 +5,12 @@ import ForgotEmailStep from './components/ForgotEmailStep';
 import ForgotOtpStep   from './components/ForgotOtpStep';
 import ForgotResetStep from './components/ForgotResetStep';
 import ForgotDoneStep  from './components/ForgotDoneStep';
+import TwoFaStep       from './components/TwoFaStep';
 
 // Per-step enter/exit animation config
 const STEP_MOTION = {
   'login':        { initial: { opacity: 0, x: -16 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x:  16 }, transition: { duration: 0.2 } },
+  '2fa-otp':      { initial: { opacity: 0, x:  16 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: -16 }, transition: { duration: 0.2 } },
   'forgot-email': { initial: { opacity: 0, x:  16 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: -16 }, transition: { duration: 0.2 } },
   'forgot-otp':   { initial: { opacity: 0, x:  16 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: -16 }, transition: { duration: 0.2 } },
   'forgot-reset': { initial: { opacity: 0, x:  16 }, animate: { opacity: 1, x: 0 }, exit: { opacity: 0, x: -16 }, transition: { duration: 0.2 } },
