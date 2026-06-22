@@ -19,7 +19,7 @@ const ROLE_OPTIONS = [
 ];
 
 const EditUserModal = ({ user, open, onClose, onUpdated }) => {
-  const [form,    setForm]    = useState({ username: '', email: '', region: 'global', role: 'admin' });
+  const [form,    setForm]    = useState({ username: '', email: '', region: 'global', role: 'editor' });
   const [loading, setLoading] = useState(false);
 
   // Sync form when user prop changes
