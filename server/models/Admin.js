@@ -33,7 +33,13 @@ adminSchema.methods.comparePassword = function (candidate) {
 };
 
 adminSchema.methods.toSafeObject = function () {
-  const { password, __v, ...rest } = this.toObject();
+  const {
+    password, __v,
+    totpSecret, totpLastUsedCode,
+    resetOTPCode, resetOTPExpires,
+    loginOTPCode, loginOTPExpires,
+    ...rest
+  } = this.toObject();
   return rest;
 };
 
