@@ -73,25 +73,25 @@ const AdminDashboard = () => {
         heading="h1"
         title={isSuperAdmin ? 'IT Admin Dashboard' : `${admin?.username ?? 'My'} Dashboard`}
         subtitle={isSuperAdmin ? 'Global configuration & system telemetry' : 'Your assigned reports & activity'}
-        action={
+        action={isSuperAdmin ? (
           <div className="flex items-center gap-2">
+            {/* Scope selector */}
             <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-bold">
-              {['csv', 'excel'].map(f => (
-                <button
-                  key={f}
-                  type="button"
-                  onClick={() => setExportFormat(f)}
-                  className={`px-3 py-1.5 transition-colors ${
-                    exportFormat === f ? 'bg-[#0B0D0F] text-white' : 'bg-white text-gray-500 hover:bg-gray-50'
-                  }`}
-                >
-                  {f === 'csv' ? 'CSV' : 'Excel'}
-                </button>
+              {[{ v: 'year', l: '1 Year' }, { v: 'all', l: 'All History' }].map(({ v, l }) => (
+                <button key={v} type="button" onClick={() => setExportScope(v)}
+                  className={`px-3 py-1.5 transition-colors ${exportScope === v ? 'bg-[#0B0D0F] text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
+                >{l}</button>
               ))}
             </div>
-            <button
-              onClick={handleExportLogs}
-              disabled={exporting}
+            {/* Format selector */}
+            <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-bold">
+              {['csv', 'excel'].map(f => (
+                <button key={f} type="button" onClick={() => setExportFormat(f)}
+                  className={`px-3 py-1.5 transition-colors ${exportFormat === f ? 'bg-[#0B0D0F] text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
+                >{f === 'csv' ? 'CSV' : 'Excel'}</button>
+              ))}
+            </div>
+            <button onClick={handleExportLogs} disabled={exporting}
               className="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-60"
             >
               {exporting
@@ -101,7 +101,7 @@ const AdminDashboard = () => {
               Export Logs
             </button>
           </div>
-        }
+        ) : null}
       />
 
       {/* Stat cards */}
