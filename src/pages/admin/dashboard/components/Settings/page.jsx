@@ -148,6 +148,7 @@ const Settings = () => {
           defaultRegion:          general.region,
           sessionTimeoutMinutes:  Number(security.sessionTimeout),
           enforceStrongPasswords: security.strongPasswords,
+          require2fa:             security.require2fa,
           failedLoginWarnings:    notifications.failedLoginWarnings,
           weeklyDigest:           notifications.weeklyDigest,
         }),
