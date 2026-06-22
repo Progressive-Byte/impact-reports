@@ -2,6 +2,7 @@ import crypto from 'crypto';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import XLSX from 'xlsx';
+import { authenticator } from 'otplib';
 import Admin from '../models/Admin.js';
 import PlatformSettings from '../models/PlatformSettings.js';
 import Notification from '../models/Notification.js';
@@ -24,6 +25,27 @@ const signResetToken = (id) =>
 
 const hashCode = (val) =>
   crypto.createHash('sha256').update(val).digest('hex');
+
+// In-memory TOTP rate limiter: max 5 wrong attempts per 15-minute window
+const totpAttempts = new Map();
+const TOTP_MAX = 5;
+const TOTP_WINDOW_MS = 15 * 60 * 1000;
+
+function totpRateCheck(username) {
+  const now   = Date.now();
+  const entry = totpAttempts.get(username);
+  if (!entry || entry.resetAt <= now) {
+    totpAttempts.set(username, { count: 1, resetAt: now + TOTP_WINDOW_MS });
+    return { allowed: true };
+  }
+  if (entry.count >= TOTP_MAX) {
+    return { allowed: false, remaining: Math.ceil((entry.resetAt - now) / 60000) };
+  }
+  entry.count++;
+  return { allowed: true };
+}
+
+function totpRateClear(username) { totpAttempts.delete(username); }
 
 // POST /api/auth/login — validates credentials, returns JWT directly
 router.post('/login', async (req, res) => {
