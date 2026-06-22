@@ -2,13 +2,18 @@
 
 Mounted at `/api/auth`.
 
-| Method | Path                       | Auth                | Body                   | Notes                                                 |
-| ------ | -------------------------- | ------------------- | ---------------------- | ----------------------------------------------------- |
-| POST   | `/api/auth/login`          | Public              | `username`, `password` | Returns JWT + admin object; writes login log          |
-| GET    | `/api/auth/me`             | Bearer              | —                      | Returns current admin profile                         |
-| POST   | `/api/auth/logout`         | Bearer              | —                      | Records logout event; session teardown is client-side |
-| GET    | `/api/auth/logs`           | Bearer              | —                      | Last 50 login/logout events, newest first             |
-| GET    | `/api/auth/logs/export`    | Bearer (superadmin) | —                      | Download all activity logs as CSV or Excel            |
+| Method | Path                          | Auth                | Body                        | Notes                                                      |
+| ------ | ----------------------------- | ------------------- | --------------------------- | ---------------------------------------------------------- |
+| POST   | `/api/auth/login`             | Public              | `username`, `password`      | Returns JWT (or `twoFaRequired: true` when 2FA is on)      |
+| POST   | `/api/auth/verify-2fa`        | Public              | `username`, `code`          | Submits 2FA OTP; returns JWT on success                    |
+| POST   | `/api/auth/resend-2fa-otp`    | Public              | `username`                  | Re-sends login OTP for an active 2FA session               |
+| POST   | `/api/auth/forgot-password`   | Public              | `email`                     | Sends 6-digit reset OTP to the registered email            |
+| POST   | `/api/auth/verify-reset-otp`  | Public              | `email`, `code`             | Validates reset OTP; returns a short-lived `resetToken`    |
+| POST   | `/api/auth/reset-password`    | Public              | `resetToken`, `password`    | Consumes reset token and sets a new password               |
+| GET    | `/api/auth/me`                | Bearer              | —                           | Returns current admin profile                              |
+| POST   | `/api/auth/logout`            | Bearer              | —                           | Records logout event; session teardown is client-side      |
+| GET    | `/api/auth/logs`              | Bearer              | —                           | Last 50 login/logout events, newest first                  |
+| GET    | `/api/auth/logs/export`       | Bearer (superadmin) | —                           | Download all activity logs as CSV or Excel                 |
 
 ---
 
