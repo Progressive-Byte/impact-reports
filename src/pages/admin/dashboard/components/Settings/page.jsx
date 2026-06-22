@@ -145,6 +145,19 @@ const Settings = () => {
     </div>
   );
 
+  const handleDisableTotp = async () => {
+    setDisablingTotp(true);
+    try {
+      const data = await adminApiRequest('/api/admin/settings/disable-totp', { method: 'DELETE' });
+      updateAdmin(data.admin);
+      toast.success('Authenticator app removed');
+    } catch (err) {
+      toast.error(err.message || 'Failed to remove authenticator app');
+    } finally {
+      setDisablingTotp(false);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
