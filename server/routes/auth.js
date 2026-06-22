@@ -299,37 +299,56 @@ router.post('/logout', protect, async (req, res) => {
   res.json({ message: 'Logged out' });
 });
 
-// GET /api/auth/logs — last 50 login/logout events, newest first
+// GET /api/auth/logs — live logs from the last 30 days, newest first (max 500 rows)
 router.get('/logs', protect, async (_req, res) => {
   try {
-    const logs = await ActivityLog.find().sort({ createdAt: -1 }).limit(50).lean();
-    res.json({ logs });
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const [logs, total] = await Promise.all([
+      ActivityLog
+        .find({ archivedAt: null, createdAt: { $gte: since } })
+        .sort({ createdAt: -1 })
+        .limit(500)
+        .lean(),
+      ActivityLog.countDocuments({ archivedAt: null, createdAt: { $gte: since } }),
+    ]);
+    res.json({ logs, meta: { total, windowDays: 30 } });
   } catch {
     res.status(500).json({ message: 'Failed to load activity logs' });
   }
 });
 
-// GET /api/auth/logs/export?format=csv|excel — superadmin only
+// GET /api/auth/logs/export?format=csv|excel&scope=year|all — superadmin only
+// scope=year (default): live records from the last 365 days
+// scope=all: every record including archived (full audit trail)
 router.get('/logs/export', protect, async (req, res) => {
   if (req.admin.role !== 'superadmin') {
     return res.status(403).json({ message: 'Superadmin only' });
   }
   try {
-    const logs     = await ActivityLog.find().sort({ createdAt: -1 }).lean();
-    const format   = req.query.format === 'excel' ? 'excel' : 'csv';
-    const date     = new Date().toISOString().split('T')[0];
-    const filename = `activity-logs-${date}`;
+    const scope  = req.query.scope === 'all' ? 'all' : 'year';
+    const format = req.query.format === 'excel' ? 'excel' : 'csv';
+    const date   = new Date().toISOString().split('T')[0];
+
+    const filter = scope === 'all'
+      ? {}
+      : { createdAt: { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) } };
+
+    const logs     = await ActivityLog.find(filter).sort({ createdAt: -1 }).lean();
+    const filename = `activity-logs-${scope}-${date}`;
     const rows     = logs.map(l => ({
-      Type:      l.type,
-      Username:  l.username,
-      Role:      l.role      || '',
-      IP:        l.ip        || '',
-      Timestamp: new Date(l.createdAt).toISOString(),
+      Type:       l.type,
+      Username:   l.username,
+      Role:       l.role       || '',
+      IP:         l.ip         || '',
+      Timestamp:  new Date(l.createdAt).toISOString(),
+      Archived:   l.archivedAt ? new Date(l.archivedAt).toISOString() : '',
     }));
 
     if (format === 'csv') {
-      const header = 'Type,Username,Role,IP,Timestamp\n';
-      const body   = rows.map(r => `${r.Type},${r.Username},${r.Role},${r.IP},${r.Timestamp}`).join('\n');
+      const header = 'Type,Username,Role,IP,Timestamp,Archived\n';
+      const body   = rows.map(r =>
+        `${r.Type},${r.Username},${r.Role},${r.IP},${r.Timestamp},${r.Archived}`
+      ).join('\n');
       res.setHeader('Content-Type', 'text/csv');
       res.setHeader('Content-Disposition', `attachment; filename="${filename}.csv"`);
       return res.send(header + body);
