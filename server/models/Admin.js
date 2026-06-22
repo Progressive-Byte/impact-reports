@@ -13,6 +13,8 @@ const adminSchema = new mongoose.Schema(
     failedLoginAttempts:{ type: Number, default: 0 },
     resetOTPCode:       { type: String },
     resetOTPExpires:    { type: Date },
+    loginOTPCode:       { type: String },
+    loginOTPExpires:    { type: Date },
   },
   { timestamps: true }
 );
