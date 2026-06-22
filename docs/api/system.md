@@ -120,6 +120,58 @@ List endpoints that support pagination accept these query parameters:
 
 ---
 
+## Background jobs (cron)
+
+Two cron jobs start automatically when the server boots.
+
+### Weekly digest — every Monday 08:00
+
+```
+Schedule: 0 8 * * 1
+```
+
+Queries all reports published in the last 7 days and emails a summary to every active `superadmin`. Runs only when the `weeklyDigest` platform setting is `true`.
+
+Can be triggered manually via `POST /api/config/send-weekly-digest` (superadmin only).
+
+### Log archival — 1st of every month at 02:00
+
+```
+Schedule: 0 2 1 * *
+```
+
+Soft-archives `ActivityLog` records older than 365 days by setting `archivedAt` to the current timestamp. Records are **never permanently deleted**. Archived records are excluded from the `GET /api/auth/logs` display endpoint but remain exportable via `GET /api/auth/logs/export?scope=all`.
+
+---
+
+## Activity log retention policy
+
+| Window       | Behaviour                                                    |
+| ------------ | ------------------------------------------------------------ |
+| 0 – 30 days  | Displayed in the System Log panel on the Admin Dashboard     |
+| 0 – 365 days | Live (`archivedAt: null`); included in `scope=year` export   |
+| > 365 days   | Soft-archived monthly; excluded from display and year export |
+| All time     | Permanently retained; always included in `scope=all` export  |
+
+Backfill existing records that predate the `archivedAt` field:
+
+```bash
+node --input-type=module <<'EOF'
+import './server/bootstrap.js';
+import mongoose from 'mongoose';
+await mongoose.connect(process.env.MONGODB_URI);
+const ActivityLog = (await import('./server/models/ActivityLog.js')).default;
+const result = await ActivityLog.updateMany(
+  { archivedAt: { $exists: false } },
+  { $set: { archivedAt: null } }
+);
+console.log(`Backfilled ${result.modifiedCount} records`);
+await mongoose.disconnect();
+EOF
+```
+
+---
+
 ## System endpoints
 
 | Method | Path          | Auth   | Notes                                |
