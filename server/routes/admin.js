@@ -250,8 +250,8 @@ router.put('/settings/profile', async (req, res) => {
 router.post('/settings/setup-totp', async (req, res) => {
   try {
     const admin      = await Admin.findById(req.admin._id);
-    const secret     = authenticator.generateSecret();
-    const otpauthUri = authenticator.generateURI({ label: admin.email, issuer: 'Impact Reports', secret });
+    const secret     = generateSecret();
+    const otpauthUri = totpKeyUri({ label: admin.email, issuer: 'Impact Reports', secret });
     const qrDataUrl  = await QRCode.toDataURL(otpauthUri);
 
     admin.totpSecret  = secret;
