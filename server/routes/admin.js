@@ -1,5 +1,6 @@
 import express from 'express';
-import { authenticator } from 'otplib';
+import { TOTP } from 'otplib';
+const authenticator = new TOTP();
 import QRCode from 'qrcode';
 import Admin from '../models/Admin.js';
 import Report from '../models/Report.js';
