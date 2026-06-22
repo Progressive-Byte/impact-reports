@@ -275,7 +275,8 @@ router.post('/settings/verify-totp-setup', async (req, res) => {
     if (!admin.totpSecret) {
       return res.status(400).json({ message: 'No TOTP setup in progress. Start again.' });
     }
-    if (!authenticator.verify({ token: code.trim(), secret: admin.totpSecret })) {
+    const result = await authenticator.verify({ token: code.trim(), secret: admin.totpSecret });
+    if (!result?.valid) {
       return res.status(400).json({ message: 'Incorrect code. Make sure you scanned the QR correctly.' });
     }
 
