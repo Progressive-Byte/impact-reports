@@ -167,7 +167,7 @@ router.put('/admins/:id', async (req, res) => {
     if (username) update.username = username.trim();
     if (email)    update.email    = email.toLowerCase().trim();
     if (region)   update.region   = region;
-    if (role && ['superadmin', 'admin'].includes(role)) update.role = role;
+    if (role && ['superadmin', 'editor', 'viewer'].includes(role)) update.role = role;
 
     const admin = await Admin.findByIdAndUpdate(
       req.params.id,
