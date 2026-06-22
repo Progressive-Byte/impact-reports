@@ -19,8 +19,10 @@ const AdminDashboard = () => {
   const [dashStats,    setDashStats]    = useState(null);
   const [loading,      setLoading]      = useState(true);
   const [activityLogs, setActivityLogs] = useState([]);
+  const [logMeta,      setLogMeta]      = useState({ total: 0, windowDays: 30 });
   const [exporting,    setExporting]    = useState(false);
   const [exportFormat, setExportFormat] = useState('csv');
+  const [exportScope,  setExportScope]  = useState('year');
 
   useEffect(() => {
     adminApiRequest('/api/admin/dashboard')
@@ -28,7 +30,10 @@ const AdminDashboard = () => {
       .catch(() => {})
       .finally(() => setLoading(false));
     adminApiRequest('/api/auth/logs')
-      .then(data => setActivityLogs(data.logs || []))
+      .then(data => {
+        setActivityLogs(data.logs || []);
+        if (data.meta) setLogMeta(data.meta);
+      })
       .catch(() => {});
   }, []);
 
@@ -36,7 +41,7 @@ const AdminDashboard = () => {
     setExporting(true);
     try {
       const token    = getCookie('adminToken');
-      const response = await fetch(`/api/auth/logs/export?format=${exportFormat}`, {
+      const response = await fetch(`/api/auth/logs/export?format=${exportFormat}&scope=${exportScope}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) {
@@ -48,7 +53,7 @@ const AdminDashboard = () => {
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
       a.href     = url;
-      a.download = `activity-logs-${new Date().toISOString().split('T')[0]}.${ext}`;
+      a.download = `activity-logs-${exportScope}-${new Date().toISOString().split('T')[0]}.${ext}`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success('Logs exported');
