@@ -36,6 +36,7 @@ const reportSchema = new mongoose.Schema(
 
     // General step
     actualProjectId:   { type: String, default: '' },
+    donationUrl:       { type: String, default: '' },
     cost:              { type: Number, default: 0 },
     projectLead:       { type: String, default: '' },
     fiscalYear:        { type: String, default: 'FY25' },
