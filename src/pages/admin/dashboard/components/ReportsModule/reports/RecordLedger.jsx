@@ -239,6 +239,10 @@ const RecordLedger = ({
                   {entry.createdAt ? entry.createdAt.slice(0, 10) : '—'}
                 </span>
 
+                <span className="text-xs text-gray-400 tabular-nums">
+                  {entry.updatedAt ? entry.updatedAt.slice(0, 10) : '—'}
+                </span>
+
                 {/* Row actions */}
                 <div className="flex items-center gap-1 flex-shrink-0">
                   {confirmId === entry._id ? (
