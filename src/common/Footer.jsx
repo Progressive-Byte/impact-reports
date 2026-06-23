@@ -80,16 +80,35 @@ const Footer = () => {
           <div>
             <h3 className="text-[22px] font-bold text-black mb-6">Stay Connected</h3>
             <div className="mb-6">
-              <div className="relative group">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full border border-gray-200 rounded-full px-6 py-4 text-[15px] focus:outline-none focus:border-[#E52321] transition-all duration-300 bg-gray-50 focus:bg-white placeholder-gray-400"
-                />
-                <button data-cursor-label="JOIN" className="absolute right-2 top-2 bottom-2 bg-black hover:bg-[#E52321] text-white rounded-full px-6 text-[13px] font-bold transition-all duration-300 transform active:scale-95">
-                  Join
-                </button>
-              </div>
+              {status === 'success' ? (
+                <div className="flex items-center gap-3 bg-green-50 border border-green-200 rounded-full px-5 py-4">
+                  <SafeIcon icon="FiCheckCircle" className="text-green-500 text-lg flex-shrink-0" />
+                  <span className="text-[14px] font-bold text-green-700">{message}</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSubscribe}>
+                  <div className="relative group">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={e => { setEmail(e.target.value); setStatus('idle'); setMessage(''); }}
+                      placeholder="Enter your email"
+                      className="w-full border border-gray-200 rounded-full px-6 py-4 text-[15px] focus:outline-none focus:border-[#E52321] transition-all duration-300 bg-gray-50 focus:bg-white placeholder-gray-400"
+                    />
+                    <button
+                      type="submit"
+                      disabled={status === 'loading' || !email.trim()}
+                      data-cursor-label="JOIN"
+                      className="absolute right-2 top-2 bottom-2 bg-black hover:bg-[#E52321] text-white rounded-full px-6 text-[13px] font-bold transition-all duration-300 transform active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                      {status === 'loading' ? '…' : 'Join'}
+                    </button>
+                  </div>
+                  {status === 'error' && (
+                    <p className="text-xs text-red-500 font-medium mt-2 px-2">{message}</p>
+                  )}
+                </form>
+              )}
             </div>
             <div className="flex items-center justify-center space-x-6 mt-6">
               <a href="#" className="text-[#E52321] hover:text-[#C91D1B] hover:scale-110 transition-all duration-300">
