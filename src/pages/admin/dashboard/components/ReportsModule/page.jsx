@@ -23,6 +23,7 @@ const STEP_CONTENT = [GeneralTab, NarrativeTab, MetricsTab, MediaTimelineTab, Co
 const ReportsModule = ({ onCountChange }) => {
   const { admin }    = useAdminAuth();
   const isSuperAdmin = admin?.role === 'superadmin';
+  const isViewer     = admin?.role === 'viewer';
 
   const [searchParams, setSearchParams] = useSearchParams();
   const reportId  = searchParams.get('reportId');
