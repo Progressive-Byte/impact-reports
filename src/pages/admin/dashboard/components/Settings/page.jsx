@@ -44,6 +44,8 @@ const Settings = () => {
   const [exportFormat,    setExportFormat]    = useState('csv');
   const [showTotpModal,   setShowTotpModal]   = useState(false);
   const [disablingTotp,   setDisablingTotp]   = useState(false);
+  const [showPurgeModal,  setShowPurgeModal]  = useState(false);
+  const [purging,         setPurging]         = useState(false);
 
   const [security, setSecurity] = useState({
     require2fa:      false,
