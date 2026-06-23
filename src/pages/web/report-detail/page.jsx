@@ -194,7 +194,7 @@ const ReportDetail = () => {
             onToggle={() => toggleSection('locations')}
           />
 
-          <ReportCTAFooter />
+          <ReportCTAFooter donationUrl={report.donationUrl} />
         </div>
       </div>
 
