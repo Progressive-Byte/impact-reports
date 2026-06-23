@@ -2,19 +2,23 @@
 
 Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 
-| Method | Path                              | Auth        | Body                                 | Notes                                    |
-| ------ | --------------------------------- | ----------- | ------------------------------------ | ---------------------------------------- |
-| GET    | `/api/reports`                    | Bearer      | —                                    | List reports (role-filtered)             |
-| GET    | `/api/reports/search`             | Bearer      | —                                    | Autocomplete project names (query: `q`) |
-| GET    | `/api/reports/export`             | Superadmin  | —                                    | Download all reports as CSV or Excel     |
-| POST   | `/api/reports`                    | Superadmin  | `projectName`, `assignedTo[]`        | Create report with status `pending`      |
-| GET    | `/api/reports/:id`                | Bearer      | —                                    | Get single report                        |
-| PATCH  | `/api/reports/:id/step/:stepName` | Bearer      | step fields (see below)              | Save one wizard step                     |
-| DELETE | `/api/reports/:id`                | Superadmin  | —                                    | Permanently delete report                |
+| Method | Path                              | Auth              | Body                                 | Notes                                    |
+| ------ | --------------------------------- | ----------------- | ------------------------------------ | ---------------------------------------- |
+| GET    | `/api/reports`                    | Bearer (any)      | —                                    | List reports (role-filtered)             |
+| GET    | `/api/reports/search`             | Bearer (any)      | —                                    | Autocomplete project names (query: `q`) |
+| GET    | `/api/reports/export`             | Superadmin        | —                                    | Download all reports as CSV or Excel     |
+| POST   | `/api/reports`                    | Superadmin        | `projectName`, `assignedTo[]`        | Create report with status `pending`      |
+| GET    | `/api/reports/:id`                | Bearer (any)      | —                                    | Get single report                        |
+| PATCH  | `/api/reports/:id/step/:stepName` | Editor/Superadmin | step fields (see below)              | Save one wizard step                     |
+| DELETE | `/api/reports/:id`                | Superadmin        | —                                    | Permanently delete report                |
 
-**Access rules**
-- `superadmin` sees and can act on all reports.
-- `admin` sees only reports where their ID is in `assignedTo`. They can edit (save steps) but cannot create or delete.
+**Access rules by role**
+
+| Role          | List / Read               | Save steps | Create | Delete |
+| ------------- | ------------------------- | ---------- | ------ | ------ |
+| `superadmin`  | All reports               | ✓          | ✓      | ✓      |
+| `editor`      | Only assigned (`assignedTo` contains their `_id`) | ✓ | ✗ | ✗ |
+| `viewer`      | Only assigned (`assignedTo` contains their `_id`) | ✗ (403) | ✗ | ✗ |
 
 ---
 
