@@ -66,7 +66,7 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 
 ## `GET /api/reports`
 
-List reports accessible to the caller with server-side search, filter, sort, and pagination. Superadmin gets all; admin gets only assigned reports.
+List reports accessible to the caller with server-side search, filter, sort, and pagination. Superadmin gets all; editors and viewers get only reports where their ID is in `assignedTo`.
 
 ### Query parameters
 
