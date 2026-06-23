@@ -183,17 +183,19 @@ const RecordLedger = ({
         ) : reports.length === 0 ? (
           <div className="px-6 py-14 text-center">
             <SafeIcon
-              icon={urlSearch ? 'FiSearch' : 'FiClipboard'}
+              icon={urlSearch ? 'FiSearch' : isTrash ? 'FiTrash2' : 'FiClipboard'}
               className="text-gray-200 text-3xl mx-auto mb-3"
             />
             <p className="text-sm text-gray-400">
               {urlSearch
                 ? `No reports matching "${urlSearch}"`
-                : urlStatus !== 'all'
-                  ? `No ${urlStatus} reports found.`
-                  : 'No reports yet.'}
+                : isTrash
+                  ? 'Trash is empty.'
+                  : urlStatus !== 'all'
+                    ? `No ${urlStatus} reports found.`
+                    : 'No reports yet.'}
             </p>
-            {(urlSearch || urlStatus !== 'all') && (
+            {(urlSearch || (urlStatus !== 'all' && !isTrash)) && (
               <button
                 onClick={() => { setInputSearch(''); onStatusChange('all'); }}
                 className="mt-3 text-sm font-bold text-[#E52321] hover:underline"
