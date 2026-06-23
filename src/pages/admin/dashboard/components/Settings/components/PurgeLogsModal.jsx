@@ -20,7 +20,7 @@ const PurgeLogsModal = ({ onClose, onConfirm, purging }) => {
       const url      = URL.createObjectURL(blob);
       const a        = document.createElement('a');
       a.href         = url;
-      a.download     = `audit-logs-${new Date().toISOString().split('T')[0]}.csv`;
+      a.download     = `audit-logs-${new Date().toISOString().split('T')[0]}.${dlFormat === 'excel' ? 'xlsx' : 'csv'}`;
       a.click();
       URL.revokeObjectURL(url);
     } catch {
