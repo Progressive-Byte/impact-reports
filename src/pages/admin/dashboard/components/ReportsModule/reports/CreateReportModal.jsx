@@ -5,16 +5,17 @@ import MultiSelect from './MultiSelect';
 import { adminApiRequest } from '../../../../../../services/adminApi';
 
 const CreateReportModal = ({ open, onClose, onCreated, adminOptions }) => {
-  const [projectName,    setProjectName]    = useState('');
-  const [assignedTo,     setAssignedTo]     = useState([]);
-  const [suggestions,    setSuggestions]    = useState([]);
-  const [showSuggestions,setShowSuggestions]= useState(false);
-  const [submitting,     setSubmitting]     = useState(false);
+  const [projectName,     setProjectName]     = useState('');
+  const [actualProjectId, setActualProjectId] = useState('');
+  const [assignedTo,      setAssignedTo]      = useState([]);
+  const [suggestions,     setSuggestions]     = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [submitting,      setSubmitting]      = useState(false);
   const suggestRef = useRef(null);
 
   // Reset form when modal opens
   useEffect(() => {
-    if (open) { setProjectName(''); setAssignedTo([]); setSuggestions([]); setShowSuggestions(false); }
+    if (open) { setProjectName(''); setActualProjectId(''); setAssignedTo([]); setSuggestions([]); setShowSuggestions(false); }
   }, [open]);
 
   // Close suggestion list on outside click
