@@ -60,6 +60,19 @@ export function useReportData() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [regionOptions.length]);
 
+  // Lazy-load sector options from the backend config endpoint.
+  const loadSectorOptions = useCallback(() => {
+    if (sectorOptions.length > 0 || sectorOptionsLoadingRef.current) return;
+    sectorOptionsLoadingRef.current = true;
+    publicApiRequest('/api/config/sectors')
+      .then(data => setSectorOptions(
+        (data.sectors || []).map(s => ({ value: s, label: s }))
+      ))
+      .catch(() => {})
+      .finally(() => { sectorOptionsLoadingRef.current = false; });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sectorOptions.length]);
+
   // Fetch report list with server-side search, filter, sort, and pagination
   const fetchReports = useCallback(async ({ status = 'all', q = '', sort = 'recent', page = 1 } = {}) => {
     setLoadingList(true);
