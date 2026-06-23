@@ -4,13 +4,7 @@ import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../../common/SafeIcon';
 import CustomSelect from '../../ReportsModule/reports/CustomSelect';
 import { adminApiRequest } from '../../../../../../services/adminApi';
-
-const REGION_OPTIONS = [
-  { value: 'global',         label: 'Global' },
-  { value: 'mena',           label: 'MENA' },
-  { value: 'eastern_europe', label: 'Eastern Europe' },
-  { value: 'asia_pacific',   label: 'Asia Pacific' },
-];
+import { publicApiRequest } from '../../../../../../services/publicApi';
 
 const ROLE_OPTIONS = [
   { value: 'editor',     label: 'Editor' },
@@ -19,8 +13,20 @@ const ROLE_OPTIONS = [
 ];
 
 const EditUserModal = ({ user, open, onClose, onUpdated }) => {
-  const [form,    setForm]    = useState({ username: '', email: '', region: 'global', role: 'editor' });
-  const [loading, setLoading] = useState(false);
+  const [form,          setForm]          = useState({ username: '', email: '', region: '', role: 'editor' });
+  const [loading,       setLoading]       = useState(false);
+  const [regionOptions, setRegionOptions] = useState([]);
+
+  // Fetch regions from DB when modal opens
+  useEffect(() => {
+    if (!open) return;
+    publicApiRequest('/api/config/regions')
+      .then(data => {
+        const opts = (data.regions || []).map(r => ({ value: r, label: r }));
+        setRegionOptions(opts);
+      })
+      .catch(() => {});
+  }, [open]);
 
   // Sync form when user prop changes
   useEffect(() => {
@@ -28,7 +34,7 @@ const EditUserModal = ({ user, open, onClose, onUpdated }) => {
       setForm({
         username: user.username || '',
         email:    user.email    || '',
-        region:   user.region   || 'global',
+        region:   user.region   || '',
         role:     user.role     || 'editor',
       });
     }
