@@ -103,7 +103,7 @@ router.get('/reports/:idOrSlug', async (req, res) => {
     res.json({
       id:                report._id.toString(),
       slug:              report.slug      || report._id.toString(),
-      projectId:         report.projectId || '',
+      projectId:         report.actualProjectId || report.projectId || '',
       title:             report.projectName,
       image:             report.thumbnail || report.images?.[0]?.url || '',
       region,
