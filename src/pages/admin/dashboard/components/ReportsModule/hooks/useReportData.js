@@ -25,6 +25,7 @@ export function useReportData() {
   // Track in-flight requests to avoid duplicate calls
   const adminOptionsLoadingRef  = useRef(false);
   const regionOptionsLoadingRef = useRef(false);
+  const sectorOptionsLoadingRef = useRef(false);
 
   // Fetch platform default region once on mount
   useEffect(() => {
