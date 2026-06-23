@@ -132,9 +132,15 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
 
   const handleStateChange = (country, selectedStates) => {
     const coords  = coordMap[country] || {};
-    // Preserve any map-picked locations (they won't match a state name in stateMap)
-    const stateSet    = new Set(getStateOptions(country).map(s => s.value));
-    const mapPicked   = form.locations.filter(l => l.country === country && !stateSet.has(l.address));
+    const stateSet = new Set(getStateOptions(country).map(s => s.value));
+    // Only preserve locations that were explicitly map-pinned (non-state name + real GPS coords).
+    // Locations with no coords are old free-text entries that shouldn't survive a state change.
+    const mapPicked = form.locations.filter(l =>
+      l.country === country &&
+      !stateSet.has(l.address) &&
+      l.lat !== '' && l.lat != null &&
+      l.lng !== '' && l.lng != null
+    );
     const newStateLocs = selectedStates.map((address, i) => ({
       id:      Date.now() + i + Math.random(),
       country,
