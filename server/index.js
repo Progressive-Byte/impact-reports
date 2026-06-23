@@ -36,6 +36,7 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/config', configRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/subscribers', subscriberRoutes);
 
 app.get('/api/health', (_, res) => res.json({ status: 'ok', timestamp: new Date() }));
 
