@@ -233,6 +233,7 @@ const ReportsModule = ({ onCountChange }) => {
           update={update}
           adminOptions={adminOptions}
           regionOptions={regionOptions}
+          sectorOptions={sectorOptions}
           StepContent={STEP_CONTENT[stepIndex]}
           saving={saving}
           onBack={handleBack}
