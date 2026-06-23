@@ -13,7 +13,7 @@ import Settings from './components/Settings/page';
 const VALID_SECTIONS = {
   superadmin: ['overview', 'reports', 'users', 'settings'],
   editor:     ['overview', 'reports'],
-  viewer:     ['overview'],
+  viewer:     ['overview', 'reports'],
 };
 
 const AdminOverview = () => {
