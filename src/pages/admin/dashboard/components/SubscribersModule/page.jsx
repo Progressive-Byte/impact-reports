@@ -135,20 +135,22 @@ const SubscribersModule = () => {
         </div>
 
         {/* Table header */}
-        <div className="grid grid-cols-[2fr_1fr_1fr] gap-4 px-5 py-2.5 bg-gray-50 border-b border-gray-100">
+        <div className="grid grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-2.5 bg-gray-50 border-b border-gray-100">
           <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Email Address</span>
           <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Joined</span>
           <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Time</span>
+          <span />
         </div>
 
         {/* Rows */}
         <div className="divide-y divide-gray-50">
           {loading ? (
             Array.from({ length: SKELETON_ROWS }).map((_, i) => (
-              <div key={i} className="grid grid-cols-[2fr_1fr_1fr] gap-4 px-5 py-3.5 animate-pulse">
+              <div key={i} className="grid grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-3.5 animate-pulse">
                 <div className="h-4 bg-gray-100 rounded w-3/4" />
                 <div className="h-4 bg-gray-100 rounded w-1/2" />
                 <div className="h-4 bg-gray-100 rounded w-1/3" />
+                <div className="h-4 bg-gray-100 rounded w-full" />
               </div>
             ))
           ) : subscribers.length === 0 ? (
@@ -172,7 +174,7 @@ const SubscribersModule = () => {
             subscribers.map((sub, idx) => (
               <div
                 key={sub._id}
-                className="grid grid-cols-[2fr_1fr_1fr] gap-4 px-5 py-3.5 hover:bg-gray-50/60 transition-colors group"
+                className="grid grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-3.5 hover:bg-gray-50/60 transition-colors group"
               >
                 {/* Email */}
                 <div className="flex items-center gap-3 min-w-0">
@@ -192,6 +194,21 @@ const SubscribersModule = () => {
 
                 {/* Time */}
                 <span className="text-sm text-gray-400 self-center">{formatTime(sub.createdAt)}</span>
+
+                {/* Delete */}
+                <div className="flex items-center justify-end">
+                  <button
+                    onClick={() => handleDelete(sub._id, sub.email)}
+                    disabled={deletingId === sub._id}
+                    title="Remove subscriber"
+                    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-300 hover:text-[#E52321] hover:bg-red-50 border border-transparent hover:border-red-100 transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {deletingId === sub._id
+                      ? <span className="w-3.5 h-3.5 border-2 border-[#E52321] border-t-transparent rounded-full animate-spin" />
+                      : <SafeIcon icon="FiTrash2" className="text-sm" />
+                    }
+                  </button>
+                </div>
               </div>
             ))
           )}
