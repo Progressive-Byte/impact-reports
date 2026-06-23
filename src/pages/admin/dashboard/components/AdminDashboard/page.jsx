@@ -39,44 +39,12 @@ const AdminDashboard = () => {
       .catch(() => {});
   }, []);
 
-  const handleExportLogs = async () => {
+  const handleOpenExport = () => {
     if (exportScope === 'custom') {
-      if (!dateFrom || !dateTo) {
-        toast.error('Please select both start and end dates');
-        return;
-      }
-      if (dateFrom > dateTo) {
-        toast.error('Start date must be on or before end date');
-        return;
-      }
+      if (!dateFrom || !dateTo) { toast.error('Please select both start and end dates'); return; }
+      if (dateFrom > dateTo)    { toast.error('Start date must be on or before end date'); return; }
     }
-    setExporting(true);
-    try {
-      const token  = getCookie('adminToken');
-      const params = new URLSearchParams({ format: exportFormat, scope: exportScope });
-      if (exportScope === 'custom') { params.set('from', dateFrom); params.set('to', dateTo); }
-      const response = await fetch(`/api/auth/logs/export?${params}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
-        throw new Error(body.message || 'Export failed');
-      }
-      const blob = await response.blob();
-      const ext  = exportFormat === 'excel' ? 'xlsx' : 'csv';
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement('a');
-      a.href     = url;
-      const suffix = exportScope === 'custom' ? `${dateFrom}-to-${dateTo}` : exportScope;
-      a.download = `activity-logs-${suffix}.${ext}`;
-      a.click();
-      URL.revokeObjectURL(url);
-      toast.success('Logs exported');
-    } catch (err) {
-      toast.error(err.message || 'Export failed');
-    } finally {
-      setExporting(false);
-    }
+    setShowExportModal(true);
   };
 
   const rs         = dashStats?.reportStats;
