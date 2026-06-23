@@ -161,6 +161,19 @@ const Settings = () => {
     }
   };
 
+  const handlePurge = async () => {
+    setPurging(true);
+    try {
+      const data = await adminApiRequest('/api/auth/logs/purge', { method: 'DELETE' });
+      toast.success(`Audit logs purged — ${data.deleted} record${data.deleted !== 1 ? 's' : ''} deleted`);
+      setShowPurgeModal(false);
+    } catch (err) {
+      toast.error(err.message || 'Purge failed');
+    } finally {
+      setPurging(false);
+    }
+  };
+
   const handleSave = async () => {
     setSaving(true);
     try {
