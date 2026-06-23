@@ -197,17 +197,33 @@ const SubscribersModule = () => {
 
                 {/* Delete */}
                 <div className="flex items-center justify-end">
-                  <button
-                    onClick={() => handleDelete(sub._id, sub.email)}
-                    disabled={deletingId === sub._id}
-                    title="Remove subscriber"
-                    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-300 hover:text-[#E52321] hover:bg-red-50 border border-transparent hover:border-red-100 transition-all opacity-0 group-hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {deletingId === sub._id
-                      ? <span className="w-3.5 h-3.5 border-2 border-[#E52321] border-t-transparent rounded-full animate-spin" />
-                      : <SafeIcon icon="FiTrash2" className="text-sm" />
-                    }
-                  </button>
+                  {confirmId === sub._id ? (
+                    <>
+                      <button
+                        onClick={() => handleDelete(sub._id)}
+                        disabled={deletingId === sub._id}
+                        className="text-[10px] font-black text-[#E52321] bg-red-50 border border-red-200 px-2.5 py-1.5 rounded-lg hover:bg-red-100 transition-colors disabled:opacity-50"
+                      >
+                        {deletingId === sub._id
+                          ? <span className="w-3 h-3 border-2 border-[#E52321] border-t-transparent rounded-full animate-spin inline-block" />
+                          : 'Confirm'}
+                      </button>
+                      <button
+                        onClick={() => setConfirmId(null)}
+                        className="text-[10px] font-black text-gray-400 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors ml-1"
+                      >
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => setConfirmId(sub._id)}
+                      title="Remove subscriber"
+                      className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-300 hover:text-[#E52321] hover:bg-red-50 border border-transparent hover:border-red-100 transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <SafeIcon icon="FiTrash2" className="text-sm" />
+                    </button>
+                  )}
                 </div>
               </div>
             ))
