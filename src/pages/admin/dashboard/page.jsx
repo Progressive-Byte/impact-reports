@@ -13,7 +13,7 @@ import Settings from './components/Settings/page';
 import SubscribersModule from './components/SubscribersModule/page';
 
 const VALID_SECTIONS = {
-  superadmin: ['overview', 'reports', 'users', 'data', 'settings'],
+  superadmin: ['overview', 'reports', 'users', 'data', 'subscribers', 'settings'],
   editor:     ['overview', 'reports'],
   viewer:     ['overview', 'reports'],
 };
