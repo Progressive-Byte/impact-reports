@@ -5,54 +5,121 @@ import PageHeader from '../../common/PageHeader';
 import { publicApiRequest } from '../../../../../services/publicApi';
 import { adminApiRequest } from '../../../../../services/adminApi';
 
+const ListCard = ({ icon, title, subtitle, items, loading, onAdd, onUpdate, onRemove, addLabel, placeholder }) => (
+  <div className="bg-white border border-gray-200 rounded-2xl shadow-sm flex flex-col">
+    {/* Header */}
+    <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+      <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+        <SafeIcon icon={icon} className="text-gray-600 text-sm" />
+      </div>
+      <div>
+        <p className="text-sm font-black text-[#0B0D0F]">{title}</p>
+        <p className="text-xs text-gray-400">{subtitle}</p>
+      </div>
+    </div>
+
+    {/* List */}
+    <div className="px-6 py-5 space-y-3 flex-1">
+      {loading ? (
+        <div className="space-y-3">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-11 bg-gray-100 rounded-xl animate-pulse" />
+          ))}
+        </div>
+      ) : items.length === 0 ? (
+        <p className="text-sm text-gray-400 text-center py-4">No {title.toLowerCase()} yet. Add one below.</p>
+      ) : (
+        items.map((item, idx) => (
+          <div key={idx} className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0">
+              <SafeIcon icon={icon} className="text-gray-400 text-xs" />
+            </div>
+            <input
+              type="text"
+              value={item}
+              onChange={e => onUpdate(idx, e.target.value)}
+              placeholder={placeholder}
+              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] bg-white transition-all"
+            />
+            <button
+              onClick={() => onRemove(idx)}
+              className="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-[#E52321] hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+              title="Remove"
+            >
+              <SafeIcon icon="FiTrash2" className="text-sm" />
+            </button>
+          </div>
+        ))
+      )}
+    </div>
+
+    {/* Add button */}
+    <div className="px-6 pb-6">
+      <button
+        onClick={onAdd}
+        className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 hover:border-[#E52321] hover:text-[#E52321] text-gray-400 text-sm font-bold py-3 rounded-xl transition-colors"
+      >
+        <SafeIcon icon="FiPlus" className="text-base" />
+        {addLabel}
+      </button>
+    </div>
+  </div>
+);
+
 const DataManagement = () => {
   const [regions,  setRegions]  = useState([]);
+  const [sectors,  setSectors]  = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [saving,   setSaving]   = useState(false);
 
-  const fetchRegions = useCallback(async () => {
+  const fetchAll = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await publicApiRequest('/api/config/regions');
-      setRegions(data.regions || []);
+      const [regData, secData] = await Promise.all([
+        publicApiRequest('/api/config/regions'),
+        publicApiRequest('/api/config/sectors'),
+      ]);
+      setRegions(regData.regions || []);
+      setSectors(secData.sectors || []);
     } catch {
-      toast.error('Failed to load regions');
+      toast.error('Failed to load data');
     } finally {
       setLoading(false);
     }
   }, []);
 
-  useEffect(() => { fetchRegions(); }, [fetchRegions]);
-
-  const addRegion = () => setRegions(prev => [...prev, '']);
-
-  const updateRegion = (idx, val) =>
-    setRegions(prev => prev.map((r, i) => (i === idx ? val : r)));
-
-  const removeRegion = (idx) =>
-    setRegions(prev => prev.filter((_, i) => i !== idx));
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const handleSave = async () => {
-    const cleaned = regions.map(r => r.trim()).filter(Boolean);
-    if (cleaned.length === 0) {
-      toast.error('Add at least one region');
-      return;
-    }
-    const dupes = cleaned.filter((r, i) => cleaned.indexOf(r) !== i);
-    if (dupes.length) {
-      toast.error(`Duplicate region: "${dupes[0]}"`);
-      return;
-    }
+    const cleanedRegions = regions.map(r => r.trim()).filter(Boolean);
+    const cleanedSectors = sectors.map(s => s.trim()).filter(Boolean);
+
+    if (cleanedRegions.length === 0) { toast.error('Add at least one region'); return; }
+    if (cleanedSectors.length === 0) { toast.error('Add at least one sector'); return; }
+
+    const dupRegion = cleanedRegions.find((r, i) => cleanedRegions.indexOf(r) !== i);
+    if (dupRegion) { toast.error(`Duplicate region: "${dupRegion}"`); return; }
+
+    const dupSector = cleanedSectors.find((s, i) => cleanedSectors.indexOf(s) !== i);
+    if (dupSector) { toast.error(`Duplicate sector: "${dupSector}"`); return; }
+
     setSaving(true);
     try {
-      await adminApiRequest('/api/config/regions', {
-        method: 'PUT',
-        body: JSON.stringify({ regions: cleaned }),
-      });
-      setRegions(cleaned);
-      toast.success('Regions saved');
+      await Promise.all([
+        adminApiRequest('/api/config/regions', {
+          method: 'PUT',
+          body: JSON.stringify({ regions: cleanedRegions }),
+        }),
+        adminApiRequest('/api/config/sectors', {
+          method: 'PUT',
+          body: JSON.stringify({ sectors: cleanedSectors }),
+        }),
+      ]);
+      setRegions(cleanedRegions);
+      setSectors(cleanedSectors);
+      toast.success('Data saved successfully');
     } catch (err) {
-      toast.error(err.message || 'Failed to save regions');
+      toast.error(err.message || 'Failed to save');
     } finally {
       setSaving(false);
     }
@@ -78,63 +145,32 @@ const DataManagement = () => {
         }
       />
 
-      <div className="bg-white border border-gray-200 rounded-2xl shadow-sm">
-        {/* Card header */}
-        <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
-          <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
-            <SafeIcon icon="FiGlobe" className="text-gray-600 text-sm" />
-          </div>
-          <div>
-            <p className="text-sm font-black text-[#0B0D0F]">Regions</p>
-            <p className="text-xs text-gray-400">Used in reports, user profiles, and invite forms</p>
-          </div>
-        </div>
+      <div className="grid grid-cols-2 gap-5">
+        <ListCard
+          icon="FiGlobe"
+          title="Regions"
+          subtitle="Used in reports, user profiles, and invite forms"
+          items={regions}
+          loading={loading}
+          onAdd={() => setRegions(p => [...p, ''])}
+          onUpdate={(idx, val) => setRegions(p => p.map((r, i) => i === idx ? val : r))}
+          onRemove={(idx) => setRegions(p => p.filter((_, i) => i !== idx))}
+          addLabel="Add Region"
+          placeholder="Region name"
+        />
 
-        {/* Region list */}
-        <div className="px-6 py-5 space-y-3">
-          {loading ? (
-            <div className="space-y-3">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-11 bg-gray-100 rounded-xl animate-pulse" />
-              ))}
-            </div>
-          ) : regions.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">No regions yet. Add one below.</p>
-          ) : (
-            regions.map((region, idx) => (
-              <div key={idx} className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0">
-                  <SafeIcon icon="FiMapPin" className="text-gray-400 text-xs" />
-                </div>
-                <input
-                  type="text"
-                  value={region}
-                  onChange={e => updateRegion(idx, e.target.value)}
-                  placeholder="Region name"
-                  className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] bg-white transition-all"
-                />
-                <button
-                  onClick={() => removeRegion(idx)}
-                  className="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-[#E52321] hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
-                  title="Remove"
-                >
-                  <SafeIcon icon="FiTrash2" className="text-sm" />
-                </button>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* Add button */}
-        <div className="px-6 pb-6">
-          <button
-            onClick={addRegion}
-            className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 hover:border-[#E52321] hover:text-[#E52321] text-gray-400 text-sm font-bold py-3 rounded-xl transition-colors"
-          >
-            <SafeIcon icon="FiPlus" className="text-base" />
-            Add Region
-          </button>
-        </div>
+        <ListCard
+          icon="FiTag"
+          title="Sectors"
+          subtitle="Used in report General tab (e.g. Healthcare, Education)"
+          items={sectors}
+          loading={loading}
+          onAdd={() => setSectors(p => [...p, ''])}
+          onUpdate={(idx, val) => setSectors(p => p.map((s, i) => i === idx ? val : s))}
+          onRemove={(idx) => setSectors(p => p.filter((_, i) => i !== idx))}
+          addLabel="Add Sector"
+          placeholder="Sector name"
+        />
       </div>
     </div>
   );
