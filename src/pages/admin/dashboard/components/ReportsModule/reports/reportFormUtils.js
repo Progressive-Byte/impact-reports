@@ -2,6 +2,7 @@ export const BLANK_FORM = {
   projectName:       '',
   projectId:         '',
   actualProjectId:   '',
+  donationUrl:       '',
   cost:              0,
   assignedTo:        [],
   projectLead:       '',
