@@ -9,6 +9,7 @@ const platformSettingsSchema = new mongoose.Schema({
   weeklyDigest:           { type: Boolean, default: false },
   require2fa:             { type: Boolean, default: false },
   regions:                { type: [String], default: [] },
+  sectors:                { type: [String], default: [] },
 }, { timestamps: true });
 
 export default mongoose.model('PlatformSettings', platformSettingsSchema);
