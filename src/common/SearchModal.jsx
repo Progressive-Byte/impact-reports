@@ -98,9 +98,14 @@ const SearchModal = ({ isOpen, onClose }) => {
                       <div className="w-10 h-10 rounded-xl bg-gray-50 group-hover:bg-[#E52321]/10 flex items-center justify-center mr-5 transition-colors">
                         <SafeIcon icon={item.icon} className="text-gray-400 group-hover:text-[#E52321] text-lg" />
                       </div>
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">{item.type}</span>
-                        <span className="text-gray-900 font-bold group-hover:text-[#E52321] transition-colors">{item.label}</span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-0.5">
+                          {item.type === 'id' ? 'Project ID' : item.type}
+                        </span>
+                        <span className="text-gray-900 font-bold group-hover:text-[#E52321] transition-colors truncate">{item.label}</span>
+                        {item.subtitle && (
+                          <span className="text-[10px] text-gray-400 font-medium truncate">ID: {item.subtitle}</span>
+                        )}
                       </div>
                       <SafeIcon icon="FiArrowRight" className="ml-auto text-gray-200 group-hover:text-[#E52321] opacity-0 group-hover:opacity-100 transition-all" />
                     </button>
