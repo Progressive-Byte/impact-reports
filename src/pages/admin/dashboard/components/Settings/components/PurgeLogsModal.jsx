@@ -4,9 +4,19 @@ import SafeIcon from '../../../../../../common/SafeIcon';
 import { getCookie } from '../../../../../../utils/cookies';
 
 const PurgeLogsModal = ({ onClose, onConfirm, purging }) => {
-  const [downloaded, setDownloaded] = useState(null); // null | 'yes' | 'no'
-  const [downloading, setDownloading] = useState(false);
-  const [dlFormat, setDlFormat] = useState('csv');
+  const ALL_COLS = ['Type', 'Username', 'Role', 'IP', 'Timestamp', 'Archived', 'Details'];
+
+  const [downloaded,   setDownloaded]   = useState(null); // null | 'yes' | 'no'
+  const [downloading,  setDownloading]  = useState(false);
+  const [dlFormat,     setDlFormat]     = useState('csv');
+  const [selectedCols, setSelectedCols] = useState(new Set(ALL_COLS));
+
+  const toggleCol = (key) =>
+    setSelectedCols(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
 
   const handleDownload = async () => {
     setDownloading(true);
