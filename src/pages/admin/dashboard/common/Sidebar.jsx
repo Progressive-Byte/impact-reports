@@ -71,8 +71,8 @@ const Sidebar = ({ section, setSection, setSidebarOpen, reportCount = null, mobi
         </div>
       </nav>
 
-      {/* Bottom status */}
-      <div className="px-4 pb-5 pt-3 border-t border-white/5">
+      {/* Bottom status — superadmin only */}
+      {isSuperAdmin && <div className="px-4 pb-5 pt-3 border-t border-white/5">
         <div className="space-y-2">
           {STATUS_ITEMS.map(({ dot, icon, label, value, valueClass }) => (
             <div key={label} className="flex items-center justify-between py-0.5">
