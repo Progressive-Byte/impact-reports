@@ -1,7 +1,14 @@
 import React from 'react';
 import SafeIcon from '../../../../common/SafeIcon';
 
-const ReportCTAFooter = ({ donationUrl }) => (
+const normalizeUrl = (url) => {
+  if (!url) return '';
+  return /^https?:\/\//i.test(url) ? url : `https://${url}`;
+};
+
+const ReportCTAFooter = ({ donationUrl }) => {
+  const href = normalizeUrl(donationUrl);
+  return (
   <footer className="bg-white rounded-[2.5rem] p-10 md:p-14 text-left relative overflow-hidden shadow-[0_18px_50px_rgba(0,0,0,0.06)] border border-gray-100">
     <div className="absolute -top-24 -right-24 w-80 h-80 bg-[#E52321]/10 rounded-full blur-[90px]" />
     <div className="absolute -bottom-28 -left-28 w-96 h-96 bg-black/5 rounded-full blur-[100px]" />
