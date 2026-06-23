@@ -233,9 +233,10 @@ const ReportsModule = ({ onCountChange }) => {
           StepContent={STEP_CONTENT[stepIndex]}
           saving={saving}
           onBack={handleBack}
-          onNext={handleNext}
+          onNext={isViewer ? handleViewerNext : handleNext}
           onStepClick={goToStep}
           isSuperAdmin={isSuperAdmin}
+          isViewer={isViewer}
           fieldErrors={fieldErrors}
         />
       ) : (
@@ -254,6 +255,7 @@ const ReportsModule = ({ onCountChange }) => {
           onPageChange={handlePageChange}
           onRefresh={handleRefresh}
           isSuperAdmin={isSuperAdmin}
+          isViewer={isViewer}
           onEdit={openWizard}
           onDelete={handleDelete}
           selected={selected}
