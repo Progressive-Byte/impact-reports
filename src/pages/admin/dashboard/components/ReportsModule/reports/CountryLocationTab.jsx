@@ -279,55 +279,51 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
                     )}
                   </div>
 
-                  {/* Divider */}
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-px bg-gray-100" />
-                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">or</span>
-                    <div className="flex-1 h-px bg-gray-100" />
-                  </div>
-
-                  {/* ── Option B: Add on Map ──────────────────────────── */}
-                  <div>
-                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                      <SafeIcon icon="FiMap" className="text-[10px]" />
-                      Pin a specific location on the map
-                      <span className="text-gray-300 normal-case font-medium tracking-normal ml-1">
-                        for camps, villages, or rural areas not in the list above
+                  {/* ── Section B: Pin on Map (additive — works alongside section A) ── */}
+                  <div className="border-t border-gray-100 pt-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1.5">
+                        <SafeIcon icon="FiMap" className="text-[10px]" />
+                        Pin a specific location on the map
+                      </p>
+                      <span className="text-[9px] text-gray-300 font-medium">
+                        for camps, villages, or rural areas
                       </span>
-                    </p>
+                    </div>
 
-                    {/* Map-picked locations list */}
+                    {/* Map-picked locations as chips */}
                     {mapPickedLocs.length > 0 && (
-                      <div className="space-y-1.5 mb-2">
+                      <div className="flex flex-wrap gap-1.5 mb-2">
                         {mapPickedLocs.map(loc => (
-                          <div key={loc.id} className="flex items-center gap-2.5 bg-green-50 border border-green-100 rounded-xl px-3 py-2">
-                            <SafeIcon icon="FiNavigation" className="text-green-500 text-xs flex-shrink-0" />
-                            <div className="flex-1 min-w-0">
-                              <p className="text-xs font-bold text-[#0B0D0F] truncate">{loc.address}</p>
-                              <p className="text-[9px] text-green-600 font-mono tabular-nums">
-                                {Number(loc.lat).toFixed(4)}, {Number(loc.lng).toFixed(4)}
-                              </p>
-                            </div>
+                          <div
+                            key={loc.id}
+                            className="inline-flex items-center gap-1.5 bg-green-50 border border-green-200 rounded-full pl-2.5 pr-1.5 py-1 group"
+                          >
+                            <SafeIcon icon="FiNavigation" className="text-green-500 text-[10px] flex-shrink-0" />
+                            <span className="text-[11px] font-bold text-[#0B0D0F] max-w-[140px] truncate">{loc.address}</span>
+                            <span className="text-[9px] text-green-600 font-mono tabular-nums whitespace-nowrap">
+                              {Number(loc.lat).toFixed(3)}, {Number(loc.lng).toFixed(3)}
+                            </span>
                             <button
                               onClick={() => openMapForEdit(loc)}
-                              className="text-[10px] font-bold text-gray-400 hover:text-[#E52321] transition-colors flex-shrink-0"
                               title="Edit coordinates"
+                              className="w-4 h-4 flex items-center justify-center text-gray-300 hover:text-[#E52321] transition-colors"
                             >
-                              <SafeIcon icon="FiEdit2" className="text-xs" />
+                              <SafeIcon icon="FiEdit2" className="text-[9px]" />
                             </button>
                             <button
                               onClick={() => removeLocation(loc.id)}
-                              className="text-[10px] font-bold text-gray-400 hover:text-[#E52321] transition-colors flex-shrink-0"
-                              title="Remove this location"
+                              title="Remove"
+                              className="w-4 h-4 flex items-center justify-center text-gray-300 hover:text-[#E52321] transition-colors"
                             >
-                              <SafeIcon icon="FiX" className="text-xs" />
+                              <SafeIcon icon="FiX" className="text-[9px]" />
                             </button>
                           </div>
                         ))}
                       </div>
                     )}
 
-                    {/* Free-text "Add location" + "Add on Map" buttons */}
+                    {/* Add location + Add on Map buttons */}
                     <div className="flex gap-2">
                       {!hasStates && (
                         <button
@@ -340,7 +336,7 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
                       )}
                       <button
                         onClick={() => openMapForNew(country)}
-                        className="flex-1 border border-dashed border-blue-200 rounded-xl py-2.5 text-sm text-blue-400 font-semibold hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-2"
+                        className={`${hasStates ? 'w-full' : 'flex-1'} border border-dashed border-gray-200 rounded-xl py-2.5 text-sm text-gray-500 font-semibold hover:bg-gray-50 hover:border-gray-400 hover:text-gray-700 transition-colors flex items-center justify-center gap-2`}
                       >
                         <SafeIcon icon="FiMap" className="text-xs" />
                         Add on Map
