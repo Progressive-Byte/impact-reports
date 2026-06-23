@@ -144,6 +144,7 @@ const RecordLedger = ({
               <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
                 urlStatus === 'published' ? 'bg-green-500'
                 : urlStatus === 'pending' ? 'bg-yellow-400'
+                : urlStatus === 'trash'   ? 'bg-red-400'
                 : 'bg-gray-400'
               }`} />
               {urlStatus}
