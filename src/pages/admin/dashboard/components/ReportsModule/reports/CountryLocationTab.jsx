@@ -17,8 +17,10 @@ function getStateOptions(countryName) {
 }
 
 const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
-  const [gpsOpen,    setGpsOpen]    = useState(new Set()); // Set<loc.id>
-  const [pickerLoc,  setPickerLoc]  = useState(null);       // loc object for map picker
+  // gpsOpen = Set of loc IDs whose GPS row is expanded (for editing coords on existing locations)
+  const [gpsOpen,   setGpsOpen]   = useState(new Set());
+  // pickerConfig = { country, locId?, mode: 'new'|'edit', initialName?, initialLat?, initialLng? }
+  const [pickerCfg, setPickerCfg] = useState(null);
 
   const stateMap = useMemo(() => {
     const map = {};
@@ -26,7 +28,6 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
     return map;
   }, [form.countries]);
 
-  // lat/lng lookup: { countryName → { stateName → { lat, lng } } }
   const coordMap = useMemo(() => {
     const map = {};
     form.countries.forEach(c => {
@@ -42,7 +43,7 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
     return map;
   }, [form.countries]);
 
-  // Auto-fill lat/lng from library for locations that have an address but empty coords
+  // Auto-fill library lat/lng for locations missing coords
   useEffect(() => {
     const needsFill = form.locations.some(l => l.address && (!l.lat || !l.lng));
     if (!needsFill) return;
@@ -55,7 +56,7 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
     update('locations', filled);
   }, [coordMap]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── GPS helpers ────────────────────────────────────────────────────
+  // ── GPS helpers ─────────────────────────────────────────────────────
   const toggleGps = (id) =>
     setGpsOpen(prev => {
       const next = new Set(prev);
@@ -72,11 +73,42 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
   const clearGps = (id) =>
     update('locations', form.locations.map(l => l.id === id ? { ...l, lat: '', lng: '' } : l));
 
-  // ── Country selection ──────────────────────────────────────────────
+  // ── Map picker handlers ─────────────────────────────────────────────
+  const openMapForNew = (country) =>
+    setPickerCfg({ country, mode: 'new' });
+
+  const openMapForEdit = (loc) =>
+    setPickerCfg({
+      country:     loc.country,
+      locId:       loc.id,
+      mode:        'edit',
+      initialName: loc.address,
+      initialLat:  loc.lat,
+      initialLng:  loc.lng,
+    });
+
+  const handlePickerConfirm = (name, lat, lng) => {
+    if (pickerCfg.mode === 'new') {
+      // Create a new location entry
+      const newLoc = {
+        id:      Date.now() + Math.random(),
+        country: pickerCfg.country,
+        address: name,
+        lat,
+        lng,
+      };
+      update('locations', [...form.locations, newLoc]);
+    } else {
+      // Update coords on existing location (name stays unchanged)
+      updateGps(pickerCfg.locId, lat, lng);
+    }
+    setPickerCfg(null);
+  };
+
+  // ── Country selection ────────────────────────────────────────────────
   const handleCountryChange = (newCountries) => {
     const kept    = form.locations.filter(l => newCountries.includes(l.country));
     const covered = new Set(kept.map(l => l.country));
-    // For newly added countries that have NO state data, seed one blank text row
     const seeds   = newCountries
       .filter(c => !covered.has(c) && getStateOptions(c).length === 0)
       .map(c => ({ id: Date.now() + Math.random(), country: c, address: '' }));
@@ -84,36 +116,39 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
     update('locations', [...kept, ...seeds]);
   };
 
-  // ── Location helpers (used by free-text fallback) ──────────────────
+  // ── Free-text location helpers ────────────────────────────────────────
   const addTextLocation = (country) =>
     update('locations', [...form.locations, { id: Date.now(), country, address: '' }]);
 
-  const removeTextLocation = (id) =>
+  const removeLocation = (id) =>
     update('locations', form.locations.filter(l => l.id !== id));
 
   const updateTextLocation = (id, address) =>
     update('locations', form.locations.map(l => l.id === id ? { ...l, address } : l));
 
-  // ── State multi-select helper ──────────────────────────────────────
+  // ── State multi-select helper ─────────────────────────────────────────
   const getSelectedStates = (country) =>
     form.locations.filter(l => l.country === country && l.address.trim()).map(l => l.address);
 
   const handleStateChange = (country, selectedStates) => {
     const coords  = coordMap[country] || {};
-    const others  = form.locations.filter(l => l.country !== country);
-    const newLocs = selectedStates.map((address, i) => ({
+    // Preserve any map-picked locations (they won't match a state name in stateMap)
+    const stateSet    = new Set(getStateOptions(country).map(s => s.value));
+    const mapPicked   = form.locations.filter(l => l.country === country && !stateSet.has(l.address));
+    const newStateLocs = selectedStates.map((address, i) => ({
       id:      Date.now() + i + Math.random(),
       country,
       address,
       lat:     coords[address]?.lat || '',
       lng:     coords[address]?.lng || '',
     }));
-    update('locations', [...others, ...newLocs]);
+    const others = form.locations.filter(l => l.country !== country);
+    update('locations', [...others, ...newStateLocs, ...mapPicked]);
   };
 
   return (
     <div className="space-y-5">
-      {/* ── Country multi-selector ──────────────────────────────────── */}
+      {/* ── Country multi-selector ───────────────────────────────────── */}
       <MultiSelect
         label="Project Countries"
         required
@@ -124,7 +159,7 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
         error={fieldErrors.countries}
       />
 
-      {/* ── Per-country location sections ───────────────────────────── */}
+      {/* ── Per-country location sections ─────────────────────────────── */}
       {form.countries.length > 0 && (
         <div className="space-y-3">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
@@ -134,16 +169,20 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
           {form.countries.map(country => {
             const stateOptions   = stateMap[country] ?? [];
             const hasStates      = stateOptions.length > 0;
+            const stateSet       = new Set(stateOptions.map(s => s.value));
             const selectedStates = getSelectedStates(country);
             const countryLocs    = form.locations.filter(l => l.country === country);
+            // Map-picked locations = those whose address isn't in the state library
+            const mapPickedLocs  = hasStates
+              ? countryLocs.filter(l => !stateSet.has(l.address))
+              : [];
+            const stateLocs      = countryLocs.filter(l => stateSet.has(l.address));
             const locError       = fieldErrors[`loc_${country}`];
-            const filledCount    = hasStates
-              ? selectedStates.length
-              : countryLocs.filter(l => l.address.trim()).length;
+            const filledCount    = countryLocs.filter(l => l.address.trim()).length;
 
             return (
               <div key={country} className="border border-gray-200 rounded-xl">
-                {/* Country header bar */}
+                {/* Country header */}
                 <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100">
                   <div className="flex items-center gap-2.5">
                     <div className="w-6 h-6 rounded-md bg-[#E52321]/10 border border-[#E52321]/20 flex items-center justify-center flex-shrink-0">
@@ -155,99 +194,160 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
                     </span>
                     {hasStates && (
                       <span className="text-[10px] font-semibold text-gray-300 uppercase tracking-widest">
-                        · {stateOptions.length} available
+                        · {stateOptions.length} regions available
                       </span>
                     )}
                   </div>
-                  {locError && (
-                    <p className="text-xs text-red-500 font-medium">{locError}</p>
-                  )}
+                  {locError && <p className="text-xs text-red-500 font-medium">{locError}</p>}
                 </div>
 
                 {/* Location body */}
-                <div className="p-4">
-                  {hasStates ? (
-                    /* ── Multi-select for states/provinces ── */
-                    <div className="space-y-3">
+                <div className="p-4 space-y-4">
+
+                  {/* ── Option A: Select from list ──────────────────── */}
+                  <div>
+                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <SafeIcon icon="FiList" className="text-[10px]" />
+                      {hasStates ? 'Select from regions / districts' : 'Type location name'}
+                    </p>
+
+                    {hasStates ? (
                       <MultiSelect
                         value={selectedStates}
                         onChange={val => handleStateChange(country, val)}
                         options={stateOptions}
-                        placeholder={`Select states / provinces in ${country}...`}
+                        placeholder={`Select regions / districts in ${country}...`}
                       />
-                      {/* GPS rows for each selected state */}
-                      {countryLocs.filter(l => l.address.trim()).length > 0 && (
-                        <div className="space-y-1.5 pt-1">
-                          <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2">
-                            GPS Coordinates <span className="text-gray-300 normal-case font-medium tracking-normal">(optional — overrides library defaults)</span>
-                          </p>
-                          {countryLocs.filter(l => l.address.trim()).map(loc => (
-                            <GpsLocationRow
-                              key={loc.id}
-                              loc={loc}
-                              label={loc.address}
-                              isOpen={gpsOpen.has(loc.id)}
-                              onToggle={() => toggleGps(loc.id)}
-                              onLatChange={v => updateLocationField(loc.id, 'lat', v)}
-                              onLngChange={v => updateLocationField(loc.id, 'lng', v)}
-                              onPickMap={() => setPickerLoc(loc)}
-                              onClear={() => clearGps(loc.id)}
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    /* ── Free-text rows for countries without state data ── */
-                    <div className="space-y-2">
-                      {countryLocs.map((loc, idx) => (
-                        <div key={loc.id} className="space-y-1.5">
-                          {/* Address row */}
-                          <div className="flex items-center gap-3">
-                            <div className="w-7 h-7 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0">
-                              <SafeIcon icon="FiMapPin" className="text-[#E52321] text-xs" />
+                    ) : (
+                      <div className="space-y-2">
+                        {countryLocs.map((loc, idx) => (
+                          <div key={loc.id} className="space-y-1.5">
+                            <div className="flex items-center gap-3">
+                              <div className="w-7 h-7 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0">
+                                <SafeIcon icon={loc.lat && loc.lng ? 'FiNavigation' : 'FiMapPin'} className={`text-xs ${loc.lat && loc.lng ? 'text-green-500' : 'text-[#E52321]'}`} />
+                              </div>
+                              <Input
+                                placeholder={`Location ${idx + 1} — City, District or Region`}
+                                value={loc.address}
+                                onChange={e => updateTextLocation(loc.id, e.target.value)}
+                                className="flex-1"
+                              />
+                              {/* GPS toggle for typed location */}
+                              <GpsBadge loc={loc} isOpen={gpsOpen.has(loc.id)} onClick={() => toggleGps(loc.id)} />
+                              <button
+                                onClick={() => removeLocation(loc.id)}
+                                disabled={countryLocs.length === 1}
+                                className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-[#E52321] border border-gray-200 rounded-xl bg-white transition-colors flex-shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
+                              >
+                                <SafeIcon icon="FiTrash2" className="text-xs" />
+                              </button>
                             </div>
-                            <Input
-                              placeholder={`Location ${idx + 1} — City, District or Region`}
-                              value={loc.address}
-                              onChange={e => updateTextLocation(loc.id, e.target.value)}
-                              className="flex-1"
-                            />
-                            {/* GPS toggle */}
-                            <GpsBadgeButton
-                              loc={loc}
-                              isOpen={gpsOpen.has(loc.id)}
-                              onClick={() => toggleGps(loc.id)}
-                            />
+                            {gpsOpen.has(loc.id) && (
+                              <GpsInputRow
+                                loc={loc}
+                                onLatChange={v => updateLocationField(loc.id, 'lat', v)}
+                                onLngChange={v => updateLocationField(loc.id, 'lng', v)}
+                                onPickMap={() => openMapForEdit(loc)}
+                                onClear={() => clearGps(loc.id)}
+                              />
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* State-based GPS rows */}
+                    {hasStates && stateLocs.length > 0 && (
+                      <div className="mt-3 space-y-1">
+                        <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
+                          GPS Coordinates
+                          <span className="ml-1.5 text-gray-300 normal-case font-medium tracking-normal">(optional override)</span>
+                        </p>
+                        {stateLocs.map(loc => (
+                          <GpsStateRow
+                            key={loc.id}
+                            loc={loc}
+                            isOpen={gpsOpen.has(loc.id)}
+                            onToggle={() => toggleGps(loc.id)}
+                            onLatChange={v => updateLocationField(loc.id, 'lat', v)}
+                            onLngChange={v => updateLocationField(loc.id, 'lng', v)}
+                            onPickMap={() => openMapForEdit(loc)}
+                            onClear={() => clearGps(loc.id)}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Divider */}
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-px bg-gray-100" />
+                    <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest">or</span>
+                    <div className="flex-1 h-px bg-gray-100" />
+                  </div>
+
+                  {/* ── Option B: Add on Map ──────────────────────────── */}
+                  <div>
+                    <p className="text-[9px] font-black text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                      <SafeIcon icon="FiMap" className="text-[10px]" />
+                      Pin a specific location on the map
+                      <span className="text-gray-300 normal-case font-medium tracking-normal ml-1">
+                        for camps, villages, or rural areas not in the list above
+                      </span>
+                    </p>
+
+                    {/* Map-picked locations list */}
+                    {mapPickedLocs.length > 0 && (
+                      <div className="space-y-1.5 mb-2">
+                        {mapPickedLocs.map(loc => (
+                          <div key={loc.id} className="flex items-center gap-2.5 bg-green-50 border border-green-100 rounded-xl px-3 py-2">
+                            <SafeIcon icon="FiNavigation" className="text-green-500 text-xs flex-shrink-0" />
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-bold text-[#0B0D0F] truncate">{loc.address}</p>
+                              <p className="text-[9px] text-green-600 font-mono tabular-nums">
+                                {Number(loc.lat).toFixed(4)}, {Number(loc.lng).toFixed(4)}
+                              </p>
+                            </div>
                             <button
-                              onClick={() => removeTextLocation(loc.id)}
-                              disabled={countryLocs.length === 1}
-                              className="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-[#E52321] border border-gray-200 rounded-xl bg-white transition-colors flex-shrink-0 disabled:opacity-30 disabled:cursor-not-allowed"
+                              onClick={() => openMapForEdit(loc)}
+                              className="text-[10px] font-bold text-gray-400 hover:text-[#E52321] transition-colors flex-shrink-0"
+                              title="Edit coordinates"
                             >
-                              <SafeIcon icon="FiTrash2" className="text-xs" />
+                              <SafeIcon icon="FiEdit2" className="text-xs" />
+                            </button>
+                            <button
+                              onClick={() => removeLocation(loc.id)}
+                              className="text-[10px] font-bold text-gray-400 hover:text-[#E52321] transition-colors flex-shrink-0"
+                              title="Remove this location"
+                            >
+                              <SafeIcon icon="FiX" className="text-xs" />
                             </button>
                           </div>
-                          {/* GPS input row — shown when expanded */}
-                          {gpsOpen.has(loc.id) && (
-                            <GpsInputRow
-                              loc={loc}
-                              onLatChange={v => updateLocationField(loc.id, 'lat', v)}
-                              onLngChange={v => updateLocationField(loc.id, 'lng', v)}
-                              onPickMap={() => setPickerLoc(loc)}
-                              onClear={() => clearGps(loc.id)}
-                            />
-                          )}
-                        </div>
-                      ))}
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Free-text "Add location" + "Add on Map" buttons */}
+                    <div className="flex gap-2">
+                      {!hasStates && (
+                        <button
+                          onClick={() => addTextLocation(country)}
+                          className="flex-1 border border-dashed border-gray-200 rounded-xl py-2.5 text-sm text-[#76767e] font-semibold hover:bg-red-50 hover:border-[#E52321] hover:text-[#E52321] transition-colors flex items-center justify-center gap-2"
+                        >
+                          <SafeIcon icon="FiPlus" className="text-xs" />
+                          Add location
+                        </button>
+                      )}
                       <button
-                        onClick={() => addTextLocation(country)}
-                        className="mt-1 w-full border border-dashed border-gray-200 rounded-xl py-2.5 text-sm text-[#76767e] font-semibold hover:bg-red-50 hover:border-[#E52321] hover:text-[#E52321] transition-colors flex items-center justify-center gap-2"
+                        onClick={() => openMapForNew(country)}
+                        className="flex-1 border border-dashed border-blue-200 rounded-xl py-2.5 text-sm text-blue-400 font-semibold hover:bg-blue-50 hover:border-blue-400 hover:text-blue-600 transition-colors flex items-center justify-center gap-2"
                       >
-                        <SafeIcon icon="FiPlus" className="text-xs" />
-                        Add location in {country}
+                        <SafeIcon icon="FiMap" className="text-xs" />
+                        Add on Map
                       </button>
                     </div>
-                  )}
+                  </div>
+
                 </div>
               </div>
             );
@@ -255,35 +355,33 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
         </div>
       )}
 
-      {/* GPS map picker modal */}
-      {pickerLoc && (
+      {/* GPS / Map picker modal */}
+      {pickerCfg && (
         <GpsPickerModal
-          country={pickerLoc.country}
-          initialLat={pickerLoc.lat}
-          initialLng={pickerLoc.lng}
-          onConfirm={(lat, lng) => {
-            updateGps(pickerLoc.id, lat, lng);
-            setGpsOpen(prev => new Set([...prev, pickerLoc.id]));
-            setPickerLoc(null);
-          }}
-          onClose={() => setPickerLoc(null)}
+          country={pickerCfg.country}
+          initialName={pickerCfg.initialName || ''}
+          initialLat={pickerCfg.initialLat}
+          initialLng={pickerCfg.initialLng}
+          nameReadOnly={pickerCfg.mode === 'edit'}
+          onConfirm={handlePickerConfirm}
+          onClose={() => setPickerCfg(null)}
         />
       )}
     </div>
   );
 };
 
-// ── Small helper sub-components ────────────────────────────────────────
+// ── Internal helper components ────────────────────────────────────────
 
-function GpsBadgeButton({ loc, isOpen, onClick }) {
-  const hasGps = loc.lat && loc.lng;
+function GpsBadge({ loc, isOpen, onClick }) {
+  const has = loc.lat && loc.lng;
   return (
     <button
       type="button"
       onClick={onClick}
-      title={hasGps ? `GPS: ${Number(loc.lat).toFixed(4)}, ${Number(loc.lng).toFixed(4)}` : 'Add GPS coordinates'}
+      title={has ? `GPS: ${Number(loc.lat).toFixed(4)}, ${Number(loc.lng).toFixed(4)}` : 'Add GPS coordinates'}
       className={`flex-shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-xl border text-[10px] font-bold transition-all ${
-        hasGps
+        has
           ? isOpen
             ? 'bg-green-100 border-green-300 text-green-700'
             : 'bg-green-50 border-green-200 text-green-600 hover:bg-green-100'
@@ -292,10 +390,8 @@ function GpsBadgeButton({ loc, isOpen, onClick }) {
             : 'bg-white border-gray-200 text-gray-400 hover:border-gray-300 hover:text-gray-600'
       }`}
     >
-      <SafeIcon icon={hasGps ? 'FiCheckCircle' : 'FiNavigation'} className="text-[10px]" />
-      {hasGps
-        ? `${Number(loc.lat).toFixed(2)}, ${Number(loc.lng).toFixed(2)}`
-        : 'GPS'}
+      <SafeIcon icon={has ? 'FiCheckCircle' : 'FiNavigation'} className="text-[10px]" />
+      {has ? `${Number(loc.lat).toFixed(2)}, ${Number(loc.lng).toFixed(2)}` : 'GPS'}
     </button>
   );
 }
@@ -332,7 +428,7 @@ function GpsInputRow({ loc, onLatChange, onLngChange, onPickMap, onClear }) {
         <button
           type="button"
           onClick={onClear}
-          title="Clear GPS coordinates"
+          title="Clear GPS"
           className="w-6 h-6 flex items-center justify-center text-gray-300 hover:text-red-400 transition-colors flex-shrink-0"
         >
           <SafeIcon icon="FiX" className="text-xs" />
@@ -342,14 +438,14 @@ function GpsInputRow({ loc, onLatChange, onLngChange, onPickMap, onClear }) {
   );
 }
 
-function GpsLocationRow({ loc, label, isOpen, onToggle, onLatChange, onLngChange, onPickMap, onClear }) {
-  const hasGps = loc.lat && loc.lng;
+function GpsStateRow({ loc, isOpen, onToggle, onLatChange, onLngChange, onPickMap, onClear }) {
+  const has = loc.lat && loc.lng;
   return (
     <div className="space-y-1">
       <div className="flex items-center gap-2 py-1">
         <SafeIcon icon="FiMapPin" className="text-gray-300 text-[10px] flex-shrink-0" />
-        <span className="flex-1 text-xs font-semibold text-gray-600 truncate">{label}</span>
-        {hasGps && !isOpen && (
+        <span className="flex-1 text-xs font-semibold text-gray-600 truncate">{loc.address}</span>
+        {has && !isOpen && (
           <span className="text-[9px] text-green-500 font-bold font-mono tabular-nums">
             {Number(loc.lat).toFixed(4)}, {Number(loc.lng).toFixed(4)}
           </span>
@@ -358,17 +454,13 @@ function GpsLocationRow({ loc, label, isOpen, onToggle, onLatChange, onLngChange
           type="button"
           onClick={onToggle}
           className={`flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-lg border text-[10px] font-bold transition-all ${
-            hasGps
-              ? isOpen
-                ? 'bg-green-100 border-green-300 text-green-700'
-                : 'bg-green-50 border-green-200 text-green-600 hover:bg-green-100'
-              : isOpen
-                ? 'bg-gray-100 border-gray-300 text-gray-600'
-                : 'bg-white border-gray-200 text-gray-400 hover:border-gray-300'
+            has
+              ? isOpen ? 'bg-green-100 border-green-300 text-green-700' : 'bg-green-50 border-green-200 text-green-600 hover:bg-green-100'
+              : isOpen ? 'bg-gray-100 border-gray-300 text-gray-600' : 'bg-white border-gray-200 text-gray-400 hover:border-gray-300'
           }`}
         >
-          <SafeIcon icon={hasGps ? 'FiCheckCircle' : 'FiNavigation'} className="text-[10px]" />
-          {isOpen ? 'Hide' : (hasGps ? 'Edit' : 'Add GPS')}
+          <SafeIcon icon={has ? 'FiCheckCircle' : 'FiNavigation'} className="text-[10px]" />
+          {isOpen ? 'Hide' : (has ? 'Edit GPS' : 'Add GPS')}
         </button>
       </div>
       {isOpen && (
