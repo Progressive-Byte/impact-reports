@@ -22,7 +22,11 @@ const PurgeLogsModal = ({ onClose, onConfirm, purging }) => {
     setDownloading(true);
     try {
       const token    = getCookie('adminToken');
-      const response = await fetch(`/api/auth/logs/export?format=${dlFormat}&scope=all`, {
+      const params = new URLSearchParams({ format: dlFormat, scope: 'all' });
+      if (selectedCols.size < ALL_COLS.length && selectedCols.size > 0) {
+        params.set('columns', [...selectedCols].join(','));
+      }
+      const response = await fetch(`/api/auth/logs/export?${params}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Export failed');
