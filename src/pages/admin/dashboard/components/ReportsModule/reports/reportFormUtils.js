@@ -124,13 +124,15 @@ export function validateStep(stepKey, form, isSuperAdmin = true) {
 
 export const buildStepPayload = {
   general:   (f) => ({
-    projectName:   f.projectName,
-    assignedTo:    f.assignedTo,
-    projectLead:   f.projectLead,
-    fiscalYear:    f.fiscalYear,
-    region:        f.region,
-    sector:        f.sector,
-    livesImpacted: Number(f.livesImpacted) || 0,
+    projectName:     f.projectName,
+    assignedTo:      f.assignedTo,
+    actualProjectId: f.actualProjectId || '',
+    cost:            Number(f.cost) || 0,
+    projectLead:     f.projectLead,
+    fiscalYear:      f.fiscalYear,
+    region:          f.region,
+    sector:          f.sector,
+    livesImpacted:   Number(f.livesImpacted) || 0,
   }),
   narrative: (f) => ({
     projectBackground: f.projectBackground,
