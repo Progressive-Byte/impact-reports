@@ -82,17 +82,36 @@ const PurgeLogsModal = ({ onClose, onConfirm, purging }) => {
               <p className="text-xs text-gray-400 leading-relaxed">
                 We recommend downloading a full copy of all audit logs before permanently deleting them.
               </p>
-              <button
-                onClick={handleDownload}
-                disabled={downloading}
-                className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-60"
-              >
-                {downloading
-                  ? <span className="w-3.5 h-3.5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                  : <SafeIcon icon="FiDownload" className="text-sm" />
-                }
-                {downloading ? 'Downloading…' : 'Download All Logs (CSV)'}
-              </button>
+              <div className="flex items-center gap-2">
+                {/* Format picker */}
+                <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-bold">
+                  {['csv', 'excel'].map(f => (
+                    <button
+                      key={f}
+                      type="button"
+                      onClick={() => setDlFormat(f)}
+                      className={`px-3 py-1.5 transition-colors ${
+                        dlFormat === f
+                          ? 'bg-[#0B0D0F] text-white'
+                          : 'bg-white text-gray-500 hover:bg-gray-50'
+                      }`}
+                    >
+                      {f === 'csv' ? 'CSV' : 'Excel'}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={handleDownload}
+                  disabled={downloading}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-60"
+                >
+                  {downloading
+                    ? <span className="w-3.5 h-3.5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                    : <SafeIcon icon="FiDownload" className="text-sm" />
+                  }
+                  {downloading ? 'Downloading…' : `Download All Logs (${dlFormat.toUpperCase()})`}
+                </button>
+              </div>
             </div>
 
             {/* Yes / No confirmation */}
