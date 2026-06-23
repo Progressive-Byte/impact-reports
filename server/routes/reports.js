@@ -193,7 +193,7 @@ router.post('/', async (req, res) => {
       return res.status(403).json({ message: 'Only superadmin can create reports' });
     }
 
-    const { projectName, assignedTo } = req.body;
+    const { projectName, assignedTo, actualProjectId } = req.body;
     if (!projectName?.trim()) {
       return res.status(400).json({ message: 'Project name is required' });
     }
