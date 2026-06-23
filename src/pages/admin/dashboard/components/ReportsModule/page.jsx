@@ -115,6 +115,11 @@ const ReportsModule = ({ onCountChange }) => {
     else goToStep(STEP_KEYS[stepIndex - 1]);
   };
 
+  const handleViewerNext = useCallback(() => {
+    if (stepIndex < STEP_KEYS.length - 1) goToStep(STEP_KEYS[stepIndex + 1]);
+    else goToList();
+  }, [stepIndex, goToStep, goToList]);
+
   const handleNext = async () => {
     const errors = validateStep(stepKey, form, isSuperAdmin);
     if (Object.keys(errors).length) {
