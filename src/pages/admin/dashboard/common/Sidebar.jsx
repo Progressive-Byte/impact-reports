@@ -91,7 +91,7 @@ const Sidebar = ({ section, setSection, setSidebarOpen, reportCount = null, mobi
             <span className="text-white text-[11px] font-bold">156</span>
           </div>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };
