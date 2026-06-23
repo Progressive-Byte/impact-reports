@@ -202,8 +202,11 @@ router.get('/search', async (req, res) => {
     const regex = new RegExp(q.trim(), 'i');
     const base  = { status: 'published' };
 
-    const [reportDocs, sectors, countryDocs, regions] = await Promise.all([
-      Report.find({ ...base, projectName: regex }).select('projectName').limit(5),
+    const [reportByName, reportById, sectors, countryDocs, regions] = await Promise.all([
+      Report.find({ ...base, projectName: regex })
+        .select('projectName slug').limit(5),
+      Report.find({ ...base, $or: [{ actualProjectId: regex }, { projectId: regex }] })
+        .select('projectName actualProjectId projectId slug').limit(3),
       Report.distinct('sector', { ...base, sector: regex }),
       Report.aggregate([
         { $match: base },
@@ -215,12 +218,26 @@ router.get('/search', async (req, res) => {
       Report.distinct('region', { ...base, region: regex }),
     ]);
 
+    // Deduplicate report+id results by _id
+    const seenIds = new Set();
+    const reportResults = [];
+    for (const r of reportByName) {
+      seenIds.add(r._id.toString());
+      reportResults.push({ label: r.projectName, type: 'report', id: r._id.toString(), slug: r.slug || r._id.toString(), icon: 'FiFileText' });
+    }
+    for (const r of reportById) {
+      if (seenIds.has(r._id.toString())) continue;
+      seenIds.add(r._id.toString());
+      const displayId = r.actualProjectId || r.projectId || '';
+      reportResults.push({ label: r.projectName, subtitle: displayId, type: 'id', id: r._id.toString(), slug: r.slug || r._id.toString(), icon: 'FiHash' });
+    }
+
     const results = [
-      ...reportDocs.map(r  => ({ label: r.projectName, type: 'report',  id: r._id.toString(), icon: 'FiFileText' })),
-      ...sectors.slice(0, 3).map(s => ({ label: s,      type: 'sector',  icon: 'FiBox'      })),
-      ...countryDocs.slice(0, 3).map(c => ({ label: c._id, type: 'country', icon: 'FiFlag'  })),
-      ...regions.slice(0, 2).map(r => ({ label: r,      type: 'region',  icon: 'FiGlobe'    })),
-    ].slice(0, 8);
+      ...reportResults.slice(0, 5),
+      ...countryDocs.slice(0, 3).map(c => ({ label: c._id, type: 'country', icon: 'FiFlag'   })),
+      ...regions.slice(0, 2).map(r     => ({ label: r,     type: 'region',  icon: 'FiGlobe'  })),
+      ...sectors.slice(0, 2).map(s     => ({ label: s,     type: 'sector',  icon: 'FiBox'    })),
+    ].slice(0, 10);
 
     res.json({ results });
   } catch (err) {
