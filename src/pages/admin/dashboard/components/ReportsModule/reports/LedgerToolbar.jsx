@@ -4,8 +4,10 @@ import CustomSelect from './CustomSelect';
 const STATUS_FILTERS = ['all', 'published', 'draft', 'pending'];
 
 const SORT_OPTIONS = [
-  { value: 'recent', label: 'Recent' },
-  { value: 'oldest', label: 'Oldest' },
+  { value: 'recent', label: 'Recent'  },
+  { value: 'oldest', label: 'Oldest'  },
+  { value: 'az',     label: 'A → Z'   },
+  { value: 'za',     label: 'Z → A'   },
 ];
 
 const LedgerToolbar = ({
