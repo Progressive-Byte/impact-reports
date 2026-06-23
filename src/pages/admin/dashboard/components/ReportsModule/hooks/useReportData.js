@@ -15,6 +15,7 @@ export function useReportData() {
   const [stats,         setStats]         = useState({ totalLives: 0, count: 0 });
   const [adminOptions,  setAdminOptions]  = useState([]);
   const [regionOptions, setRegionOptions] = useState([]);
+  const [sectorOptions, setSectorOptions] = useState([]);
   const [loadingList,   setLoadingList]   = useState(true);
   const [loadingReport, setLoadingReport] = useState(false);
 
