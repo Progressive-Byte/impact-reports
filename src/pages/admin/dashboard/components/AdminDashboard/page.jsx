@@ -40,10 +40,22 @@ const AdminDashboard = () => {
   }, []);
 
   const handleExportLogs = async () => {
+    if (exportScope === 'custom') {
+      if (!dateFrom || !dateTo) {
+        toast.error('Please select both start and end dates');
+        return;
+      }
+      if (dateFrom > dateTo) {
+        toast.error('Start date must be on or before end date');
+        return;
+      }
+    }
     setExporting(true);
     try {
-      const token    = getCookie('adminToken');
-      const response = await fetch(`/api/auth/logs/export?format=${exportFormat}&scope=${exportScope}`, {
+      const token  = getCookie('adminToken');
+      const params = new URLSearchParams({ format: exportFormat, scope: exportScope });
+      if (exportScope === 'custom') { params.set('from', dateFrom); params.set('to', dateTo); }
+      const response = await fetch(`/api/auth/logs/export?${params}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) {
@@ -55,7 +67,8 @@ const AdminDashboard = () => {
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement('a');
       a.href     = url;
-      a.download = `activity-logs-${exportScope}-${new Date().toISOString().split('T')[0]}.${ext}`;
+      const suffix = exportScope === 'custom' ? `${dateFrom}-to-${dateTo}` : exportScope;
+      a.download = `activity-logs-${suffix}.${ext}`;
       a.click();
       URL.revokeObjectURL(url);
       toast.success('Logs exported');
