@@ -10,6 +10,9 @@ const LogoIcon = ({ className = "w-10 h-10 sm:w-12 sm:h-12" }) => (
 );
 
 const Header = ({ onSearchClick }) => {
+  const { pathname } = useLocation();
+  const isReportDetail = /^\/report\//.test(pathname);
+
   return (
     <>
       <header className="absolute top-4 sm:top-6 left-0 right-0 z-50">
