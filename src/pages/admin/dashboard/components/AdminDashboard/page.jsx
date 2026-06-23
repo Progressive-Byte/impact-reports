@@ -21,11 +21,10 @@ const AdminDashboard = () => {
   const [loading,      setLoading]      = useState(true);
   const [activityLogs, setActivityLogs] = useState([]);
   const [logMeta,      setLogMeta]      = useState({ total: 0, windowDays: 30 });
-  const [exporting,    setExporting]    = useState(false);
-  const [exportFormat, setExportFormat] = useState('csv');
-  const [exportScope,  setExportScope]  = useState('year');
-  const [dateFrom,     setDateFrom]     = useState('');
-  const [dateTo,       setDateTo]       = useState('');
+  const [exportScope,      setExportScope]      = useState('year');
+  const [dateFrom,         setDateFrom]         = useState('');
+  const [dateTo,           setDateTo]           = useState('');
+  const [showExportModal,  setShowExportModal]  = useState(false);
 
   useEffect(() => {
     adminApiRequest('/api/admin/dashboard')
