@@ -92,13 +92,17 @@ const RecordLedger = ({
   isViewer = false,
   onEdit,
   onDelete,
+  onRestore,
+  onPermanentDelete,
   onBulkDelete,
 }) => {
   const [confirmId, setConfirmId] = useState(null);
   const showSkeleton = loading || isDebouncing;
+  const isTrash = urlStatus === 'trash';
 
   const handleConfirmDelete = (id) => {
-    onDelete?.(id);
+    if (isTrash) onPermanentDelete?.(id);
+    else onDelete?.(id);
     setConfirmId(null);
   };
 
