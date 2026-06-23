@@ -42,6 +42,44 @@ router.put('/regions', protect, async (req, res) => {
   }
 });
 
+const DEFAULT_SECTORS = ['Healthcare', 'Education', 'WASH', 'Food Security', 'Shelter', 'Livelihoods'];
+
+// GET /api/config/sectors — public; returns DB sectors, falls back to hardcoded defaults
+router.get('/sectors', async (_req, res) => {
+  try {
+    const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+    const sectors = settings?.sectors?.length ? settings.sectors : DEFAULT_SECTORS;
+    res.json({ sectors });
+  } catch {
+    res.json({ sectors: DEFAULT_SECTORS });
+  }
+});
+
+// PUT /api/config/sectors — superadmin only, replaces the full sector list
+router.put('/sectors', protect, async (req, res) => {
+  if (req.admin.role !== 'superadmin') {
+    return res.status(403).json({ message: 'Superadmin only' });
+  }
+  const { sectors } = req.body;
+  if (!Array.isArray(sectors) || sectors.length === 0) {
+    return res.status(400).json({ message: 'At least one sector is required' });
+  }
+  const cleaned = sectors.map(s => s.trim()).filter(Boolean);
+  if (cleaned.length === 0) {
+    return res.status(400).json({ message: 'At least one sector is required' });
+  }
+  try {
+    const settings = await PlatformSettings.findOneAndUpdate(
+      { key: 'platform' },
+      { $set: { sectors: cleaned } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ).lean();
+    res.json({ sectors: settings.sectors });
+  } catch {
+    res.status(500).json({ message: 'Failed to save sectors' });
+  }
+});
+
 // GET /api/config/settings — protected, returns platform settings
 router.get('/settings', protect, async (_req, res) => {
   try {
