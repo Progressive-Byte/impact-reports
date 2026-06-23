@@ -127,8 +127,14 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
     update('locations', form.locations.map(l => l.id === id ? { ...l, address } : l));
 
   // ── State multi-select helper ─────────────────────────────────────────
-  const getSelectedStates = (country) =>
-    form.locations.filter(l => l.country === country && l.address.trim()).map(l => l.address);
+  // Only return addresses that are valid state names — keeps junk/map-pinned locs out of the MultiSelect
+  const getSelectedStates = (country) => {
+    const sOpts = stateMap[country] ?? [];
+    const sSet  = new Set(sOpts.map(s => s.value));
+    return form.locations
+      .filter(l => l.country === country && sSet.has(l.address))
+      .map(l => l.address);
+  };
 
   const handleStateChange = (country, selectedStates) => {
     const coords  = coordMap[country] || {};
