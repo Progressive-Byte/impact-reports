@@ -114,9 +114,11 @@ export function useReportData() {
     meta, stats,
     adminOptions,
     regionOptions,
+    sectorOptions,
     loadingList, loadingReport,
     fetchReports,
     loadAdminOptions,
     loadRegionOptions,
+    loadSectorOptions,
   };
 }
