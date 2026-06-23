@@ -34,7 +34,7 @@ const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], secto
     </div>
     <div className="grid grid-cols-2 gap-5">
       <Input
-        label="Project Lead" required
+        label="Project Lead/Partner" required
         placeholder="Lead name"
         value={form.projectLead}
         onChange={e => update('projectLead', e.target.value)}
