@@ -18,6 +18,7 @@ const SubscribersModule = () => {
   const [subscribers, setSubscribers] = useState([]);
   const [meta,        setMeta]        = useState(null);
   const [loading,     setLoading]     = useState(true);
+  const [deletingId,  setDeletingId]  = useState(null); // id currently being deleted
 
   // Debounce search input → URL
   useEffect(() => {
