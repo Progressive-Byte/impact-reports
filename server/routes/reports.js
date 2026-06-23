@@ -63,7 +63,11 @@ router.get('/', async (req, res) => {
   try {
     const { status, q, sort } = req.query;
     const { page, limit, skip } = parsePagination(req.query, { defaultLimit: 10, maxLimit: 100 });
-    const sortOrder = sort === 'oldest' ? 'createdAt' : '-createdAt';
+    const sortOrder =
+      sort === 'oldest' ? 'createdAt' :
+      sort === 'az'     ? 'projectName' :
+      sort === 'za'     ? '-projectName' :
+      '-createdAt';
 
     const filter = req.admin.role === 'superadmin'
       ? {}
