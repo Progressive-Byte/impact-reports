@@ -203,6 +203,13 @@ const Settings = () => {
       {showTotpModal && (
         <TotpSetupModal onClose={() => setShowTotpModal(false)} />
       )}
+      {showPurgeModal && (
+        <PurgeLogsModal
+          onClose={() => setShowPurgeModal(false)}
+          onConfirm={handlePurge}
+          purging={purging}
+        />
+      )}
     </AnimatePresence>
     <div className="space-y-5">
       <PageHeader
