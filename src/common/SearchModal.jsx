@@ -32,8 +32,8 @@ const SearchModal = ({ isOpen, onClose }) => {
   }, [query]);
 
   const handleSelect = (item) => {
-    if (item.type === 'report') {
-      navigate(`/report/${item.id}`);
+    if (item.type === 'report' || item.type === 'id') {
+      navigate(`/report/${item.slug || item.id}`);
     } else {
       navigate(`/?filter=${encodeURIComponent(item.label)}&type=${item.type}`);
     }
