@@ -32,7 +32,7 @@ const InviteModal = ({ open, onClose, onInviteSent }) => {
 
   const handleClose = () => {
     if (loading) return;
-    setForm(INITIAL);
+    setForm(p => ({ ...INITIAL, region: regionOptions[0]?.value || '' }));
     onClose();
   };
 
