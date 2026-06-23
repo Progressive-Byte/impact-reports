@@ -33,6 +33,7 @@ export const reportToForm = (report, defaultRegion = '') => ({
   projectName:       report.projectName     || '',
   projectId:         report.projectId       || '',
   actualProjectId:   report.actualProjectId || '',
+  donationUrl:       report.donationUrl     || '',
   cost:              report.cost            ?? 0,
   assignedTo:        (report.assignedTo || []).map(a => String(a._id ?? a)),
   projectLead:       report.projectLead || '',
