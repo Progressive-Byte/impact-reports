@@ -12,7 +12,7 @@ import DataManagement from './components/DataManagement/page';
 import Settings from './components/Settings/page';
 
 const VALID_SECTIONS = {
-  superadmin: ['overview', 'reports', 'users', 'settings'],
+  superadmin: ['overview', 'reports', 'users', 'data', 'settings'],
   editor:     ['overview', 'reports'],
   viewer:     ['overview', 'reports'],
 };
