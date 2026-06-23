@@ -10,6 +10,7 @@ import ReportsModule from './components/ReportsModule/page';
 import UserManager from './components/UserManager/page';
 import DataManagement from './components/DataManagement/page';
 import Settings from './components/Settings/page';
+import SubscribersModule from './components/SubscribersModule/page';
 
 const VALID_SECTIONS = {
   superadmin: ['overview', 'reports', 'users', 'data', 'settings'],
