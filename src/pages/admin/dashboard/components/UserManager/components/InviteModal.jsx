@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../../common/SafeIcon';
 import CustomSelect from '../../ReportsModule/reports/CustomSelect';
 import { adminApiRequest } from '../../../../../../services/adminApi';
+import { publicApiRequest } from '../../../../../../services/publicApi';
 
 const ROLE_OPTIONS = [
   { value: 'editor',     label: 'Editor' },
@@ -11,18 +12,23 @@ const ROLE_OPTIONS = [
   { value: 'superadmin', label: 'Superadmin' },
 ];
 
-const REGION_OPTIONS = [
-  { value: 'global',         label: 'Global' },
-  { value: 'mena',           label: 'MENA' },
-  { value: 'eastern_europe', label: 'Eastern Europe' },
-  { value: 'asia_pacific',   label: 'Asia Pacific' },
-];
-
-const INITIAL = { email: '', role: 'editor', region: 'global' };
+const INITIAL = { email: '', role: 'editor', region: '' };
 
 const InviteModal = ({ open, onClose, onInviteSent }) => {
-  const [form,    setForm]    = useState(INITIAL);
-  const [loading, setLoading] = useState(false);
+  const [form,          setForm]          = useState(INITIAL);
+  const [loading,       setLoading]       = useState(false);
+  const [regionOptions, setRegionOptions] = useState([]);
+
+  useEffect(() => {
+    if (!open) return;
+    publicApiRequest('/api/config/regions')
+      .then(data => {
+        const opts = (data.regions || []).map(r => ({ value: r, label: r }));
+        setRegionOptions(opts);
+        setForm(p => ({ ...p, region: p.region || opts[0]?.value || '' }));
+      })
+      .catch(() => {});
+  }, [open]);
 
   const handleClose = () => {
     if (loading) return;
