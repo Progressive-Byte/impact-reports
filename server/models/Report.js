@@ -35,6 +35,8 @@ const reportSchema = new mongoose.Schema(
     status:            { type: String, enum: ['pending', 'draft', 'published'], default: 'pending' },
 
     // General step
+    actualProjectId:   { type: String, default: '' },
+    cost:              { type: Number, default: 0 },
     projectLead:       { type: String, default: '' },
     fiscalYear:        { type: String, default: 'FY25' },
     region:            { type: String, default: '' },
