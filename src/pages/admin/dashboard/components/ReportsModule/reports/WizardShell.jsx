@@ -30,6 +30,7 @@ const WizardShell = ({
             update={update}
             adminOptions={adminOptions}
             regionOptions={regionOptions}
+            sectorOptions={sectorOptions}
             isSuperAdmin={isSuperAdmin}
             fieldErrors={{}}
           />
@@ -40,6 +41,7 @@ const WizardShell = ({
           update={update}
           adminOptions={adminOptions}
           regionOptions={regionOptions}
+          sectorOptions={sectorOptions}
           isSuperAdmin={isSuperAdmin}
           fieldErrors={fieldErrors}
         />
