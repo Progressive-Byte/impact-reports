@@ -199,11 +199,11 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
                   <SafeIcon icon="FiTrash2" className="text-sm" />
                 </button>
               </div>
-              <Textarea
-                rows={3}
+              <RichTextEditor
                 placeholder="Milestone notes..."
                 value={m.notes}
-                onChange={e => updateMilestone(m.id, 'notes', e.target.value)}
+                onChange={val => updateMilestone(m.id, 'notes', val)}
+                minHeight={80}
               />
             </div>
           ))}
