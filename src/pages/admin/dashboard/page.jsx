@@ -73,6 +73,7 @@ const AdminOverview = () => {
           {section === 'overview'  && <AdminDashboard />}
           {section === 'reports'   && <ReportsModule onCountChange={setReportCount} />}
           {section === 'users'     && <UserManager />}
+          {section === 'data'      && <DataManagement />}
           {section === 'settings'  && <Settings />}
         </main>
       </div>
