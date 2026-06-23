@@ -5,7 +5,6 @@ import SafeIcon from '../../../../../common/SafeIcon';
 import PageHeader from '../../common/PageHeader';
 import { adminApiRequest } from '../../../../../services/adminApi';
 import { useAdminAuth } from '../../../../../context/AdminAuthContext';
-import { getCookie } from '../../../../../utils/cookies';
 import StatCard from './components/StatCard';
 import ActivityLog from './components/ActivityLog';
 import LogExportModal from './components/LogExportModal';
