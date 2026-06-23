@@ -23,6 +23,36 @@
   }
 }
 
+/* Tiptap rich text editor */
+.tiptap-editor .tiptap {
+  outline: none;
+  min-height: var(--editor-min-height, 120px);
+}
+.tiptap-editor .tiptap p { margin: 0 0 0.5em; }
+.tiptap-editor .tiptap p:last-child { margin-bottom: 0; }
+.tiptap-editor .tiptap ul { list-style: disc; padding-left: 1.4em; margin: 0 0 0.5em; }
+.tiptap-editor .tiptap li { margin: 0.15em 0; }
+.tiptap-editor .tiptap strong { font-weight: 700; }
+.tiptap-editor .tiptap em { font-style: italic; }
+.tiptap-editor .tiptap s { text-decoration: line-through; }
+.tiptap-editor .tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #c0c0c8;
+  pointer-events: none;
+  height: 0;
+  font-size: 0.875rem;
+}
+
+/* Rich text output (public view) */
+.rich-text-output p { margin: 0 0 0.75em; }
+.rich-text-output p:last-child { margin-bottom: 0; }
+.rich-text-output ul { list-style: disc; padding-left: 1.5em; margin: 0 0 0.75em; }
+.rich-text-output li { margin: 0.2em 0; }
+.rich-text-output strong { font-weight: 700; }
+.rich-text-output em { font-style: italic; }
+.rich-text-output s { text-decoration: line-through; }
+
 /* Custom Scrollbar for a premium feel */
 ::-webkit-scrollbar {
   width: 8px;
