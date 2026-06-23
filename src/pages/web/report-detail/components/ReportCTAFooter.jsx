@@ -45,6 +45,7 @@ const ReportCTAFooter = ({ donationUrl }) => {
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 export default ReportCTAFooter;
