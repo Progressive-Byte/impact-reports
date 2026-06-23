@@ -25,9 +25,9 @@ const ReportCTAFooter = ({ donationUrl }) => {
         </div>
       </div>
       <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-3 justify-end">
-        {donationUrl ? (
+        {href ? (
           <a
-            href={donationUrl}
+            href={href}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full block text-center bg-[#E52321] hover:bg-[#C91D1B] text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.25em] shadow-lg shadow-red-500/20 active:scale-95 transition-transform"
