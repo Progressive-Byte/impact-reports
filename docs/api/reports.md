@@ -285,7 +285,9 @@ When `location` step is saved and all five steps are complete, `status` becomes 
 
 ### Role protection
 
-When the caller's role is `admin` (not `superadmin`), `projectName` and `assignedTo` are silently ignored on the `general` step — they cannot be changed regardless of what is sent.
+- **`viewer`** — always blocked with `403 Viewers have read-only access` before any step processing.
+- **`editor`** — `projectName` and `assignedTo` are silently stripped from the `general` step body; they cannot be changed regardless of what is sent.
+- **`superadmin`** — no restrictions.
 
 ### Errors
 
