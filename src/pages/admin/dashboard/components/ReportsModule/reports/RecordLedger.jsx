@@ -257,9 +257,9 @@ const RecordLedger = ({
                       <button
                         onClick={() => onEdit?.(entry)}
                         className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#0B0D0F] hover:bg-gray-100 rounded-lg transition-colors"
-                        title="Edit"
+                        title={isViewer ? 'View' : 'Edit'}
                       >
-                        <SafeIcon icon="FiEdit2" className="text-sm" />
+                        <SafeIcon icon={isViewer ? 'FiEye' : 'FiEdit2'} className="text-sm" />
                       </button>
                       {isSuperAdmin && (
                         <button
