@@ -29,12 +29,15 @@ export const getBlankForm = (defaultRegion = '') => ({
 });
 
 export const reportToForm = (report, defaultRegion = '') => ({
-  projectName:       report.projectName || '',
+  projectName:       report.projectName     || '',
+  projectId:         report.projectId       || '',
+  actualProjectId:   report.actualProjectId || '',
+  cost:              report.cost            ?? 0,
   assignedTo:        (report.assignedTo || []).map(a => String(a._id ?? a)),
   projectLead:       report.projectLead || '',
-  fiscalYear:        report.fiscalYear || 'FY25',
-  region:            report.region     || defaultRegion,
-  sector:            report.sector     || '',
+  fiscalYear:        report.fiscalYear  || 'FY25',
+  region:            report.region      || defaultRegion,
+  sector:            report.sector      || '',
   livesImpacted:     report.livesImpacted ?? 0,
   projectBackground: report.projectBackground || '',
   strategicResponse: report.strategicResponse || '',
