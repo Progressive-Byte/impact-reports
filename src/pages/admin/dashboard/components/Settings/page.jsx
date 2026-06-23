@@ -9,6 +9,7 @@ import SelectRow from './components/SelectRow';
 import ActionRow from './components/ActionRow';
 import SettingsSkeleton from './components/SettingsSkeleton';
 import TotpSetupModal from './components/TotpSetupModal';
+import PurgeLogsModal from './components/PurgeLogsModal';
 import { publicApiRequest } from '../../../../../services/publicApi';
 import { adminApiRequest } from '../../../../../services/adminApi';
 import { getCookie } from '../../../../../utils/cookies';
