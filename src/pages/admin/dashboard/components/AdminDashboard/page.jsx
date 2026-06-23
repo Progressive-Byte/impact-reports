@@ -8,6 +8,7 @@ import { useAdminAuth } from '../../../../../context/AdminAuthContext';
 import { getCookie } from '../../../../../utils/cookies';
 import StatCard from './components/StatCard';
 import ActivityLog from './components/ActivityLog';
+import LogExportModal from './components/LogExportModal';
 import ActiveRegions from './components/ActiveRegions';
 import PlatformConfig from './components/PlatformConfig';
 import { fmt } from './components/utils';
