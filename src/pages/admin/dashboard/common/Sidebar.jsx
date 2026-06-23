@@ -5,8 +5,9 @@ const NAV = [
   { id: 'overview', label: 'Admin Dashboard',  icon: 'FiGrid',     superadminOnly: false },
   { id: 'reports',  label: 'Reports Module',   icon: 'FiFileText', superadminOnly: false },
   { id: 'users',    label: 'User Management',  icon: 'FiUsers',    superadminOnly: true  },
-  { id: 'data',     label: 'Data Management',  icon: 'FiDatabase', superadminOnly: true  },
-  { id: 'settings', label: 'Settings',         icon: 'FiSettings', superadminOnly: true  },
+  { id: 'data',        label: 'Data Management',  icon: 'FiDatabase', superadminOnly: true  },
+  { id: 'subscribers', label: 'All Subscribers',  icon: 'FiMail',     superadminOnly: true  },
+  { id: 'settings',    label: 'Settings',         icon: 'FiSettings', superadminOnly: true  },
 ];
 
 const STATUS_ITEMS = [
