@@ -276,7 +276,7 @@ const CustomCursor = () => {
 
   if (!enabled) return null;
 
-  const showLabel = variant === 'hover' && Boolean(label);
+  const showLabel = Boolean(label);
 
   return (
     <div ref={containerRef} style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999 }} aria-hidden="true">
