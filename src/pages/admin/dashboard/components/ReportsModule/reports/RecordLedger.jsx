@@ -15,11 +15,17 @@ const STATUS_STYLES = {
   trash:     'bg-red-50 text-red-400 border border-red-100',
 };
 
-// ── Bulk action bar (mirrors UserManager's BulkActionBar) ─────────────────────
-const BulkActionBar = ({ selectedCount, onBulkDelete }) => {
+// ── Bulk action bar ───────────────────────────────────────────────────────────
+const BulkActionBar = ({ selectedCount, onBulkDelete, isTrash }) => {
   const [confirming, setConfirming] = useState(false);
 
-  const handleDelete = () => {
+  const idleLabel    = isTrash ? 'Delete Permanently' : 'Move to Trash';
+  const confirmLabel = isTrash ? 'Delete Forever'     : 'Confirm';
+  const confirmText  = isTrash
+    ? `Permanently delete ${selectedCount} report${selectedCount !== 1 ? 's' : ''}? This cannot be undone.`
+    : `Move ${selectedCount} report${selectedCount !== 1 ? 's' : ''} to Trash?`;
+
+  const handleClick = () => {
     if (!confirming) { setConfirming(true); return; }
     setConfirming(false);
     onBulkDelete();
@@ -36,9 +42,7 @@ const BulkActionBar = ({ selectedCount, onBulkDelete }) => {
 
       <div className="flex items-center gap-2">
         {confirming && (
-          <span className="text-xs text-gray-500 font-medium">
-            Delete {selectedCount} report{selectedCount !== 1 ? 's' : ''}?
-          </span>
+          <span className="text-xs text-gray-500 font-medium">{confirmText}</span>
         )}
         {confirming && (
           <button
@@ -50,7 +54,7 @@ const BulkActionBar = ({ selectedCount, onBulkDelete }) => {
         )}
         <button
           disabled={selectedCount === 0}
-          onClick={handleDelete}
+          onClick={handleClick}
           className={`px-4 py-2 border rounded-xl text-xs font-bold transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
             confirming
               ? 'border-red-400 bg-[#E52321] text-white hover:bg-[#c91d1b]'
@@ -59,7 +63,7 @@ const BulkActionBar = ({ selectedCount, onBulkDelete }) => {
                 : 'border-gray-200 text-gray-400'
           }`}
         >
-          {confirming ? 'Confirm Delete' : 'Delete Selected'}
+          {confirming ? confirmLabel : idleLabel}
         </button>
       </div>
     </div>
