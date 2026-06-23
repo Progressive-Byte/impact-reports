@@ -296,7 +296,7 @@ When `location` step is saved and all five steps are complete, `status` becomes 
 | `400`  | Invalid `stepName`                                                                           |
 | `400`  | Per-step validation failure — missing required field or invalid value (message describes which field) |
 | `400`  | `assignedTo` contains duplicate admin IDs (`general` step, superadmin only)                 |
-| `403`  | Caller not assigned to report and not superadmin                                             |
+| `403`  | Caller is `viewer` (read-only) or not assigned to report                                     |
 | `404`  | Report not found                                                                             |
 
 **Per-step required fields**
