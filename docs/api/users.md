@@ -19,7 +19,7 @@ Mounted at `/api/admin`. All routes require `Authorization: Bearer <token>`.
 | DELETE | `/api/admin/settings/disable-totp`         | Bearer      | —                                         | Remove authenticator app from own account          |
 | POST   | `/api/admin/backfill-slugs`                | Superadmin  | —                                         | One-off: generate slugs for reports that lack one  |
 
-> **Superadmin** — endpoints marked `Superadmin` return `403` for `admin`-role callers.  
+> **Superadmin** — endpoints marked `Superadmin` return `403` for `editor` and `viewer` callers.  
 > **Self-protection** — an admin cannot edit, toggle, or delete their own account.
 
 ---
