@@ -21,7 +21,7 @@ const locationSchema = new mongoose.Schema(
 );
 
 const milestoneSchema = new mongoose.Schema(
-  { date: String, title: String, notes: String },
+  { date: String, title: String, description: String },
   { _id: false }
 );
 

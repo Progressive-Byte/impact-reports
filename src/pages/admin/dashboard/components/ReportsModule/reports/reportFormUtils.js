@@ -18,7 +18,7 @@ export const BLANK_FORM = {
   images:            [{ id: 1, url: '' }],
   thumbnail:         '',
   videoUrl:          '',
-  milestones:        [{ id: 1, date: '', title: '', notes: '' }],
+  milestones:        [{ id: 1, date: '', title: '', description: '' }],
   countries:         [],
   locations:         [],
 };
@@ -153,7 +153,7 @@ export const buildStepPayload = {
     images:     f.images.filter(img => img.url.trim()).map(({ url }) => ({ url })),
     thumbnail:  f.thumbnail || '',
     videoUrl:   f.videoUrl.trim(),
-    milestones: f.milestones.map(({ date, title, notes }) => ({ date, title, notes })),
+    milestones: f.milestones.map(({ date, title, description }) => ({ date, title, description })),
   }),
   location:  (f) => ({
     countries: f.countries,

@@ -48,7 +48,7 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
 
   // ── Milestones ──────────────────────────────────────────────────────
   const addMilestone = () =>
-    update('milestones', [...form.milestones, { id: Date.now(), date: '', title: '', notes: '' }]);
+    update('milestones', [...form.milestones, { id: Date.now(), date: '', title: '', description: '' }]);
   const removeMilestone = (id) =>
     update('milestones', form.milestones.filter(m => m.id !== id));
   const updateMilestone = (id, key, val) =>
@@ -201,8 +201,8 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
               </div>
               <RichTextEditor
                 placeholder="Milestone notes..."
-                value={m.notes}
-                onChange={val => updateMilestone(m.id, 'notes', val)}
+                value={m.description}
+                onChange={val => updateMilestone(m.id, 'description', val)}
                 minHeight={80}
               />
             </div>

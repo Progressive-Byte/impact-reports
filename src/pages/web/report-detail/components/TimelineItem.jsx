@@ -25,7 +25,12 @@ const TimelineItem = ({ milestone, isLast }) => (
         <h4 className="text-base sm:text-lg font-black text-[#0B0D0F] tracking-tight leading-snug">
           {milestone.title}
         </h4>
-        <p className="mt-2 text-sm text-gray-600 leading-relaxed">{milestone.description}</p>
+        {milestone.description && (
+          <div
+            className="rich-text-output mt-2 text-sm text-gray-600 leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: milestone.description }}
+          />
+        )}
       </div>
     </div>
   </div>
