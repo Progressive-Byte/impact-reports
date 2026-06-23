@@ -153,9 +153,9 @@ const ReportsModule = ({ onCountChange }) => {
     }
   };
 
-  const handleCreated = () => {
+  const handleCreated = (report) => {
     setShowCreate(false);
-    fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
+    openWizard(report);
   };
 
   const handleDelete = async (id) => {
