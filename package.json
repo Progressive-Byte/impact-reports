@@ -20,6 +20,10 @@
   "dependencies": {
     "@questlabs/react-sdk": "^2.2.92",
     "@supabase/supabase-js": "^2.39.0",
+    "@tiptap/extension-placeholder": "^3.27.1",
+    "@tiptap/pm": "^3.27.1",
+    "@tiptap/react": "^3.27.1",
+    "@tiptap/starter-kit": "^3.27.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
