@@ -73,8 +73,11 @@ router.get('/', async (req, res) => {
       ? {}
       : { assignedTo: req.admin._id };
 
-    if (status && ['pending', 'draft', 'published'].includes(status)) {
+    if (status && ['pending', 'draft', 'published', 'trash'].includes(status)) {
       filter.status = status;
+    } else {
+      // "All" tab excludes trash
+      filter.status = { $ne: 'trash' };
     }
     if (q?.trim()) {
       filter.projectName = new RegExp(q.trim(), 'i');
