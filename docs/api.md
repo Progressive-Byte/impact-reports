@@ -15,7 +15,7 @@ Welcome to the API documentation for the **Nonprofit Impact Report Portal** admi
 All endpoints below require a valid `Bearer` token.
 
 - [Users](api/users.md) — Dashboard stats, admin account listing, creation, role changes, status toggle, deletion, own password/profile update, TOTP authenticator app setup/verify/disable, and slug backfill.
-- [Reports](api/reports.md) — Impact report lifecycle: create, step-by-step wizard save, list, export (CSV/Excel), and delete.
+- [Reports](api/reports.md) — Impact report lifecycle: create, step-by-step wizard save, list (with A→Z/Z→A sort), export (CSV/Excel), soft-delete to Trash, restore from Trash, and permanent delete.
 - [Notifications](api/notifications.md) — In-app security notifications (failed-login warnings): list, mark one read, mark all read.
 
 ## Invite Flow
