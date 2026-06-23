@@ -1,11 +1,12 @@
 import Skeleton from '../../../common/Skeleton';
 
-const ROW_GRID = 'grid grid-cols-[20px_2fr_1fr_1fr_1.5fr_1fr_auto] gap-4 items-center px-6';
+const ROW_GRID = 'grid grid-cols-[20px_1.5fr_1fr_1fr_1fr_1.5fr_1fr_auto] gap-4 items-center px-6';
 
 const ReportSkeletonRow = () => (
   <div className={`${ROW_GRID} py-4 animate-pulse`}>
     <Skeleton className="h-4 w-4 rounded" />
     <Skeleton className="h-4 w-3/4" />
+    <Skeleton className="h-4 w-16" />
     <Skeleton className="h-4 w-10" />
     <Skeleton className="h-6 rounded-full w-20" />
     <Skeleton className="h-4 w-28" />
