@@ -8,6 +8,7 @@ const platformSettingsSchema = new mongoose.Schema({
   failedLoginWarnings:    { type: Boolean, default: true },
   weeklyDigest:           { type: Boolean, default: false },
   require2fa:             { type: Boolean, default: false },
+  regions:                { type: [String], default: [] },
 }, { timestamps: true });
 
 export default mongoose.model('PlatformSettings', platformSettingsSchema);
