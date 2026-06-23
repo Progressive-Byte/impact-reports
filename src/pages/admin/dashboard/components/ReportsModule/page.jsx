@@ -38,10 +38,12 @@ const ReportsModule = ({ onCountChange }) => {
     meta, stats,
     adminOptions,
     regionOptions,
+    sectorOptions,
     loadingList, loadingReport,
     fetchReports,
     loadAdminOptions,
     loadRegionOptions,
+    loadSectorOptions,
   } = useReportData();
 
   const {
