@@ -89,6 +89,8 @@ export function validateStep(stepKey, form, isSuperAdmin = true) {
       break;
 
     case 'metrics': {
+      const total = (Number(form.children) || 0) + (Number(form.women) || 0) + (Number(form.men) || 0);
+      if (total > 100) errors.demographics = 'Children + Women + Men must not exceed 100%';
       const validDeliverables = form.deliverables.filter(d => d.label.trim() && Number(d.count) > 0);
       if (!validDeliverables.length) errors.deliverables = 'Add at least one deliverable with a label and count';
       break;
