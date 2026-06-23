@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../../common/SafeIcon';
-import { Input, Textarea } from './FormField';
+import { Input } from './FormField';
+import RichTextEditor from '@/common/RichTextEditor';
 import { adminApiRequest } from '../../../../../../services/adminApi';
 
 const MAX_IMAGES  = 10;
