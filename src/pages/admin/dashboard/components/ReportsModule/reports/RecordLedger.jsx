@@ -264,7 +264,7 @@ const RecordLedger = ({
                         onClick={() => handleConfirmDelete(entry._id)}
                         className="text-[10px] font-black text-[#E52321] bg-red-50 border border-red-200 px-2.5 py-1.5 rounded-lg hover:bg-red-100 transition-colors"
                       >
-                        Confirm
+                        {isTrash ? 'Delete Forever' : 'Confirm'}
                       </button>
                       <button
                         onClick={() => setConfirmId(null)}
@@ -272,6 +272,27 @@ const RecordLedger = ({
                       >
                         Cancel
                       </button>
+                    </>
+                  ) : isTrash ? (
+                    <>
+                      {isSuperAdmin && (
+                        <button
+                          onClick={() => onRestore?.(entry._id)}
+                          className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                          title="Restore"
+                        >
+                          <SafeIcon icon="FiRotateCcw" className="text-sm" />
+                        </button>
+                      )}
+                      {isSuperAdmin && (
+                        <button
+                          onClick={() => setConfirmId(entry._id)}
+                          className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#E52321] hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete Permanently"
+                        >
+                          <SafeIcon icon="FiTrash2" className="text-sm" />
+                        </button>
+                      )}
                     </>
                   ) : (
                     <>
@@ -286,7 +307,7 @@ const RecordLedger = ({
                         <button
                           onClick={() => setConfirmId(entry._id)}
                           className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#E52321] hover:bg-red-50 rounded-lg transition-colors"
-                          title="Delete"
+                          title="Move to Trash"
                         >
                           <SafeIcon icon="FiTrash2" className="text-sm" />
                         </button>
