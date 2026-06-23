@@ -215,11 +215,12 @@ router.post('/', async (req, res) => {
     const slug = await uniqueSlug(Report, toSlug(projectName.trim()));
 
     const created = await Report.create({
-      projectName: projectName.trim(),
+      projectName:     projectName.trim(),
       slug,
-      projectId:   `REP-${String(seq).padStart(3, '0')}`,
-      assignedTo:  uniqueAssignees,
-      createdBy:   req.admin._id,
+      projectId:       `REP-${String(seq).padStart(3, '0')}`,
+      actualProjectId: (actualProjectId || '').trim(),
+      assignedTo:      uniqueAssignees,
+      createdBy:       req.admin._id,
     });
 
     const report = await Report.findById(created._id).populate(POPULATE);
