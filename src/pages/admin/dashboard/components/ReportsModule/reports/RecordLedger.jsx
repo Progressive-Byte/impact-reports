@@ -218,6 +218,10 @@ const RecordLedger = ({
 
                 <p className="text-sm font-bold text-[#0B0D0F] truncate">{entry.projectName}</p>
 
+                <p className="text-xs text-gray-500 truncate">
+                  {entry.actualProjectId || <span className="text-gray-300">—</span>}
+                </p>
+
                 <p className="text-sm font-black text-[#0B0D0F]">
                   {entry.livesImpacted ? entry.livesImpacted.toLocaleString() : '—'}
                 </p>
