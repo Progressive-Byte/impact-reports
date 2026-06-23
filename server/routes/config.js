@@ -40,16 +40,13 @@ router.put('/regions', protect, async (req, res) => {
   }
 });
 
-const DEFAULT_SECTORS = ['Healthcare', 'Education', 'WASH', 'Food Security', 'Shelter', 'Livelihoods'];
-
-// GET /api/config/sectors — public; returns DB sectors, falls back to hardcoded defaults
+// GET /api/config/sectors — public; returns DB sectors
 router.get('/sectors', async (_req, res) => {
   try {
     const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
-    const sectors = settings?.sectors?.length ? settings.sectors : DEFAULT_SECTORS;
-    res.json({ sectors });
+    res.json({ sectors: settings?.sectors || [] });
   } catch {
-    res.json({ sectors: DEFAULT_SECTORS });
+    res.json({ sectors: [] });
   }
 });
 
