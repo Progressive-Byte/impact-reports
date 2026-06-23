@@ -19,7 +19,7 @@ function yearToFiscal(year) {
 }
 
 function shapeCard(r) {
-  const bg     = r.projectBackground || '';
+  const bg     = (r.projectBackground || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   const region = r.region || deriveRegion(r.countries);
   return {
     id:        r._id.toString(),
