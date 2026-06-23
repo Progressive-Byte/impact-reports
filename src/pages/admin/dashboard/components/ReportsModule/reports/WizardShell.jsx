@@ -6,7 +6,7 @@ const TOTAL_STEPS = STEPS.length;
 const WizardShell = ({
   step, loading, form, update, adminOptions, regionOptions,
   StepContent, saving, onBack, onNext, onStepClick,
-  isSuperAdmin = true, fieldErrors = {},
+  isSuperAdmin = true, isViewer = false, fieldErrors = {},
 }) => (
   <div className="bg-white border border-gray-200 rounded-3xl shadow-sm">
 
@@ -23,6 +23,17 @@ const WizardShell = ({
             <div key={i} className="h-12 bg-gray-100 rounded-xl" />
           ))}
         </div>
+      ) : isViewer ? (
+        <div className="pointer-events-none select-none">
+          <StepContent
+            form={form}
+            update={update}
+            adminOptions={adminOptions}
+            regionOptions={regionOptions}
+            isSuperAdmin={isSuperAdmin}
+            fieldErrors={{}}
+          />
+        </div>
       ) : (
         <StepContent
           form={form}
@@ -38,8 +49,8 @@ const WizardShell = ({
     {/* Footer navigation */}
     <div className="px-8 py-5 border-t border-gray-100 bg-gray-50/50 rounded-b-3xl flex items-center justify-between">
       <p className="text-xs text-gray-400 flex items-center gap-1.5">
-        <SafeIcon icon="FiShield" className="text-xs" />
-        Step {step} of {TOTAL_STEPS} · saved on Next
+        <SafeIcon icon={isViewer ? 'FiEye' : 'FiShield'} className="text-xs" />
+        {isViewer ? `Step ${step} of ${TOTAL_STEPS} · read-only view` : `Step ${step} of ${TOTAL_STEPS} · saved on Next`}
       </p>
       <div className="flex items-center gap-3">
         <button
@@ -49,20 +60,33 @@ const WizardShell = ({
         >
           {step === 1 ? 'Cancel' : '← Back'}
         </button>
-        <button
-          onClick={onNext}
-          disabled={saving || loading}
-          className={`flex items-center gap-2 px-5 py-2.5 text-white rounded-xl text-sm font-bold transition-colors disabled:opacity-50 ${
-            step < TOTAL_STEPS ? 'bg-[#0B0D0F] hover:bg-[#1a1d20]' : 'bg-[#E52321] hover:bg-[#c91d1b]'
-          }`}
-        >
-          {saving && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
-          {step < TOTAL_STEPS ? (
-            <>Save &amp; Next <SafeIcon icon="FiArrowRight" className="text-sm" /></>
-          ) : (
-            <><SafeIcon icon="FiCheck" className="text-sm" /> Submit Report</>
-          )}
-        </button>
+        {isViewer ? (
+          <button
+            onClick={onNext}
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white rounded-xl text-sm font-bold transition-colors"
+          >
+            {step < TOTAL_STEPS ? (
+              <>Next <SafeIcon icon="FiArrowRight" className="text-sm" /></>
+            ) : (
+              <>Close <SafeIcon icon="FiX" className="text-sm" /></>
+            )}
+          </button>
+        ) : (
+          <button
+            onClick={onNext}
+            disabled={saving || loading}
+            className={`flex items-center gap-2 px-5 py-2.5 text-white rounded-xl text-sm font-bold transition-colors disabled:opacity-50 ${
+              step < TOTAL_STEPS ? 'bg-[#0B0D0F] hover:bg-[#1a1d20]' : 'bg-[#E52321] hover:bg-[#c91d1b]'
+            }`}
+          >
+            {saving && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+            {step < TOTAL_STEPS ? (
+              <>Save &amp; Next <SafeIcon icon="FiArrowRight" className="text-sm" /></>
+            ) : (
+              <><SafeIcon icon="FiCheck" className="text-sm" /> Submit Report</>
+            )}
+          </button>
+        )}
       </div>
     </div>
   </div>
