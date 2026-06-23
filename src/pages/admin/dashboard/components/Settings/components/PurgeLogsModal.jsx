@@ -6,12 +6,13 @@ import { getCookie } from '../../../../../../utils/cookies';
 const PurgeLogsModal = ({ onClose, onConfirm, purging }) => {
   const [downloaded, setDownloaded] = useState(null); // null | 'yes' | 'no'
   const [downloading, setDownloading] = useState(false);
+  const [dlFormat, setDlFormat] = useState('csv');
 
   const handleDownload = async () => {
     setDownloading(true);
     try {
       const token    = getCookie('adminToken');
-      const response = await fetch('/api/auth/logs/export?format=csv&scope=all', {
+      const response = await fetch(`/api/auth/logs/export?format=${dlFormat}&scope=all`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!response.ok) throw new Error('Export failed');
