@@ -116,7 +116,7 @@ const CreateReportModal = ({ open, onClose, onCreated, adminOptions }) => {
           {/* Actual Project ID */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Actual Project ID <span className="text-gray-400 font-normal">(optional)</span>
+              Actual Project ID <span className="text-[#E52321]">*</span>
             </label>
             <input
               type="text"
