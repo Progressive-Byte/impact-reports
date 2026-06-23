@@ -166,6 +166,7 @@ const RecordLedger = ({
         <BulkActionBar
           selectedCount={selectedCount}
           onBulkDelete={onBulkDelete}
+          isTrash={isTrash}
         />
       )}
 
