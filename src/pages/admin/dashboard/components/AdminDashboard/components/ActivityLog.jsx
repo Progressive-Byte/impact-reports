@@ -4,6 +4,7 @@ import { STATUS_TAG, timeAgo } from './utils';
 const SYS_TAG = {
   login:  { label: 'LOGIN',  cls: 'bg-green-600 text-white' },
   logout: { label: 'LOGOUT', cls: 'bg-orange-500 text-white' },
+  purge:  { label: 'PURGE',  cls: 'bg-red-700 text-white' },
 };
 
 const ActivityLog = ({ recentActivity = [], activityLogs = [], logMeta = {}, loading }) => {
