@@ -1,5 +1,8 @@
 export const BLANK_FORM = {
   projectName:       '',
+  projectId:         '',
+  actualProjectId:   '',
+  cost:              0,
   assignedTo:        [],
   projectLead:       '',
   fiscalYear:        'FY25',
