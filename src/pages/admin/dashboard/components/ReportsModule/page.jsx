@@ -292,6 +292,8 @@ const ReportsModule = ({ onCountChange }) => {
           isViewer={isViewer}
           onEdit={openWizard}
           onDelete={handleDelete}
+          onRestore={handleRestore}
+          onPermanentDelete={handlePermanentDelete}
           selected={selected}
           allSelected={allSelected}
           selectedCount={selectedCount}
