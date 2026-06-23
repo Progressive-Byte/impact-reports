@@ -13,6 +13,7 @@ import uploadRoutes from './routes/upload.js';
 import publicRoutes from './routes/public.js';
 import configRoutes from './routes/config.js';
 import notificationRoutes from './routes/notifications.js';
+import subscriberRoutes from './routes/subscribers.js';
 import { startWeeklyDigestCron } from './cron/weeklyDigest.js';
 import { startLogArchivalCron } from './cron/logArchival.js';
 
