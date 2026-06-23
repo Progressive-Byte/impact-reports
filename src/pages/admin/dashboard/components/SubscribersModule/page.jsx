@@ -145,7 +145,7 @@ const SubscribersModule = () => {
         {/* Rows */}
         <div className="divide-y divide-gray-50">
           {loading ? (
-            Array.from({ length: SKELETON_ROWS }).map((_, i) => (
+            Array.from({ length: meta?.limit ?? SKELETON_ROWS }).map((_, i) => (
               <div key={i} className="grid grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-3.5 animate-pulse">
                 <div className="h-4 bg-gray-100 rounded w-3/4" />
                 <div className="h-4 bg-gray-100 rounded w-1/2" />
