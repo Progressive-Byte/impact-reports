@@ -2,9 +2,7 @@ import { Input } from './FormField';
 import CustomSelect from './CustomSelect';
 import MultiSelect from './MultiSelect';
 
-const FISCAL_YEARS = ['FY23', 'FY24', 'FY25', 'FY26'].map(v => ({ value: v, label: v }));
-
-const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
+const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], sectorOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
     <div className="grid grid-cols-2 gap-5">
       <Input
@@ -33,11 +31,12 @@ const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], isSup
         onChange={e => update('projectLead', e.target.value)}
         error={fieldErrors.projectLead}
       />
-      <CustomSelect
+      <Input
         label="Fiscal Year" required
+        placeholder="e.g. FY26"
         value={form.fiscalYear}
-        onChange={val => update('fiscalYear', val)}
-        options={FISCAL_YEARS}
+        onChange={e => update('fiscalYear', e.target.value)}
+        error={fieldErrors.fiscalYear}
       />
     </div>
     <div className="grid grid-cols-2 gap-5">
@@ -49,11 +48,12 @@ const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], isSup
         placeholder={regionOptions.length ? 'Select region...' : 'Loading…'}
         error={fieldErrors.region}
       />
-      <Input
+      <CustomSelect
         label="Sector" required
-        placeholder="e.g. WASH, Education, Healthcare"
         value={form.sector}
-        onChange={e => update('sector', e.target.value)}
+        onChange={val => update('sector', val)}
+        options={sectorOptions}
+        placeholder={sectorOptions.length ? 'Select sector...' : 'Loading…'}
         error={fieldErrors.sector}
       />
     </div>
