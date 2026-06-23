@@ -96,6 +96,30 @@ const PurgeLogsModal = ({ onClose, onConfirm, purging }) => {
               <p className="text-xs text-gray-400 leading-relaxed">
                 We recommend downloading a full copy of all audit logs before permanently deleting them.
               </p>
+              {/* Column selector */}
+              <div>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">Columns</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {ALL_COLS.map(key => {
+                    const on = selectedCols.has(key);
+                    return (
+                      <button
+                        key={key}
+                        type="button"
+                        onClick={() => toggleCol(key)}
+                        className={`px-2.5 py-1 rounded-md border text-[10px] font-bold transition-all ${
+                          on
+                            ? 'bg-[#0B0D0F] border-[#0B0D0F] text-white'
+                            : 'bg-white border-gray-200 text-gray-400 line-through'
+                        }`}
+                      >
+                        {key === 'IP' ? 'IP Address' : key}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               <div className="flex items-center gap-2">
                 {/* Format picker */}
                 <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-bold">
@@ -116,7 +140,7 @@ const PurgeLogsModal = ({ onClose, onConfirm, purging }) => {
                 </div>
                 <button
                   onClick={handleDownload}
-                  disabled={downloading}
+                  disabled={downloading || selectedCols.size === 0}
                   className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-100 transition-colors disabled:opacity-60"
                 >
                   {downloading
