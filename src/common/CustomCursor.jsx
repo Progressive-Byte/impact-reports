@@ -241,9 +241,9 @@ const CustomCursor = () => {
       const tag = ct.tagName?.toLowerCase();
       const role = ct.getAttribute?.('role');
       if (mode === 'focus') { setVariant('focus'); setLabel(cl); return; }
-      if (tag === 'a') { setVariant('hover'); setLabel(cl || 'open'); return; }
+      if (tag === 'a') { setVariant('hover'); setLabel(cl); return; }
       if (tag === 'button' || role === 'button' || ct.classList.contains('cursor-pointer')) {
-        setVariant('hover'); setLabel(cl || 'click'); return;
+        setVariant('hover'); setLabel(cl); return;
       }
       setVariant('default'); setLabel(cl);
     };
