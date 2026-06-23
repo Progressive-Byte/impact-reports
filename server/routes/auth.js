@@ -382,25 +382,41 @@ router.get('/logs/export', protect, async (req, res) => {
       filenameSuffix = `1year-${today}`;
     }
 
+    const ALLOWED_COLS = ['Type', 'Username', 'Role', 'IP', 'Timestamp', 'Archived', 'Details'];
+
+    // Parse optional columns whitelist — default: all columns
+    const reqCols = (req.query.columns || '')
+      .split(',').map(c => c.trim()).filter(c => ALLOWED_COLS.includes(c));
+    const selectedCols = reqCols.length > 0 ? reqCols : ALLOWED_COLS;
+
     const logs     = await ActivityLog.find(filter).sort({ createdAt: -1 }).lean();
     const filename = `activity-logs-${filenameSuffix}`;
-    const rows     = logs.map(l => ({
-      Type:       l.type,
-      Username:   l.username,
-      Role:       l.role       || '',
-      IP:         l.ip         || '',
-      Timestamp:  new Date(l.createdAt).toISOString(),
-      Archived:   l.archivedAt ? new Date(l.archivedAt).toISOString() : '',
+
+    const allRows = logs.map(l => ({
+      Type:      l.type,
+      Username:  l.username,
+      Role:      l.role       || '',
+      IP:        l.ip         || '',
+      Timestamp: new Date(l.createdAt).toISOString(),
+      Archived:  l.archivedAt ? new Date(l.archivedAt).toISOString() : '',
+      Details:   l.details    || '',
     }));
 
+    // Keep only the columns the caller requested
+    const rows = allRows.map(r =>
+      Object.fromEntries(selectedCols.map(c => [c, r[c] ?? '']))
+    );
+
     if (format === 'csv') {
-      const header = 'Type,Username,Role,IP,Timestamp,Archived\n';
-      const body   = rows.map(r =>
-        `${r.Type},${r.Username},${r.Role},${r.IP},${r.Timestamp},${r.Archived}`
-      ).join('\n');
+      const escape = (v) => {
+        const s = v == null ? '' : String(v).replace(/"/g, '""');
+        return /[",\n\r]/.test(s) ? `"${s}"` : s;
+      };
+      const header = selectedCols.join(',');
+      const body   = rows.map(r => selectedCols.map(c => escape(r[c])).join(',')).join('\n');
       res.setHeader('Content-Type', 'text/csv');
       res.setHeader('Content-Disposition', `attachment; filename="${filename}.csv"`);
-      return res.send(header + body);
+      return res.send(`${header}\n${body}`);
     }
 
     const ws = XLSX.utils.json_to_sheet(rows);
