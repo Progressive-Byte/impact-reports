@@ -1,7 +1,7 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
 import CustomSelect from './CustomSelect';
 
-const STATUS_FILTERS = ['all', 'published', 'draft', 'pending'];
+const STATUS_FILTERS = ['all', 'published', 'draft', 'pending', 'trash'];
 
 const SORT_OPTIONS = [
   { value: 'recent', label: 'Recent'  },
