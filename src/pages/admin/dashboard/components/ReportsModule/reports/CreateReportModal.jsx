@@ -42,7 +42,8 @@ const CreateReportModal = ({ open, onClose, onCreated, adminOptions }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!projectName.trim())       return toast.error('Project name is required');
+    if (!projectName.trim())        return toast.error('Project name is required');
+    if (!actualProjectId.trim())   return toast.error('Actual Project ID is required');
     if (assignedTo.length === 0)   return toast.error('Assign at least one user');
 
     setSubmitting(true);
