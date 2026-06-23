@@ -131,6 +131,7 @@ export const buildStepPayload = {
     projectName:     f.projectName,
     assignedTo:      f.assignedTo,
     actualProjectId: f.actualProjectId || '',
+    donationUrl:     f.donationUrl     || '',
     cost:            Number(f.cost) || 0,
     projectLead:     f.projectLead,
     fiscalYear:      f.fiscalYear,
