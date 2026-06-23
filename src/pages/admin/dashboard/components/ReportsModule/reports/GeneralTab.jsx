@@ -4,6 +4,20 @@ import MultiSelect from './MultiSelect';
 
 const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], sectorOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
+    {/* System ID + Actual Project ID */}
+    <div className="grid grid-cols-2 gap-5">
+      <Input
+        label="System Project ID"
+        value={form.projectId || '—'}
+        readOnly
+      />
+      <Input
+        label="Actual Project ID"
+        placeholder="e.g. Burma Water 1001"
+        value={form.actualProjectId}
+        onChange={e => update('actualProjectId', e.target.value)}
+      />
+    </div>
     <div className="grid grid-cols-2 gap-5">
       <Input
         label="Project Name" required
@@ -57,7 +71,7 @@ const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], secto
         error={fieldErrors.sector}
       />
     </div>
-    <div className="grid grid-cols-1 gap-5">
+    <div className="grid grid-cols-2 gap-5">
       <Input
         label="Lives Impacted" required
         type="number"
@@ -65,6 +79,14 @@ const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], secto
         value={form.livesImpacted}
         onChange={e => update('livesImpacted', e.target.value)}
         error={fieldErrors.livesImpacted}
+      />
+      <Input
+        label="Cost"
+        type="number"
+        min="0"
+        placeholder="0"
+        value={form.cost}
+        onChange={e => update('cost', e.target.value)}
       />
     </div>
   </div>
