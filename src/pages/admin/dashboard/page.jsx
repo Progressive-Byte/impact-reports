@@ -8,6 +8,7 @@ import MobileSidebar from './common/MobileSidebar';
 import AdminDashboard from './components/AdminDashboard/page';
 import ReportsModule from './components/ReportsModule/page';
 import UserManager from './components/UserManager/page';
+import DataManagement from './components/DataManagement/page';
 import Settings from './components/Settings/page';
 
 const VALID_SECTIONS = {
