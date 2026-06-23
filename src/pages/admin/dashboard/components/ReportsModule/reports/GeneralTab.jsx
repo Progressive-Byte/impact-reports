@@ -4,13 +4,8 @@ import MultiSelect from './MultiSelect';
 
 const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], sectorOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
-    {/* System ID + Actual Project ID */}
-    <div className="grid grid-cols-2 gap-5">
-      <Input
-        label="System Project ID"
-        value={form.projectId || '—'}
-        readOnly
-      />
+    {/* Actual Project ID */}
+    <div className="grid grid-cols-1 gap-5">
       <Input
         label="Actual Project ID"
         placeholder="e.g. Burma Water 1001"
