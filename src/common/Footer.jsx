@@ -9,6 +9,35 @@ const LogoIcon = ({ className = "w-10 h-10" }) => (
 );
 
 const Footer = () => {
+  const [email,     setEmail]     = useState('');
+  const [status,    setStatus]    = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
+  const [message,   setMessage]   = useState('');
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!email.trim() || status === 'loading') return;
+    setStatus('loading');
+    try {
+      const res = await fetch('/api/subscribers/subscribe', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStatus('success');
+        setMessage(data.message || 'You\'re subscribed!');
+        setEmail('');
+      } else {
+        setStatus('error');
+        setMessage(data.message || 'Subscription failed.');
+      }
+    } catch {
+      setStatus('error');
+      setMessage('Network error. Please try again.');
+    }
+  };
+
   return (
     <footer className="bg-white pt-16 pb-8 border-t border-gray-200 mt-auto shadow-[0_-4px_20px_rgba(0,0,0,0.02)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
