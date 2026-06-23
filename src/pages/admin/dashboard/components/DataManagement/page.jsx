@@ -19,7 +19,7 @@ const ListCard = ({ icon, title, subtitle, items, loading, onAdd, onUpdate, onRe
     </div>
 
     {/* List */}
-    <div className="px-6 py-5 space-y-3 flex-1">
+    <div className="px-6 py-5 space-y-3 overflow-y-auto max-h-[340px]">
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
