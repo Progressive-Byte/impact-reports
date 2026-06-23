@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
 
 const activityLogSchema = new mongoose.Schema({
-  type:       { type: String, enum: ['login', 'logout'], required: true },
+  type:       { type: String, enum: ['login', 'logout', 'purge'], required: true },
   username:   { type: String, required: true },
   role:       { type: String },
   ip:         { type: String },
+  details:    { type: String, default: '' },
   archivedAt: { type: Date, default: null },
 }, { timestamps: true });
 
