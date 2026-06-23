@@ -162,7 +162,7 @@ const ReportsModule = ({ onCountChange }) => {
     try {
       await adminApiRequest(`/api/reports/${id}`, { method: 'DELETE' });
       setSelected(prev => { const n = new Set(prev); n.delete(id); return n; });
-      toast.success('Report deleted');
+      toast.success('Report moved to Trash');
       const wouldBeEmpty = reports.length === 1 && urlPage > 1;
       if (wouldBeEmpty) handlePageChange(urlPage - 1);
       else fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
@@ -171,17 +171,47 @@ const ReportsModule = ({ onCountChange }) => {
     }
   };
 
+  const handleRestore = async (id) => {
+    try {
+      await adminApiRequest(`/api/reports/${id}/restore`, { method: 'PATCH' });
+      setSelected(prev => { const n = new Set(prev); n.delete(id); return n; });
+      toast.success('Report restored');
+      const wouldBeEmpty = reports.length === 1 && urlPage > 1;
+      if (wouldBeEmpty) handlePageChange(urlPage - 1);
+      else fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
+    } catch (err) {
+      toast.error(err.message || 'Failed to restore');
+    }
+  };
+
+  const handlePermanentDelete = async (id) => {
+    try {
+      await adminApiRequest(`/api/reports/${id}/permanent`, { method: 'DELETE' });
+      setSelected(prev => { const n = new Set(prev); n.delete(id); return n; });
+      toast.success('Report permanently deleted');
+      const wouldBeEmpty = reports.length === 1 && urlPage > 1;
+      if (wouldBeEmpty) handlePageChange(urlPage - 1);
+      else fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
+    } catch (err) {
+      toast.error(err.message || 'Failed to permanently delete');
+    }
+  };
+
   const handleBulkDelete = async () => {
     const ids = Array.from(selected);
     if (!ids.length) return;
+    const isTrash = urlStatus === 'trash';
+    const endpoint = (id) => isTrash ? `/api/reports/${id}/permanent` : `/api/reports/${id}`;
     const results = await Promise.allSettled(
-      ids.map(id => adminApiRequest(`/api/reports/${id}`, { method: 'DELETE' }))
+      ids.map(id => adminApiRequest(endpoint(id), { method: 'DELETE' }))
     );
-    const failed = results.filter(r => r.status === 'rejected').length;
-    const deleted = ids.length - failed;
+    const failed  = results.filter(r => r.status === 'rejected').length;
+    const success = ids.length - failed;
     setSelected(new Set());
-    if (deleted > 0) toast.success(`${deleted} report${deleted !== 1 ? 's' : ''} deleted`);
-    if (failed > 0)  toast.error(`${failed} report${failed !== 1 ? 's' : ''} could not be deleted`);
+    if (success > 0) toast.success(isTrash
+      ? `${success} report${success !== 1 ? 's' : ''} permanently deleted`
+      : `${success} report${success !== 1 ? 's' : ''} moved to Trash`);
+    if (failed > 0) toast.error(`${failed} report${failed !== 1 ? 's' : ''} could not be deleted`);
     const wouldBeEmpty = reports.length === ids.length && urlPage > 1;
     if (wouldBeEmpty) handlePageChange(urlPage - 1);
     else fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
