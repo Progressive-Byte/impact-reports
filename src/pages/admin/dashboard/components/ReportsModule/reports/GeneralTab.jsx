@@ -4,13 +4,19 @@ import MultiSelect from './MultiSelect';
 
 const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], sectorOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
-    {/* Actual Project ID */}
-    <div className="grid grid-cols-1 gap-5">
+    {/* Actual Project ID + Donation URL */}
+    <div className="grid grid-cols-2 gap-5">
       <Input
         label="Actual Project ID"
         placeholder="e.g. Burma Water 1001"
         value={form.actualProjectId}
         onChange={e => update('actualProjectId', e.target.value)}
+      />
+      <Input
+        label="Donation URL"
+        placeholder="https://donate.example.com/project"
+        value={form.donationUrl}
+        onChange={e => update('donationUrl', e.target.value)}
       />
     </div>
     <div className="grid grid-cols-2 gap-5">
