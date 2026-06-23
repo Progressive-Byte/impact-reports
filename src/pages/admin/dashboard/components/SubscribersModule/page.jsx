@@ -6,7 +6,7 @@ import PageHeader from '../../common/PageHeader';
 import Pagination from '@/common/Pagination';
 import { adminApiRequest } from '../../../../../services/adminApi';
 
-const SKELETON_ROWS = 8;
+const SKELETON_ROWS = 20; // matches default limit; overridden at render time with meta?.limit
 
 const SubscribersModule = () => {
   const [searchParams, setSearchParams] = useSearchParams();
