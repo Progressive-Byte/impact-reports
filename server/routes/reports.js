@@ -312,6 +312,9 @@ router.patch('/:id/step/:stepName', async (req, res) => {
     if (!canAccess(req.admin, report)) {
       return res.status(403).json({ message: 'Access denied' });
     }
+    if (report.status === 'trash') {
+      return res.status(400).json({ message: 'Cannot edit a trashed report. Restore it first.' });
+    }
 
     const isSuperAdmin = req.admin.role === 'superadmin';
 
