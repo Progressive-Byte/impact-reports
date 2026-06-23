@@ -4,18 +4,19 @@ Endpoints that expose server-side configuration and platform settings.
 
 Base path: `/api/config`
 
-| Method | Path                      | Auth                | Description                                    |
-| ------ | ------------------------- | ------------------- | ---------------------------------------------- |
-| GET    | `/regions`                | None                | Returns the fixed region taxonomy              |
-| GET    | `/settings`               | Bearer (any)        | Returns current platform settings              |
-| PATCH  | `/settings`               | Bearer (superadmin) | Update platform settings                       |
-| POST   | `/send-weekly-digest`     | Bearer (superadmin) | Manually trigger the weekly digest email       |
+| Method | Path                      | Auth                | Description                                              |
+| ------ | ------------------------- | ------------------- | -------------------------------------------------------- |
+| GET    | `/regions`                | None                | Returns the active region list (DB or hardcoded fallback)|
+| PUT    | `/regions`                | Bearer (superadmin) | Replace the full region list                             |
+| GET    | `/settings`               | Bearer (any)        | Returns current platform settings                        |
+| PATCH  | `/settings`               | Bearer (superadmin) | Update platform settings                                 |
+| POST   | `/send-weekly-digest`     | Bearer (superadmin) | Manually trigger the weekly digest email                 |
 
 ---
 
 ## `GET /api/config/regions`
 
-Public — no authentication required. Returns the canonical list of regions defined in `server/config/regions.js`.
+Public — no authentication required. Returns the active region list. Reads from the `PlatformSettings.regions` array in MongoDB; if that array is empty (e.g. before any regions have been saved via the Data Management tab), falls back to the hardcoded defaults in `server/config/regions.js`.
 
 ### Response `200`
 
@@ -23,6 +24,52 @@ Public — no authentication required. Returns the canonical list of regions def
 {
   "regions": ["Africa", "Middle East", "South Asia", "Southeast Asia", "Global"]
 }
+```
+
+---
+
+## `PUT /api/config/regions`
+
+Requires **superadmin** role. Replaces the entire region list stored in `PlatformSettings.regions`. After this call, `GET /api/config/regions` returns only the new list.
+
+### Request body
+
+| Field     | Type     | Required | Description                                      |
+| --------- | -------- | :------: | ------------------------------------------------ |
+| `regions` | string[] | Yes      | Non-empty array of region name strings. Blank/empty strings are stripped before saving. |
+
+Example:
+
+```json
+{
+  "regions": ["Africa", "Middle East", "South Asia", "Southeast Asia", "Global", "Eastern Europe"]
+}
+```
+
+### Response `200`
+
+```json
+{
+  "regions": ["Africa", "Middle East", "South Asia", "Southeast Asia", "Global", "Eastern Europe"]
+}
+```
+
+### Errors
+
+| Status | Condition                                          |
+| ------ | -------------------------------------------------- |
+| `400`  | `regions` is not an array, is empty, or all entries are blank |
+| `401`  | Missing or invalid token                           |
+| `403`  | Caller is not `superadmin`                         |
+| `500`  | Database error                                     |
+
+### curl
+
+```bash
+curl -X PUT http://localhost:5173/api/config/regions \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"regions":["Africa","Middle East","South Asia","Southeast Asia","Global"]}'
 ```
 
 ---
