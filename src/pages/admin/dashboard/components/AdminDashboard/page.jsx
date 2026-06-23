@@ -50,6 +50,16 @@ const AdminDashboard = () => {
   const regionData = dashStats?.regionData ?? [];
 
   return (
+    <>
+    {showExportModal && (
+      <LogExportModal
+        scope={exportScope}
+        dateFrom={dateFrom}
+        dateTo={dateTo}
+        previewLogs={activityLogs}
+        onClose={() => setShowExportModal(false)}
+      />
+    )}
     <div className="space-y-6">
       <PageHeader
         heading="h1"
