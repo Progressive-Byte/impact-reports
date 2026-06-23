@@ -54,7 +54,7 @@ export const reportToForm = (report, defaultRegion = '') => ({
   images:            (report.images || []).map((img, i) => ({ id: i + 1, url: img.url || '' })),
   thumbnail:         report.thumbnail || '',
   videoUrl:          report.videoUrl || '',
-  milestones:        (report.milestones || []).map((m, i) => ({ ...m, id: i + 1 })),
+  milestones:        (report.milestones || []).map((m, i) => ({ ...m, id: i + 1, description: m.description || m.notes || '' })),
   stepsCompleted:    report.stepsCompleted || [],
   countries:         report.countries || [],
   locations:         (report.locations || []).map((l, i) => ({

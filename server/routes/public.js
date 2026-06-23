@@ -122,7 +122,7 @@ router.get('/reports/:idOrSlug', async (req, res) => {
       milestones:   (report.milestones || []).map((m) => ({
         date:        m.date  || '',
         title:       m.title || '',
-        description: m.notes || '',
+        description: m.description || m.notes || '',
       })),
       images:    report.images    || [],
       videoUrl:  report.videoUrl  || '',
