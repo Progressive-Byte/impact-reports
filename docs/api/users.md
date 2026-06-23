@@ -41,9 +41,15 @@ Mounted at `/api/admin`. All routes require `Authorization: Bearer <token>`.
 }
 ```
 
-**Role values:** `superadmin` | `admin`
+**Role values:** `superadmin` | `editor` | `viewer`
 
-**Region values:** free string, default `"global"`. Common values: `"global"`, `"south_asia"`, `"middle_east"`, `"africa"`.
+| Role          | Dashboard | Reports (assigned) | Users tab | Data Management | Settings |
+| ------------- | :-------: | :----------------: | :-------: | :-------------: | :------: |
+| `superadmin`  | ✓         | All (read+write)   | ✓         | ✓               | ✓        |
+| `editor`      | ✓         | Own (read+write)   | ✗         | ✗               | ✗        |
+| `viewer`      | ✓         | Own (read-only)    | ✗         | ✗               | ✗        |
+
+**Region values:** any string from `GET /api/config/regions`. Stored as-is; no server-side enum validation.
 
 **`totpEnabled`** — `true` when the admin has completed authenticator app setup. Clients use this to show/hide the TOTP option in the 2FA login flow and the "Remove" button in Settings.
 
