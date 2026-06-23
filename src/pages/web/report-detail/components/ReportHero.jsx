@@ -5,11 +5,12 @@ import SafeIcon from '../../../../common/SafeIcon';
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=1200&q=80';
 
 const ReportHero = ({ report, onImageError }) => {
-  const heroSummary = report.projectBackground
-    ? (report.projectBackground.length > 200
-        ? report.projectBackground.slice(0, 200).trimEnd() + '…'
-        : report.projectBackground)
+  const plainBackground = report.projectBackground
+    ? report.projectBackground.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
     : '';
+  const heroSummary = plainBackground.length > 200
+    ? plainBackground.slice(0, 200).trimEnd() + '…'
+    : plainBackground;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
