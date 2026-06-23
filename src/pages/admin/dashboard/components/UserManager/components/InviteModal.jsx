@@ -117,7 +117,7 @@ const InviteModal = ({ open, onClose, onInviteSent }) => {
                 <CustomSelect
                   value={form.region}
                   onChange={val => setForm(p => ({ ...p, region: val }))}
-                  options={REGION_OPTIONS}
+                  options={regionOptions}
                   disabled={loading}
                 />
               </div>
