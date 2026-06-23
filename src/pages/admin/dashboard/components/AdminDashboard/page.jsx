@@ -89,15 +89,40 @@ const AdminDashboard = () => {
         title={isSuperAdmin ? 'IT Admin Dashboard' : `${admin?.username ?? 'My'} Dashboard`}
         subtitle={isSuperAdmin ? 'Global configuration & system telemetry' : 'Your assigned reports & activity'}
         action={isSuperAdmin ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap justify-end">
             {/* Scope selector */}
             <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-bold">
-              {[{ v: 'year', l: '1 Year' }, { v: 'all', l: 'All History' }].map(({ v, l }) => (
+              {[{ v: 'year', l: '1 Year' }, { v: 'all', l: 'All History' }, { v: 'custom', l: 'Custom' }].map(({ v, l }) => (
                 <button key={v} type="button" onClick={() => setExportScope(v)}
                   className={`px-3 py-1.5 transition-colors ${exportScope === v ? 'bg-[#0B0D0F] text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
                 >{l}</button>
               ))}
             </div>
+
+            {/* Custom date range — visible only when scope=custom */}
+            {exportScope === 'custom' && (
+              <div className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-xl px-3 py-1.5">
+                <SafeIcon icon="FiCalendar" className="text-gray-400 text-xs flex-shrink-0" />
+                <input
+                  type="date"
+                  value={dateFrom}
+                  max={dateTo || undefined}
+                  onChange={e => setDateFrom(e.target.value)}
+                  className="text-xs font-bold text-gray-700 bg-transparent outline-none w-[108px] cursor-pointer"
+                  title="Start date"
+                />
+                <span className="text-gray-300 text-xs font-bold">—</span>
+                <input
+                  type="date"
+                  value={dateTo}
+                  min={dateFrom || undefined}
+                  onChange={e => setDateTo(e.target.value)}
+                  className="text-xs font-bold text-gray-700 bg-transparent outline-none w-[108px] cursor-pointer"
+                  title="End date"
+                />
+              </div>
+            )}
+
             {/* Format selector */}
             <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-bold">
               {['csv', 'excel'].map(f => (
@@ -106,6 +131,7 @@ const AdminDashboard = () => {
                 >{f === 'csv' ? 'CSV' : 'Excel'}</button>
               ))}
             </div>
+
             <button onClick={handleExportLogs} disabled={exporting}
               className="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-60"
             >
