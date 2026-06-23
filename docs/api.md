@@ -28,4 +28,4 @@ All endpoints below require a valid `Bearer` token.
 
 ## Configuration
 
-- [Config](api/config.md) — Region taxonomy (public), platform settings (default region, session timeout, strong passwords, failed-login warnings, weekly digest, require 2FA with email OTP or TOTP), and manual weekly digest trigger.
+- [Config](api/config.md) — Region list (public read / superadmin write — DB-backed with hardcoded fallback), platform settings (default region, session timeout, strong passwords, failed-login warnings, weekly digest, require 2FA with email OTP or TOTP), and manual weekly digest trigger.
