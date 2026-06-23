@@ -12,6 +12,7 @@ const STATUS_STYLES = {
   pending:   'bg-yellow-50 text-yellow-700 border border-yellow-200',
   draft:     'bg-gray-100 text-gray-500',
   published: 'bg-green-50 text-green-700 border border-green-200',
+  trash:     'bg-red-50 text-red-400 border border-red-100',
 };
 
 // ── Bulk action bar (mirrors UserManager's BulkActionBar) ─────────────────────
