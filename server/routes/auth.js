@@ -341,24 +341,49 @@ router.get('/logs', protect, async (_req, res) => {
   }
 });
 
-// GET /api/auth/logs/export?format=csv|excel&scope=year|all — superadmin only
-// scope=year (default): live records from the last 365 days
-// scope=all: every record including archived (full audit trail)
+// GET /api/auth/logs/export?format=csv|excel&scope=year|all|custom&from=YYYY-MM-DD&to=YYYY-MM-DD
+// scope=year (default): last 365 days
+// scope=all: full audit trail
+// scope=custom: date range specified by `from` and `to` (ISO date strings, inclusive)
 router.get('/logs/export', protect, async (req, res) => {
   if (req.admin.role !== 'superadmin') {
     return res.status(403).json({ message: 'Superadmin only' });
   }
   try {
-    const scope  = req.query.scope === 'all' ? 'all' : 'year';
-    const format = req.query.format === 'excel' ? 'excel' : 'csv';
-    const date   = new Date().toISOString().split('T')[0];
+    const rawScope = req.query.scope;
+    const scope    = rawScope === 'all' ? 'all' : rawScope === 'custom' ? 'custom' : 'year';
+    const format   = req.query.format === 'excel' ? 'excel' : 'csv';
+    const today    = new Date().toISOString().split('T')[0];
 
-    const filter = scope === 'all'
-      ? {}
-      : { createdAt: { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) } };
+    let filter;
+    let filenameSuffix;
+
+    if (scope === 'all') {
+      filter         = {};
+      filenameSuffix = `all-${today}`;
+    } else if (scope === 'custom') {
+      const fromStr = (req.query.from || '').trim();
+      const toStr   = (req.query.to   || '').trim();
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(fromStr) || !/^\d{4}-\d{2}-\d{2}$/.test(toStr)) {
+        return res.status(400).json({ message: 'Invalid date format. Use YYYY-MM-DD.' });
+      }
+      const fromDate = new Date(`${fromStr}T00:00:00.000Z`);
+      const toDate   = new Date(`${toStr}T23:59:59.999Z`);
+      if (isNaN(fromDate) || isNaN(toDate)) {
+        return res.status(400).json({ message: 'Invalid date values' });
+      }
+      if (fromDate > toDate) {
+        return res.status(400).json({ message: 'Start date must be on or before end date' });
+      }
+      filter         = { createdAt: { $gte: fromDate, $lte: toDate } };
+      filenameSuffix = `${fromStr}-to-${toStr}`;
+    } else {
+      filter         = { createdAt: { $gte: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000) } };
+      filenameSuffix = `1year-${today}`;
+    }
 
     const logs     = await ActivityLog.find(filter).sort({ createdAt: -1 }).lean();
-    const filename = `activity-logs-${scope}-${date}`;
+    const filename = `activity-logs-${filenameSuffix}`;
     const rows     = logs.map(l => ({
       Type:       l.type,
       Username:   l.username,
