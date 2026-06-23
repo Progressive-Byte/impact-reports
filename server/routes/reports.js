@@ -290,6 +290,10 @@ function validateStepPayload(stepName, body, isSuperAdmin) {
 // ── PATCH /api/reports/:id/step/:stepName ────────────────────────────
 router.patch('/:id/step/:stepName', async (req, res) => {
   try {
+    if (req.admin.role === 'viewer') {
+      return res.status(403).json({ message: 'Viewers have read-only access' });
+    }
+
     const { stepName } = req.params;
     if (!STEP_FIELDS[stepName]) {
       return res.status(400).json({ message: `Invalid step: ${stepName}` });
