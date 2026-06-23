@@ -178,13 +178,21 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
             const stateSet       = new Set(stateOptions.map(s => s.value));
             const selectedStates = getSelectedStates(country);
             const countryLocs    = form.locations.filter(l => l.country === country);
-            // Map-picked locations = those whose address isn't in the state library
+            // Map-picked = non-state-name AND has real GPS coords.
+            // Locations without GPS are old free-text entries — never show them as map chips.
             const mapPickedLocs  = hasStates
-              ? countryLocs.filter(l => !stateSet.has(l.address))
+              ? countryLocs.filter(l =>
+                  !stateSet.has(l.address) &&
+                  l.lat !== '' && l.lat != null &&
+                  l.lng !== '' && l.lng != null
+                )
               : [];
             const stateLocs      = countryLocs.filter(l => stateSet.has(l.address));
             const locError       = fieldErrors[`loc_${country}`];
-            const filledCount    = countryLocs.filter(l => l.address.trim()).length;
+            // Count only meaningful locations (state selections + map pins + typed addresses)
+            const filledCount    = hasStates
+              ? stateLocs.length + mapPickedLocs.length
+              : countryLocs.filter(l => l.address.trim()).length;
 
             return (
               <div key={country} className="border border-gray-200 rounded-xl">
