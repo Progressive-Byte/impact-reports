@@ -324,6 +324,7 @@ const Settings = () => {
               description="Permanently delete logs older than 1 year"
               label="Purge"
               danger
+              onClick={() => setShowPurgeModal(true)}
             />
           </SettingCard>
         </div>
