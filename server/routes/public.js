@@ -24,7 +24,7 @@ function shapeCard(r) {
   return {
     id:        r._id.toString(),
     slug:      r.slug      || r._id.toString(),
-    projectId: r.projectId || '',
+    projectId: r.actualProjectId || r.projectId || '',
     title:     r.projectName,
     image:     r.thumbnail || r.images?.[0]?.url || '',
     region,
