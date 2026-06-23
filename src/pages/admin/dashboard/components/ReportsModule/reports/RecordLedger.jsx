@@ -84,6 +84,7 @@ const RecordLedger = ({
   onToggleOne,
   // table actions
   isSuperAdmin,
+  isViewer = false,
   onEdit,
   onDelete,
   onBulkDelete,
