@@ -12,12 +12,12 @@ const ActivityLog = ({ recentActivity = [], activityLogs = [], logMeta = {}, loa
 
   const systemLogs = activityLogs.map(log => {
     const t = SYS_TAG[log.type] ?? SYS_TAG.login;
-    return {
-      tag:      t.label,
-      tagClass: t.cls,
-      time:     timeAgo(log.createdAt),
-      msg:      `${log.username} (${log.role}) ${log.type === 'login' ? 'logged in' : 'logged out'}`,
-    };
+    let msg;
+    if (log.type === 'login')  msg = `${log.username} (${log.role}) logged in`;
+    else if (log.type === 'logout') msg = `${log.username} (${log.role}) logged out`;
+    else if (log.type === 'purge')  msg = `${log.username} (${log.role}) purged audit logs${log.details ? ` — ${log.details}` : ''}`;
+    else msg = `${log.username} (${log.role}) ${log.type}`;
+    return { tag: t.label, tagClass: t.cls, time: timeAgo(log.createdAt), msg };
   });
 
   const contentLogs = recentActivity.map(r => {
