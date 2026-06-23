@@ -2,21 +2,23 @@
 
 Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 
-| Method | Path                              | Auth              | Body                                 | Notes                                    |
-| ------ | --------------------------------- | ----------------- | ------------------------------------ | ---------------------------------------- |
-| GET    | `/api/reports`                    | Bearer (any)      | —                                    | List reports (role-filtered)             |
-| GET    | `/api/reports/search`             | Bearer (any)      | —                                    | Autocomplete project names (query: `q`) |
-| GET    | `/api/reports/export`             | Superadmin        | —                                    | Download all reports as CSV or Excel     |
-| POST   | `/api/reports`                    | Superadmin        | `projectName`, `assignedTo[]`        | Create report with status `pending`      |
-| GET    | `/api/reports/:id`                | Bearer (any)      | —                                    | Get single report                        |
-| PATCH  | `/api/reports/:id/step/:stepName` | Editor/Superadmin | step fields (see below)              | Save one wizard step                     |
-| DELETE | `/api/reports/:id`                | Superadmin        | —                                    | Permanently delete report                |
+| Method | Path                              | Auth              | Body                                 | Notes                                             |
+| ------ | --------------------------------- | ----------------- | ------------------------------------ | ------------------------------------------------- |
+| GET    | `/api/reports`                    | Bearer (any)      | —                                    | List reports (role-filtered, trash excluded by default) |
+| GET    | `/api/reports/search`             | Bearer (any)      | —                                    | Autocomplete project names (query: `q`)           |
+| GET    | `/api/reports/export`             | Superadmin        | —                                    | Download all reports as CSV or Excel              |
+| POST   | `/api/reports`                    | Superadmin        | `projectName`, `assignedTo[]`, `actualProjectId` | Create report with status `pending`  |
+| GET    | `/api/reports/:id`                | Bearer (any)      | —                                    | Get single report                                 |
+| PATCH  | `/api/reports/:id/step/:stepName` | Editor/Superadmin | step fields (see below)              | Save one wizard step (blocked if status=`trash`)  |
+| PATCH  | `/api/reports/:id/restore`        | Superadmin        | —                                    | Restore a trashed report                          |
+| DELETE | `/api/reports/:id`                | Superadmin        | —                                    | Soft-delete: move to trash (`status = "trash"`)   |
+| DELETE | `/api/reports/:id/permanent`      | Superadmin        | —                                    | Permanently destroy a trashed report              |
 
 **Access rules by role**
 
-| Role          | List / Read               | Save steps | Create | Delete |
-| ------------- | ------------------------- | ---------- | ------ | ------ |
-| `superadmin`  | All reports               | ✓          | ✓      | ✓      |
+| Role          | List / Read               | Save steps | Create | Trash / Restore / Permanent delete |
+| ------------- | ------------------------- | ---------- | ------ | ---------------------------------- |
+| `superadmin`  | All reports               | ✓          | ✓      | ✓                                  |
 | `editor`      | Only assigned (`assignedTo` contains their `_id`) | ✓ | ✗ | ✗ |
 | `viewer`      | Only assigned (`assignedTo` contains their `_id`) | ✗ (403) | ✗ | ✗ |
 
@@ -28,24 +30,29 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 {
   "_id":             "6650a1b2c3d4e5f607a8b9c2",
   "projectName":     "Winter Relief Alpha",
+  "slug":            "winter-relief-alpha",
+  "projectId":       "REP-001",
+  "actualProjectId": "BurmaWater-1001",
   "assignedTo":      [{ "_id": "...", "username": "sadek", "email": "sadek@example.com" }],
   "createdBy":       { "_id": "...", "username": "admin" },
   "status":          "draft",
+  "donationUrl":     "https://donate.example.com/project",
+  "cost":            15000,
   "projectLead":     "Ali Hassan",
   "fiscalYear":      "FY25",
   "region":          "South Asia",
   "sector":          "Healthcare",
   "livesImpacted":   4800,
-  "projectBackground": "...",
-  "strategicResponse": "...",
+  "projectBackground": "<p><strong>Crisis context...</strong></p>",
+  "strategicResponse": "<p>Response operations...</p>",
   "children":        40,
   "women":           35,
   "men":             25,
   "deliverables":    [{ "label": "Solar Wells", "count": 12, "icon": "FiSun", "description": "Installed across rural communities" }],
-  "images":          [{ "url": "https://res.cloudinary.com/dt1oakyjz/image/upload/v.../photo1.jpg" }, { "url": "https://res.cloudinary.com/dt1oakyjz/image/upload/v.../photo2.jpg" }],
-  "thumbnail":       "https://res.cloudinary.com/dt1oakyjz/image/upload/v.../photo1.jpg",
+  "images":          [{ "url": "https://res.cloudinary.com/.../photo1.jpg" }],
+  "thumbnail":       "https://res.cloudinary.com/.../photo1.jpg",
   "videoUrl":        "https://youtube.com/watch?v=abc123",
-  "milestones":      [{ "date": "2025-01", "title": "Phase 1", "notes": "..." }],
+  "milestones":      [{ "date": "2025-01", "title": "Phase 1", "description": "<p>Completed initial survey</p>" }],
   "countries":       ["India", "Kenya"],
   "locations":       [{ "country": "India", "address": "Uttar Pradesh" }, { "country": "Kenya", "address": "Nairobi" }],
   "stepsCompleted":  ["general", "narrative"],
@@ -56,11 +63,14 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 
 **Status values**
 
-| Status      | When set                                                    |
-| ----------- | ----------------------------------------------------------- |
-| `pending`   | Just created — no step saved yet                            |
-| `draft`     | At least one step saved but not all five                    |
-| `published` | All five steps saved (after final `location` step submit)   |
+| Status      | When set                                                                        |
+| ----------- | ------------------------------------------------------------------------------- |
+| `pending`   | Just created — no step saved yet                                                |
+| `draft`     | At least one step saved but not all five                                        |
+| `published` | All five steps saved (after final `location` step submit)                       |
+| `trash`     | Soft-deleted via `DELETE /api/reports/:id` — hidden from all lists except Trash |
+
+Reports with `status: "trash"` are excluded from the public portal and from the admin "All" list view. Only the explicit `?status=trash` filter surfaces them.
 
 ---
 
@@ -70,13 +80,15 @@ List reports accessible to the caller with server-side search, filter, sort, and
 
 ### Query parameters
 
-| Param    | Type    | Default  | Description                                                          |
-| -------- | ------- | :------: | -------------------------------------------------------------------- |
-| `status` | string  | —        | Filter by status: `pending`, `draft`, or `published`. Omit for all. |
-| `q`      | string  | —        | Case-insensitive substring search on `projectName`.                  |
-| `sort`   | string  | `recent` | Sort order: `recent` (newest first) or `oldest`.                     |
-| `page`   | integer | `1`      | Page number (1-based).                                               |
-| `limit`  | integer | `10`     | Items per page (max `100`).                                          |
+| Param    | Type    | Default  | Description                                                                              |
+| -------- | ------- | :------: | ---------------------------------------------------------------------------------------- |
+| `status` | string  | —        | Filter: `pending`, `draft`, `published`, or `trash`. Omit (or send `all`) to get all non-trash reports. |
+| `q`      | string  | —        | Case-insensitive substring search on `projectName`.                                      |
+| `sort`   | string  | `recent` | `recent` (newest first), `oldest`, `az` (A → Z by name), `za` (Z → A by name).          |
+| `page`   | integer | `1`      | Page number (1-based).                                                                   |
+| `limit`  | integer | `10`     | Items per page (max `100`).                                                              |
+
+When `status` is omitted the response excludes trash. Pass `status=trash` explicitly to list trashed reports.
 
 ### Response `200`
 
@@ -103,12 +115,16 @@ List reports accessible to the caller with server-side search, filter, sort, and
 ### curl
 
 ```bash
-# All reports, page 1
+# All reports (trash excluded), page 1
 curl http://localhost:5173/api/reports \
   -H "Authorization: Bearer $TOKEN"
 
-# Search + status filter + sort
-curl "http://localhost:5173/api/reports?q=winter&status=published&sort=oldest&page=2" \
+# Only trashed reports
+curl "http://localhost:5173/api/reports?status=trash" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Search + status filter + A-Z sort
+curl "http://localhost:5173/api/reports?q=winter&status=published&sort=az&page=2" \
   -H "Authorization: Bearer $TOKEN"
 ```
 
@@ -130,13 +146,6 @@ Search existing project names for autocomplete in the Create modal.
 { "suggestions": ["Winter Relief Alpha", "Winter Food Drive"] }
 ```
 
-### curl
-
-```bash
-curl "http://localhost:5173/api/reports/search?q=winter" \
-  -H "Authorization: Bearer $TOKEN"
-```
-
 ---
 
 ## `POST /api/reports`
@@ -145,19 +154,11 @@ Create a new report. Only `superadmin` can call this. The new report gets status
 
 ### Request body
 
-| Field        | Type     | Required | Description                               | Example                          |
-| ------------ | -------- | :------: | ----------------------------------------- | -------------------------------- |
-| `projectName`| string   | Yes      | Unique project name                       | `"Winter Relief Alpha"`          |
-| `assignedTo` | string[] | Yes      | Array of Admin `_id` strings (role=admin) | `["6650a1...","6650a2..."]`      |
-
-Example:
-
-```json
-{
-  "projectName": "Winter Relief Alpha",
-  "assignedTo":  ["6650a1b2c3d4e5f607a8b9c0"]
-}
-```
+| Field             | Type     | Required | Description                                       | Example                     |
+| ----------------- | -------- | :------: | ------------------------------------------------- | --------------------------- |
+| `projectName`     | string   | Yes      | Unique project name                               | `"Winter Relief Alpha"`     |
+| `assignedTo`      | string[] | Yes      | Array of Admin `_id` strings (role = editor)      | `["6650a1...","6650a2..."]` |
+| `actualProjectId` | string   | —        | Human-readable project ID set by the creator      | `"BurmaWater-1001"`         |
 
 ### Response `201`
 
@@ -178,7 +179,7 @@ Returns the created Report object (with `assignedTo` and `createdBy` populated).
 curl -X POST http://localhost:5173/api/reports \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"projectName":"Winter Relief Alpha","assignedTo":["6650a1b2c3d4e5f607a8b9c0"]}'
+  -d '{"projectName":"Winter Relief Alpha","assignedTo":["6650a1b2c3d4e5f607a8b9c0"],"actualProjectId":"BurmaWater-1001"}'
 ```
 
 ---
@@ -195,16 +196,18 @@ Get a single report by ID. Caller must be superadmin or listed in `assignedTo`.
 
 ### Errors
 
-| Status | Condition                             |
-| ------ | ------------------------------------- |
-| `403`  | Caller not assigned and not superadmin|
-| `404`  | Report not found                      |
+| Status | Condition                              |
+| ------ | -------------------------------------- |
+| `403`  | Caller not assigned and not superadmin |
+| `404`  | Report not found                       |
 
 ---
 
 ## `PATCH /api/reports/:id/step/:stepName`
 
 Save the data for one wizard step. Marks the step complete and updates the report status.
+
+Returns `400` if the report's current status is `"trash"` — restore it first.
 
 ### URL parameters
 
@@ -216,31 +219,38 @@ Save the data for one wizard step. Marks the step complete and updates the repor
 
 **`general`**
 
-| Field           | Type     | Required      | Description                                                |
-| --------------- | -------- | :-----------: | ---------------------------------------------------------- |
-| `projectName`   | string   | Superadmin    | Project name                                               |
-| `assignedTo`    | string[] | Superadmin    | Array of Admin `_id` strings                               |
-| `projectLead`   | string   | Yes           | Lead person name                                           |
-| `fiscalYear`    | string   | Yes           | e.g. `"FY25"`                                              |
-| `region`        | string   | Yes           | One of: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global` |
-| `sector`        | string   | Yes           | Free-text sector e.g. `"Healthcare"`                       |
-| `livesImpacted` | number   | Yes (> 0)     | Number of lives impacted                                   |
+| Field             | Type     | Required      | Description                                                                           |
+| ----------------- | -------- | :-----------: | ------------------------------------------------------------------------------------- |
+| `projectName`     | string   | Superadmin    | Project name                                                                          |
+| `assignedTo`      | string[] | Superadmin    | Array of Admin `_id` strings                                                          |
+| `actualProjectId` | string   | —             | Human-readable project ID (e.g. `"BurmaWater-1001"`)                                 |
+| `donationUrl`     | string   | —             | Per-report donation link shown on the public report page's "Donate Now" button        |
+| `cost`            | number   | —             | Project cost (stored for internal use; not yet surfaced on the public portal)         |
+| `projectLead`     | string   | Yes           | Lead person / partner name                                                            |
+| `fiscalYear`      | string   | Yes           | e.g. `"FY25"`                                                                         |
+| `region`          | string   | Yes           | One of: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global`             |
+| `sector`          | string   | Yes           | Free-text sector e.g. `"Healthcare"`                                                  |
+| `livesImpacted`   | number   | Yes (> 0)     | Number of lives impacted                                                              |
 
 **`narrative`**
 
-| Field               | Type   | Description            |
-| ------------------- | ------ | ---------------------- |
-| `projectBackground` | string | Crisis context         |
-| `strategicResponse` | string | Response operations    |
+Both fields accept rich HTML produced by the Tiptap editor (bold, italic, strikethrough, bullet lists). Stored as HTML; rendered with `dangerouslySetInnerHTML` on the public portal.
+
+| Field               | Type   | Required | Description         |
+| ------------------- | ------ | :------: | ------------------- |
+| `projectBackground` | string | Yes      | Crisis context      |
+| `strategicResponse` | string | Yes      | Response operations |
 
 **`metrics`**
 
-| Field          | Type     | Required | Description                    |
-| -------------- | -------- | :------: | ------------------------------ |
-| `children`     | number   | —        | Children demographic %         |
-| `women`        | number   | —        | Women demographic %            |
-| `men`          | number   | —        | Men demographic %              |
-| `deliverables` | array    | Yes      | At least one item required (see below) |
+`children + women + men` must not exceed 100 — validated client-side with a live progress bar; the server does not enforce the cap.
+
+| Field          | Type     | Required | Description                              |
+| -------------- | -------- | :------: | ---------------------------------------- |
+| `children`     | number   | —        | Children demographic %                   |
+| `women`        | number   | —        | Women demographic %                      |
+| `men`          | number   | —        | Men demographic %                        |
+| `deliverables` | array    | Yes      | At least one item required (see below)   |
 
 Each `deliverables` item:
 
@@ -248,32 +258,32 @@ Each `deliverables` item:
 | ------------- | ------ | :------: | ------------------------------------------------- |
 | `label`       | string | Yes      | Metric name (e.g. `"Solar Wells"`)                |
 | `count`       | number | Yes      | Verified volume (must be > 0)                     |
-| `icon`        | string | —        | Feather icon name (e.g. `"FiSun"`). Defaults to `"FiBox"` in the UI. |
-| `description` | string | —        | Short description shown below the label on the public report page |
+| `icon`        | string | —        | Feather icon name (e.g. `"FiSun"`)                |
+| `description` | string | —        | Short description shown on the public report page |
 
 **`media`**
 
 | Field        | Type     | Required | Description                                               |
 | ------------ | -------- | :------: | --------------------------------------------------------- |
 | `images`     | array    | Yes      | At least 1, max 10. Each item: `{ url: string }`          |
-| `thumbnail`  | string   | —        | Cloudinary URL of the chosen report thumbnail. Must be one of the URLs in `images[]`. Falls back to `images[0].url` in the public API if not set. |
+| `thumbnail`  | string   | —        | Cloudinary URL of the chosen thumbnail                    |
 | `videoUrl`   | string   | —        | YouTube / Vimeo / S3 video link (optional)                |
 | `milestones` | array    | Yes      | At least one item with `date` + `title` (see below)       |
 
 Each `milestones` item:
 
-| Field   | Type   | Required | Description              |
-| ------- | ------ | :------: | ------------------------ |
-| `date`  | string | Yes      | Date or timeframe label  |
-| `title` | string | Yes      | Milestone title          |
-| `notes` | string | —        | Additional notes         |
+| Field         | Type   | Required | Description                                                          |
+| ------------- | ------ | :------: | -------------------------------------------------------------------- |
+| `date`        | string | Yes      | Date or timeframe label                                              |
+| `title`       | string | Yes      | Milestone title                                                      |
+| `description` | string | —        | Rich HTML notes (Tiptap). Rendered with `dangerouslySetInnerHTML` on the public timeline. |
 
 **`location`**
 
-| Field       | Type     | Required | Description                                              |
-| ----------- | -------- | :------: | -------------------------------------------------------- |
-| `countries` | string[] | Yes      | Clean country names e.g. `["India","Kenya"]`             |
-| `locations` | array    | Yes      | Each item: `{ country: string, address: string }`. At least one per selected country. |
+| Field       | Type     | Required | Description                                                            |
+| ----------- | -------- | :------: | ---------------------------------------------------------------------- |
+| `countries` | string[] | Yes      | Clean country names e.g. `["India","Kenya"]`                           |
+| `locations` | array    | Yes      | Each item: `{ country, address }`. At least one per selected country.  |
 
 ### Response `200`
 
@@ -281,102 +291,83 @@ Each `milestones` item:
 { "report": { /* updated Report object */ } }
 ```
 
-When `location` step is saved and all five steps are complete, `status` becomes `"published"`. Otherwise `"draft"`.
+When the `location` step is saved and all five steps are complete, `status` becomes `"published"`. Otherwise `"draft"`.
 
 ### Role protection
 
-- **`viewer`** — always blocked with `403 Viewers have read-only access` before any step processing.
-- **`editor`** — `projectName` and `assignedTo` are silently stripped from the `general` step body; they cannot be changed regardless of what is sent.
+- **`viewer`** — always blocked with `403 Viewers have read-only access`.
+- **`editor`** — `projectName` and `assignedTo` are stripped from `general` step body silently.
 - **`superadmin`** — no restrictions.
 
 ### Errors
 
 | Status | Condition                                                                                    |
 | ------ | -------------------------------------------------------------------------------------------- |
+| `400`  | Report status is `"trash"` — restore it before editing                                       |
 | `400`  | Invalid `stepName`                                                                           |
-| `400`  | Per-step validation failure — missing required field or invalid value (message describes which field) |
-| `400`  | `assignedTo` contains duplicate admin IDs (`general` step, superadmin only)                 |
-| `403`  | Caller is `viewer` (read-only) or not assigned to report                                     |
+| `400`  | Per-step validation failure (message describes which field)                                  |
+| `400`  | `assignedTo` contains duplicate IDs (`general` step, superadmin only)                       |
+| `403`  | Caller is `viewer` or not assigned to report                                                 |
 | `404`  | Report not found                                                                             |
-
-**Per-step required fields**
-
-| Step        | Required                                                                 |
-| ----------- | ------------------------------------------------------------------------ |
-| `general`   | `projectLead`, `fiscalYear`, `region`, `sector`, `livesImpacted > 0`; plus `projectName` and `assignedTo` for superadmin |
-| `narrative` | `projectBackground`, `strategicResponse`                                 |
-| `metrics`   | At least one deliverable with a non-empty `label` and `count > 0`        |
-| `media`     | At least one `images[].url`; max 10 images; at least one milestone with `date` and `title` |
-| `location`  | At least one country; every selected country must have at least one location entry          |
-
-### curl
-
-```bash
-# Save general step
-curl -X PATCH "http://localhost:5173/api/reports/6650a1b2c3d4e5f607a8b9c2/step/general" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"projectName":"Winter Relief Alpha","assignedTo":["6650a1b2..."],"projectLead":"Ali Hassan","fiscalYear":"FY25","region":"South Asia","sector":"Healthcare","livesImpacted":4800}'
-
-# Submit final step
-curl -X PATCH "http://localhost:5173/api/reports/6650a1b2c3d4e5f607a8b9c2/step/media" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"galleryUrl":"https://...","milestones":[{"date":"2025-01","title":"Phase 1","notes":"Delivered"}]}'
-```
 
 ---
 
 ## `GET /api/reports/export`
 
-Download all reports (all statuses, all regions) as a flat file. Only `superadmin` can call this.
+Download all reports as a flat file. Only `superadmin` can call this.
 
 ### Query parameters
 
-| Param    | Type   | Default | Description                                          |
-| -------- | ------ | :-----: | ---------------------------------------------------- |
-| `format` | string | `csv`   | `csv` — plain text CSV; `excel` — `.xlsx` workbook   |
-
-### Response
-
-Returns a file download with the appropriate `Content-Disposition` header.
-
-- **CSV**: `Content-Type: text/csv`, filename `reports-export-YYYY-MM-DD.csv`
-- **Excel**: `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, filename `reports-export-YYYY-MM-DD.xlsx`
+| Param    | Type   | Default | Description                                        |
+| -------- | ------ | :-----: | -------------------------------------------------- |
+| `format` | string | `csv`   | `csv` — plain text; `excel` — `.xlsx` workbook     |
 
 Each row includes: `Project ID`, `Project Name`, `Slug`, `Status`, `Project Lead`, `Fiscal Year`, `Region`, `Sector`, `Lives Impacted`, `Countries`, `Project Background`, `Strategic Response`, `Children`, `Women`, `Men`, `Deliverables`, `Images Count`, `Thumbnail URL`, `Video URL`, `Milestones Count`, `Steps Completed`, `Assigned To`, `Created By`, `Created At`, `Updated At`.
-
-### Errors
-
-| Status | Condition                  |
-| ------ | -------------------------- |
-| `403`  | Caller is not `superadmin` |
-| `500`  | Export generation failed   |
 
 ### curl
 
 ```bash
-# Download as CSV
 curl "http://localhost:5173/api/reports/export?format=csv" \
-  -H "Authorization: Bearer $TOKEN" \
-  -o reports.csv
+  -H "Authorization: Bearer $TOKEN" -o reports.csv
+```
 
-# Download as Excel
-curl "http://localhost:5173/api/reports/export?format=excel" \
-  -H "Authorization: Bearer $TOKEN" \
-  -o reports.xlsx
+---
+
+## `PATCH /api/reports/:id/restore`
+
+Restore a trashed report. Sets `status` back to `"published"` (if all five steps are complete) or `"draft"`. Only `superadmin` can call this.
+
+### Response `200`
+
+```json
+{ "message": "Report restored" }
+```
+
+### Errors
+
+| Status | Condition                          |
+| ------ | ---------------------------------- |
+| `400`  | Report is not currently in trash   |
+| `403`  | Caller is not `superadmin`         |
+| `404`  | Report not found                   |
+
+### curl
+
+```bash
+curl -X PATCH http://localhost:5173/api/reports/6650a1b2c3d4e5f607a8b9c2/restore \
+  -H "Authorization: Bearer $TOKEN"
 ```
 
 ---
 
 ## `DELETE /api/reports/:id`
 
-Permanently delete a report. Only `superadmin` can call this.
+**Soft-delete** — moves the report to trash by setting `status = "trash"`. The record is preserved and can be restored. Only `superadmin` can call this.
 
 ### Response `200`
 
 ```json
-{ "message": "Report deleted successfully" }
+{ "message": "Report moved to trash" }
 ```
 
 ### Errors
@@ -390,5 +381,31 @@ Permanently delete a report. Only `superadmin` can call this.
 
 ```bash
 curl -X DELETE http://localhost:5173/api/reports/6650a1b2c3d4e5f607a8b9c2 \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+---
+
+## `DELETE /api/reports/:id/permanent`
+
+**Permanently destroy** a report. This is irreversible — the document is removed from the database. Intended for reports already in trash. Only `superadmin` can call this.
+
+### Response `200`
+
+```json
+{ "message": "Report permanently deleted" }
+```
+
+### Errors
+
+| Status | Condition                   |
+| ------ | --------------------------- |
+| `403`  | Caller is not `superadmin`  |
+| `404`  | Report not found            |
+
+### curl
+
+```bash
+curl -X DELETE http://localhost:5173/api/reports/6650a1b2c3d4e5f607a8b9c2/permanent \
   -H "Authorization: Bearer $TOKEN"
 ```
