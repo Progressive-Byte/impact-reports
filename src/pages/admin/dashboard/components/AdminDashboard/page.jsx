@@ -91,22 +91,10 @@ const AdminDashboard = () => {
               </div>
             )}
 
-            {/* Format selector */}
-            <div className="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-bold">
-              {['csv', 'excel'].map(f => (
-                <button key={f} type="button" onClick={() => setExportFormat(f)}
-                  className={`px-3 py-1.5 transition-colors ${exportFormat === f ? 'bg-[#0B0D0F] text-white' : 'bg-white text-gray-500 hover:bg-gray-50'}`}
-                >{f === 'csv' ? 'CSV' : 'Excel'}</button>
-              ))}
-            </div>
-
-            <button onClick={handleExportLogs} disabled={exporting}
-              className="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors shadow-sm disabled:opacity-60"
+            <button onClick={handleOpenExport}
+              className="flex items-center gap-2 border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors shadow-sm"
             >
-              {exporting
-                ? <div className="w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
-                : <SafeIcon icon="FiDownload" className="text-sm" />
-              }
+              <SafeIcon icon="FiDownload" className="text-sm" />
               Export Logs
             </button>
           </div>
