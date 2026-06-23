@@ -367,15 +367,52 @@ router.patch('/:id/step/:stepName', async (req, res) => {
   }
 });
 
+// ── PATCH /api/reports/:id/restore ──────────────────────────────────
+router.patch('/:id/restore', async (req, res) => {
+  try {
+    if (req.admin.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Only superadmin can restore reports' });
+    }
+    const report = await Report.findById(req.params.id);
+    if (!report) return res.status(404).json({ message: 'Report not found' });
+    if (report.status !== 'trash') {
+      return res.status(400).json({ message: 'Report is not in trash' });
+    }
+    const allDone = ALL_STEPS.every(s => report.stepsCompleted.includes(s));
+    report.status = allDone ? 'published' : 'draft';
+    await report.save();
+    res.json({ message: 'Report restored' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// ── DELETE /api/reports/:id/permanent ───────────────────────────────
+router.delete('/:id/permanent', async (req, res) => {
+  try {
+    if (req.admin.role !== 'superadmin') {
+      return res.status(403).json({ message: 'Only superadmin can permanently delete reports' });
+    }
+    const report = await Report.findByIdAndDelete(req.params.id);
+    if (!report) return res.status(404).json({ message: 'Report not found' });
+    res.json({ message: 'Report permanently deleted' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // ── DELETE /api/reports/:id ──────────────────────────────────────────
+// Soft-delete: moves report to trash (status = 'trash')
 router.delete('/:id', async (req, res) => {
   try {
     if (req.admin.role !== 'superadmin') {
       return res.status(403).json({ message: 'Only superadmin can delete reports' });
     }
-    const report = await Report.findByIdAndDelete(req.params.id);
+    const report = await Report.findById(req.params.id);
     if (!report) return res.status(404).json({ message: 'Report not found' });
-    res.json({ message: 'Report deleted successfully' });
+    report.status = 'trash';
+    await report.save();
+    res.json({ message: 'Report moved to trash' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
