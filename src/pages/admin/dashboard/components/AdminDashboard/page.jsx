@@ -23,6 +23,8 @@ const AdminDashboard = () => {
   const [exporting,    setExporting]    = useState(false);
   const [exportFormat, setExportFormat] = useState('csv');
   const [exportScope,  setExportScope]  = useState('year');
+  const [dateFrom,     setDateFrom]     = useState('');
+  const [dateTo,       setDateTo]       = useState('');
 
   useEffect(() => {
     adminApiRequest('/api/admin/dashboard')
