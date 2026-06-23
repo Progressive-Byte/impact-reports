@@ -299,6 +299,30 @@ router.post('/logout', protect, async (req, res) => {
   res.json({ message: 'Logged out' });
 });
 
+// DELETE /api/auth/logs/purge — permanently delete logs older than 1 year, superadmin only
+router.delete('/logs/purge', protect, async (req, res) => {
+  if (req.admin.role !== 'superadmin') {
+    return res.status(403).json({ message: 'Superadmin only' });
+  }
+  try {
+    const cutoff = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
+    const result = await ActivityLog.deleteMany({ createdAt: { $lt: cutoff } });
+
+    // Record who performed the purge so it appears at the top of the log
+    await ActivityLog.create({
+      type:     'purge',
+      username: req.admin.username,
+      role:     req.admin.role,
+      ip:       clientIp(req),
+      details:  `${result.deletedCount} record${result.deletedCount !== 1 ? 's' : ''} deleted`,
+    });
+
+    res.json({ message: 'Audit logs purged', deleted: result.deletedCount });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // GET /api/auth/logs — live logs from the last 30 days, newest first (max 500 rows)
 router.get('/logs', protect, async (_req, res) => {
   try {
