@@ -43,4 +43,14 @@ router.get('/', protect, async (req, res) => {
   return res.json({ items, meta: buildMeta({ page, limit, total }) });
 });
 
+// DELETE /api/subscribers/:id — superadmin only
+router.delete('/:id', protect, async (req, res) => {
+  if (req.admin.role !== 'superadmin') {
+    return res.status(403).json({ message: 'Forbidden' });
+  }
+  const deleted = await Subscriber.findByIdAndDelete(req.params.id);
+  if (!deleted) return res.status(404).json({ message: 'Subscriber not found' });
+  return res.json({ message: 'Subscriber removed' });
+});
+
 export default router;
