@@ -46,7 +46,7 @@ const InviteModal = ({ open, onClose, onInviteSent }) => {
         body: JSON.stringify(form),
       });
       toast.success(`Invite sent to ${form.email}`);
-      setForm(INITIAL);
+      setForm(p => ({ ...INITIAL, region: regionOptions[0]?.value || '' }));
       onClose();
       onInviteSent?.();
     } catch (err) {
