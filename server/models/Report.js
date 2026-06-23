@@ -32,7 +32,7 @@ const reportSchema = new mongoose.Schema(
     projectId:         { type: String, default: '' },
     assignedTo:        [{ type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }],
     createdBy:         { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
-    status:            { type: String, enum: ['pending', 'draft', 'published'], default: 'pending' },
+    status:            { type: String, enum: ['pending', 'draft', 'published', 'trash'], default: 'pending' },
 
     // General step
     actualProjectId:   { type: String, default: '' },
