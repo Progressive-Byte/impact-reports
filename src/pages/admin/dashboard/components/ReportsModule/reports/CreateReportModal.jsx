@@ -113,6 +113,21 @@ const CreateReportModal = ({ open, onClose, onCreated, adminOptions }) => {
             )}
           </div>
 
+          {/* Actual Project ID */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Actual Project ID <span className="text-gray-400 font-normal">(optional)</span>
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Burma Water 1001"
+              value={actualProjectId}
+              onChange={e => setActualProjectId(e.target.value)}
+              autoComplete="off"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 bg-white placeholder:text-gray-400 transition-all focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec]"
+            />
+          </div>
+
           {/* Assigned To multi-select */}
           <MultiSelect
             label="Assigned To"
