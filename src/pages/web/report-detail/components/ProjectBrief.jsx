@@ -42,9 +42,10 @@ const ProjectBrief = ({ report }) => {
             onToggle={() => toggle('background')}
             variant="brief"
           >
-            <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
-              {report.projectBackground}
-            </p>
+            <div
+              className="rich-text-output text-gray-600 leading-relaxed text-sm sm:text-base"
+              dangerouslySetInnerHTML={{ __html: report.projectBackground }}
+            />
           </CollapsibleSection>
         )}
 
@@ -55,9 +56,10 @@ const ProjectBrief = ({ report }) => {
             onToggle={() => toggle('response')}
             variant="brief"
           >
-            <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
-              {report.strategicResponse}
-            </p>
+            <div
+              className="rich-text-output text-gray-600 leading-relaxed text-sm sm:text-base"
+              dangerouslySetInnerHTML={{ __html: report.strategicResponse }}
+            />
           </CollapsibleSection>
         )}
       </div>
