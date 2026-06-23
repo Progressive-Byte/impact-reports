@@ -56,6 +56,22 @@ const SubscribersModule = () => {
 
   useEffect(() => { fetchSubscribers(); }, [fetchSubscribers]);
 
+  const handleDelete = async (id, email) => {
+    if (!window.confirm(`Remove "${email}" from subscribers?`)) return;
+    setDeletingId(id);
+    try {
+      await adminApiRequest(`/api/subscribers/${id}`, { method: 'DELETE' });
+      toast.success('Subscriber removed');
+      // If last item on page > 1, step back one page
+      if (subscribers.length === 1 && urlPage > 1) handlePageChange(urlPage - 1);
+      else fetchSubscribers();
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete subscriber');
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   const formatDate = (iso) => {
     if (!iso) return '—';
     return new Date(iso).toLocaleDateString('en-US', {
