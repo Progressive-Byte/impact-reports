@@ -48,21 +48,23 @@ const Header = ({ onSearchClick }) => {
         </div>
       </header>
 
-      {/* Floating Search Button */}
-      <motion.button
-        initial={{ x: 100 }}
-        animate={{ x: 0 }}
-        whileHover={{ x: -10 }}
-        onClick={onSearchClick}
-        data-cursor-label="SEARCH"
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-[60] bg-[#E52321] text-white p-2.5 pl-4 sm:p-4 sm:pl-6 rounded-l-full shadow-2xl flex items-center space-x-2 sm:space-x-3 group transition-all duration-300"
-        title="Open Search"
-      >
-        <div className="flex flex-col items-center justify-center">
-          <SafeIcon icon="FiSearch" className="text-xl sm:text-2xl group-hover:scale-110 transition-transform" />
-          <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-tighter mt-0.5 sm:mt-1">Search</span>
-        </div>
-      </motion.button>
+      {/* Floating Search Button — hidden on individual report pages */}
+      {!isReportDetail && (
+        <motion.button
+          initial={{ x: 100 }}
+          animate={{ x: 0 }}
+          whileHover={{ x: -10 }}
+          onClick={onSearchClick}
+          data-cursor-label="SEARCH"
+          className="fixed right-0 top-1/2 -translate-y-1/2 z-[60] bg-[#E52321] text-white p-2.5 pl-4 sm:p-4 sm:pl-6 rounded-l-full shadow-2xl flex items-center space-x-2 sm:space-x-3 group transition-all duration-300"
+          title="Open Search"
+        >
+          <div className="flex flex-col items-center justify-center">
+            <SafeIcon icon="FiSearch" className="text-xl sm:text-2xl group-hover:scale-110 transition-transform" />
+            <span className="text-[7px] sm:text-[8px] font-black uppercase tracking-tighter mt-0.5 sm:mt-1">Search</span>
+          </div>
+        </motion.button>
+      )}
     </>
   );
 };
