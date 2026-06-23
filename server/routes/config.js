@@ -5,14 +5,13 @@ import { sendWeeklyDigest } from '../utils/sendWeeklyDigest.js';
 
 const router = express.Router();
 
-// GET /api/config/regions — public; returns DB regions, falls back to hardcoded defaults
+// GET /api/config/regions — public; returns DB regions
 router.get('/regions', async (_req, res) => {
   try {
     const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
-    const regions = settings?.regions?.length ? settings.regions : REGIONS;
-    res.json({ regions });
+    res.json({ regions: settings?.regions || [] });
   } catch {
-    res.json({ regions: REGIONS });
+    res.json({ regions: [] });
   }
 });
 
