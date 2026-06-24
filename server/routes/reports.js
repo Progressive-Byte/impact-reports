@@ -64,6 +64,29 @@ async function findProjectAssigneeConflicts(projectName, assigneeIds, excludeRep
   return `${names} ${taken.size === 1 ? 'is' : 'are'} already assigned to "${projectName.trim()}"`;
 }
 
+// ── GET /api/reports/counts ──────────────────────────────────────────
+// Must be before /:id to avoid 'counts' being treated as an id
+router.get('/counts', async (req, res) => {
+  try {
+    const baseFilter = req.admin.role === 'superadmin'
+      ? {}
+      : { $or: [{ assignedTo: req.admin._id }, { approvalAssignedTo: req.admin._id }] };
+
+    const STATUSES = ['pending', 'draft', 'published', 'pending_approval', 'trash'];
+
+    const results = await Promise.all(
+      STATUSES.map(s => Report.countDocuments({ ...baseFilter, status: s }))
+    );
+
+    const counts = Object.fromEntries(STATUSES.map((s, i) => [s, results[i]]));
+    counts.all = results.filter((_, i) => STATUSES[i] !== 'trash').reduce((a, b) => a + b, 0);
+
+    res.json({ counts });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // ── GET /api/reports?status=&q=&sort=recent|oldest&page=&limit= ──────
 router.get('/', async (req, res) => {
   try {
