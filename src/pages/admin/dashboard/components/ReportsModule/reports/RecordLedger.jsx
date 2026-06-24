@@ -215,6 +215,9 @@ const RecordLedger = ({
             const assigneeNames = (entry.assignedTo || [])
               .map(a => a.username || a.email)
               .join(', ');
+            const approvalReviewerName = entry.approvalAssignedTo
+              ? (entry.approvalAssignedTo.username || entry.approvalAssignedTo.email)
+              : null;
 
             const isSelected = selected.has(entry._id);
 
