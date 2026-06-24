@@ -300,7 +300,7 @@ const ReportsModule = ({ onCountChange }) => {
               StepContent={STEP_CONTENT[stepIndex]}
               saving={saving}
               onBack={handleBack}
-              onNext={effectiveIsViewer ? handleViewerNext : handleNext}
+              onNext={(effectiveIsViewer || isApprover) ? handleViewerNext : handleNext}
               onStepClick={goToStep}
               onApprove={handleApprove}
               isSuperAdmin={isSuperAdmin}
