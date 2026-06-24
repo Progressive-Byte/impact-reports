@@ -17,6 +17,7 @@ export function useReportData() {
   const [allAdminOptions, setAllAdminOptions] = useState([]);
   const [regionOptions,   setRegionOptions]   = useState([]);
   const [sectorOptions, setSectorOptions] = useState([]);
+  const [tabCounts,     setTabCounts]     = useState({});
   const [loadingList,   setLoadingList]   = useState(true);
   const [loadingReport, setLoadingReport] = useState(false);
 
