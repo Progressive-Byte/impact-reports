@@ -138,6 +138,7 @@ export function useReportData() {
     form, setForm,
     reports, setReports,
     meta, stats,
+    tabCounts,
     adminOptions,
     allAdminOptions,
     regionOptions,
