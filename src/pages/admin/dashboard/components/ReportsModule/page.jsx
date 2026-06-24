@@ -36,6 +36,7 @@ const ReportsModule = ({ onCountChange }) => {
     form, setForm,
     reports,
     meta, stats,
+    tabCounts,
     adminOptions,
     allAdminOptions,
     regionOptions,
