@@ -216,7 +216,7 @@ const Settings = () => {
       <PageHeader
         title="Settings"
         subtitle="Security, notifications & platform defaults"
-        action={
+        action={isSuperAdmin ? (
           <button
             onClick={handleSave}
             disabled={saving || loading}
@@ -228,7 +228,7 @@ const Settings = () => {
             }
             Save Changes
           </button>
-        }
+        ) : null}
       />
 
       {loading ? <SettingsSkeleton /> : isSuperAdmin ? (
