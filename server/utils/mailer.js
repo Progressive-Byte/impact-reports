@@ -21,7 +21,18 @@ async function sendMail({ to, subject, text, html }) {
   });
 
   console.log(`[MAILER] Sending to ${to} via ${process.env.SMTP_HOST}`);
-  await transport.sendMail({ from, to, subject, text, html });
+  await transport.sendMail({
+    from,
+    to,
+    subject,
+    text,
+    html,
+    replyTo: from,
+    headers: {
+      'X-Mailer': 'Impact Reports Portal',
+      'X-Priority': '3',
+    },
+  });
   console.log(`[MAILER] ✓ Sent to ${to}`);
 }
 
