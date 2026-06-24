@@ -194,7 +194,7 @@ const ReportDetail = () => {
             onToggle={() => toggleSection('locations')}
           />
 
-          <ReportCTAFooter donationUrl={report.donationUrl} />
+          <ReportCTAFooter donationUrl={report.donationUrl} slug={report.slug || slug} projectName={report.projectName} />
         </div>
       </div>
 
