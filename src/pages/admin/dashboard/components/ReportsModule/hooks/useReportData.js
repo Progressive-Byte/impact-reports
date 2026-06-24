@@ -89,6 +89,13 @@ export function useReportData() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sectorOptions.length]);
 
+  const fetchTabCounts = useCallback(async () => {
+    try {
+      const data = await adminApiRequest('/api/reports/counts');
+      setTabCounts(data.counts ?? {});
+    } catch { /* non-critical */ }
+  }, []);
+
   // Fetch report list with server-side search, filter, sort, and pagination
   const fetchReports = useCallback(async ({ status = 'all', q = '', sort = 'recent', page = 1 } = {}) => {
     setLoadingList(true);
@@ -99,7 +106,10 @@ export function useReportData() {
       if (sort !== 'recent') params.set('sort',  sort);
       if (page > 1)          params.set('page',  String(page));
       const qs   = params.toString() ? `?${params}` : '';
-      const data = await adminApiRequest(`/api/reports${qs}`);
+      const [data] = await Promise.all([
+        adminApiRequest(`/api/reports${qs}`),
+        fetchTabCounts(),
+      ]);
       setReports(data.reports || []);
       setMeta(data.meta   ?? null);
       setStats(data.stats ?? { totalLives: 0, count: 0 });
@@ -108,7 +118,7 @@ export function useReportData() {
     } finally {
       setLoadingList(false);
     }
-  }, []);
+  }, [fetchTabCounts]);
 
   // Load single report when entering wizard; fall back to DB default region when report has none
   useEffect(() => {
