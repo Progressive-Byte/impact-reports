@@ -22,6 +22,7 @@ const SORT_OPTIONS = [
 const LedgerToolbar = ({
   inputSearch, setInputSearch, isDebouncing,
   urlSearch, urlStatus, urlSort, meta, loading,
+  tabCounts = {},
   onStatusChange, onSortChange, onRefresh,
 }) => (
   <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 gap-3 flex-wrap">
