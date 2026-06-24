@@ -420,6 +420,32 @@ router.delete('/:id/permanent', async (req, res) => {
   }
 });
 
+// ── PATCH /api/reports/:id/approve ──────────────────────────────────
+router.patch('/:id/approve', async (req, res) => {
+  try {
+    const report = await Report.findById(req.params.id);
+    if (!report) return res.status(404).json({ message: 'Report not found' });
+
+    const isAssignedApprover =
+      report.approvalAssignedTo &&
+      String(report.approvalAssignedTo) === String(req.admin._id);
+
+    if (!isAssignedApprover && req.admin.role !== 'superadmin') {
+      return res.status(403).json({ message: 'You are not the approval reviewer for this report' });
+    }
+    if (report.status !== 'pending_approval') {
+      return res.status(400).json({ message: 'Report is not pending approval' });
+    }
+
+    report.status = 'published';
+    await report.save();
+    const populated = await Report.findById(report._id).populate(POPULATE);
+    res.json({ report: populated, message: 'Report approved and published' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // ── DELETE /api/reports/:id ──────────────────────────────────────────
 // Soft-delete: moves report to trash (status = 'trash')
 router.delete('/:id', async (req, res) => {
