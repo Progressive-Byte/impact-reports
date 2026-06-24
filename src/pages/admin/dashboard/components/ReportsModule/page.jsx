@@ -258,6 +258,7 @@ const ReportsModule = ({ onCountChange }) => {
         onClose={() => setShowCreate(false)}
         onCreated={handleCreated}
         adminOptions={adminOptions}
+        allAdminOptions={allAdminOptions}
       />
 
       {!isWizard && (
