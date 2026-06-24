@@ -49,17 +49,21 @@ const LedgerToolbar = ({
             key={f}
             onClick={() => onStatusChange(f)}
             disabled={loading}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition-all disabled:opacity-60 ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-60 ${
               f === 'trash'
                 ? urlStatus === 'trash'
                   ? 'bg-red-50 text-[#E52321] shadow-sm'
                   : 'text-gray-400 hover:text-[#E52321]'
-                : urlStatus === f
-                  ? 'bg-white text-gray-800 shadow-sm'
-                  : 'text-gray-400 hover:text-gray-600'
+                : f === 'pending_approval'
+                  ? urlStatus === 'pending_approval'
+                    ? 'bg-blue-50 text-blue-600 shadow-sm'
+                    : 'text-gray-400 hover:text-blue-500'
+                  : urlStatus === f
+                    ? 'bg-white text-gray-800 shadow-sm'
+                    : 'text-gray-400 hover:text-gray-600'
             }`}
           >
-            {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
+            {STATUS_TAB_LABELS[f]}
           </button>
         ))}
       </div>
