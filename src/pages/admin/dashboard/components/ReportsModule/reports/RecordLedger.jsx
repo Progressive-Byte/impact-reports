@@ -125,6 +125,7 @@ const RecordLedger = ({
         urlSort={urlSort}
         meta={meta}
         loading={loading}
+        tabCounts={tabCounts}
         onStatusChange={onStatusChange}
         onSortChange={onSortChange}
         onRefresh={onRefresh}
