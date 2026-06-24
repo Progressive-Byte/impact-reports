@@ -13,8 +13,9 @@ export function useReportData() {
   const [reports,       setReports]       = useState([]);
   const [meta,          setMeta]          = useState(null);
   const [stats,         setStats]         = useState({ totalLives: 0, count: 0 });
-  const [adminOptions,  setAdminOptions]  = useState([]);
-  const [regionOptions, setRegionOptions] = useState([]);
+  const [adminOptions,    setAdminOptions]    = useState([]);
+  const [allAdminOptions, setAllAdminOptions] = useState([]);
+  const [regionOptions,   setRegionOptions]   = useState([]);
   const [sectorOptions, setSectorOptions] = useState([]);
   const [loadingList,   setLoadingList]   = useState(true);
   const [loadingReport, setLoadingReport] = useState(false);
