@@ -43,7 +43,7 @@ const RichTextEditor = ({
         codeBlock: false,
         code: false,
         horizontalRule: false,
-        heading: false,
+        heading: { levels: [1, 2, 3] },
       }),
       Placeholder.configure({ placeholder }),
       Link.configure({ openOnClick: false, autolink: true, linkOnPaste: true }),
@@ -140,7 +140,20 @@ const RichTextEditor = ({
         {/* Toolbar */}
         {!readOnly && (
           <>
-            <div className="flex items-center gap-0.5 px-3 py-2 border-b border-gray-100 bg-gray-50/70">
+            <div className="flex items-center gap-0.5 px-3 py-2 border-b border-gray-100 bg-gray-50/70 flex-wrap">
+              {[1, 2, 3].map(level => (
+                <ToolbarBtn
+                  key={level}
+                  onMouseDown={exec(() => editor?.chain().focus().toggleHeading({ level }).run())}
+                  active={editor?.isActive('heading', { level })}
+                  title={`Heading ${level}`}
+                >
+                  <span className="text-[11px] font-bold leading-none">H{level}</span>
+                </ToolbarBtn>
+              ))}
+
+              <Divider />
+
               <ToolbarBtn
                 onMouseDown={exec(() => editor?.chain().focus().toggleBold().run())}
                 active={editor?.isActive('bold')}
