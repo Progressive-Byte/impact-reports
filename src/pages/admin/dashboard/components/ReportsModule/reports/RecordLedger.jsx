@@ -128,6 +128,7 @@ const RecordLedger = ({
         meta={meta}
         loading={loading}
         tabCounts={tabCounts}
+        isSuperAdmin={isSuperAdmin}
         onStatusChange={onStatusChange}
         onSortChange={onSortChange}
         onRefresh={onRefresh}
