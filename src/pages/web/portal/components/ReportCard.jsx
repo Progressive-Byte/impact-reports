@@ -29,18 +29,18 @@ const ReportCard = ({ report }) => (
       <div className="mt-5 flex items-end justify-between">
         <div className="flex items-end">
           <div className="flex flex-col items-start gap-0.5 min-w-0">
-            <p className="text-[10px] font-black uppercase tracking-widest text-white/50">Location</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-white">Location</p>
             <div className="flex items-center gap-1.5">
-              <SafeIcon icon="FiMapPin" className="text-[#E52321] text-[10px] flex-shrink-0" />
-              <span className="text-white/80 text-[11px] font-semibold truncate">{report.region}</span>
+              <SafeIcon icon="FiMapPin" className="text-white text-[10px] flex-shrink-0" />
+              <span className="text-white text-[11px] font-semibold truncate">{report.region}</span>
             </div>
-            <span className="text-[10px] uppercase tracking-[0.18em] text-white/50 truncate">
+            <span className="text-[10px] uppercase tracking-[0.18em] text-white truncate">
               {report.year} • {report.sector}
             </span>
           </div>
 
           <div className="min-w-0 ml-4 pl-4 border-l border-white/20">
-            <p className="text-[10px] font-black uppercase tracking-widest text-white/50">Impact</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-white">Impact</p>
             <p className="text-lg font-black text-white tracking-tight">{report.metrics.beneficiaries.toLocaleString()}</p>
           </div>
         </div>
