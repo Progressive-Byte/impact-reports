@@ -321,6 +321,7 @@ const ReportsModule = ({ onCountChange }) => {
           urlSearch={urlSearch}
           urlStatus={urlStatus}
           urlSort={urlSort}
+          tabCounts={tabCounts}
           onStatusChange={handleStatusChange}
           onSortChange={handleSortChange}
           onPageChange={handlePageChange}
