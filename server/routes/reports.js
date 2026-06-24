@@ -317,11 +317,14 @@ router.patch('/:id/step/:stepName', async (req, res) => {
 
     const report = await Report.findById(req.params.id);
     if (!report) return res.status(404).json({ message: 'Report not found' });
-    if (!canAccess(req.admin, report)) {
+    if (!canEdit(req.admin, report)) {
       return res.status(403).json({ message: 'Access denied' });
     }
     if (report.status === 'trash') {
       return res.status(400).json({ message: 'Cannot edit a trashed report. Restore it first.' });
+    }
+    if (report.status === 'pending_approval' && req.admin.role !== 'superadmin') {
+      return res.status(403).json({ message: 'This report is awaiting approval and cannot be edited.' });
     }
 
     const isSuperAdmin = req.admin.role === 'superadmin';
