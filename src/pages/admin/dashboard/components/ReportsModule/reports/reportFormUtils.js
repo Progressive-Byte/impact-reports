@@ -32,9 +32,13 @@ export const getBlankForm = (defaultRegion = '') => ({
 });
 
 export const reportToForm = (report, defaultRegion = '') => ({
-  projectName:       report.projectName     || '',
-  projectId:         report.projectId       || '',
-  actualProjectId:   report.actualProjectId || '',
+  projectName:         report.projectName     || '',
+  projectId:           report.projectId       || '',
+  status:              report.status          || 'pending',
+  approvalAssignedTo:  report.approvalAssignedTo
+    ? String(report.approvalAssignedTo._id ?? report.approvalAssignedTo)
+    : '',
+  actualProjectId:     report.actualProjectId || '',
   donationUrl:       report.donationUrl     || '',
   cost:              report.cost            ?? 0,
   assignedTo:        (report.assignedTo || []).map(a => String(a._id ?? a)),
