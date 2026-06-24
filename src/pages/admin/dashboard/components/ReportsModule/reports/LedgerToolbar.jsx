@@ -1,7 +1,16 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
 import CustomSelect from './CustomSelect';
 
-const STATUS_FILTERS = ['all', 'published', 'draft', 'pending', 'trash'];
+const STATUS_FILTERS = ['all', 'published', 'draft', 'pending', 'pending_approval', 'trash'];
+
+const STATUS_TAB_LABELS = {
+  all:              'All',
+  published:        'Published',
+  draft:            'Draft',
+  pending:          'Pending',
+  pending_approval: 'For Review',
+  trash:            'Trash',
+};
 
 const SORT_OPTIONS = [
   { value: 'recent', label: 'Recent'  },
