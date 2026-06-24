@@ -250,7 +250,7 @@ router.get('/:id', async (req, res) => {
   try {
     const report = await Report.findById(req.params.id).populate(POPULATE);
     if (!report) return res.status(404).json({ message: 'Report not found' });
-    if (!canAccess(req.admin, report)) {
+    if (!canView(req.admin, report)) {
       return res.status(403).json({ message: 'Access denied' });
     }
     res.json({ report });
