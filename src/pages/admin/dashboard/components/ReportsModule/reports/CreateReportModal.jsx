@@ -54,7 +54,12 @@ const CreateReportModal = ({ open, onClose, onCreated, adminOptions, allAdminOpt
     try {
       const data = await adminApiRequest('/api/reports', {
         method: 'POST',
-        body: JSON.stringify({ projectName: projectName.trim(), actualProjectId: actualProjectId.trim(), assignedTo }),
+        body: JSON.stringify({
+          projectName:        projectName.trim(),
+          actualProjectId:    actualProjectId.trim(),
+          assignedTo,
+          ...(approvalAssignedTo ? { approvalAssignedTo } : {}),
+        }),
       });
       toast.success('Report created');
       onCreated(data.report);
