@@ -1,7 +1,9 @@
 export const BLANK_FORM = {
-  projectName:       '',
-  projectId:         '',
-  actualProjectId:   '',
+  projectName:         '',
+  projectId:           '',
+  status:              'pending',
+  approvalAssignedTo:  '',
+  actualProjectId:     '',
   donationUrl:       '',
   cost:              0,
   assignedTo:        [],
