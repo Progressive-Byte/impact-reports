@@ -68,18 +68,29 @@ async function findProjectAssigneeConflicts(projectName, assigneeIds, excludeRep
 // Must be before /:id to avoid 'counts' being treated as an id
 router.get('/counts', async (req, res) => {
   try {
-    const baseFilter = req.admin.role === 'superadmin'
+    const isSuperAdmin = req.admin.role === 'superadmin';
+
+    // Base filter for regular statuses: reports assigned to me (as editor) or as approver
+    const baseFilter = isSuperAdmin
       ? {}
       : { $or: [{ assignedTo: req.admin._id }, { approvalAssignedTo: req.admin._id }] };
 
-    const STATUSES = ['pending', 'draft', 'published', 'pending_approval', 'trash'];
+    // For pending_approval: non-superadmin sees ONLY reports where they are the approver
+    const approvalFilter = isSuperAdmin
+      ? { status: 'pending_approval' }
+      : { approvalAssignedTo: req.admin._id, status: 'pending_approval' };
 
-    const results = await Promise.all(
-      STATUSES.map(s => Report.countDocuments({ ...baseFilter, status: s }))
-    );
+    const REGULAR = ['pending', 'draft', 'published', 'trash'];
 
-    const counts = Object.fromEntries(STATUSES.map((s, i) => [s, results[i]]));
-    counts.all = results.filter((_, i) => STATUSES[i] !== 'trash').reduce((a, b) => a + b, 0);
+    const [regularResults, approvalCount] = await Promise.all([
+      Promise.all(REGULAR.map(s => Report.countDocuments({ ...baseFilter, status: s }))),
+      Report.countDocuments(approvalFilter),
+    ]);
+
+    const counts = Object.fromEntries(REGULAR.map((s, i) => [s, regularResults[i]]));
+    counts.pending_approval = approvalCount;
+    counts.all = regularResults.filter((_, i) => REGULAR[i] !== 'trash').reduce((a, b) => a + b, 0)
+      + approvalCount;
 
     res.json({ counts });
   } catch (err) {
