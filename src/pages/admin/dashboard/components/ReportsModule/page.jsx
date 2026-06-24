@@ -278,23 +278,37 @@ const ReportsModule = ({ onCountChange }) => {
       />
 
       {isWizard ? (
-        <WizardShell
-          step={step}
-          loading={loadingReport}
-          form={form}
-          update={update}
-          adminOptions={adminOptions}
-          regionOptions={regionOptions}
-          sectorOptions={sectorOptions}
-          StepContent={STEP_CONTENT[stepIndex]}
-          saving={saving}
-          onBack={handleBack}
-          onNext={isViewer ? handleViewerNext : handleNext}
-          onStepClick={goToStep}
-          isSuperAdmin={isSuperAdmin}
-          isViewer={isViewer}
-          fieldErrors={fieldErrors}
-        />
+        (() => {
+          const isPendingApproval = form.status === 'pending_approval';
+          const isApprover = Boolean(
+            isPendingApproval &&
+            form.approvalAssignedTo &&
+            String(form.approvalAssignedTo) === String(admin?._id)
+          );
+          // Editors who submitted but aren't the approver see read-only too
+          const effectiveIsViewer = isViewer || (isPendingApproval && !isSuperAdmin && !isApprover);
+          return (
+            <WizardShell
+              step={step}
+              loading={loadingReport}
+              form={form}
+              update={update}
+              adminOptions={adminOptions}
+              regionOptions={regionOptions}
+              sectorOptions={sectorOptions}
+              StepContent={STEP_CONTENT[stepIndex]}
+              saving={saving}
+              onBack={handleBack}
+              onNext={effectiveIsViewer ? handleViewerNext : handleNext}
+              onStepClick={goToStep}
+              onApprove={handleApprove}
+              isSuperAdmin={isSuperAdmin}
+              isViewer={effectiveIsViewer}
+              isApprover={isApprover}
+              fieldErrors={fieldErrors}
+            />
+          );
+        })()
       ) : (
         <RecordLedger
           reports={reports}
