@@ -16,32 +16,34 @@ const ReportCard = ({ report }) => (
 
     {/* Bottom content */}
     <div className="relative z-10 p-6 sm:p-7 min-h-[340px] flex flex-col justify-end">
-      {/* Title row — title on left, region+year on right */}
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug line-clamp-2 flex-1">
-          {report.title}
-        </h3>
-        <div className="flex flex-col items-end gap-1 flex-shrink-0 pt-0.5">
-          <div className="flex items-center gap-1.5">
-            <SafeIcon icon="FiMapPin" className="text-[#E52321] text-[10px]" />
-            <span className="text-white/80 text-[11px] font-semibold">{report.region}</span>
-          </div>
-          <span className="text-[10px] uppercase tracking-[0.18em] text-white/50">
-            {report.year} • {report.sector}
-          </span>
-        </div>
-      </div>
+      {/* Title */}
+      <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug line-clamp-2">
+        {report.title}
+      </h3>
 
       <p className="mt-2 text-sm text-white/70 leading-relaxed line-clamp-2">
         {report.summary}
       </p>
 
-      <div className="mt-5 flex items-center justify-between gap-4">
+      {/* Bottom row — Impact on left, Location on right, arrow far right */}
+      <div className="mt-5 flex items-end justify-between gap-4">
         <div className="min-w-0">
           <p className="text-[10px] font-black uppercase tracking-widest text-white/50">Impact</p>
           <p className="text-lg font-black text-white tracking-tight">{report.metrics.beneficiaries.toLocaleString()}</p>
         </div>
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/10 group-hover:bg-[#E52321] border border-white/10 group-hover:border-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300">
+
+        <div className="flex flex-col items-start gap-0.5 min-w-0">
+          <p className="text-[10px] font-black uppercase tracking-widest text-white/50">Location</p>
+          <div className="flex items-center gap-1.5">
+            <SafeIcon icon="FiMapPin" className="text-[#E52321] text-[10px] flex-shrink-0" />
+            <span className="text-white/80 text-[11px] font-semibold truncate">{report.region}</span>
+          </div>
+          <span className="text-[10px] uppercase tracking-[0.18em] text-white/50 truncate">
+            {report.year} • {report.sector}
+          </span>
+        </div>
+
+        <span className="inline-flex items-center gap-2 rounded-full bg-white/10 group-hover:bg-[#E52321] border border-white/10 group-hover:border-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 flex-shrink-0">
           <SafeIcon icon="FiArrowRight" className="text-base" />
         </span>
       </div>
