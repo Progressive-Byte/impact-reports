@@ -148,6 +148,27 @@ const CreateReportModal = ({ open, onClose, onCreated, adminOptions, allAdminOpt
             placeholder="Select team members..."
           />
 
+          {/* Approval Reviewer single-select */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">
+              Approval Reviewer
+              <span className="ml-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wide">optional</span>
+            </label>
+            <select
+              value={approvalAssignedTo}
+              onChange={e => setApprovalAssignedTo(e.target.value)}
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 bg-white transition-all focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] appearance-none"
+            >
+              <option value="">No approval reviewer</option>
+              {allAdminOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+            <p className="mt-1 text-[11px] text-gray-400">
+              When all steps are completed, the report will await approval from this reviewer before publishing.
+            </p>
+          </div>
+
           {/* Actions */}
           <div className="flex items-center justify-end gap-3 pt-2">
             <button
