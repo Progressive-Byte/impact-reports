@@ -147,12 +147,13 @@ const RecordLedger = ({
           {urlStatus !== 'all' && (
             <span className="flex items-center gap-1.5 bg-white border border-gray-200 text-xs font-bold text-gray-600 px-3 py-1 rounded-full capitalize">
               <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                urlStatus === 'published' ? 'bg-green-500'
-                : urlStatus === 'pending' ? 'bg-yellow-400'
-                : urlStatus === 'trash'   ? 'bg-red-400'
+                urlStatus === 'published'        ? 'bg-green-500'
+                : urlStatus === 'pending'        ? 'bg-yellow-400'
+                : urlStatus === 'pending_approval' ? 'bg-blue-400'
+                : urlStatus === 'trash'          ? 'bg-red-400'
                 : 'bg-gray-400'
               }`} />
-              {urlStatus}
+              {STATUS_LABELS[urlStatus] ?? urlStatus}
               <button onClick={() => onStatusChange('all')} className="text-gray-300 hover:text-gray-500 ml-0.5">
                 <SafeIcon icon="FiX" className="text-[10px]" />
               </button>
