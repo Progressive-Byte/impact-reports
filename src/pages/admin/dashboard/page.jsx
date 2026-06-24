@@ -14,8 +14,8 @@ import SubscribersModule from './components/SubscribersModule/page';
 
 const VALID_SECTIONS = {
   superadmin: ['overview', 'reports', 'users', 'data', 'subscribers', 'settings'],
-  editor:     ['overview', 'reports'],
-  viewer:     ['overview', 'reports'],
+  editor:     ['overview', 'reports', 'settings'],
+  viewer:     ['overview', 'reports', 'settings'],
 };
 
 const AdminOverview = () => {
