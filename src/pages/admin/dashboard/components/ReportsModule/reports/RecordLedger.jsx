@@ -87,6 +87,8 @@ const RecordLedger = ({
   urlSearch, urlStatus, urlSort,
   // handlers
   onStatusChange, onSortChange, onPageChange, onRefresh,
+  // role context
+  isSuperAdmin,
   // selection
   selected = new Set(),
   allSelected = false,
