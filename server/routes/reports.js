@@ -10,8 +10,9 @@ const router = express.Router();
 router.use(protect);
 
 const POPULATE = [
-  { path: 'assignedTo', select: 'username email' },
-  { path: 'createdBy',  select: 'username email' },
+  { path: 'assignedTo',         select: 'username email' },
+  { path: 'approvalAssignedTo', select: 'username email' },
+  { path: 'createdBy',          select: 'username email' },
 ];
 
 // Which fields each step is allowed to update
