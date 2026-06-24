@@ -81,6 +81,7 @@ const RecordLedger = ({
   reports = [],
   loading = false,
   meta    = null,
+  tabCounts = {},
   // filter state
   inputSearch, setInputSearch, isDebouncing,
   urlSearch, urlStatus, urlSort,
