@@ -64,13 +64,14 @@ const LedgerToolbar = ({
             f === 'trash'            ? urlStatus === 'trash' :
             f === 'pending_approval' ? urlStatus === 'pending_approval' :
             urlStatus === f;
+          const isApproveMe = f === 'pending_approval' && isApprover;
 
           return (
             <button
               key={f}
               onClick={() => onStatusChange(f)}
               disabled={loading}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-60 ${
+              className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-60 ${
                 f === 'trash'
                   ? isActive
                     ? 'bg-red-50 text-[#E52321] shadow-sm'
@@ -78,19 +79,34 @@ const LedgerToolbar = ({
                   : f === 'pending_approval'
                     ? isActive
                       ? 'bg-blue-50 text-blue-600 shadow-sm'
-                      : 'text-gray-400 hover:text-blue-500'
+                      : isApproveMe
+                        ? 'text-blue-500 hover:text-blue-600'
+                        : 'text-gray-400 hover:text-blue-500'
                     : isActive
                       ? 'bg-white text-gray-800 shadow-sm'
                       : 'text-gray-400 hover:text-gray-600'
               }`}
             >
-              {STATUS_TAB_LABELS[f]}
+              {/* Pulsing dot for approver with pending tasks */}
+              {isApproveMe && !isActive && (
+                <span className="relative flex h-2 w-2 flex-shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500" />
+                </span>
+              )}
+
+              {getTabLabel(f)}
+
               {count != null && count > 0 && (
                 <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-full leading-none ${
                   f === 'trash'
                     ? isActive ? 'bg-red-100 text-[#E52321]' : 'bg-gray-100 text-gray-400'
                     : f === 'pending_approval'
-                      ? isActive ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400'
+                      ? isActive
+                        ? 'bg-blue-100 text-blue-600'
+                        : isApproveMe
+                          ? 'bg-blue-100 text-blue-600'
+                          : 'bg-gray-100 text-gray-400'
                       : isActive ? 'bg-gray-100 text-gray-600' : 'bg-gray-100 text-gray-400'
                 }`}>
                   {count}
