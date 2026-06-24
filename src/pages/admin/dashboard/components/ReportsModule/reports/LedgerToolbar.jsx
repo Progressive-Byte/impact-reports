@@ -23,8 +23,21 @@ const LedgerToolbar = ({
   inputSearch, setInputSearch, isDebouncing,
   urlSearch, urlStatus, urlSort, meta, loading,
   tabCounts = {},
+  isSuperAdmin = false,
   onStatusChange, onSortChange, onRefresh,
-}) => (
+}) => {
+  // Non-superadmin with pending approvals: rename tab and pulse
+  const myApprovalCount = tabCounts.pending_approval ?? 0;
+  const isApprover = !isSuperAdmin && myApprovalCount > 0;
+
+  const getTabLabel = (f) => {
+    if (f === 'pending_approval') {
+      return isSuperAdmin ? 'For Review' : 'Approve Me';
+    }
+    return STATUS_TAB_LABELS[f];
+  };
+
+  return (
   <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 gap-3 flex-wrap">
 
     {/* Left: title + count badge */}
