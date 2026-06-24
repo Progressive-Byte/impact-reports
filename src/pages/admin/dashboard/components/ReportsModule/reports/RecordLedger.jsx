@@ -9,10 +9,15 @@ import LedgerToolbar from './LedgerToolbar';
 const SKELETON_ROWS = 5;
 
 const STATUS_STYLES = {
-  pending:   'bg-yellow-50 text-yellow-700 border border-yellow-200',
-  draft:     'bg-gray-100 text-gray-500',
-  published: 'bg-green-50 text-green-700 border border-green-200',
-  trash:     'bg-red-50 text-red-400 border border-red-100',
+  pending:          'bg-yellow-50 text-yellow-700 border border-yellow-200',
+  draft:            'bg-gray-100 text-gray-500',
+  published:        'bg-green-50 text-green-700 border border-green-200',
+  pending_approval: 'bg-blue-50 text-blue-700 border border-blue-200',
+  trash:            'bg-red-50 text-red-400 border border-red-100',
+};
+
+const STATUS_LABELS = {
+  pending_approval: 'For Review',
 };
 
 // ── Bulk action bar ───────────────────────────────────────────────────────────
