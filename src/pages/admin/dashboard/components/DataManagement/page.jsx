@@ -8,7 +8,7 @@ import { adminApiRequest } from '../../../../../services/adminApi';
 const ListCard = ({ icon, title, subtitle, items, loading, onAdd, onUpdate, onRemove, addLabel, placeholder }) => (
   <div className="bg-white border border-gray-200 rounded-2xl shadow-sm flex flex-col">
     {/* Header */}
-    <div className="flex items-center gap-3 px-6 py-4 border-b border-gray-100">
+    <div className="flex items-center gap-3 px-4 sm:px-6 py-4 border-b border-gray-100">
       <div className="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
         <SafeIcon icon={icon} className="text-gray-600 text-sm" />
       </div>
@@ -19,7 +19,7 @@ const ListCard = ({ icon, title, subtitle, items, loading, onAdd, onUpdate, onRe
     </div>
 
     {/* List */}
-    <div className="px-6 py-5 space-y-3 overflow-y-auto max-h-[340px]">
+    <div className="px-4 sm:px-6 py-5 space-y-3 overflow-y-auto max-h-[340px]">
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map(i => (
