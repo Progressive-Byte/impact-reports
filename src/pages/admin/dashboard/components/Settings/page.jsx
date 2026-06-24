@@ -37,6 +37,7 @@ const CURRENCY_OPTIONS = [
 
 const Settings = () => {
   const { admin, updateAdmin } = useAdminAuth();
+  const isSuperAdmin = admin?.role === 'superadmin';
   const [regionOptions,   setRegionOptions]   = useState([]);
   const [loading,         setLoading]         = useState(true);
   const [saving,          setSaving]          = useState(false);
