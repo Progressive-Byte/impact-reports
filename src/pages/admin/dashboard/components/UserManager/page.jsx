@@ -100,7 +100,7 @@ const UserManager = () => {
         action={
           <button
             onClick={() => setShowInvite(true)}
-            className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors"
+            className="flex items-center gap-2 bg-[#E52321] hover:bg-[#c91d1b] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors whitespace-nowrap flex-shrink-0"
           >
             <SafeIcon icon="FiUserPlus" className="text-base" />
             Invite User
