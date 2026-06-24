@@ -232,7 +232,7 @@ const Settings = () => {
       />
 
       {loading ? <SettingsSkeleton /> : isSuperAdmin ? (
-        <div className="grid grid-cols-2 gap-5 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 items-start">
 
           <div className="space-y-5">
             <SettingCard icon="FiShield" title="Security">
