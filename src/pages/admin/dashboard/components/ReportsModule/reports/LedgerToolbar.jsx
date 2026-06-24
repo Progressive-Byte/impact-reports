@@ -45,28 +45,47 @@ const LedgerToolbar = ({
 
       {/* Status segmented tabs */}
       <div className="bg-gray-50 border border-gray-100 rounded-xl p-1 flex gap-0.5 flex-shrink-0">
-        {STATUS_FILTERS.map(f => (
-          <button
-            key={f}
-            onClick={() => onStatusChange(f)}
-            disabled={loading}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-60 ${
-              f === 'trash'
-                ? urlStatus === 'trash'
-                  ? 'bg-red-50 text-[#E52321] shadow-sm'
-                  : 'text-gray-400 hover:text-[#E52321]'
-                : f === 'pending_approval'
-                  ? urlStatus === 'pending_approval'
-                    ? 'bg-blue-50 text-blue-600 shadow-sm'
-                    : 'text-gray-400 hover:text-blue-500'
-                  : urlStatus === f
-                    ? 'bg-white text-gray-800 shadow-sm'
-                    : 'text-gray-400 hover:text-gray-600'
-            }`}
-          >
-            {STATUS_TAB_LABELS[f]}
-          </button>
-        ))}
+        {STATUS_FILTERS.map(f => {
+          const count = tabCounts[f];
+          const isActive =
+            f === 'trash'            ? urlStatus === 'trash' :
+            f === 'pending_approval' ? urlStatus === 'pending_approval' :
+            urlStatus === f;
+
+          return (
+            <button
+              key={f}
+              onClick={() => onStatusChange(f)}
+              disabled={loading}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all disabled:opacity-60 ${
+                f === 'trash'
+                  ? isActive
+                    ? 'bg-red-50 text-[#E52321] shadow-sm'
+                    : 'text-gray-400 hover:text-[#E52321]'
+                  : f === 'pending_approval'
+                    ? isActive
+                      ? 'bg-blue-50 text-blue-600 shadow-sm'
+                      : 'text-gray-400 hover:text-blue-500'
+                    : isActive
+                      ? 'bg-white text-gray-800 shadow-sm'
+                      : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              {STATUS_TAB_LABELS[f]}
+              {count != null && count > 0 && (
+                <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-full leading-none ${
+                  f === 'trash'
+                    ? isActive ? 'bg-red-100 text-[#E52321]' : 'bg-gray-100 text-gray-400'
+                    : f === 'pending_approval'
+                      ? isActive ? 'bg-blue-100 text-blue-600' : 'bg-gray-100 text-gray-400'
+                      : isActive ? 'bg-gray-100 text-gray-600' : 'bg-gray-100 text-gray-400'
+                }`}>
+                  {count}
+                </span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
       {/* Search */}
