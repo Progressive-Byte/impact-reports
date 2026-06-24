@@ -349,6 +349,9 @@ const RecordLedger = ({
         )}
       </div>
 
+      </div>{/* min-w */}
+      </div>{/* overflow-x-auto */}
+
       <Pagination meta={meta} onPageChange={onPageChange} label="reports" />
     </div>
   );
