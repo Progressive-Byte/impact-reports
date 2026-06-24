@@ -54,7 +54,7 @@ const ListCard = ({ icon, title, subtitle, items, loading, onAdd, onUpdate, onRe
     </div>
 
     {/* Add button */}
-    <div className="px-6 pb-6">
+    <div className="px-4 sm:px-6 pb-6">
       <button
         onClick={onAdd}
         className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 hover:border-[#E52321] hover:text-[#E52321] text-gray-400 text-sm font-bold py-3 rounded-xl transition-colors"
