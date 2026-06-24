@@ -77,9 +77,10 @@ router.get('/', async (req, res) => {
 
     const filter = req.admin.role === 'superadmin'
       ? {}
-      : { assignedTo: req.admin._id };
+      : { $or: [{ assignedTo: req.admin._id }, { approvalAssignedTo: req.admin._id }] };
 
-    if (status && ['pending', 'draft', 'published', 'trash'].includes(status)) {
+    const VALID_STATUSES = ['pending', 'draft', 'published', 'pending_approval', 'trash'];
+    if (status && VALID_STATUSES.includes(status)) {
       filter.status = status;
     } else {
       // "All" tab excludes trash
