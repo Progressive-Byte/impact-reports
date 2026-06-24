@@ -163,6 +163,7 @@ const LedgerToolbar = ({
       </button>
     </div>
   </div>
-);
+  );
+};
 
 export default LedgerToolbar;
