@@ -142,7 +142,11 @@ const ReportsModule = ({ onCountChange }) => {
         body:   JSON.stringify(payload),
       });
       if (stepKey === 'location') {
-        toast.success('Report submitted successfully');
+        if (data.report?.status === 'pending_approval') {
+          toast.success('Report submitted — awaiting approval before publishing');
+        } else {
+          toast.success('Report submitted successfully');
+        }
         goToList();
       } else {
         setForm(reportToForm(data.report));
@@ -151,6 +155,20 @@ const ReportsModule = ({ onCountChange }) => {
       }
     } catch (err) {
       toast.error(err.message || 'Failed to save step');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleApprove = async () => {
+    setSaving(true);
+    try {
+      await adminApiRequest(`/api/reports/${reportId}/approve`, { method: 'PATCH' });
+      toast.success('Report approved and published!');
+      fetchReports({ status: urlStatus, q: urlSearch, sort: urlSort, page: urlPage });
+      goToList();
+    } catch (err) {
+      toast.error(err.message || 'Failed to approve report');
     } finally {
       setSaving(false);
     }
