@@ -36,7 +36,7 @@ export function useReportData() {
       .catch(() => {});
   }, []);
 
-  // Lazy-load admin users for "Assigned To" dropdowns.
+  // Lazy-load editor users for "Assigned To" dropdowns.
   const loadAdminOptions = useCallback(() => {
     if (adminOptions.length > 0 || adminOptionsLoadingRef.current) return;
     adminOptionsLoadingRef.current = true;
@@ -48,6 +48,19 @@ export function useReportData() {
       .finally(() => { adminOptionsLoadingRef.current = false; });
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adminOptions.length]);
+
+  // Lazy-load all users (any role) for "Approval Reviewer" dropdown.
+  const loadAllAdminOptions = useCallback(() => {
+    if (allAdminOptions.length > 0 || allAdminOptionsLoadingRef.current) return;
+    allAdminOptionsLoadingRef.current = true;
+    adminApiRequest('/api/admin/admins?limit=100')
+      .then(data => setAllAdminOptions(
+        (data.items || []).map(a => ({ value: a._id, label: `${a.username || a.email} (${a.role})` }))
+      ))
+      .catch(() => {})
+      .finally(() => { allAdminOptionsLoadingRef.current = false; });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allAdminOptions.length]);
 
   // Lazy-load region options from the backend config endpoint.
   const loadRegionOptions = useCallback(() => {
@@ -115,11 +128,13 @@ export function useReportData() {
     reports, setReports,
     meta, stats,
     adminOptions,
+    allAdminOptions,
     regionOptions,
     sectorOptions,
     loadingList, loadingReport,
     fetchReports,
     loadAdminOptions,
+    loadAllAdminOptions,
     loadRegionOptions,
     loadSectorOptions,
   };
