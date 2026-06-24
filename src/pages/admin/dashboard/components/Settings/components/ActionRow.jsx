@@ -1,6 +1,6 @@
 const ActionRow = ({ title, description, label, danger = false, onClick, loading = false, extra }) => (
-  <div className="flex items-center justify-between py-4">
-    <div className="pr-6 flex-1 min-w-0">
+  <div className="flex flex-wrap items-center justify-between gap-3 py-4">
+    <div className="min-w-0">
       <p className="text-sm font-bold text-[#0B0D0F]">{title}</p>
       <p className="text-xs text-gray-400 mt-0.5">{description}</p>
     </div>
