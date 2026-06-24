@@ -207,7 +207,7 @@ router.post('/', async (req, res) => {
       return res.status(403).json({ message: 'Only superadmin can create reports' });
     }
 
-    const { projectName, assignedTo, actualProjectId } = req.body;
+    const { projectName, assignedTo, actualProjectId, approvalAssignedTo } = req.body;
     if (!projectName?.trim()) {
       return res.status(400).json({ message: 'Project name is required' });
     }
@@ -229,12 +229,13 @@ router.post('/', async (req, res) => {
     const slug = await uniqueSlug(Report, toSlug(projectName.trim()));
 
     const created = await Report.create({
-      projectName:     projectName.trim(),
+      projectName:        projectName.trim(),
       slug,
-      projectId:       `REP-${String(seq).padStart(3, '0')}`,
-      actualProjectId: (actualProjectId || '').trim(),
-      assignedTo:      uniqueAssignees,
-      createdBy:       req.admin._id,
+      projectId:          `REP-${String(seq).padStart(3, '0')}`,
+      actualProjectId:    (actualProjectId || '').trim(),
+      assignedTo:         uniqueAssignees,
+      createdBy:          req.admin._id,
+      ...(approvalAssignedTo ? { approvalAssignedTo } : {}),
     });
 
     const report = await Report.findById(created._id).populate(POPULATE);
