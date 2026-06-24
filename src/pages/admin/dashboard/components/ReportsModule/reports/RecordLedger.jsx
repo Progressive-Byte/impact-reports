@@ -249,12 +249,23 @@ const RecordLedger = ({
                 </p>
 
                 <span className={`text-[10px] font-black uppercase rounded px-2.5 py-1 w-fit ${STATUS_STYLES[entry.status] ?? STATUS_STYLES.draft}`}>
-                  {entry.status}
+                  {STATUS_LABELS[entry.status] ?? entry.status}
                 </span>
 
                 <div className="flex items-center gap-1.5 min-w-0">
                   <SafeIcon icon="FiUser" className="text-gray-400 text-xs flex-shrink-0" />
                   <span className="text-xs text-gray-600 truncate">{assigneeNames || '—'}</span>
+                </div>
+
+                <div className="flex items-center gap-1.5 min-w-0">
+                  {approvalReviewerName ? (
+                    <>
+                      <SafeIcon icon="FiCheckCircle" className="text-blue-400 text-xs flex-shrink-0" />
+                      <span className="text-xs text-blue-700 truncate font-medium">{approvalReviewerName}</span>
+                    </>
+                  ) : (
+                    <span className="text-gray-300 text-xs">—</span>
+                  )}
                 </div>
 
                 <span className="text-xs text-gray-400 tabular-nums">
