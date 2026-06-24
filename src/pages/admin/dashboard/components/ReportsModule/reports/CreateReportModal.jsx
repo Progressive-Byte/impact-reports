@@ -4,18 +4,22 @@ import SafeIcon from '../../../../../../common/SafeIcon';
 import MultiSelect from './MultiSelect';
 import { adminApiRequest } from '../../../../../../services/adminApi';
 
-const CreateReportModal = ({ open, onClose, onCreated, adminOptions }) => {
-  const [projectName,     setProjectName]     = useState('');
-  const [actualProjectId, setActualProjectId] = useState('');
-  const [assignedTo,      setAssignedTo]      = useState([]);
-  const [suggestions,     setSuggestions]     = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [submitting,      setSubmitting]      = useState(false);
+const CreateReportModal = ({ open, onClose, onCreated, adminOptions, allAdminOptions }) => {
+  const [projectName,          setProjectName]          = useState('');
+  const [actualProjectId,      setActualProjectId]      = useState('');
+  const [assignedTo,           setAssignedTo]           = useState([]);
+  const [approvalAssignedTo,   setApprovalAssignedTo]   = useState('');
+  const [suggestions,          setSuggestions]          = useState([]);
+  const [showSuggestions,      setShowSuggestions]      = useState(false);
+  const [submitting,           setSubmitting]           = useState(false);
   const suggestRef = useRef(null);
 
   // Reset form when modal opens
   useEffect(() => {
-    if (open) { setProjectName(''); setActualProjectId(''); setAssignedTo([]); setSuggestions([]); setShowSuggestions(false); }
+    if (open) {
+      setProjectName(''); setActualProjectId(''); setAssignedTo([]);
+      setApprovalAssignedTo(''); setSuggestions([]); setShowSuggestions(false);
+    }
   }, [open]);
 
   // Close suggestion list on outside click
