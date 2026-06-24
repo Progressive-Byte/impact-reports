@@ -231,16 +231,110 @@ const Settings = () => {
         }
       />
 
-      {loading ? <SettingsSkeleton /> : <div className="grid grid-cols-2 gap-5 items-start">
+      {loading ? <SettingsSkeleton /> : isSuperAdmin ? (
+        <div className="grid grid-cols-2 gap-5 items-start">
 
-        <div className="space-y-5">
-          <SettingCard icon="FiShield" title="Security">
-            <ToggleRow
-              title="Require 2FA"
-              description="Enforce two-factor auth on all staff accounts"
-              checked={security.require2fa}
-              onChange={setSec('require2fa')}
-            />
+          <div className="space-y-5">
+            <SettingCard icon="FiShield" title="Security">
+              <ToggleRow
+                title="Require 2FA"
+                description="Enforce two-factor auth on all staff accounts"
+                checked={security.require2fa}
+                onChange={setSec('require2fa')}
+              />
+              <ActionRow
+                title="Authenticator App"
+                description={admin?.totpEnabled ? 'Enabled — used at login when 2FA is required' : 'Not set up — adds a second verification method'}
+                label={admin?.totpEnabled ? 'Remove' : 'Set Up'}
+                danger={admin?.totpEnabled}
+                onClick={admin?.totpEnabled ? handleDisableTotp : () => setShowTotpModal(true)}
+                loading={disablingTotp}
+              />
+              <ToggleRow
+                title="Enforce strong passwords"
+                description="Minimum 12 chars, symbols & numbers"
+                checked={security.strongPasswords}
+                onChange={setSec('strongPasswords')}
+              />
+              <SelectRow
+                title="Session timeout"
+                description="Auto sign-out after inactivity"
+                value={security.sessionTimeout}
+                onChange={setSec('sessionTimeout')}
+                options={TIMEOUT_OPTIONS}
+              />
+            </SettingCard>
+
+            <SettingCard icon="FiGlobe" title="General">
+              <SelectRow
+                title="Default region"
+                description="Applied to new reports & users"
+                value={general.region}
+                onChange={setGen('region')}
+                options={regionOptions}
+              />
+              <SelectRow
+                title="Timezone"
+                description="Used for logs & timestamps"
+                value={general.timezone}
+                onChange={setGen('timezone')}
+                options={TIMEZONE_OPTIONS}
+              />
+              <SelectRow
+                title="Currency"
+                description="Reporting & impact valuation"
+                value={general.currency}
+                onChange={setGen('currency')}
+                options={CURRENCY_OPTIONS}
+              />
+            </SettingCard>
+          </div>
+
+          <div className="space-y-5">
+            <SettingCard icon="FiBell" title="Notifications">
+              <ToggleRow
+                title="Email alerts"
+                description="Data-integrity & security events"
+                checked={notifications.emailAlerts}
+                onChange={setNote('emailAlerts')}
+              />
+              <ToggleRow
+                title="Weekly digest"
+                description="Summary of published reports"
+                checked={notifications.weeklyDigest}
+                onChange={setNote('weeklyDigest')}
+              />
+              <ToggleRow
+                title="Failed-login warnings"
+                description="Notify on repeated failed logins"
+                checked={notifications.failedLoginWarnings}
+                onChange={setNote('failedLoginWarnings')}
+              />
+            </SettingCard>
+
+            <SettingCard icon="FiAlertTriangle" title="Danger Zone" danger>
+              <ActionRow
+                title="Export all data"
+                description="Download all reports as CSV or Excel"
+                label="Export"
+                onClick={handleExport}
+                loading={exporting}
+                extra={formatPicker}
+              />
+              <ActionRow
+                title="Purge audit logs"
+                description="Permanently delete logs older than 1 year"
+                label="Purge"
+                danger
+                onClick={() => setShowPurgeModal(true)}
+              />
+            </SettingCard>
+          </div>
+
+        </div>
+      ) : (
+        <div className="max-w-xl">
+          <SettingCard icon="FiShield" title="Personal Security">
             <ActionRow
               title="Authenticator App"
               description={admin?.totpEnabled ? 'Enabled — used at login when 2FA is required' : 'Not set up — adds a second verification method'}
@@ -249,88 +343,9 @@ const Settings = () => {
               onClick={admin?.totpEnabled ? handleDisableTotp : () => setShowTotpModal(true)}
               loading={disablingTotp}
             />
-            <ToggleRow
-              title="Enforce strong passwords"
-              description="Minimum 12 chars, symbols & numbers"
-              checked={security.strongPasswords}
-              onChange={setSec('strongPasswords')}
-            />
-            <SelectRow
-              title="Session timeout"
-              description="Auto sign-out after inactivity"
-              value={security.sessionTimeout}
-              onChange={setSec('sessionTimeout')}
-              options={TIMEOUT_OPTIONS}
-            />
-          </SettingCard>
-
-          <SettingCard icon="FiGlobe" title="General">
-            <SelectRow
-              title="Default region"
-              description="Applied to new reports & users"
-              value={general.region}
-              onChange={setGen('region')}
-              options={regionOptions}
-            />
-            <SelectRow
-              title="Timezone"
-              description="Used for logs & timestamps"
-              value={general.timezone}
-              onChange={setGen('timezone')}
-              options={TIMEZONE_OPTIONS}
-            />
-            <SelectRow
-              title="Currency"
-              description="Reporting & impact valuation"
-              value={general.currency}
-              onChange={setGen('currency')}
-              options={CURRENCY_OPTIONS}
-            />
           </SettingCard>
         </div>
-
-        <div className="space-y-5">
-          <SettingCard icon="FiBell" title="Notifications">
-            <ToggleRow
-              title="Email alerts"
-              description="Data-integrity & security events"
-              checked={notifications.emailAlerts}
-              onChange={setNote('emailAlerts')}
-            />
-            <ToggleRow
-              title="Weekly digest"
-              description="Summary of published reports"
-              checked={notifications.weeklyDigest}
-              onChange={setNote('weeklyDigest')}
-            />
-            <ToggleRow
-              title="Failed-login warnings"
-              description="Notify on repeated failed logins"
-              checked={notifications.failedLoginWarnings}
-              onChange={setNote('failedLoginWarnings')}
-            />
-          </SettingCard>
-
-          <SettingCard icon="FiAlertTriangle" title="Danger Zone" danger>
-            <ActionRow
-              title="Export all data"
-              description="Download all reports as CSV or Excel"
-              label="Export"
-              onClick={handleExport}
-              loading={exporting}
-              extra={formatPicker}
-            />
-            <ActionRow
-              title="Purge audit logs"
-              description="Permanently delete logs older than 1 year"
-              label="Purge"
-              danger
-              onClick={() => setShowPurgeModal(true)}
-            />
-          </SettingCard>
-        </div>
-
-      </div>}
+      )}
     </div>
     </>
   );
