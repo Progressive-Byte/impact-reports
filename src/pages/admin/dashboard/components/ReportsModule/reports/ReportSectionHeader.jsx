@@ -27,7 +27,7 @@ const ReportSectionHeader = ({ isWizard, isSuperAdmin, projectName, onBack, onNe
     {!isWizard && isSuperAdmin && (
       <button
         onClick={onNewReport}
-        className="flex items-center gap-2 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white px-5 py-2.5 rounded-xl text-sm font-bold transition-colors"
+        className="flex items-center gap-2 bg-[#0B0D0F] hover:bg-[#1a1d20] text-white px-4 sm:px-5 py-2.5 rounded-xl text-sm font-bold transition-colors whitespace-nowrap flex-shrink-0"
       >
         <SafeIcon icon="FiPlus" className="text-base" />
         New Report
