@@ -25,22 +25,24 @@ const ReportCard = ({ report }) => (
         {report.summary}
       </p>
 
-      {/* Bottom row — Impact on left, Location on right, arrow far right */}
-      <div className="mt-5 flex items-end justify-between gap-4">
-        <div className="min-w-0">
-          <p className="text-[10px] font-black uppercase tracking-widest text-white/50">Impact</p>
-          <p className="text-lg font-black text-white tracking-tight">{report.metrics.beneficiaries.toLocaleString()}</p>
-        </div>
-
-        <div className="flex flex-col items-start gap-0.5 min-w-0">
-          <p className="text-[10px] font-black uppercase tracking-widest text-white/50">Location</p>
-          <div className="flex items-center gap-1.5">
-            <SafeIcon icon="FiMapPin" className="text-[#E52321] text-[10px] flex-shrink-0" />
-            <span className="text-white/80 text-[11px] font-semibold truncate">{report.region}</span>
+      {/* Bottom row — Location first, then Impact, arrow far right */}
+      <div className="mt-5 flex items-end justify-between">
+        <div className="flex items-end">
+          <div className="flex flex-col items-start gap-0.5 min-w-0">
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/50">Location</p>
+            <div className="flex items-center gap-1.5">
+              <SafeIcon icon="FiMapPin" className="text-[#E52321] text-[10px] flex-shrink-0" />
+              <span className="text-white/80 text-[11px] font-semibold truncate">{report.region}</span>
+            </div>
+            <span className="text-[10px] uppercase tracking-[0.18em] text-white/50 truncate">
+              {report.year} • {report.sector}
+            </span>
           </div>
-          <span className="text-[10px] uppercase tracking-[0.18em] text-white/50 truncate">
-            {report.year} • {report.sector}
-          </span>
+
+          <div className="min-w-0 ml-4 pl-4 border-l border-white/20">
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/50">Impact</p>
+            <p className="text-lg font-black text-white tracking-tight">{report.metrics.beneficiaries.toLocaleString()}</p>
+          </div>
         </div>
 
         <span className="inline-flex items-center gap-2 rounded-full bg-white/10 group-hover:bg-[#E52321] border border-white/10 group-hover:border-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 flex-shrink-0">
