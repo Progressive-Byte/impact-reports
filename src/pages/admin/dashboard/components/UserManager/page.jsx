@@ -130,49 +130,55 @@ const UserManager = () => {
           onClearStatus={() => handleStatusChange('all')}
         />
         <BulkActionBar selectedCount={selectedCount} />
-        <UserTableHeader allSelected={allSelected} onToggleAll={toggleAll} />
 
-        {/* Rows */}
-        {showSkeleton ? (
-          <div className="divide-y divide-gray-100">
-            {Array.from({ length: meta?.limit ?? SKELETON_ROWS }).map((_, i) => (
-              <UserSkeletonRow key={i} />
-            ))}
-          </div>
-        ) : users.length === 0 ? (
-          <div className="py-14 text-center">
-            <SafeIcon icon={urlSearch ? 'FiSearch' : 'FiUsers'} className="text-gray-200 text-3xl mx-auto mb-3" />
-            <p className="text-sm text-gray-400">
-              {urlSearch
-                ? `No results for "${urlSearch}"`
-                : meta?.total === 0
-                  ? 'No users yet. Invite someone to get started.'
-                  : 'No users match your filters.'}
-            </p>
-            {(urlSearch || urlStatus !== 'all') && (
-              <button
-                onClick={() => { setInputSearch(''); handleStatusChange('all'); }}
-                className="mt-3 text-sm font-bold text-[#E52321] hover:underline"
-              >
-                Clear filters
-              </button>
+        {/* Table — horizontal scroll on small screens */}
+        <div className="overflow-x-auto">
+          <div className="min-w-[860px]">
+            <UserTableHeader allSelected={allSelected} onToggleAll={toggleAll} />
+
+            {/* Rows */}
+            {showSkeleton ? (
+              <div className="divide-y divide-gray-100">
+                {Array.from({ length: meta?.limit ?? SKELETON_ROWS }).map((_, i) => (
+                  <UserSkeletonRow key={i} />
+                ))}
+              </div>
+            ) : users.length === 0 ? (
+              <div className="py-14 text-center">
+                <SafeIcon icon={urlSearch ? 'FiSearch' : 'FiUsers'} className="text-gray-200 text-3xl mx-auto mb-3" />
+                <p className="text-sm text-gray-400">
+                  {urlSearch
+                    ? `No results for "${urlSearch}"`
+                    : meta?.total === 0
+                      ? 'No users yet. Invite someone to get started.'
+                      : 'No users match your filters.'}
+                </p>
+                {(urlSearch || urlStatus !== 'all') && (
+                  <button
+                    onClick={() => { setInputSearch(''); handleStatusChange('all'); }}
+                    className="mt-3 text-sm font-bold text-[#E52321] hover:underline"
+                  >
+                    Clear filters
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="divide-y divide-gray-100">
+                {users.map(u => (
+                  <UserRow
+                    key={u._id}
+                    user={u}
+                    isSelected={selected.has(u._id)}
+                    onToggleSelect={() => toggleOne(u._id)}
+                    onUpdate={fetchUsers}
+                    onDelete={handleDelete}
+                    onEdit={setEditingUser}
+                  />
+                ))}
+              </div>
             )}
           </div>
-        ) : (
-          <div className="divide-y divide-gray-100">
-            {users.map(u => (
-              <UserRow
-                key={u._id}
-                user={u}
-                isSelected={selected.has(u._id)}
-                onToggleSelect={() => toggleOne(u._id)}
-                onUpdate={fetchUsers}
-                onDelete={handleDelete}
-                onEdit={setEditingUser}
-              />
-            ))}
-          </div>
-        )}
+        </div>
 
         <Pagination meta={meta} onPageChange={handlePageChange} label="users" />
       </div>
