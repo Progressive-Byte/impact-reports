@@ -394,7 +394,11 @@ router.patch('/:id/restore', async (req, res) => {
       return res.status(400).json({ message: 'Report is not in trash' });
     }
     const allDone = ALL_STEPS.every(s => report.stepsCompleted.includes(s));
-    report.status = allDone ? 'published' : 'draft';
+    if (allDone) {
+      report.status = report.approvalAssignedTo ? 'pending_approval' : 'published';
+    } else {
+      report.status = 'draft';
+    }
     await report.save();
     res.json({ message: 'Report restored' });
   } catch (err) {
