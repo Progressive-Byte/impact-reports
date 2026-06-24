@@ -109,6 +109,7 @@ const ReportsModule = ({ onCountChange }) => {
 
   const openWizard = (report) => {
     loadAdminOptions();
+    loadAllAdminOptions();
     loadRegionOptions();
     loadSectorOptions();
     setForm(reportToForm(report));
