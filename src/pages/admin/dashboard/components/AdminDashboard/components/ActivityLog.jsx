@@ -30,34 +30,43 @@ const ActivityLog = ({ recentActivity = [], activityLogs = [], logMeta = {}, loa
   const total      = logMeta.total      ?? systemLogs.length;
 
   return (
-    <div className="flex-[3] min-w-0 bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
+    <div className="w-full lg:flex-[3] min-w-0 bg-white border border-gray-200 rounded-3xl shadow-sm overflow-hidden">
       {/* Tab bar */}
-      <div className="flex items-center border-b border-gray-100 px-6">
-        {[{ id: 'system', label: 'System Log' }, { id: 'content', label: 'Content Feed' }].map(({ id, label }) => (
-          <button
-            key={id}
-            onClick={() => setActiveTab(id)}
-            className={`py-4 mr-7 text-sm font-bold border-b-2 transition-colors ${
-              activeTab === id ? 'border-[#E52321] text-[#0B0D0F]' : 'border-transparent text-gray-400 hover:text-gray-600'
-            }`}
-          >
-            {label}
-            {id === 'content' && recentActivity.length > 0 && (
-              <span className="ml-2 text-[10px] font-black bg-[#E52321] text-white rounded-full px-1.5 py-0.5">
-                {recentActivity.length}
-              </span>
-            )}
-          </button>
-        ))}
+      <div className="border-b border-gray-100 px-6">
+        <div className="flex items-center">
+          {[{ id: 'system', label: 'System Log' }, { id: 'content', label: 'Content Feed' }].map(({ id, label }) => (
+            <button
+              key={id}
+              onClick={() => setActiveTab(id)}
+              className={`py-4 mr-6 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${
+                activeTab === id ? 'border-[#E52321] text-[#0B0D0F]' : 'border-transparent text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              {label}
+              {id === 'content' && recentActivity.length > 0 && (
+                <span className="ml-2 text-[10px] font-black bg-[#E52321] text-white rounded-full px-1.5 py-0.5">
+                  {recentActivity.length}
+                </span>
+              )}
+            </button>
+          ))}
 
-        {/* Context badge — only on system tab */}
+          {/* Context badge — hidden on small screens to avoid squeezing tabs */}
+          {activeTab === 'system' && !loading && (
+            <span className="ml-auto text-[10px] font-bold text-gray-400 whitespace-nowrap hidden sm:inline">
+              Last {windowDays} days &middot; {total} event{total === 1 ? '' : 's'}
+              {total > activityLogs.length && (
+                <span className="text-gray-300"> (showing {activityLogs.length})</span>
+              )}
+            </span>
+          )}
+        </div>
+
+        {/* Meta row shown below tabs on mobile */}
         {activeTab === 'system' && !loading && (
-          <span className="ml-auto text-[10px] font-bold text-gray-400 whitespace-nowrap">
+          <p className="sm:hidden text-[10px] font-bold text-gray-400 pb-2">
             Last {windowDays} days &middot; {total} event{total === 1 ? '' : 's'}
-            {total > activityLogs.length && (
-              <span className="text-gray-300"> (showing {activityLogs.length})</span>
-            )}
-          </span>
+          </p>
         )}
       </div>
 
