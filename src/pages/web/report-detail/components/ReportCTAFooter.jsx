@@ -129,33 +129,34 @@ const ReportCTAFooter = ({ donationUrl, slug, projectName }) => {
             </button>
 
             {open && (
-              <div className="absolute bottom-full mb-2 right-0 w-64 bg-white border border-gray-100 rounded-2xl shadow-xl p-3 z-50">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2 mb-2">Share via</p>
+              <div className="absolute top-full mt-2 right-0 w-64 bg-white border border-gray-100 rounded-2xl shadow-xl p-4 z-50">
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Share via</p>
 
-                {SOCIALS.map(social => (
-                  <button
-                    key={social.id}
-                    onClick={() => handleSocial(social)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border border-transparent text-sm font-semibold text-gray-600 transition-all ${social.color}`}
-                  >
-                    <SafeIcon icon={social.icon} className="text-base flex-shrink-0" />
-                    {social.label}
-                  </button>
-                ))}
-
-                <div className="border-t border-gray-100 mt-2 pt-2">
-                  <button
-                    onClick={handleCopy}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl border text-sm font-semibold transition-all ${
-                      copied
-                        ? 'border-green-200 bg-green-50 text-green-600'
-                        : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                    }`}
-                  >
-                    <SafeIcon icon={copied ? 'FiCheck' : 'FiLink'} className="text-base flex-shrink-0" />
-                    {copied ? 'Link Copied!' : 'Copy Link'}
-                  </button>
+                {/* 2×2 grid of social buttons */}
+                <div className="grid grid-cols-2 gap-2 mb-3">
+                  {SOCIALS.map(social => (
+                    <button
+                      key={social.id}
+                      onClick={() => handleSocial(social)}
+                      className={`flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-gray-100 text-gray-500 text-xs font-bold transition-all ${social.color}`}
+                    >
+                      <SafeIcon icon={social.icon} className="text-xl" />
+                      {social.label}
+                    </button>
+                  ))}
                 </div>
+
+                <button
+                  onClick={handleCopy}
+                  className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border text-xs font-bold transition-all ${
+                    copied
+                      ? 'border-green-200 bg-green-50 text-green-600'
+                      : 'border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  }`}
+                >
+                  <SafeIcon icon={copied ? 'FiCheck' : 'FiLink'} className="text-sm" />
+                  {copied ? 'Link Copied!' : 'Copy Link'}
+                </button>
               </div>
             )}
           </div>
