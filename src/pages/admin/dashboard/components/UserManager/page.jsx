@@ -132,8 +132,8 @@ const UserManager = () => {
         <BulkActionBar selectedCount={selectedCount} />
 
         {/* Table — horizontal scroll on small screens */}
-        <div className="overflow-x-auto">
-          <div className="min-w-[1080px]">
+        <div className="overflow-x-auto lg:overflow-x-visible">
+          <div className="min-w-[860px] lg:min-w-0">
             <UserTableHeader allSelected={allSelected} onToggleAll={toggleAll} />
 
             {/* Rows */}

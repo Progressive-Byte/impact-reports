@@ -181,9 +181,9 @@ const RecordLedger = ({
         />
       )}
 
-      {/* Table — horizontal scroll on small screens */}
-      <div className="overflow-x-auto">
-      <div className="min-w-[860px]">
+      {/* Table — horizontal scroll below lg, natural on large screens */}
+      <div className="overflow-x-auto lg:overflow-x-visible">
+      <div className="min-w-[860px] lg:min-w-0">
 
       {/* Table header */}
       <TableHead allSelected={allSelected} onToggleAll={onToggleAll} />
