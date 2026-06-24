@@ -30,9 +30,10 @@ const reportSchema = new mongoose.Schema(
     projectName:       { type: String, required: true, trim: true },
     slug:              { type: String, default: '', index: true },
     projectId:         { type: String, default: '' },
-    assignedTo:        [{ type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }],
-    createdBy:         { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
-    status:            { type: String, enum: ['pending', 'draft', 'published', 'trash'], default: 'pending' },
+    assignedTo:          [{ type: mongoose.Schema.Types.ObjectId, ref: 'Admin' }],
+    approvalAssignedTo:  { type: mongoose.Schema.Types.ObjectId, ref: 'Admin', default: null },
+    createdBy:           { type: mongoose.Schema.Types.ObjectId, ref: 'Admin' },
+    status:              { type: String, enum: ['pending', 'draft', 'published', 'pending_approval', 'trash'], default: 'pending' },
 
     // General step
     actualProjectId:   { type: String, default: '' },
