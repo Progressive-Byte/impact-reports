@@ -1,7 +1,7 @@
 import Skeleton from '../../../common/Skeleton';
 
 // cols: checkbox | email/user | region | role | status | last-login | actions
-const ROW_GRID = 'grid grid-cols-[20px_minmax(10rem,1fr)_7rem_11rem_7rem_11rem_12rem] items-center gap-4 px-6';
+const ROW_GRID = 'grid grid-cols-[20px_minmax(10rem,2fr)_minmax(7rem,1fr)_11rem_7rem_minmax(9rem,1fr)_15rem] items-center gap-4 px-6';
 
 const UserSkeletonRow = () => (
   <div className={`${ROW_GRID} py-4 animate-pulse`}>
