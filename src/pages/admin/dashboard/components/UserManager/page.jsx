@@ -185,5 +185,4 @@ const UserManager = () => {
     </div>
   );
 };
-
 export default UserManager;
