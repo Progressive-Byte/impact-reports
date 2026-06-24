@@ -109,16 +109,24 @@ router.get('/', async (req, res) => {
       sort === 'za'     ? '-projectName' :
       '-createdAt';
 
-    const filter = req.admin.role === 'superadmin'
-      ? {}
-      : { $or: [{ assignedTo: req.admin._id }, { approvalAssignedTo: req.admin._id }] };
-
+    const isSuperAdmin = req.admin.role === 'superadmin';
     const VALID_STATUSES = ['pending', 'draft', 'published', 'pending_approval', 'trash'];
-    if (status && VALID_STATUSES.includes(status)) {
-      filter.status = status;
+
+    let filter;
+    if (!isSuperAdmin && status === 'pending_approval') {
+      // Approval reviewer tab: only reports where this user is the assigned approver
+      filter = { approvalAssignedTo: req.admin._id, status: 'pending_approval' };
     } else {
-      // "All" tab excludes trash
-      filter.status = { $ne: 'trash' };
+      filter = isSuperAdmin
+        ? {}
+        : { $or: [{ assignedTo: req.admin._id }, { approvalAssignedTo: req.admin._id }] };
+
+      if (status && VALID_STATUSES.includes(status)) {
+        filter.status = status;
+      } else {
+        // "All" tab excludes trash
+        filter.status = { $ne: 'trash' };
+      }
     }
     if (q?.trim()) {
       filter.projectName = new RegExp(q.trim(), 'i');
