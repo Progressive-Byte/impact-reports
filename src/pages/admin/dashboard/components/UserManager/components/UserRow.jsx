@@ -111,7 +111,7 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
   };
 
   // cols: checkbox | email/user | region | role | status | last-login | actions
-  const ROW_GRID = 'grid grid-cols-[20px_1fr_7rem_11rem_7rem_11rem_14rem] items-center gap-4 px-6';
+  const ROW_GRID = 'grid grid-cols-[20px_14rem_8rem_11rem_7rem_11rem_12rem] items-center gap-4 px-6';
 
   return (
     <div className={`${ROW_GRID} py-4 transition-colors ${
