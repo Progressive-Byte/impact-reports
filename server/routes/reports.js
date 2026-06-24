@@ -27,10 +27,15 @@ const STEP_FIELDS = {
 
 const ALL_STEPS = Object.keys(STEP_FIELDS);
 
-// Helper — check if caller can access a report
-const canAccess = (admin, report) =>
+// Helper — edit access: superadmin or assigned editor
+const canEdit = (admin, report) =>
   admin.role === 'superadmin' ||
   report.assignedTo.some(a => String(a._id ?? a) === String(admin._id));
+
+// Helper — view access: superadmin, assigned editor, or approval reviewer
+const canView = (admin, report) =>
+  canEdit(admin, report) ||
+  (report.approvalAssignedTo && String(report.approvalAssignedTo._id ?? report.approvalAssignedTo) === String(admin._id));
 
 // Helper — returns an error message if any assignee already appears on another
 // report with the same project name (same project, same user = duplicate)
