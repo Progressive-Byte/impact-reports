@@ -133,7 +133,7 @@ const UserManager = () => {
 
         {/* Table — horizontal scroll on small screens */}
         <div className="overflow-x-auto">
-          <div className="min-w-[920px]">
+          <div className="min-w-[1080px]">
             <UserTableHeader allSelected={allSelected} onToggleAll={toggleAll} />
 
             {/* Rows */}
