@@ -26,7 +26,7 @@ const ReportDetail = () => {
   const [report, setReport]           = useState(null);
   const [loading, setLoading]         = useState(true);
   const [error, setError]             = useState(null);
-  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null);
   const [openSections, setOpenSections]   = useState({
     deliverables: true,
     timeline:     true,
