@@ -14,7 +14,7 @@ const DemographicsCard = ({ demographics }) => {
       </div>
       <div className="p-6 space-y-6">
         <DemographicRow label="Men"              percentage={demographics.men}      icon="FiUser"  color="bg-gray-300"  />
-        <DemographicRow label="Women"            percentage={demographics.women}    icon="FiUser"  color="bg-[#0B0D0F]" />
+        <DemographicRow label="Women"            percentage={demographics.women}    icon={FaFemale} color="bg-[#0B0D0F]" />
         <DemographicRow label="Children (< 18)" percentage={demographics.children} icon="FiSmile" color="bg-[#E52321]"  />
       </div>
     </div>
