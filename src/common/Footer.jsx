@@ -126,23 +126,21 @@ const Footer = () => {
                 </form>
               )}
             </div>
-            <div className="flex items-center justify-center space-x-6 mt-6">
-              <a href="#" className="text-[#E52321] hover:text-[#C91D1B] hover:scale-110 transition-all duration-300">
-                <SafeIcon icon="FiFacebook" className="text-[22px]" />
-              </a>
-              <a href="#" className="text-[#E52321] hover:text-[#C91D1B] hover:scale-110 transition-all duration-300">
-                <SafeIcon icon="FiTwitter" className="text-[22px]" />
-              </a>
-              <a href="#" className="text-[#E52321] hover:text-[#C91D1B] hover:scale-110 transition-all duration-300">
-                <SafeIcon icon="FiInstagram" className="text-[22px]" />
-              </a>
-              <a href="#" className="text-[#E52321] hover:text-[#C91D1B] hover:scale-110 transition-all duration-300">
-                <SafeIcon icon="FiLinkedin" className="text-[22px]" />
-              </a>
-              <a href="#" className="text-[#E52321] hover:text-[#C91D1B] hover:scale-110 transition-all duration-300">
-                <SafeIcon icon="FiYoutube" className="text-[22px]" />
-              </a>
-            </div>
+            {SOCIAL_CONFIG.some(s => socialLinks[s.key]) && (
+              <div className="flex items-center justify-center space-x-6 mt-6">
+                {SOCIAL_CONFIG.filter(s => socialLinks[s.key]).map(s => (
+                  <a
+                    key={s.key}
+                    href={socialLinks[s.key]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#E52321] hover:text-[#C91D1B] hover:scale-110 transition-all duration-300"
+                  >
+                    <SafeIcon icon={s.icon} className="text-[22px]" />
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         <div className="border-t border-gray-100 pt-8 text-center mt-4">
