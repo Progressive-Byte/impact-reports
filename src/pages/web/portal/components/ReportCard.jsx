@@ -33,7 +33,7 @@ const ReportCard = ({ report }) => (
               <SafeIcon icon="FiMapPin" className="text-white text-[10px] flex-shrink-0" />
               <span className="text-white text-[11px] font-semibold truncate">{report.region}</span>
             </div>
-            <span className="text-[10px] uppercase tracking-[0.18em] text-white truncate">
+            <span className="text-[8px] md:text-[10px] uppercase tracking-[0.18em] text-white truncate">
               {report.year} • {report.sector}
             </span>
           </div>
