@@ -15,7 +15,7 @@ const ReportCard = ({ report }) => (
     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent" />
 
     {/* Arrow button — top right */}
-    <span className="absolute top-5 right-5 z-10 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 group-hover:bg-[#E52321] border border-white/10 group-hover:border-[#E52321] text-white transition-all duration-300">
+    <span className="absolute top-5 right-5 z-10 inline-flex items-center gap-2 rounded-full bg-white/10 group-hover:bg-[#E52321] border border-white/10 group-hover:border-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300">
       <SafeIcon icon="FiArrowRight" className="text-base" />
     </span>
 
