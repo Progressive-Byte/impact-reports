@@ -240,8 +240,8 @@ Update an admin's username, email, role, and/or region.
 | ---------- | ------ | :------: | --------------------------- | ---------------------------------- | ---------------- |
 | `username` | string | No       | unique                      | New login handle                   | `"updated_name"` |
 | `email`    | string | No       | unique, stored lowercase    | New contact email                  | `"new@example.com"` |
-| `role`     | string | No       | `superadmin` or `admin`     | New role                           | `"superadmin"`   |
-| `region`   | string | No       | free text                   | Assigned region                    | `"middle_east"`  |
+| `role`     | string | No       | `superadmin`, `editor`, or `viewer` | New role                      | `"superadmin"`   |
+| `region`   | string | No       | free text                           | Assigned region               | `"middle_east"`  |
 
 Example:
 
