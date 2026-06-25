@@ -347,10 +347,13 @@ Records are **never permanently deleted**. The monthly archival cron (runs 02:00
 
 ### Query parameters
 
-| Param    | Type   | Default  | Description                                                                |
-| -------- | ------ | :------: | -------------------------------------------------------------------------- |
-| `format` | string | `csv`    | `csv` — plain text CSV; `excel` — `.xlsx` workbook                         |
-| `scope`  | string | `year`   | `year` — live records from the last 365 days; `all` — every record including archived (full audit trail) |
+| Param     | Type   | Default  | Description                                                                                         |
+| --------- | ------ | :------: | --------------------------------------------------------------------------------------------------- |
+| `format`  | string | `csv`    | `csv` — plain text CSV; `excel` — `.xlsx` workbook                                                  |
+| `scope`   | string | `year`   | `year` — last 365 days; `all` — every record including archived; `custom` — explicit date range (requires `from` + `to`) |
+| `from`    | string | —        | Start date `YYYY-MM-DD` (inclusive). Required when `scope=custom`.                                  |
+| `to`      | string | —        | End date `YYYY-MM-DD` (inclusive). Required when `scope=custom`.                                    |
+| `columns` | string | all      | Comma-separated subset of columns to include. Allowed values: `Type,Username,Role,IP,Timestamp,Archived,Details`. Omit to include all columns. |
 
 ### Response
 
@@ -359,16 +362,27 @@ Returns a file download with the appropriate `Content-Disposition` header.
 - **CSV**: `Content-Type: text/csv`, filename `activity-logs-{scope}-YYYY-MM-DD.csv`
 - **Excel**: `Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`, filename `activity-logs-{scope}-YYYY-MM-DD.xlsx`
 
-Each row contains: `Type`, `Username`, `Role`, `IP`, `Timestamp`, `Archived`.  
-`Archived` is blank for live records and an ISO timestamp for soft-archived records.
+**Filename patterns by scope:**
+
+| Scope    | Filename example                              |
+| -------- | --------------------------------------------- |
+| `year`   | `activity-logs-1year-2026-06-25.csv`          |
+| `all`    | `activity-logs-all-2026-06-25.csv`            |
+| `custom` | `activity-logs-2026-01-01-to-2026-06-25.csv`  |
+
+Each row may contain (depending on `columns` param): `Type`, `Username`, `Role`, `IP`, `Timestamp`, `Archived`, `Details`.  
+`Archived` is blank for live records and an ISO timestamp for soft-archived records.  
+`Details` is populated for `purge` events (shows the count of deleted records).
 
 ### Errors
 
-| Status | Condition                          |
-| ------ | ---------------------------------- |
-| `401`  | Token missing, invalid, or expired |
-| `403`  | Caller is not `superadmin`         |
-| `500`  | Export generation failed           |
+| Status | Condition                                                  |
+| ------ | ---------------------------------------------------------- |
+| `400`  | `scope=custom` and `from`/`to` missing or invalid format   |
+| `400`  | `from` is after `to`                                       |
+| `401`  | Token missing, invalid, or expired                         |
+| `403`  | Caller is not `superadmin`                                 |
+| `500`  | Export generation failed                                   |
 
 ### curl
 
@@ -382,6 +396,54 @@ curl "http://localhost:5173/api/auth/logs/export?format=csv&scope=year" \
 curl "http://localhost:5173/api/auth/logs/export?format=excel&scope=all" \
   -H "Authorization: Bearer $TOKEN" \
   -o activity-logs-all.xlsx
+
+# Custom date range — CSV
+curl "http://localhost:5173/api/auth/logs/export?scope=custom&from=2026-01-01&to=2026-06-25" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o activity-logs-range.csv
+
+# Specific columns only
+curl "http://localhost:5173/api/auth/logs/export?scope=year&columns=Type,Username,Timestamp" \
+  -H "Authorization: Bearer $TOKEN" \
+  -o activity-logs-minimal.csv
+```
+
+---
+
+## `DELETE /api/auth/logs/purge`
+
+Permanently deletes all `ActivityLog` records older than **1 year** from the database. Requires **superadmin** role.
+
+After deletion, the server writes a `purge` event to the activity log so the action is itself auditable. The purge record appears at the top of the System Log and includes the deleted count in its `details` field.
+
+> Unlike the monthly archival cron (which soft-archives by setting `archivedAt`), this endpoint **permanently removes** records from the database. This action is irreversible.
+
+### Response `200`
+
+```json
+{
+  "message": "Audit logs purged",
+  "deleted": 1438
+}
+```
+
+| Field     | Description                                           |
+| --------- | ----------------------------------------------------- |
+| `deleted` | Count of `ActivityLog` records permanently deleted    |
+
+### Errors
+
+| Status | Condition                          |
+| ------ | ---------------------------------- |
+| `401`  | Token missing, invalid, or expired |
+| `403`  | Caller is not `superadmin`         |
+| `500`  | Database error                     |
+
+### curl
+
+```bash
+curl -X DELETE http://localhost:5173/api/auth/logs/purge \
+  -H "Authorization: Bearer $TOKEN"
 ```
 
 ---
