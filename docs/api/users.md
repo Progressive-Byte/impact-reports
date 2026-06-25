@@ -578,10 +578,18 @@ Requires **superadmin** role. Also available as `npm run backfill:slugs` from th
 ### Response `200`
 
 ```json
-{ "updated": 7 }
+{
+  "fixed": 7,
+  "reports": [
+    { "id": "6650a1b2c3d4e5f607a8b9c2", "name": "Winter Relief Alpha", "slug": "winter-relief-alpha" }
+  ]
+}
 ```
 
-`updated` is the number of reports that received a new slug.
+| Field     | Description                                              |
+| --------- | -------------------------------------------------------- |
+| `fixed`   | Number of reports that received a new slug               |
+| `reports` | Array of `{ id, name, slug }` for each updated report    |
 
 ### Errors
 
