@@ -29,7 +29,6 @@ const ReportCard = ({ report }) => (
       <div className="mt-5 flex items-end justify-between">
         <div className="flex items-end">
           <div className="flex flex-col items-start gap-0.5 min-w-0">
-            <p className="text-[10px] font-black uppercase tracking-widest text-white">Location</p>
             <div className="flex items-center gap-1.5">
               <SafeIcon icon="FiMapPin" className="text-white text-[10px] flex-shrink-0" />
               <span className="text-white text-[11px] font-semibold truncate">{report.region}</span>
