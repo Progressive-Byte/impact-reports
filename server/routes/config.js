@@ -109,7 +109,7 @@ router.patch('/settings', protect, async (req, res) => {
     return res.status(403).json({ message: 'Superadmin only' });
   }
   try {
-    const { defaultRegion, sessionTimeoutMinutes, enforceStrongPasswords, failedLoginWarnings, weeklyDigest, require2fa } = req.body;
+    const { defaultRegion, sessionTimeoutMinutes, enforceStrongPasswords, failedLoginWarnings, weeklyDigest, require2fa, socialLinks } = req.body;
     const update = {};
     if (defaultRegion          !== undefined) update.defaultRegion          = defaultRegion;
     if (sessionTimeoutMinutes  !== undefined) update.sessionTimeoutMinutes  = Number(sessionTimeoutMinutes);
@@ -117,6 +117,12 @@ router.patch('/settings', protect, async (req, res) => {
     if (failedLoginWarnings    !== undefined) update.failedLoginWarnings    = Boolean(failedLoginWarnings);
     if (weeklyDigest           !== undefined) update.weeklyDigest           = Boolean(weeklyDigest);
     if (require2fa             !== undefined) update.require2fa             = Boolean(require2fa);
+    if (socialLinks            !== undefined) {
+      const allowed = ['facebook', 'twitter', 'instagram', 'linkedin', 'youtube'];
+      allowed.forEach(k => {
+        if (socialLinks[k] !== undefined) update[`socialLinks.${k}`] = String(socialLinks[k]).trim();
+      });
+    }
 
     const settings = await PlatformSettings.findOneAndUpdate(
       { key: 'platform' },
@@ -130,6 +136,7 @@ router.patch('/settings', protect, async (req, res) => {
       failedLoginWarnings:    settings.failedLoginWarnings,
       weeklyDigest:           settings.weeklyDigest,
       require2fa:             settings.require2fa,
+      socialLinks:            settings.socialLinks || {},
     });
   } catch {
     res.status(500).json({ message: 'Failed to save settings' });
