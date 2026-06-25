@@ -174,7 +174,14 @@ Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the 
   "enforceStrongPasswords": false,
   "failedLoginWarnings":    true,
   "weeklyDigest":           false,
-  "require2fa":             false
+  "require2fa":             false,
+  "socialLinks": {
+    "facebook":  "https://facebook.com/humanconcernusa",
+    "twitter":   "",
+    "instagram": "",
+    "linkedin":  "",
+    "youtube":   ""
+  }
 }
 ```
 
@@ -186,6 +193,7 @@ Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the 
 | `failedLoginWarnings`    | boolean | `true`  | When `true`, 3 consecutive wrong-password attempts create a notification    |
 | `weeklyDigest`           | boolean | `false` | When `true`, a summary email is sent to all superadmins every Monday 08:00  |
 | `require2fa`             | boolean | `false` | When `true`, all logins require 2FA. Admins with TOTP set up choose between their authenticator app or email OTP; others receive email OTP automatically. |
+| `socialLinks`            | object  | `{}`    | Social media URLs used by the public footer — see `GET /api/config/social-links`. |
 
 ---
 
