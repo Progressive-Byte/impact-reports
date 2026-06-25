@@ -142,7 +142,7 @@ const ReportCTAFooter = ({ donationUrl, slug, projectName }) => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.97 }}
                   transition={{ duration: 0.18, ease: 'easeOut' }}
-                  className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-4"
+                  className="absolute top-full left-0 right-0 mt-2 z-50 bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-4"
                 >
                   <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Share via</p>
 
