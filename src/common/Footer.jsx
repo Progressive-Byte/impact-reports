@@ -22,6 +22,13 @@ const Footer = () => {
   const [message,     setMessage]     = useState('');
   const [socialLinks, setSocialLinks] = useState({});
 
+  useEffect(() => {
+    fetch('/api/config/social-links')
+      .then(r => r.json())
+      .then(data => setSocialLinks(data || {}))
+      .catch(() => {});
+  }, []);
+
   const handleSubscribe = async (e) => {
     e.preventDefault();
     if (!email.trim() || status === 'loading') return;
