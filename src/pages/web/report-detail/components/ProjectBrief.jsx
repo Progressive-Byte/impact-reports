@@ -15,10 +15,10 @@ const ProjectBrief = ({ report }) => {
             <h2 className="mt-1 text-xl sm:text-2xl font-black text-[#0B0D0F] tracking-tight">
               Executive Summary
             </h2>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white border border-gray-100 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">
+            {/* <span className="inline-flex items-center gap-2 rounded-full bg-white border border-gray-100 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] text-gray-500">
               <span className="w-1.5 h-1.5 rounded-full bg-[#E52321]" />
               {shortId}
-            </span>
+            </span> */}
           </div>
 
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
