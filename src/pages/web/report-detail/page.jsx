@@ -178,7 +178,7 @@ const ReportDetail = () => {
           <FieldDocumentation
             fieldReports={fieldReports}
             onImageError={handleImageError}
-            onMediaSelect={setSelectedMedia}
+            onMediaSelect={(item) => setSelectedIndex(fieldReports.findIndex(f => f === item))}
           />
 
           <ProjectCountries
