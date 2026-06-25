@@ -150,25 +150,29 @@ Autocomplete endpoint used by the search modal and inline search bar. Returns up
 ```json
 {
   "results": [
-    { "label": "Winter Relief Alpha", "type": "report",  "id": "664abc...", "icon": "FiFileText" },
-    { "label": "WASH",                "type": "sector",  "icon": "FiBox"      },
-    { "label": "Afghanistan",         "type": "country", "icon": "FiFlag"     },
-    { "label": "South Asia",          "type": "region",  "icon": "FiGlobe"    }
+    { "label": "Winter Relief Alpha", "type": "report",  "id": "664abc...", "slug": "winter-relief-alpha", "icon": "FiFileText" },
+    { "label": "BurmaWater-1001",     "type": "id",      "id": "664abc...", "slug": "winter-relief-alpha", "subtitle": "BurmaWater-1001", "icon": "FiHash" },
+    { "label": "WASH",                "type": "sector",  "icon": "FiBox"   },
+    { "label": "Afghanistan",         "type": "country", "icon": "FiFlag"  },
+    { "label": "South Asia",          "type": "region",  "icon": "FiGlobe" }
   ]
 }
 ```
 
-| Field   | Values                              | Description                                      |
-| ------- | ----------------------------------- | ------------------------------------------------ |
-| `type`  | `report`, `sector`, `country`, `region` | Determines how the frontend routes the selection |
-| `id`    | MongoDB ObjectId string             | Only present when `type === "report"`            |
-| `icon`  | Feather icon name string            | Used by `SafeIcon` in the search UI              |
+| Field      | Values                                      | Description                                                   |
+| ---------- | ------------------------------------------- | ------------------------------------------------------------- |
+| `type`     | `report`, `id`, `sector`, `country`, `region` | Determines how the frontend routes the selection             |
+| `id`       | MongoDB ObjectId string                     | Present when `type === "report"` or `type === "id"`           |
+| `slug`     | string                                      | Present when `type === "report"` or `type === "id"` — use for public URLs |
+| `subtitle` | string                                      | Present when `type === "id"` — the matching project ID value  |
+| `icon`     | Feather icon name string                    | Used by `SafeIcon` in the search UI                           |
 
-Result breakdown (max 8 total):
-- Up to 5 matching report titles
-- Up to 3 matching sectors
-- Up to 3 matching country names
-- Up to 2 matching regions
+**Result breakdown (max 10 total):**
+- Up to 5 matching report titles (`type: "report"`)
+- Up to 3 matching project IDs (`type: "id"`) — matched against `actualProjectId` or `projectId`; deduplicated with title results
+- Up to 3 matching country names (`type: "country"`)
+- Up to 2 matching regions (`type: "region"`)
+- Up to 2 matching sectors (`type: "sector"`)
 
 If `q` is empty, returns `{ "results": [] }`.
 
