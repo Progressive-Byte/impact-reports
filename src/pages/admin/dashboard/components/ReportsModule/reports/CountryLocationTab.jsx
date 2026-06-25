@@ -395,7 +395,9 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
                   </div>
 
                 </div>
+                </motion.div>
                 )}
+                </AnimatePresence>
 
               </div>
             );
