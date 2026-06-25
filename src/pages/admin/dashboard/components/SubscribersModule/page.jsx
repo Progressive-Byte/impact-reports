@@ -6,7 +6,7 @@ import PageHeader from '../../common/PageHeader';
 import Pagination from '@/common/Pagination';
 import { adminApiRequest } from '../../../../../services/adminApi';
 
-const SKELETON_ROWS = 20; // matches default limit; overridden at render time with meta?.limit
+const SKELETON_ROWS = 20;
 
 const SubscribersModule = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,7 +21,6 @@ const SubscribersModule = () => {
   const [deletingId,  setDeletingId]  = useState(null);
   const [confirmId,   setConfirmId]   = useState(null);
 
-  // Debounce search input → URL
   useEffect(() => {
     const t = setTimeout(() => {
       const next = new URLSearchParams(searchParams);
@@ -102,16 +101,15 @@ const SubscribersModule = () => {
       <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
 
         {/* Toolbar */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          {/* Search */}
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 px-5 py-4 border-b border-gray-100">
+          <div className="relative flex-1 sm:max-w-xs">
             <SafeIcon icon="FiSearch" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none" />
             <input
               type="text"
               placeholder="Search by email…"
               value={inputSearch}
               onChange={e => setInputSearch(e.target.value)}
-              className="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-xl outline-none focus:border-[#E52321] transition-colors w-64 bg-gray-50 focus:bg-white"
+              className="w-full pl-9 pr-8 py-2 text-sm border border-gray-200 rounded-xl outline-none focus:border-[#E52321] transition-colors bg-gray-50 focus:bg-white"
             />
             {inputSearch && (
               <button
@@ -122,12 +120,10 @@ const SubscribersModule = () => {
               </button>
             )}
           </div>
-
-          {/* Refresh */}
           <button
             onClick={fetchSubscribers}
             disabled={loading}
-            className="flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="self-start sm:self-auto flex items-center gap-2 px-3 py-2 border border-gray-200 rounded-xl text-xs font-bold text-gray-500 hover:bg-gray-50 transition-colors disabled:opacity-50"
           >
             <SafeIcon icon="FiRefreshCw" className={`text-sm ${loading ? 'animate-spin' : ''}`} />
             Refresh
@@ -135,10 +131,10 @@ const SubscribersModule = () => {
         </div>
 
         {/* Table header */}
-        <div className="grid grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-2.5 bg-gray-50 border-b border-gray-100">
+        <div className="grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-2.5 bg-gray-50 border-b border-gray-100">
           <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Email Address</span>
-          <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Joined</span>
-          <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Time</span>
+          <span className="hidden sm:block text-[10px] font-black text-gray-400 uppercase tracking-widest">Joined</span>
+          <span className="hidden sm:block text-[10px] font-black text-gray-400 uppercase tracking-widest">Time</span>
           <span />
         </div>
 
@@ -146,11 +142,11 @@ const SubscribersModule = () => {
         <div className="divide-y divide-gray-50">
           {loading ? (
             Array.from({ length: meta?.limit ?? SKELETON_ROWS }).map((_, i) => (
-              <div key={i} className="grid grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-3.5 animate-pulse">
+              <div key={i} className="grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-3.5 animate-pulse">
                 <div className="h-4 bg-gray-100 rounded w-3/4" />
-                <div className="h-4 bg-gray-100 rounded w-1/2" />
-                <div className="h-4 bg-gray-100 rounded w-1/3" />
-                <div className="h-4 bg-gray-100 rounded w-full" />
+                <div className="hidden sm:block h-4 bg-gray-100 rounded w-1/2" />
+                <div className="hidden sm:block h-4 bg-gray-100 rounded w-1/3" />
+                <div className="h-4 bg-gray-100 rounded w-8" />
               </div>
             ))
           ) : subscribers.length === 0 ? (
@@ -174,26 +170,34 @@ const SubscribersModule = () => {
             subscribers.map((sub, idx) => (
               <div
                 key={sub._id}
-                className="grid grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-3.5 hover:bg-gray-50/60 transition-colors group"
+                className="grid grid-cols-[1fr_auto] sm:grid-cols-[2fr_1fr_1fr_40px] gap-4 px-5 py-3.5 hover:bg-gray-50/60 transition-colors group items-center"
               >
-                {/* Email */}
+                {/* Email + date/time stacked on mobile */}
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-8 h-8 rounded-xl bg-[#E52321]/8 border border-[#E52321]/15 flex items-center justify-center flex-shrink-0">
                     <span className="text-[10px] font-black text-[#E52321]">
                       {sub.email.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="text-sm font-medium text-[#0B0D0F] truncate">{sub.email}</span>
-                  <span className="text-[9px] font-bold text-gray-300 tabular-nums opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                    #{String(idx + 1 + (urlPage - 1) * 20).padStart(3, '0')}
-                  </span>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-sm font-medium text-[#0B0D0F] truncate">{sub.email}</span>
+                      <span className="hidden sm:inline text-[9px] font-bold text-gray-300 tabular-nums opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                        #{String(idx + 1 + (urlPage - 1) * 20).padStart(3, '0')}
+                      </span>
+                    </div>
+                    {/* date + time visible only on mobile, below email */}
+                    <p className="sm:hidden text-xs text-gray-400 mt-0.5">
+                      {formatDate(sub.createdAt)} · {formatTime(sub.createdAt)}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Date */}
-                <span className="text-sm text-gray-500 self-center">{formatDate(sub.createdAt)}</span>
+                {/* Date — desktop only */}
+                <span className="hidden sm:block text-sm text-gray-500">{formatDate(sub.createdAt)}</span>
 
-                {/* Time */}
-                <span className="text-sm text-gray-400 self-center">{formatTime(sub.createdAt)}</span>
+                {/* Time — desktop only */}
+                <span className="hidden sm:block text-sm text-gray-400">{formatTime(sub.createdAt)}</span>
 
                 {/* Delete */}
                 <div className="flex items-center justify-end">
@@ -206,20 +210,20 @@ const SubscribersModule = () => {
                       >
                         {deletingId === sub._id
                           ? <span className="w-3 h-3 border-2 border-[#E52321] border-t-transparent rounded-full animate-spin inline-block" />
-                          : 'Confirm'}
+                          : 'Yes'}
                       </button>
                       <button
                         onClick={() => setConfirmId(null)}
                         className="text-[10px] font-black text-gray-400 bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-lg hover:bg-gray-100 transition-colors ml-1"
                       >
-                        Cancel
+                        No
                       </button>
                     </>
                   ) : (
                     <button
                       onClick={() => setConfirmId(sub._id)}
                       title="Remove subscriber"
-                      className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-300 hover:text-[#E52321] hover:bg-red-50 border border-transparent hover:border-red-100 transition-all opacity-0 group-hover:opacity-100"
+                      className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-300 hover:text-[#E52321] hover:bg-red-50 border border-transparent hover:border-red-100 transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
                     >
                       <SafeIcon icon="FiTrash2" className="text-sm" />
                     </button>
