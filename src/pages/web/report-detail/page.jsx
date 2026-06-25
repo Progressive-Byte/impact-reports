@@ -116,7 +116,7 @@ const ReportDetail = () => {
   const hasDemographics = (report.demographics?.men || 0) + (report.demographics?.women || 0) + (report.demographics?.children || 0) > 0;
 
   return (
-    <div className="bg-[#F9FAFB] min-h-screen pb-24 font-sans overflow-x-hidden">
+    <div className="bg-[#F9FAFB] min-h-screen pb-24 font-sans [overflow-x:clip]">
       <div className="pt-28 sm:pt-32">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link to="/" className="inline-flex items-center text-gray-500 hover:text-[#0B0D0F] transition-colors text-xs font-black tracking-widest uppercase">
