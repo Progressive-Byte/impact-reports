@@ -94,6 +94,13 @@ const Settings = () => {
         failedLoginWarnings: settingsData.failedLoginWarnings ?? true,
         weeklyDigest:        settingsData.weeklyDigest        ?? false,
       }));
+      setSocialLinks({
+        facebook:  settingsData.socialLinks?.facebook  || '',
+        twitter:   settingsData.socialLinks?.twitter   || '',
+        instagram: settingsData.socialLinks?.instagram || '',
+        linkedin:  settingsData.socialLinks?.linkedin  || '',
+        youtube:   settingsData.socialLinks?.youtube   || '',
+      });
     } catch {
       toast.error('Failed to load settings');
     } finally {
