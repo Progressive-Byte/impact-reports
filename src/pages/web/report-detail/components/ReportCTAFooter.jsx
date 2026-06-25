@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import SafeIcon from '../../../../common/SafeIcon';
 
@@ -46,9 +46,22 @@ const ReportCTAFooter = ({ donationUrl, slug, projectName }) => {
   const href    = normalizeUrl(donationUrl);
   const [open,   setOpen]   = useState(false);
   const [copied, setCopied] = useState(false);
+  const wrapperRef = useRef(null);
 
   const shareUrl  = `${window.location.origin}/report/${slug || ''}`;
   const shareText = projectName ? `${projectName} — Impact Report` : 'Impact Report';
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [open]);
 
   const handleCopy = async () => {
     try {
@@ -74,38 +87,40 @@ const ReportCTAFooter = ({ donationUrl, slug, projectName }) => {
       <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 bg-[#E52321]/10 rounded-full blur-[90px]" />
       <div className="pointer-events-none absolute -bottom-28 -left-28 w-96 h-96 bg-black/5 rounded-full blur-[100px]" />
 
-      <div className="relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          {/* Left — copy */}
-          <div className="lg:col-span-8 flex items-start gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#E52321] text-white flex items-center justify-center flex-shrink-0">
-              <SafeIcon icon="FiHeart" className="text-2xl" />
-            </div>
-            <div>
-              <h3 className="mt-1 text-2xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight">Support This Mission</h3>
-              <p className="mt-3 text-gray-600 text-sm sm:text-base leading-relaxed max-w-2xl">
-                Your partnership allows our teams to remain on the ground and expand our reach to those who need it most.
-              </p>
-            </div>
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left — copy */}
+        <div className="lg:col-span-8 flex items-start gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-[#E52321] text-white flex items-center justify-center flex-shrink-0">
+            <SafeIcon icon="FiHeart" className="text-2xl" />
           </div>
+          <div>
+            <h3 className="mt-1 text-2xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight">Support This Mission</h3>
+            <p className="mt-3 text-gray-600 text-sm sm:text-base leading-relaxed max-w-2xl">
+              Your partnership allows our teams to remain on the ground and expand our reach to those who need it most.
+            </p>
+          </div>
+        </div>
 
-          {/* Right — donate + share toggle only (no panel here) */}
-          <div className="lg:col-span-4 flex flex-col gap-3">
-            {href ? (
-              <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full block text-center bg-[#E52321] hover:bg-[#C91D1B] text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.25em] shadow-lg shadow-red-500/20 active:scale-95 transition-transform"
-              >
-                Donate Now
-              </a>
-            ) : (
-              <button disabled className="w-full bg-gray-200 text-gray-400 px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.25em] cursor-not-allowed">
-                Donate Now
-              </button>
-            )}
+        {/* Right — actions */}
+        <div className="lg:col-span-4 flex flex-col gap-3" ref={wrapperRef}>
+          {/* Donate Now */}
+          {href ? (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full block text-center bg-[#E52321] hover:bg-[#C91D1B] text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.25em] shadow-lg shadow-red-500/20 active:scale-95 transition-transform"
+            >
+              Donate Now
+            </a>
+          ) : (
+            <button disabled className="w-full bg-gray-200 text-gray-400 px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.25em] cursor-not-allowed">
+              Donate Now
+            </button>
+          )}
 
+          {/* Share Report toggle — dropdown anchor */}
+          <div className="relative">
             <button
               onClick={() => setOpen(v => !v)}
               className={`w-full flex items-center justify-center gap-2 border px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.25em] transition-colors ${
@@ -117,51 +132,51 @@ const ReportCTAFooter = ({ donationUrl, slug, projectName }) => {
               <SafeIcon icon={open ? 'FiChevronUp' : 'FiShare2'} className="text-sm" />
               {open ? 'Close' : 'Share Report'}
             </button>
+
+            {/* Floating dropdown — overflows the card */}
+            <AnimatePresence>
+              {open && (
+                <motion.div
+                  key="share-dropdown"
+                  initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                  transition={{ duration: 0.18, ease: 'easeOut' }}
+                  className="absolute bottom-full left-0 right-0 mb-2 z-50 bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-4"
+                >
+                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">Share via</p>
+
+                  {/* 2×2 social grid */}
+                  <div className="grid grid-cols-2 gap-2 mb-3">
+                    {SOCIALS.map(social => (
+                      <button
+                        key={social.id}
+                        onClick={() => handleSocial(social)}
+                        className={`flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-gray-200 bg-white text-gray-500 text-xs font-bold transition-all ${social.color}`}
+                      >
+                        <SafeIcon icon={social.icon} className="text-xl" />
+                        {social.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Copy link */}
+                  <button
+                    onClick={handleCopy}
+                    className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border text-xs font-bold transition-all ${
+                      copied
+                        ? 'border-green-200 bg-green-50 text-green-600'
+                        : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
+                  >
+                    <SafeIcon icon={copied ? 'FiCheck' : 'FiLink'} className="text-sm" />
+                    {copied ? 'Link Copied!' : 'Copy Link'}
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
-
-        {/* Share panel — full card width, below columns, no overflow */}
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              key="share-panel"
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25, ease: 'easeInOut' }}
-              className="overflow-hidden"
-            >
-              <div className="mt-6 bg-gray-50 border border-gray-100 rounded-2xl p-5">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-4">Share via</p>
-
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-                  {SOCIALS.map(social => (
-                    <button
-                      key={social.id}
-                      onClick={() => handleSocial(social)}
-                      className={`flex flex-col items-center justify-center gap-2 p-3 rounded-xl border border-gray-200 bg-white text-gray-500 text-xs font-bold transition-all ${social.color}`}
-                    >
-                      <SafeIcon icon={social.icon} className="text-xl" />
-                      {social.label}
-                    </button>
-                  ))}
-                </div>
-
-                <button
-                  onClick={handleCopy}
-                  className={`w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl border text-xs font-bold transition-all ${
-                    copied
-                      ? 'border-green-200 bg-green-50 text-green-600'
-                      : 'border-gray-200 bg-white text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-                  }`}
-                >
-                  <SafeIcon icon={copied ? 'FiCheck' : 'FiLink'} className="text-sm" />
-                  {copied ? 'Link Copied!' : 'Copy Link'}
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </footer>
   );
