@@ -8,10 +8,19 @@ const LogoIcon = ({ className = "w-10 h-10" }) => (
   </div>
 );
 
+const SOCIAL_CONFIG = [
+  { key: 'facebook',  icon: 'FiFacebook'  },
+  { key: 'twitter',   icon: 'FiTwitter'   },
+  { key: 'instagram', icon: 'FiInstagram' },
+  { key: 'linkedin',  icon: 'FiLinkedin'  },
+  { key: 'youtube',   icon: 'FiYoutube'   },
+];
+
 const Footer = () => {
-  const [email,     setEmail]     = useState('');
-  const [status,    setStatus]    = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
-  const [message,   setMessage]   = useState('');
+  const [email,       setEmail]       = useState('');
+  const [status,      setStatus]      = useState('idle'); // 'idle' | 'loading' | 'success' | 'error'
+  const [message,     setMessage]     = useState('');
+  const [socialLinks, setSocialLinks] = useState({});
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
