@@ -94,9 +94,28 @@ const ReportCTAFooter = ({ donationUrl, slug, projectName }) => {
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left — copy */}
         <div className="lg:col-span-8 flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#E52321] text-white flex items-center justify-center flex-shrink-0">
+          <motion.div
+            animate={{
+              scale: [1, 1.22, 1, 1.12, 1],
+              boxShadow: [
+                '0 4px 14px rgba(229,35,33,0.30)',
+                '0 8px 28px rgba(229,35,33,0.65)',
+                '0 4px 14px rgba(229,35,33,0.30)',
+                '0 6px 20px rgba(229,35,33,0.50)',
+                '0 4px 14px rgba(229,35,33,0.30)',
+              ],
+            }}
+            transition={{
+              duration: 1.1,
+              repeat: Infinity,
+              repeatDelay: 0.7,
+              ease: 'easeInOut',
+              times: [0, 0.14, 0.28, 0.42, 0.70],
+            }}
+            className="w-12 h-12 rounded-2xl bg-[#E52321] text-white flex items-center justify-center flex-shrink-0"
+          >
             <SafeIcon icon="FiHeart" className="text-2xl" />
-          </div>
+          </motion.div>
           <div>
             <h3 className="mt-1 text-2xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight">Support This Mission</h3>
             <p className="mt-3 text-gray-600 text-sm sm:text-base leading-relaxed max-w-2xl">
