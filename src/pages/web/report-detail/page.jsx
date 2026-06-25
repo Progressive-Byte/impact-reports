@@ -198,7 +198,13 @@ const ReportDetail = () => {
         </div>
       </div>
 
-      <MediaLightbox media={selectedMedia} title={report.title} onClose={() => setSelectedMedia(null)} />
+      <MediaLightbox
+        mediaList={fieldReports}
+        currentIndex={selectedIndex}
+        title={report.title}
+        onClose={() => setSelectedIndex(null)}
+        onNavigate={setSelectedIndex}
+      />
     </div>
   );
 };
