@@ -63,7 +63,11 @@ const Settings = () => {
   const [notifications, setNotifications] = useState({
     emailAlerts:         true,
     weeklyDigest:        false,
-    failedLoginWarnings: true,   // persisted in PlatformSettings
+    failedLoginWarnings: true,
+  });
+
+  const [socialLinks, setSocialLinks] = useState({
+    facebook: '', twitter: '', instagram: '', linkedin: '', youtube: '',
   });
 
   const fetchSettings = useCallback(async () => {
