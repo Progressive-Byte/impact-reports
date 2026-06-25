@@ -54,6 +54,17 @@ const ReportHero = ({ report, onImageError }) => {
               {heroSummary}
             </p>
           )}
+
+          {/* Location row */}
+          <div className="mt-6 flex flex-col items-start gap-0.5">
+            <div className="flex items-center gap-1.5">
+              <SafeIcon icon="FiMapPin" className="text-white text-[10px] flex-shrink-0" />
+              <span className="text-white text-[11px] font-semibold">{report.region}</span>
+            </div>
+            <span className="text-[8px] md:text-[10px] uppercase tracking-[0.18em] text-white/70">
+              {report.year} • {report.sector}
+            </span>
+          </div>
         </div>
       </motion.div>
     </div>
