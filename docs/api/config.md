@@ -203,6 +203,8 @@ Requires **superadmin** role. All fields are optional — only provided fields a
 
 ### Request body
 
+All fields are optional — only provided fields are updated.
+
 | Field                    | Type    | Description                                                              |
 | ------------------------ | ------- | ------------------------------------------------------------------------ |
 | `defaultRegion`          | string  | Must be a value from `GET /api/config/regions` (or `""` to clear)        |
@@ -211,6 +213,17 @@ Requires **superadmin** role. All fields are optional — only provided fields a
 | `failedLoginWarnings`    | boolean | Toggle failed-login notification creation                                |
 | `weeklyDigest`           | boolean | Toggle weekly digest email to superadmins                                |
 | `require2fa`             | boolean | When `true`, all logins require 2FA (email OTP or TOTP)                  |
+| `socialLinks`            | object  | Social media URLs — only keys provided are updated (partial update supported) |
+
+`socialLinks` sub-fields (all optional strings):
+
+| Sub-field   | Description                          |
+| ----------- | ------------------------------------ |
+| `facebook`  | Facebook page URL                    |
+| `twitter`   | X (Twitter) profile URL              |
+| `instagram` | Instagram profile URL                |
+| `linkedin`  | LinkedIn company page URL            |
+| `youtube`   | YouTube channel URL                  |
 
 Example:
 
@@ -221,7 +234,11 @@ Example:
   "enforceStrongPasswords": true,
   "failedLoginWarnings":    true,
   "weeklyDigest":           true,
-  "require2fa":             true
+  "require2fa":             true,
+  "socialLinks": {
+    "facebook":  "https://facebook.com/humanconcernusa",
+    "instagram": "https://instagram.com/humanconcernusa"
+  }
 }
 ```
 
