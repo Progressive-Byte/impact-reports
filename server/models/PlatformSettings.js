@@ -10,6 +10,13 @@ const platformSettingsSchema = new mongoose.Schema({
   require2fa:             { type: Boolean, default: false },
   regions:                { type: [String], default: [] },
   sectors:                { type: [String], default: [] },
+  socialLinks: {
+    facebook:  { type: String, default: '' },
+    twitter:   { type: String, default: '' },
+    instagram: { type: String, default: '' },
+    linkedin:  { type: String, default: '' },
+    youtube:   { type: String, default: '' },
+  },
 }, { timestamps: true });
 
 export default mongoose.model('PlatformSettings', platformSettingsSchema);
