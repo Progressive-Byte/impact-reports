@@ -209,29 +209,40 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
               ? stateLocs.length + mapPickedLocs.length
               : countryLocs.filter(l => l.address.trim()).length;
 
+            const isCollapsed = collapsed.has(country);
+
             return (
-              <div key={country} className="border border-gray-200 rounded-xl">
-                {/* Country header */}
-                <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100">
-                  <div className="flex items-center gap-2.5">
+              <div key={country} className="border border-gray-200 rounded-xl overflow-hidden">
+                {/* Country header — click to collapse/expand */}
+                <button
+                  type="button"
+                  onClick={() => toggleCollapse(country)}
+                  className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
                     <div className="w-6 h-6 rounded-md bg-[#E52321]/10 border border-[#E52321]/20 flex items-center justify-center flex-shrink-0">
                       <SafeIcon icon="FiFlag" className="text-[#E52321] text-[10px]" />
                     </div>
-                    <span className="text-sm font-black text-[#0B0D0F]">{country}</span>
-                    <span className="text-xs text-gray-400 font-medium">
+                    <span className="text-sm font-black text-[#0B0D0F] truncate">{country}</span>
+                    <span className="text-xs text-gray-400 font-medium whitespace-nowrap">
                       {filledCount} location{filledCount !== 1 ? 's' : ''}
                     </span>
                     {hasStates && (
-                      <span className="text-[10px] font-semibold text-gray-300 uppercase tracking-widest">
+                      <span className="text-[10px] font-semibold text-gray-300 uppercase tracking-widest whitespace-nowrap hidden sm:inline">
                         · {stateOptions.length} regions available
                       </span>
                     )}
+                    {locError && <p className="text-xs text-red-500 font-medium ml-2 shrink-0">{locError}</p>}
                   </div>
-                  {locError && <p className="text-xs text-red-500 font-medium">{locError}</p>}
-                </div>
+                  <SafeIcon
+                    icon="FiChevronDown"
+                    className={`text-gray-400 text-base flex-shrink-0 ml-3 transition-transform duration-200 ${isCollapsed ? '' : 'rotate-180'}`}
+                  />
+                </button>
 
-                {/* Location body */}
-                <div className="p-4 space-y-4">
+                {/* Location body — hidden when collapsed */}
+                {!isCollapsed && (
+                <div className="p-4 space-y-4 border-t border-gray-100">
 
                   {/* ── Option A: Select from list ──────────────────── */}
                   <div>
