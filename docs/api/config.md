@@ -77,6 +77,90 @@ curl -X PUT http://localhost:5173/api/config/regions \
 
 ---
 
+## `GET /api/config/sectors`
+
+Public — no authentication required. Returns the active sector list. Reads from `PlatformSettings.sectors` in MongoDB.
+
+### Response `200`
+
+```json
+{
+  "sectors": ["Education", "Food Security", "Healthcare", "WASH"]
+}
+```
+
+---
+
+## `PUT /api/config/sectors`
+
+Requires **superadmin** role. Replaces the entire sector list stored in `PlatformSettings.sectors`.
+
+### Request body
+
+| Field     | Type     | Required | Description                                      |
+| --------- | -------- | :------: | ------------------------------------------------ |
+| `sectors` | string[] | Yes      | Non-empty array of sector name strings. Blank/empty strings are stripped before saving. |
+
+```json
+{
+  "sectors": ["Education", "Food Security", "Healthcare", "WASH", "Shelter"]
+}
+```
+
+### Response `200`
+
+```json
+{
+  "sectors": ["Education", "Food Security", "Healthcare", "WASH", "Shelter"]
+}
+```
+
+### Errors
+
+| Status | Condition                                          |
+| ------ | -------------------------------------------------- |
+| `400`  | `sectors` is not an array, is empty, or all entries are blank |
+| `401`  | Missing or invalid token                           |
+| `403`  | Caller is not `superadmin`                         |
+| `500`  | Database error                                     |
+
+### curl
+
+```bash
+curl -X PUT http://localhost:5173/api/config/sectors \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"sectors":["Education","Healthcare","WASH"]}'
+```
+
+---
+
+## `GET /api/config/social-links`
+
+Public — no authentication required. Returns the social media URLs configured by admins in the Settings panel. Used by the public footer to render icon links. Only non-empty fields are meaningful — the footer hides icons whose URL is blank.
+
+### Response `200`
+
+```json
+{
+  "facebook":  "https://facebook.com/humanconcernusa",
+  "twitter":   "https://x.com/humanconcernusa",
+  "instagram": "https://instagram.com/humanconcernusa",
+  "linkedin":  "https://linkedin.com/company/humanconcernusa",
+  "youtube":   "https://youtube.com/@humanconcernusa"
+}
+```
+
+All fields are always present; unset fields return `""`.
+
+### curl
+
+```bash
+curl http://localhost:5173/api/config/social-links
+```
+
+---
+
 ## `GET /api/config/settings`
 
 Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the singleton `PlatformSettings` document from MongoDB.
