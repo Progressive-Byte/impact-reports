@@ -304,11 +304,11 @@ Returns the updated admin object.
 
 ### Errors
 
-| Status | Condition                    |
-| ------ | ---------------------------- |
-| `400`  | Invalid role value           |
-| `403`  | Caller is not `superadmin`   |
-| `404`  | Admin not found              |
+| Status | Condition                                               |
+| ------ | ------------------------------------------------------- |
+| `400`  | `role` is not `superadmin`, `editor`, or `viewer`       |
+| `403`  | Caller is not `superadmin`                              |
+| `404`  | Admin not found                                         |
 
 ### curl
 
@@ -316,7 +316,7 @@ Returns the updated admin object.
 curl -X PATCH http://localhost:5173/api/admin/admins/6650a1b2c3d4e5f607a8b9c0/role \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"role":"admin"}'
+  -d '{"role":"editor"}'
 ```
 
 ---
