@@ -8,6 +8,9 @@ Base path: `/api/config`
 | ------ | ------------------------- | ------------------- | -------------------------------------------------------- |
 | GET    | `/regions`                | None                | Returns the active region list (DB or hardcoded fallback)|
 | PUT    | `/regions`                | Bearer (superadmin) | Replace the full region list                             |
+| GET    | `/sectors`                | None                | Returns the active sector list                           |
+| PUT    | `/sectors`                | Bearer (superadmin) | Replace the full sector list                             |
+| GET    | `/social-links`           | None                | Returns footer social media links                        |
 | GET    | `/settings`               | Bearer (any)        | Returns current platform settings                        |
 | PATCH  | `/settings`               | Bearer (superadmin) | Update platform settings                                 |
 | POST   | `/send-weekly-digest`     | Bearer (superadmin) | Manually trigger the weekly digest email                 |
