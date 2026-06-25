@@ -343,6 +343,38 @@ const Settings = () => {
             </SettingCard>
           </div>
 
+          {/* Social Media — full width below the two columns */}
+          <div className="sm:col-span-2">
+            <SettingCard icon="FiShare2" title="Social Media Links">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                {[
+                  { key: 'facebook',  icon: 'FiFacebook',  label: 'Facebook',  placeholder: 'https://facebook.com/yourpage' },
+                  { key: 'twitter',   icon: 'FiTwitter',   label: 'X (Twitter)', placeholder: 'https://x.com/yourhandle' },
+                  { key: 'instagram', icon: 'FiInstagram', label: 'Instagram', placeholder: 'https://instagram.com/yourhandle' },
+                  { key: 'linkedin',  icon: 'FiLinkedin',  label: 'LinkedIn',  placeholder: 'https://linkedin.com/company/yourpage' },
+                  { key: 'youtube',   icon: 'FiYoutube',   label: 'YouTube',   placeholder: 'https://youtube.com/@yourchannel' },
+                ].map(({ key, icon, label, placeholder }) => (
+                  <div key={key}>
+                    <label className="flex items-center gap-2 text-xs font-black text-gray-500 uppercase tracking-widest mb-1.5">
+                      <SafeIcon icon={icon} className="text-sm text-gray-400" />
+                      {label}
+                    </label>
+                    <input
+                      type="url"
+                      value={socialLinks[key]}
+                      onChange={e => setSocialLinks(p => ({ ...p, [key]: e.target.value }))}
+                      placeholder={placeholder}
+                      className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#E52321] transition-colors bg-gray-50 focus:bg-white placeholder-gray-300"
+                    />
+                  </div>
+                ))}
+              </div>
+              <p className="text-[11px] text-gray-400 mt-4 pt-3 border-t border-gray-50">
+                Links appear in the public footer. Leave blank to hide an icon.
+              </p>
+            </SettingCard>
+          </div>
+
         </div>
       ) : (
         <div className="max-w-xl">
