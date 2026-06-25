@@ -241,8 +241,17 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
                   />
                 </button>
 
-                {/* Location body — hidden when collapsed */}
+                {/* Location body — animated collapse/expand */}
+                <AnimatePresence initial={false}>
                 {!isCollapsed && (
+                <motion.div
+                  key="body"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+                  style={{ overflow: 'hidden' }}
+                >
                 <div className="p-4 space-y-4 border-t border-gray-100">
 
                   {/* ── Option A: Select from list ──────────────────── */}
