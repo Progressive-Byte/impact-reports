@@ -187,8 +187,8 @@ Create a new admin account directly without the invite flow.
 | ---------- | ------ | :------: | ---------------------------------- | --------------------------------- | ------------------------ |
 | `username` | string | Yes      | unique                             | Login handle                      | `"newadmin"`             |
 | `email`    | string | Yes      | unique, stored lowercase           | Contact email                     | `"new@example.com"`      |
-| `password` | string | Yes      | min 6 characters                   | Initial password (bcrypt hashed)  | `"secure123"`            |
-| `role`     | string | No       | `superadmin` or `admin`            | Defaults to `"admin"`             | `"admin"`                |
+| `password` | string | Yes      | min 6 characters                         | Initial password (bcrypt hashed)  | `"secure123"`   |
+| `role`     | string | No       | `superadmin`, `editor`, or `viewer`      | Defaults to `"editor"`            | `"editor"`      |
 
 Example:
 
@@ -197,7 +197,7 @@ Example:
   "username": "newadmin",
   "email":    "new@example.com",
   "password": "secure123",
-  "role":     "admin"
+  "role":     "editor"
 }
 ```
 
