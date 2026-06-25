@@ -14,6 +14,11 @@ const ReportCard = ({ report }) => (
     {/* Gradient overlay — transparent at top, dark at bottom */}
     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent" />
 
+    {/* Arrow button — top right */}
+    <span className="absolute top-5 right-5 z-10 inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 group-hover:bg-[#E52321] border border-white/10 group-hover:border-[#E52321] text-white transition-all duration-300">
+      <SafeIcon icon="FiArrowRight" className="text-base" />
+    </span>
+
     {/* Bottom content */}
     <div className="relative z-10 p-6 sm:p-7 min-h-[340px] flex flex-col justify-end">
       {/* Title */}
@@ -25,28 +30,22 @@ const ReportCard = ({ report }) => (
         {report.summary}
       </p>
 
-      {/* Bottom row — Location first, then Impact, arrow far right */}
-      <div className="mt-5 flex items-end justify-between">
-        <div className="flex items-end">
-          <div className="flex flex-col items-start gap-0.5 min-w-0">
-            <div className="flex items-center gap-1.5">
-              <SafeIcon icon="FiMapPin" className="text-white text-[10px] flex-shrink-0" />
-              <span className="text-white text-[11px] font-semibold truncate">{report.region}</span>
-            </div>
-            <span className="text-[8px] md:text-[10px] uppercase tracking-[0.18em] text-white truncate">
-              {report.year} • {report.sector}
-            </span>
+      {/* Bottom row — Location + Impact */}
+      <div className="mt-5 flex items-end">
+        <div className="flex flex-col items-start gap-0.5 min-w-0">
+          <div className="flex items-center gap-1.5">
+            <SafeIcon icon="FiMapPin" className="text-white text-[10px] flex-shrink-0" />
+            <span className="text-white text-[11px] font-semibold truncate">{report.region}</span>
           </div>
-
-          <div className="min-w-0 ml-4 pl-4 border-l border-white/20">
-            <p className="text-[10px] font-black uppercase tracking-widest text-white">Impact</p>
-            <p className="text-lg font-black text-white tracking-tight">{report.metrics.beneficiaries.toLocaleString()}</p>
-          </div>
+          <span className="text-[8px] md:text-[10px] uppercase tracking-[0.18em] text-white truncate">
+            {report.year} • {report.sector}
+          </span>
         </div>
 
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/10 group-hover:bg-[#E52321] border border-white/10 group-hover:border-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all duration-300 flex-shrink-0">
-          <SafeIcon icon="FiArrowRight" className="text-base" />
-        </span>
+        <div className="min-w-0 ml-4 pl-4 border-l border-white/20">
+          <p className="text-[10px] font-black uppercase tracking-widest text-white">Impact</p>
+          <p className="text-lg font-black text-white tracking-tight">{report.metrics.beneficiaries.toLocaleString()}</p>
+        </div>
       </div>
     </div>
   </Link>
