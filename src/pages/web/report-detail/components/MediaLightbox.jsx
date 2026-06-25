@@ -37,6 +37,7 @@ const MediaLightbox = ({ media, title, onClose }) => (
                   className="w-full h-full"
                   allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
                   allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
                   title="Field footage"
                 />
               </div>
