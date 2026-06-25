@@ -75,6 +75,16 @@ router.put('/sectors', protect, async (req, res) => {
   }
 });
 
+// GET /api/config/social-links — public; returns social media links for the footer
+router.get('/social-links', async (_req, res) => {
+  try {
+    const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+    res.json(settings?.socialLinks || {});
+  } catch {
+    res.json({});
+  }
+});
+
 // GET /api/config/settings — protected, returns platform settings
 router.get('/settings', protect, async (_req, res) => {
   try {
@@ -86,6 +96,7 @@ router.get('/settings', protect, async (_req, res) => {
       failedLoginWarnings:    settings?.failedLoginWarnings    ?? true,
       weeklyDigest:           settings?.weeklyDigest           ?? false,
       require2fa:             settings?.require2fa             ?? false,
+      socialLinks:            settings?.socialLinks            || {},
     });
   } catch {
     res.status(500).json({ message: 'Failed to load settings' });
