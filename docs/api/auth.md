@@ -13,7 +13,8 @@ Mounted at `/api/auth`.
 | GET    | `/api/auth/me`                | Bearer              | —                                     | Returns current admin profile                                            |
 | POST   | `/api/auth/logout`            | Bearer              | —                                     | Records logout event; session teardown is client-side                    |
 | GET    | `/api/auth/logs`              | Bearer              | —                                     | Live events from the last 30 days (max 500), newest first, with `meta`   |
-| GET    | `/api/auth/logs/export`       | Bearer (superadmin) | —                                     | Download activity logs as CSV or Excel — 1-year or full-history scope    |
+| GET    | `/api/auth/logs/export`       | Bearer (superadmin) | —                                     | Download activity logs — year, all, or custom date range                 |
+| DELETE | `/api/auth/logs/purge`        | Bearer (superadmin) | —                                     | Permanently delete logs older than 1 year                                |
 
 ---
 
