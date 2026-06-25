@@ -198,6 +198,7 @@ const Settings = () => {
           require2fa:             security.require2fa,
           failedLoginWarnings:    notifications.failedLoginWarnings,
           weeklyDigest:           notifications.weeklyDigest,
+          socialLinks,
         }),
       });
       toast.success('Settings saved successfully');
