@@ -167,7 +167,7 @@ const ReportDetail = () => {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-8 lg:sticky lg:top-28 self-start">
+          <div className="space-y-8">
             <ProjectMetaCard report={report} />
             {hasDemographics && <DemographicsCard demographics={report.demographics} />}
             <TestimonialCard />
