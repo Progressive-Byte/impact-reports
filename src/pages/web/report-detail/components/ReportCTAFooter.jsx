@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import SafeIcon from '../../../../common/SafeIcon';
 
 const normalizeUrl = (url) => {
