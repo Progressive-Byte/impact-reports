@@ -63,7 +63,7 @@ const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
       return { ...l, lat: coords.lat, lng: coords.lng };
     });
     update('locations', filled);
-  }, [coordMap]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [coordMap]);
 
   // ── GPS helpers ─────────────────────────────────────────────────────
   const toggleGps = (id) =>
