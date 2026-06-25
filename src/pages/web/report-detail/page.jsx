@@ -67,7 +67,7 @@ const ReportDetail = () => {
   }, [report, slug, navigate]);
 
   useEffect(() => {
-    const handleEsc = (e) => { if (e.key === 'Escape') setSelectedMedia(null); };
+    const handleEsc = (e) => { if (e.key === 'Escape') setSelectedIndex(null); };
     window.addEventListener('keydown', handleEsc);
     return () => window.removeEventListener('keydown', handleEsc);
   }, []);
