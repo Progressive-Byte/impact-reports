@@ -18,9 +18,18 @@ function getStateOptions(countryName) {
 
 const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
   // gpsOpen = Set of loc IDs whose GPS row is expanded (for editing coords on existing locations)
-  const [gpsOpen,   setGpsOpen]   = useState(new Set());
+  const [gpsOpen,      setGpsOpen]      = useState(new Set());
+  // collapsed = Set of country names whose body is hidden
+  const [collapsed,    setCollapsed]    = useState(new Set());
   // pickerConfig = { country, locId?, mode: 'new'|'edit', initialName?, initialLat?, initialLng? }
   const [pickerCfg, setPickerCfg] = useState(null);
+
+  const toggleCollapse = (country) =>
+    setCollapsed(prev => {
+      const next = new Set(prev);
+      next.has(country) ? next.delete(country) : next.add(country);
+      return next;
+    });
 
   const stateMap = useMemo(() => {
     const map = {};
