@@ -288,14 +288,14 @@ Change only the role of an admin. Lighter alternative to the full `PUT` when onl
 
 ### Request body
 
-| Field  | Type   | Required | Validation              | Description | Example        |
-| ------ | ------ | :------: | ----------------------- | ----------- | -------------- |
-| `role` | string | Yes      | `superadmin` or `admin` | New role    | `"admin"`      |
+| Field  | Type   | Required | Validation                            | Description | Example      |
+| ------ | ------ | :------: | ------------------------------------- | ----------- | ------------ |
+| `role` | string | Yes      | `superadmin`, `editor`, or `viewer`   | New role    | `"editor"`   |
 
 Example:
 
 ```json
-{ "role": "admin" }
+{ "role": "editor" }
 ```
 
 ### Response `200`
