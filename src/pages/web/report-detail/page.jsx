@@ -168,7 +168,7 @@ const ReportDetail = () => {
 
           {/* Sidebar */}
           <div className="space-y-8">
-            <ProjectMetaCard report={report} />
+            {/* <ProjectMetaCard report={report} /> */}
             {hasDemographics && <DemographicsCard demographics={report.demographics} />}
             <TestimonialCard />
           </div>
