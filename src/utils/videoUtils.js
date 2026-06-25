@@ -22,7 +22,10 @@ export function getYoutubeThumbnail(url) {
 
 export function getEmbedUrl(url) {
   const ytId = getYoutubeId(url);
-  if (ytId) return `https://www.youtube.com/embed/${ytId}?autoplay=1`;
+  if (ytId) {
+    const origin = typeof window !== 'undefined' ? encodeURIComponent(window.location.origin) : '';
+    return `https://www.youtube.com/embed/${ytId}?autoplay=1&origin=${origin}`;
+  }
   const vimeoId = getVimeoId(url);
   if (vimeoId) return `https://player.vimeo.com/video/${vimeoId}?autoplay=1`;
   return null;
