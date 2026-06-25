@@ -24,13 +24,15 @@ All four endpoints that return report data use the same card shape:
 
 ```json
 {
-  "id":       "664abc123...",
-  "title":    "Winter Relief Alpha",
-  "image":    "https://res.cloudinary.com/dt1oakyjz/image/upload/v.../impact-reports/abc123.jpg",
-  "region":   "South Asia",
-  "sector":   "WASH",
-  "year":     "2025",
-  "summary":  "Up to 200 chars of projectBackground…",
+  "id":        "664abc123...",
+  "slug":      "winter-relief-alpha",
+  "projectId": "BurmaWater-1001",
+  "title":     "Winter Relief Alpha",
+  "image":     "https://res.cloudinary.com/dt1oakyjz/image/upload/v.../impact-reports/abc123.jpg",
+  "region":    "South Asia",
+  "sector":    "WASH",
+  "year":      "2025",
+  "summary":   "Up to 200 chars of projectBackground…",
   "countries": ["Afghanistan", "Pakistan"],
   "metrics": {
     "beneficiaries": 4200,
@@ -38,6 +40,12 @@ All four endpoints that return report data use the same card shape:
   }
 }
 ```
+
+| Field       | Description                                                                                    |
+| ----------- | ---------------------------------------------------------------------------------------------- |
+| `id`        | MongoDB ObjectId string — can be used in `GET /api/public/reports/:idOrSlug`                   |
+| `slug`      | URL-friendly slug (e.g. `winter-relief-alpha`) — preferred for public links                    |
+| `projectId` | Human-readable project ID set by admin (`actualProjectId` or sequential `projectId` fallback). `""` if not set. |
 
 **Notes:**
 - `year` is converted from the internal `fiscalYear` field (`"FY25"` → `"2025"`).
