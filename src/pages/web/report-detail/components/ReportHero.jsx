@@ -29,7 +29,7 @@ const ReportHero = ({ report, onImageError }) => {
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-transparent" />
         <div className="relative z-10 p-6 sm:p-10 flex flex-col justify-end min-h-[360px] sm:min-h-[420px]">
           <div className="flex flex-wrap items-center gap-3 mb-5">
-            {[
+            {/* {[
               { icon: 'FiMapPin',  label: report.region },
               { icon: 'FiLayers', label: report.sector },
               { icon: 'FiCalendar', label: report.year },
@@ -38,9 +38,12 @@ const ReportHero = ({ report, onImageError }) => {
                 <SafeIcon icon={icon} className="text-sm text-[#E52321]" />
                 {label}
               </span>
-            ))}
-            <span className="inline-flex items-center gap-2 rounded-full bg-[#E52321]/20 backdrop-blur-md border border-[#E52321]/30 text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] shadow-[0_14px_35px_rgba(0,0,0,0.35)]">
+            ))} */}
+            {/* <span className="inline-flex items-center gap-2 rounded-full bg-[#E52321]/20 backdrop-blur-md border border-[#E52321]/30 text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] shadow-[0_14px_35px_rgba(0,0,0,0.35)]">
               <SafeIcon icon="FiCheck" className="text-sm text-[#E52321]" /> Verified Report
+            </span> */}
+            <span className="inline-flex items-center gap-2 rounded-full bg-[#D1FAE5] text-[#065F46] border border-[#065F46]/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em]">
+              <SafeIcon icon="FiCheck" className="text-sm" /> Verified Report
             </span>
           </div>
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-[1.05] max-w-4xl text-left">
