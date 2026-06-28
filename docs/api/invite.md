@@ -12,7 +12,7 @@ Mounted at `/api/invite`.
 
 ## How the invite flow works
 
-1. An authenticated admin calls `POST /api/invite` with the target email, role, and optional region.
+1. An authenticated admin calls `POST /api/invite` with the target email, role, department, and optional region.
 2. The server generates a 64-character cryptographically random token, stores its **SHA-256 hash** in the database (the raw token is never stored), and emails the target address a registration link: `{APP_URL}/admin/register?token=<rawToken>`.
 3. The invite expires in **48 hours**. If an unused invite already exists for that email it is replaced.
 4. The recipient opens the link — the frontend calls `GET /api/invite/validate?token=<rawToken>` to check validity and pre-fill the email/role on the form.
