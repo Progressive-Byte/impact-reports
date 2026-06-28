@@ -2,7 +2,7 @@ import { Input } from './FormField';
 import CustomSelect from './CustomSelect';
 import MultiSelect from './MultiSelect';
 
-const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], sectorOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
+const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], regionOptions = [], sectorOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
     {/* Actual Project ID + Donation URL */}
     <div className="grid grid-cols-2 gap-5">
@@ -38,6 +38,16 @@ const GeneralTab = ({ form, update, adminOptions = [], regionOptions = [], secto
         error={fieldErrors.assignedTo}
       />
     </div>
+    {isSuperAdmin && (
+      <MultiSelect
+        label="Approval Reviewer" required
+        value={form.approvalAssignedTo}
+        onChange={val => update('approvalAssignedTo', val)}
+        options={allAdminOptions}
+        placeholder="Select approval reviewers..."
+        error={fieldErrors.approvalAssignedTo}
+      />
+    )}
     <div className="grid grid-cols-2 gap-5">
       <Input
         label="Project Lead/Partner" required
