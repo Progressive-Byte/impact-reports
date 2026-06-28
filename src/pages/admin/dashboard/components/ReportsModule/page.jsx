@@ -41,14 +41,12 @@ const ReportsModule = ({ onCountChange }) => {
     allAdminOptions,
     regionOptions,
     sectorOptions,
-    departmentOptions,
     loadingList, loadingReport,
     fetchReports,
     loadAdminOptions,
     loadAllAdminOptions,
     loadRegionOptions,
     loadSectorOptions,
-    loadDepartmentOptions,
   } = useReportData();
 
   const {
