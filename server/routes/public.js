@@ -125,10 +125,11 @@ router.get('/reports/:idOrSlug', async (req, res) => {
         title:       m.title || '',
         description: m.description || m.notes || '',
       })),
-      images:    report.images    || [],
-      videoUrl:  report.videoUrl  || '',
-      countries: report.countries || [],
-      locations: report.locations || [],
+      images:       report.images       || [],
+      videoUrl:     report.videoUrl     || '',
+      countries:    report.countries    || [],
+      locations:    report.locations    || [],
+      testimonials: report.testimonials || [],
     });
   } catch (err) {
     if (err.name === 'CastError') return res.status(404).json({ message: 'Report not found' });

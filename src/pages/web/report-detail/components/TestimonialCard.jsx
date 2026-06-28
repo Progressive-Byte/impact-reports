@@ -13,6 +13,7 @@ const initials = (name) =>
     .join('');
 
 const TestimonialCard = ({ testimonial }) => {
+  console.log('testimonial', testimonial);
   const stars       = testimonial?.stars       ?? MAX_STARS;
   const body        = testimonial?.body        || '';
   const clientImage = testimonial?.clientImage || '';
