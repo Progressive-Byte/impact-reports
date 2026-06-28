@@ -123,10 +123,15 @@ router.patch('/settings', protect, async (req, res) => {
     if (failedLoginWarnings    !== undefined) update.failedLoginWarnings    = Boolean(failedLoginWarnings);
     if (weeklyDigest           !== undefined) update.weeklyDigest           = Boolean(weeklyDigest);
     if (require2fa             !== undefined) update.require2fa             = Boolean(require2fa);
-    if (socialLinks            !== undefined) {
-      const allowed = ['facebook', 'twitter', 'instagram', 'linkedin', 'youtube'];
-      allowed.forEach(k => {
+    const SOCIAL_KEYS = ['facebook', 'twitter', 'instagram', 'linkedin', 'youtube'];
+    if (socialLinks !== undefined) {
+      SOCIAL_KEYS.forEach(k => {
         if (socialLinks[k] !== undefined) update[`socialLinks.${k}`] = String(socialLinks[k]).trim();
+      });
+    }
+    if (socialLinksVisible !== undefined) {
+      SOCIAL_KEYS.forEach(k => {
+        if (socialLinksVisible[k] !== undefined) update[`socialLinksVisible.${k}`] = Boolean(socialLinksVisible[k]);
       });
     }
 
