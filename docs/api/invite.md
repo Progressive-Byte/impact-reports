@@ -45,19 +45,21 @@ Send an invite email to a new user. Only `superadmin` callers can invite another
 
 ### Request body
 
-| Field    | Type   | Required | Validation                  | Description                                          | Example                    |
-| -------- | ------ | :------: | --------------------------- | ---------------------------------------------------- | -------------------------- |
-| `email`  | string | Yes      | valid email, not existing   | Recipient email — must not already be an admin       | `"newuser@example.com"`    |
-| `role`   | string | Yes      | `superadmin` or `admin`     | Role the new admin will receive on registration      | `"admin"`                  |
-| `region` | string | No       | free text                   | Assigned region — defaults to `"global"`             | `"south_asia"`             |
+| Field        | Type   | Required | Validation                  | Description                                          | Example                    |
+| ------------ | ------ | :------: | --------------------------- | ---------------------------------------------------- | -------------------------- |
+| `email`      | string | Yes      | valid email, not existing   | Recipient email — must not already be an admin       | `"newuser@example.com"`    |
+| `role`       | string | Yes      | `superadmin` or `admin`     | Role the new admin will receive on registration      | `"admin"`                  |
+| `department` | string | Yes      | non-empty                   | Organisational department stored on the new account  | `"Programmes"`             |
+| `region`     | string | No       | free text                   | Assigned region — defaults to `"global"`             | `"south_asia"`             |
 
 Example:
 
 ```json
 {
-  "email":  "newuser@example.com",
-  "role":   "admin",
-  "region": "south_asia"
+  "email":      "newuser@example.com",
+  "role":       "admin",
+  "department": "Programmes",
+  "region":     "south_asia"
 }
 ```
 
@@ -72,6 +74,7 @@ Example:
 | Status | Condition                                              |
 | ------ | ------------------------------------------------------ |
 | `400`  | `email` missing                                        |
+| `400`  | `department` missing or empty                          |
 | `400`  | `role` is not `superadmin` or `admin`                  |
 | `400`  | An admin with that email already exists                |
 | `403`  | `admin`-role caller trying to invite a `superadmin`    |
@@ -82,7 +85,7 @@ Example:
 curl -X POST http://localhost:5173/api/invite \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"email":"newuser@example.com","role":"admin","region":"global"}'
+  -d '{"email":"newuser@example.com","role":"admin","department":"Programmes","region":"global"}'
 ```
 
 ---
