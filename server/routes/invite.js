@@ -17,9 +17,10 @@ const sha256 = (val) => crypto.createHash('sha256').update(String(val)).digest('
 // POST /api/invite  — send invite (requires auth)
 router.post('/', protect, async (req, res) => {
   try {
-    const { email, role, region } = req.body;
+    const { email, role, region, department } = req.body;
 
     if (!email) return res.status(400).json({ message: 'Email is required' });
+    if (!department?.trim()) return res.status(400).json({ message: 'Department is required' });
     if (!['superadmin', 'editor', 'viewer'].includes(role)) {
       return res.status(400).json({ message: 'Role must be superadmin, editor, or viewer' });
     }
@@ -39,9 +40,10 @@ router.post('/', protect, async (req, res) => {
     await Invite.create({
       email: email.toLowerCase(),
       role,
-      region: region || 'global',
-      tokenHash: sha256(rawToken),
-      expiresAt: new Date(Date.now() + 48 * 60 * 60 * 1000),
+      region:     region || 'global',
+      department: department.trim(),
+      tokenHash:  sha256(rawToken),
+      expiresAt:  new Date(Date.now() + 48 * 60 * 60 * 1000),
     });
 
     await sendInviteEmail({ to: email, token: rawToken });
