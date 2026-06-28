@@ -45,7 +45,6 @@ export const reportToForm = (report, defaultRegion = '') => ({
   fiscalYear:        report.fiscalYear  || 'FY25',
   region:            report.region      || defaultRegion,
   sector:            report.sector      || '',
-  department:        report.department  || '',
   livesImpacted:     report.livesImpacted ?? 0,
   projectBackground: report.projectBackground || '',
   strategicResponse: report.strategicResponse || '',
