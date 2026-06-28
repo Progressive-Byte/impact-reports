@@ -240,4 +240,5 @@ Returns `404` if the report does not exist or is not `published`.
 - `milestones[].description` is mapped from the `notes` field in the database.
 - `image` follows the same fallback logic as the card endpoint: `thumbnail` → first `images[].url` → `""`.
 - `year` is derived from `fiscalYear` using the same `FY25 → 2025` conversion as the list endpoint.
+- `shortSubtitle` is the plain-text subtitle set in the General wizard step. Displayed in the report hero section and on the report card. Falls back gracefully to the stripped `projectBackground` excerpt in the UI when empty.
 - `testimonials` is an array saved in the Narrative wizard step. `body` is rich HTML (Tiptap). An empty array `[]` means none were added. `clientImage` falls back to an initials avatar in the UI when blank.
