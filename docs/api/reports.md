@@ -224,18 +224,20 @@ Returns `400` if the report's current status is `"trash"` — restore it first.
 
 **`general`**
 
-| Field             | Type     | Required      | Description                                                                           |
-| ----------------- | -------- | :-----------: | ------------------------------------------------------------------------------------- |
-| `projectName`     | string   | Superadmin    | Project name                                                                          |
-| `assignedTo`      | string[] | Superadmin    | Array of Admin `_id` strings                                                          |
-| `actualProjectId` | string   | —             | Human-readable project ID (e.g. `"BurmaWater-1001"`)                                 |
-| `donationUrl`     | string   | —             | Per-report donation link shown on the public report page's "Donate Now" button        |
-| `cost`            | number   | —             | Project cost (stored for internal use; not yet surfaced on the public portal)         |
-| `projectLead`     | string   | Yes           | Lead person / partner name                                                            |
-| `fiscalYear`      | string   | Yes           | e.g. `"FY25"`                                                                         |
-| `region`          | string   | Yes           | One of: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global`             |
-| `sector`          | string   | Yes           | Free-text sector e.g. `"Healthcare"`                                                  |
-| `livesImpacted`   | number   | Yes (> 0)     | Number of lives impacted                                                              |
+| Field                | Type     | Required      | Description                                                                           |
+| -------------------- | -------- | :-----------: | ------------------------------------------------------------------------------------- |
+| `projectName`        | string   | Superadmin    | Project name                                                                          |
+| `assignedTo`         | string[] | Superadmin    | Array of Admin `_id` strings (editors assigned to this report)                        |
+| `approvalAssignedTo` | string[] | Superadmin    | Array of Admin `_id` strings who must approve before publishing                       |
+| `actualProjectId`    | string   | —             | Human-readable project ID (e.g. `"BurmaWater-1001"`)                                 |
+| `shortSubtitle`      | string   | —             | Short plain-text description shown on the report card and report detail hero section  |
+| `donationUrl`        | string   | —             | Per-report donation link shown on the public report page's "Donate Now" button        |
+| `cost`               | number   | —             | Project cost (stored for internal use; not yet surfaced on the public portal)         |
+| `projectLead`        | string   | Yes           | Lead person / partner name                                                            |
+| `fiscalYear`         | string   | Yes           | e.g. `"FY25"`                                                                         |
+| `region`             | string   | Yes           | One of: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global`             |
+| `sector`             | string   | Yes           | Free-text sector e.g. `"Healthcare"`                                                  |
+| `livesImpacted`      | number   | Yes (> 0)     | Number of lives impacted                                                              |
 
 **`narrative`**
 
