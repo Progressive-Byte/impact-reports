@@ -138,6 +138,86 @@ curl -X PUT http://localhost:5173/api/config/sectors \
 
 ---
 
+## `GET /api/config/departments`
+
+Public — no authentication required. Returns the active department list stored in `PlatformSettings.departments`. Used to populate the Department dropdown in the Invite and Edit User modals.
+
+### Response `200`
+
+```json
+{
+  "departments": ["Finance", "Programmes", "Communications", "Operations"]
+}
+```
+
+---
+
+## `PUT /api/config/departments`
+
+Requires **superadmin** role. Replaces the entire department list stored in `PlatformSettings.departments`.
+
+### Request body
+
+| Field         | Type     | Required | Description                                                                        |
+| ------------- | -------- | :------: | ---------------------------------------------------------------------------------- |
+| `departments` | string[] | Yes      | Non-empty array of department name strings. Blank/empty strings are stripped before saving. |
+
+```json
+{
+  "departments": ["Finance", "Programmes", "Communications", "Operations"]
+}
+```
+
+### Response `200`
+
+```json
+{
+  "departments": ["Finance", "Programmes", "Communications", "Operations"]
+}
+```
+
+### Errors
+
+| Status | Condition                                                  |
+| ------ | ---------------------------------------------------------- |
+| `400`  | `departments` is not an array, is empty, or all entries are blank |
+| `401`  | Missing or invalid token                                   |
+| `403`  | Caller is not `superadmin`                                 |
+| `500`  | Database error                                             |
+
+### curl
+
+```bash
+curl -X PUT http://localhost:5173/api/config/departments \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"departments":["Finance","Programmes","Communications"]}'
+```
+
+---
+
+## `GET /api/config/donate`
+
+Public — no authentication required. Returns the global donation URL configured by a superadmin in the platform Settings. The public header's "Donate" button uses this URL; the button is hidden when the URL is empty.
+
+### Response `200`
+
+```json
+{
+  "url": "https://donate.example.com"
+}
+```
+
+`url` is `""` if no donation URL has been configured.
+
+### curl
+
+```bash
+curl http://localhost:5173/api/config/donate
+```
+
+---
+
 ## `GET /api/config/social-links`
 
 Public — no authentication required. Returns the social media URLs configured by admins in the Settings panel. Used by the public footer to render icon links.
