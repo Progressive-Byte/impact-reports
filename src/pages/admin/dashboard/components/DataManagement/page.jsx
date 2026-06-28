@@ -160,7 +160,7 @@ const DataManagement = () => {
         }
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
         <ListCard
           icon="FiGlobe"
           title="Regions"
@@ -185,6 +185,19 @@ const DataManagement = () => {
           onRemove={(idx) => setSectors(p => p.filter((_, i) => i !== idx))}
           addLabel="Add Sector"
           placeholder="Sector name"
+        />
+
+        <ListCard
+          icon="FiBriefcase"
+          title="Departments"
+          subtitle="Used in report General tab to categorize by department"
+          items={departments}
+          loading={loading}
+          onAdd={() => setDepartments(p => [...p, ''])}
+          onUpdate={(idx, val) => setDepartments(p => p.map((d, i) => i === idx ? val : d))}
+          onRemove={(idx) => setDepartments(p => p.filter((_, i) => i !== idx))}
+          addLabel="Add Department"
+          placeholder="Department name"
         />
       </div>
     </div>
