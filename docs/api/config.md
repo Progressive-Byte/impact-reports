@@ -308,6 +308,7 @@ All fields are optional — only provided fields are updated.
 | `failedLoginWarnings`    | boolean | Toggle failed-login notification creation                                |
 | `weeklyDigest`           | boolean | Toggle weekly digest email to superadmins                                |
 | `require2fa`             | boolean | When `true`, all logins require 2FA (email OTP or TOTP)                  |
+| `donationUrl`            | string  | URL for the public "Donate" button. Send `""` to hide the button.        |
 | `socialLinks`            | object  | Social media URLs — only keys provided are updated (partial update supported) |
 | `socialLinksVisible`     | object  | Per-platform visibility flags — only keys provided are updated               |
 
