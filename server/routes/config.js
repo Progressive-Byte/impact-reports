@@ -5,6 +5,16 @@ import { sendWeeklyDigest } from '../utils/sendWeeklyDigest.js';
 
 const router = express.Router();
 
+// GET /api/config/donate — public; returns the global donation URL
+router.get('/donate', async (_req, res) => {
+  try {
+    const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+    res.json({ url: settings?.donationUrl || '' });
+  } catch {
+    res.json({ url: '' });
+  }
+});
+
 // GET /api/config/regions — public; returns DB regions
 router.get('/regions', async (_req, res) => {
   try {
