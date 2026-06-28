@@ -283,8 +283,8 @@ const ReportsModule = ({ onCountChange }) => {
           const isPendingApproval = form.status === 'pending_approval';
           const isApprover = Boolean(
             isPendingApproval &&
-            form.approvalAssignedTo &&
-            String(form.approvalAssignedTo) === String(admin?._id)
+            Array.isArray(form.approvalAssignedTo) &&
+            form.approvalAssignedTo.some(a => String(a._id ?? a) === String(admin?._id))
           );
           // Editors who submitted but aren't the approver see read-only too
           const effectiveIsViewer = isViewer || (isPendingApproval && !isSuperAdmin && !isApprover);
