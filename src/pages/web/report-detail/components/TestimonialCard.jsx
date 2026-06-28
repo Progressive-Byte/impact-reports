@@ -11,15 +11,9 @@ const TestimonialCard = () => (
     className="relative bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden"
   >
     {/* Left glow blob */}
-    <div
-      className="pointer-events-none absolute -left-8 top-1/2 -translate-y-1/2 w-36 h-48 rounded-full opacity-25"
-      style={{ background: 'radial-gradient(ellipse at center, #E52321 0%, transparent 70%)', filter: 'blur(28px)' }}
-    />
+    <div className="pointer-events-none absolute -left-8 top-1/2 -translate-y-1/2 w-36 h-48 rounded-full opacity-25 bg-[radial-gradient(ellipse_at_center,#E52321_0%,transparent_70%)] blur-2xl" />
     {/* Right glow blob */}
-    <div
-      className="pointer-events-none absolute -right-8 top-1/2 -translate-y-1/2 w-36 h-48 rounded-full opacity-20"
-      style={{ background: 'radial-gradient(ellipse at center, #E52321 0%, transparent 70%)', filter: 'blur(28px)' }}
-    />
+    <div className="pointer-events-none absolute -right-8 top-1/2 -translate-y-1/2 w-36 h-48 rounded-full opacity-20 bg-[radial-gradient(ellipse_at_center,#E52321_0%,transparent_70%)] blur-2xl" />
 
     {/* Top accent bar */}
     <div className="h-1 w-full bg-gradient-to-r from-[#E52321] via-[#E52321]/60 to-transparent" />
