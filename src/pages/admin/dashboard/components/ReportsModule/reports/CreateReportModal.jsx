@@ -149,25 +149,15 @@ const CreateReportModal = ({ open, onClose, onCreated, adminOptions, allAdminOpt
             placeholder="Select team members..."
           />
 
-          {/* Approval Reviewer single-select */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1.5">
-              Approval Reviewer
-              <span className="ml-1.5 text-[10px] font-bold text-gray-400 uppercase tracking-wide">optional</span>
-            </label>
-            <CustomSelect
-              value={approvalAssignedTo}
-              onChange={setApprovalAssignedTo}
-              options={[
-                { value: '', label: 'No approval reviewer' },
-                ...allAdminOptions,
-              ]}
-              placeholder="Select reviewer..."
-            />
-            <p className="mt-1 text-[11px] text-gray-400">
-              When all steps are completed, the report will await this reviewer&apos;s approval before publishing.
-            </p>
-          </div>
+          {/* Approval Reviewer multi-select */}
+          <MultiSelect
+            label="Approval Reviewer"
+            required
+            value={approvalAssignedTo}
+            onChange={setApprovalAssignedTo}
+            options={allAdminOptions}
+            placeholder="Select reviewers..."
+          />
 
           {/* Actions */}
           <div className="flex items-center justify-end gap-3 pt-2">
