@@ -10,6 +10,9 @@ Base path: `/api/config`
 | PUT    | `/regions`                | Bearer (superadmin) | Replace the full region list                             |
 | GET    | `/sectors`                | None                | Returns the active sector list                           |
 | PUT    | `/sectors`                | Bearer (superadmin) | Replace the full sector list                             |
+| GET    | `/departments`            | None                | Returns the active department list                       |
+| PUT    | `/departments`            | Bearer (superadmin) | Replace the full department list                         |
+| GET    | `/donate`                 | None                | Returns the global donation URL                          |
 | GET    | `/social-links`           | None                | Returns footer social media links                        |
 | GET    | `/settings`               | Bearer (any)        | Returns current platform settings                        |
 | PATCH  | `/settings`               | Bearer (superadmin) | Update platform settings                                 |
