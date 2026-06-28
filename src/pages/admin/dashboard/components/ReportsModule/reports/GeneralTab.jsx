@@ -2,7 +2,7 @@ import { Input } from './FormField';
 import CustomSelect from './CustomSelect';
 import MultiSelect from './MultiSelect';
 
-const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], regionOptions = [], sectorOptions = [], departmentOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
+const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], regionOptions = [], sectorOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
 
     {/* Row 1: Actual Project ID | Donation URL */}
@@ -82,8 +82,8 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
       />
     </div>
 
-    {/* Row 5: Region | Sector | Department */}
-    <div className="grid grid-cols-3 gap-5">
+    {/* Row 5: Region | Sector */}
+    <div className="grid grid-cols-2 gap-5">
       <CustomSelect
         label="Region" required
         value={form.region}
@@ -100,17 +100,9 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         placeholder={sectorOptions.length ? 'Select sector...' : 'Loading…'}
         error={fieldErrors.sector}
       />
-      <CustomSelect
-        label="Department"
-        value={form.department}
-        onChange={val => update('department', val)}
-        options={departmentOptions}
-        placeholder={departmentOptions.length ? 'Select department...' : 'Loading…'}
-        error={fieldErrors.department}
-      />
     </div>
 
-    {/* Row 6: Cost (half-width) */}
+    {/* Row 6: Cost */}
     <div className="grid grid-cols-2 gap-5">
       <Input
         label="Cost"
