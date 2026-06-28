@@ -18,7 +18,7 @@ const CreateReportModal = ({ open, onClose, onCreated, adminOptions, allAdminOpt
   useEffect(() => {
     if (open) {
       setProjectName(''); setActualProjectId(''); setAssignedTo([]);
-      setApprovalAssignedTo(''); setSuggestions([]); setShowSuggestions(false);
+      setApprovalAssignedTo([]); setSuggestions([]); setShowSuggestions(false);
     }
   }, [open]);
 
