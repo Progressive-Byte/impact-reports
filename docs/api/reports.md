@@ -19,8 +19,8 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 | Role          | List / Read               | Save steps | Create | Trash / Restore / Permanent delete |
 | ------------- | ------------------------- | ---------- | ------ | ---------------------------------- |
 | `superadmin`  | All reports               | ✓          | ✓      | ✓                                  |
-| `editor`      | Only assigned (`assignedTo` contains their `_id`) | ✓ | ✗ | ✗ |
-| `viewer`      | Only assigned (`assignedTo` contains their `_id`) | ✗ (403) | ✗ | ✗ |
+| `editor`      | Assigned (`assignedTo`) or approval reviewer (`approvalAssignedTo`) | ✓ | ✗ | ✗ |
+| `viewer`      | Assigned (`assignedTo`) or approval reviewer (`approvalAssignedTo`) | ✗ (403) | ✗ | ✗ |
 
 ---
 
