@@ -23,10 +23,7 @@ const TestimonialCard = () => (
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center flex-shrink-0">
-            <span
-              className="text-[#E52321] font-black select-none"
-              style={{ fontFamily: 'Georgia, serif', fontSize: '1.6rem', lineHeight: 1 }}
-            >
+            <span className="text-[#E52321] font-black select-none font-serif text-[1.6rem] leading-none">
               &ldquo;
             </span>
           </div>
