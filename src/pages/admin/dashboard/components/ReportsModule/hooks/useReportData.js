@@ -26,10 +26,11 @@ export function useReportData() {
   const defaultRegionRef = useRef('');
 
   // Track in-flight requests to avoid duplicate calls
-  const adminOptionsLoadingRef    = useRef(false);
-  const allAdminOptionsLoadingRef = useRef(false);
-  const regionOptionsLoadingRef = useRef(false);
-  const sectorOptionsLoadingRef = useRef(false);
+  const adminOptionsLoadingRef      = useRef(false);
+  const allAdminOptionsLoadingRef   = useRef(false);
+  const regionOptionsLoadingRef     = useRef(false);
+  const sectorOptionsLoadingRef     = useRef(false);
+  const departmentOptionsLoadingRef = useRef(false);
 
   // Fetch platform default region once on mount
   useEffect(() => {
