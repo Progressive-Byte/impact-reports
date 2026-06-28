@@ -310,7 +310,7 @@ Each `milestones` item:
 { "report": { /* updated Report object */ } }
 ```
 
-When the `location` step is saved and all five steps are complete, `status` becomes `"published"`. Otherwise `"draft"`.
+When the `location` step is saved and all five steps are complete, `status` becomes `"pending_approval"` if `approvalAssignedTo` is non-empty, otherwise `"published"`. Otherwise `"draft"`.
 
 ### Role protection
 
