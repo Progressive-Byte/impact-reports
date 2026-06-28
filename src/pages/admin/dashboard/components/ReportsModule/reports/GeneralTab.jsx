@@ -1,4 +1,4 @@
-import { Input } from './FormField';
+import { Input, Textarea } from './FormField';
 import CustomSelect from './CustomSelect';
 import MultiSelect from './MultiSelect';
 
