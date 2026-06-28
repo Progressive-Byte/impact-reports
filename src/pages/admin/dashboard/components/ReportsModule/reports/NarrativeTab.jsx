@@ -1,4 +1,5 @@
 import RichTextEditor from '@/common/RichTextEditor';
+import TestimonialsSection from './TestimonialsSection';
 
 const NarrativeTab = ({ form, update, fieldErrors = {} }) => (
   <div className="space-y-5">
@@ -18,6 +19,10 @@ const NarrativeTab = ({ form, update, fieldErrors = {} }) => (
       error={fieldErrors.strategicResponse}
       minHeight={150}
     />
+
+    <div className="pt-2 border-t border-gray-100">
+      <TestimonialsSection form={form} update={update} />
+    </div>
   </div>
 );
 
