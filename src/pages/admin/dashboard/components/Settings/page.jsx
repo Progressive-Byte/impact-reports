@@ -359,6 +359,25 @@ const Settings = () => {
             </SettingCard>
           </div>
 
+          {/* Donation URL — full width */}
+          <div className="sm:col-span-2">
+            <SettingCard icon="FiHeart" title="Donation Link">
+              <div className="pt-2">
+                <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">
+                  Global Donation URL
+                </label>
+                <input
+                  type="url"
+                  value={donationUrl}
+                  onChange={e => setDonationUrl(e.target.value)}
+                  placeholder="https://donate.example.org"
+                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] transition-colors placeholder-gray-300"
+                />
+                <p className="mt-1.5 text-xs text-gray-400">Shown as the &quot;Donate&quot; button link in the public site header. Leave blank to disable the button.</p>
+              </div>
+            </SettingCard>
+          </div>
+
           {/* Social Media — full width below the two columns */}
           <div className="sm:col-span-2">
             <SettingCard icon="FiShare2" title="Social Media Links">
