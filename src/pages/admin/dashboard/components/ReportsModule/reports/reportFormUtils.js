@@ -158,6 +158,9 @@ export const buildStepPayload = {
   narrative: (f) => ({
     projectBackground: f.projectBackground,
     strategicResponse: f.strategicResponse,
+    testimonials: f.testimonials.map(({ stars, body, clientImage, name, designation, address }) => ({
+      stars, body, clientImage, name, designation, address,
+    })),
   }),
   metrics:   (f) => ({
     children:     Number(f.children) || 0,
