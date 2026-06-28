@@ -115,6 +115,7 @@ const ReportsModule = ({ onCountChange }) => {
     loadAllAdminOptions();
     loadRegionOptions();
     loadSectorOptions();
+    loadDepartmentOptions();
     setForm(reportToForm(report));
     setSearchParams({ reportId: report._id, step: 'general' }, { replace: true });
   };
