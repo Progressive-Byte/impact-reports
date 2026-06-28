@@ -52,6 +52,8 @@ Mounted at `/api/admin`. All routes require `Authorization: Bearer <token>`.
 
 **Region values:** any string from `GET /api/config/regions`. Stored as-is; no server-side enum validation.
 
+**`department`** — the organisational department the admin belongs to (e.g. `"Programmes"`, `"Finance"`). Set via the invite flow and editable in the Edit User modal. Values come from `GET /api/config/departments`. Required when inviting a user.
+
 **`totpEnabled`** — `true` when the admin has completed authenticator app setup. Clients use this to show/hide the TOTP option in the 2FA login flow and the "Remove" button in Settings.
 
 > The following sensitive fields are **never** returned in any response: `password`, `totpSecret`, `totpLastUsedCode`, `resetOTPCode`, `resetOTPExpires`, `loginOTPCode`, `loginOTPExpires`.
