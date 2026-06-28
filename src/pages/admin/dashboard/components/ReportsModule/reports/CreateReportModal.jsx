@@ -46,9 +46,10 @@ const CreateReportModal = ({ open, onClose, onCreated, adminOptions, allAdminOpt
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!projectName.trim())        return toast.error('Project name is required');
-    if (!actualProjectId.trim())   return toast.error('Actual Project ID is required');
-    if (assignedTo.length === 0)   return toast.error('Assign at least one user');
+    if (!projectName.trim())            return toast.error('Project name is required');
+    if (!actualProjectId.trim())        return toast.error('Actual Project ID is required');
+    if (assignedTo.length === 0)        return toast.error('Assign at least one user');
+    if (approvalAssignedTo.length === 0) return toast.error('Select at least one approval reviewer');
 
     setSubmitting(true);
     try {
@@ -58,7 +59,7 @@ const CreateReportModal = ({ open, onClose, onCreated, adminOptions, allAdminOpt
           projectName:        projectName.trim(),
           actualProjectId:    actualProjectId.trim(),
           assignedTo,
-          ...(approvalAssignedTo ? { approvalAssignedTo } : {}),
+          approvalAssignedTo,
         }),
       });
       toast.success('Report created');
