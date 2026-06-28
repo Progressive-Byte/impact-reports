@@ -171,7 +171,6 @@ const ReportDetail = () => {
             {/* <ProjectMetaCard report={report} /> */}
             {hasDemographics && <DemographicsCard demographics={report.demographics} />}
             {report.testimonials?.map((t, i) => (
-              console.log(t),
               <TestimonialCard key={i} testimonial={t} />
             ))}
           </div>
