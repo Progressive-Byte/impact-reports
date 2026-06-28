@@ -155,6 +155,7 @@ export const buildStepPayload = {
     fiscalYear:         f.fiscalYear,
     region:             f.region,
     sector:             f.sector,
+    department:         f.department || '',
     livesImpacted:      Number(f.livesImpacted) || 0,
   }),
   narrative: (f) => ({
