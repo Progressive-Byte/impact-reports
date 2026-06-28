@@ -51,12 +51,6 @@ const TestimonialCard = () => (
           <p className="font-black text-[#0B0D0F] text-sm leading-none">Tariq M.</p>
           <p className="mt-1 text-[10px] text-gray-400 uppercase tracking-[0.2em] font-bold">Father · Gaza, Palestine</p>
         </div>
-        {/* Verified badge */}
-        <div className="ml-auto flex-shrink-0">
-          <span className="inline-flex items-center gap-1 bg-green-50 border border-green-100 text-green-600 rounded-full px-2.5 py-1 text-[9px] font-black uppercase tracking-widest">
-            <SafeIcon icon="FiCheck" className="text-[9px]" /> Verified
-          </span>
-        </div>
       </div>
     </div>
   </motion.div>
