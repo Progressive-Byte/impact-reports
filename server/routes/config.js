@@ -115,7 +115,7 @@ router.patch('/settings', protect, async (req, res) => {
     return res.status(403).json({ message: 'Superadmin only' });
   }
   try {
-    const { defaultRegion, sessionTimeoutMinutes, enforceStrongPasswords, failedLoginWarnings, weeklyDigest, require2fa, socialLinks } = req.body;
+    const { defaultRegion, sessionTimeoutMinutes, enforceStrongPasswords, failedLoginWarnings, weeklyDigest, require2fa, socialLinks, socialLinksVisible } = req.body;
     const update = {};
     if (defaultRegion          !== undefined) update.defaultRegion          = defaultRegion;
     if (sessionTimeoutMinutes  !== undefined) update.sessionTimeoutMinutes  = Number(sessionTimeoutMinutes);
