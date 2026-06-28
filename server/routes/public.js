@@ -74,7 +74,7 @@ router.get('/reports', async (req, res) => {
         .sort(sortOrder)
         .skip(skip)
         .limit(limit)
-        .select('projectName slug projectId actualProjectId images thumbnail region sector fiscalYear projectBackground livesImpacted countries locations'),
+        .select('projectName slug projectId actualProjectId shortSubtitle images thumbnail region sector fiscalYear projectBackground livesImpacted countries locations'),
       Report.countDocuments(filter),
     ]);
 
