@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
 import SafeIcon from '../../../../../../common/SafeIcon';
 import MultiSelect from './MultiSelect';
-import CustomSelect from './CustomSelect';
 import { adminApiRequest } from '../../../../../../services/adminApi';
 
 const CreateReportModal = ({ open, onClose, onCreated, adminOptions, allAdminOptions }) => {
