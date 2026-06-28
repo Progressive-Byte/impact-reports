@@ -112,6 +112,7 @@ router.get('/reports/:idOrSlug', async (req, res) => {
       year:              deriveYear(report.fiscalYear),
       projectLead:       report.projectLead       || '',
       donationUrl:       report.donationUrl       || '',
+      shortSubtitle:     report.shortSubtitle     || '',
       projectBackground: report.projectBackground || '',
       strategicResponse: report.strategicResponse || '',
       livesImpacted:     report.livesImpacted     || 0,
