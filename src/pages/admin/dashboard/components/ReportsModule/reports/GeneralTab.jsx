@@ -2,7 +2,7 @@ import { Input } from './FormField';
 import CustomSelect from './CustomSelect';
 import MultiSelect from './MultiSelect';
 
-const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], regionOptions = [], sectorOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
+const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], regionOptions = [], sectorOptions = [], departmentOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
     {/* Actual Project ID + Donation URL */}
     <div className="grid grid-cols-2 gap-5">
