@@ -220,6 +220,16 @@ Returns `404` if the report does not exist or is not `published`.
   "countries": ["Gaza", "Lebanon", "Palestine", "Syria"],
   "locations": [
     { "country": "Palestine", "address": "Gaza (North)", "lat": "31.5326", "lng": "34.4667" }
+  ],
+  "testimonials": [
+    {
+      "stars":       5,
+      "body":        "<p>The mobile clinic arrived when we had no other options...</p>",
+      "clientImage": "https://res.cloudinary.com/...",
+      "name":        "Tariq M.",
+      "designation": "Father",
+      "address":     "Gaza, Palestine"
+    }
   ]
 }
 ```
@@ -229,3 +239,4 @@ Returns `404` if the report does not exist or is not `published`.
 - `milestones[].description` is mapped from the `notes` field in the database.
 - `image` follows the same fallback logic as the card endpoint: `thumbnail` → first `images[].url` → `""`.
 - `year` is derived from `fiscalYear` using the same `FY25 → 2025` conversion as the list endpoint.
+- `testimonials` is an array saved in the Narrative wizard step. `body` is rich HTML (Tiptap). An empty array `[]` means none were added. `clientImage` falls back to an initials avatar in the UI when blank.
