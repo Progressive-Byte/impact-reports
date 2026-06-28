@@ -410,10 +410,10 @@ router.patch('/:id/step/:stepName', async (req, res) => {
       report.stepsCompleted.push(stepName);
     }
 
-    // Status: pending_approval if all steps done and an approver is assigned; else published
+    // Status: pending_approval if all steps done and approvers are assigned; else published
     const allDone = ALL_STEPS.every(s => report.stepsCompleted.includes(s));
     if (allDone) {
-      report.status = report.approvalAssignedTo ? 'pending_approval' : 'published';
+      report.status = report.approvalAssignedTo?.length > 0 ? 'pending_approval' : 'published';
     } else {
       report.status = 'draft';
     }
