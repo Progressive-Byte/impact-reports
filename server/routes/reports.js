@@ -440,7 +440,7 @@ router.patch('/:id/restore', async (req, res) => {
     }
     const allDone = ALL_STEPS.every(s => report.stepsCompleted.includes(s));
     if (allDone) {
-      report.status = report.approvalAssignedTo ? 'pending_approval' : 'published';
+      report.status = report.approvalAssignedTo?.length > 0 ? 'pending_approval' : 'published';
     } else {
       report.status = 'draft';
     }
