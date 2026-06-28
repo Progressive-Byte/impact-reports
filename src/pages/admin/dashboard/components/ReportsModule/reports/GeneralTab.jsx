@@ -40,6 +40,15 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
       />
     </div>
 
+    {/* Short Subtitle — full width */}
+    <Textarea
+      label="Short Subtitle"
+      placeholder="Brief description shown on the report card and hero section..."
+      rows={2}
+      value={form.shortSubtitle}
+      onChange={e => update('shortSubtitle', e.target.value)}
+    />
+
     {/* Row 3: Assigned To | Approval Reviewer (side by side for superadmin) */}
     <div className={`grid gap-5 ${isSuperAdmin ? 'grid-cols-2' : 'grid-cols-1'}`}>
       <MultiSelect
