@@ -88,8 +88,9 @@ export function validateStep(stepKey, form, isSuperAdmin = true) {
   switch (stepKey) {
     case 'general':
       if (isSuperAdmin) {
-        if (!form.projectName.trim())   errors.projectName = 'Project name is required';
-        if (!form.assignedTo.length)    errors.assignedTo  = 'At least one assignee is required';
+        if (!form.projectName.trim())        errors.projectName        = 'Project name is required';
+        if (!form.assignedTo.length)         errors.assignedTo         = 'At least one assignee is required';
+        if (!form.approvalAssignedTo.length) errors.approvalAssignedTo = 'At least one approval reviewer is required';
       }
       if (!form.projectLead.trim())     errors.projectLead     = 'Project lead is required';
       if (!form.fiscalYear)             errors.fiscalYear      = 'Fiscal year is required';
