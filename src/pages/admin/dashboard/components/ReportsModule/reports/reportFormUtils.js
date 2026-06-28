@@ -149,6 +149,7 @@ export const buildStepPayload = {
     assignedTo:         f.assignedTo,
     approvalAssignedTo: f.approvalAssignedTo,
     actualProjectId:    f.actualProjectId || '',
+    shortSubtitle:      f.shortSubtitle   || '',
     donationUrl:        f.donationUrl     || '',
     cost:               Number(f.cost) || 0,
     projectLead:        f.projectLead,
