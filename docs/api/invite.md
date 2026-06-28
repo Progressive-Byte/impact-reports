@@ -2,11 +2,11 @@
 
 Mounted at `/api/invite`.
 
-| Method | Path                      | Auth   | Body                               | Notes                                  |
-| ------ | ------------------------- | ------ | ---------------------------------- | -------------------------------------- |
-| POST   | `/api/invite`             | Bearer | `email`, `role`, `region?`         | Send invite email to a new user        |
-| GET    | `/api/invite/validate`    | Public | —                                  | Validate an invite token (query param) |
-| POST   | `/api/invite/register`    | Public | `token`, `username`, `password`    | Complete registration via invite token |
+| Method | Path                      | Auth   | Body                                        | Notes                                  |
+| ------ | ------------------------- | ------ | ------------------------------------------- | -------------------------------------- |
+| POST   | `/api/invite`             | Bearer | `email`, `role`, `department`, `region?`    | Send invite email to a new user        |
+| GET    | `/api/invite/validate`    | Public | —                                           | Validate an invite token (query param) |
+| POST   | `/api/invite/register`    | Public | `token`, `username`, `password`             | Complete registration via invite token |
 
 ---
 
