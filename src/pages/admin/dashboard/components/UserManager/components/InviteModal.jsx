@@ -12,22 +12,30 @@ const ROLE_OPTIONS = [
   { value: 'superadmin', label: 'Superadmin' },
 ];
 
-const INITIAL = { email: '', role: 'editor', region: '' };
+const INITIAL = { email: '', role: 'editor', region: '', department: '' };
 
 const InviteModal = ({ open, onClose, onInviteSent }) => {
-  const [form,          setForm]          = useState(INITIAL);
-  const [loading,       setLoading]       = useState(false);
-  const [regionOptions, setRegionOptions] = useState([]);
+  const [form,              setForm]              = useState(INITIAL);
+  const [loading,           setLoading]           = useState(false);
+  const [regionOptions,     setRegionOptions]     = useState([]);
+  const [departmentOptions, setDepartmentOptions] = useState([]);
 
   useEffect(() => {
     if (!open) return;
-    publicApiRequest('/api/config/regions')
-      .then(data => {
-        const opts = (data.regions || []).map(r => ({ value: r, label: r }));
-        setRegionOptions(opts);
-        setForm(p => ({ ...p, region: p.region || opts[0]?.value || '' }));
-      })
-      .catch(() => {});
+    Promise.all([
+      publicApiRequest('/api/config/regions'),
+      publicApiRequest('/api/config/departments'),
+    ]).then(([regData, depData]) => {
+      const regOpts = (regData.regions     || []).map(r => ({ value: r, label: r }));
+      const depOpts = (depData.departments || []).map(d => ({ value: d, label: d }));
+      setRegionOptions(regOpts);
+      setDepartmentOptions(depOpts);
+      setForm(p => ({
+        ...p,
+        region:     p.region     || regOpts[0]?.value || '',
+        department: p.department || '',
+      }));
+    }).catch(() => {});
   }, [open]);
 
   const handleClose = () => {
@@ -37,7 +45,8 @@ const InviteModal = ({ open, onClose, onInviteSent }) => {
   };
 
   const handleSend = async () => {
-    if (!form.email.trim()) { toast.error('Email is required'); return; }
+    if (!form.email.trim())     { toast.error('Email is required');      return; }
+    if (!form.department.trim()) { toast.error('Department is required'); return; }
 
     setLoading(true);
     try {
@@ -102,7 +111,7 @@ const InviteModal = ({ open, onClose, onInviteSent }) => {
             </div>
 
             {/* Role + Region */}
-            <div className="grid grid-cols-2 gap-4 mb-7">
+            <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1.5">Role</label>
                 <CustomSelect
@@ -121,6 +130,20 @@ const InviteModal = ({ open, onClose, onInviteSent }) => {
                   disabled={loading}
                 />
               </div>
+            </div>
+
+            {/* Department */}
+            <div className="mb-7">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                Department <span className="text-[#E52321]">*</span>
+              </label>
+              <CustomSelect
+                value={form.department}
+                onChange={val => setForm(p => ({ ...p, department: val }))}
+                options={departmentOptions}
+                placeholder={departmentOptions.length ? 'Select department...' : 'Loading…'}
+                disabled={loading}
+              />
             </div>
 
             {/* Footer */}
