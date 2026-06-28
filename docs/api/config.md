@@ -183,6 +183,13 @@ Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the 
     "instagram": "",
     "linkedin":  "",
     "youtube":   ""
+  },
+  "socialLinksVisible": {
+    "facebook":  true,
+    "twitter":   true,
+    "instagram": false,
+    "linkedin":  true,
+    "youtube":   true
   }
 }
 ```
@@ -195,7 +202,8 @@ Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the 
 | `failedLoginWarnings`    | boolean | `true`  | When `true`, 3 consecutive wrong-password attempts create a notification    |
 | `weeklyDigest`           | boolean | `false` | When `true`, a summary email is sent to all superadmins every Monday 08:00  |
 | `require2fa`             | boolean | `false` | When `true`, all logins require 2FA. Admins with TOTP set up choose between their authenticator app or email OTP; others receive email OTP automatically. |
-| `socialLinks`            | object  | `{}`    | Social media URLs used by the public footer — see `GET /api/config/social-links`. |
+| `socialLinks`            | object  | `{}`    | Social media URLs — see `GET /api/config/social-links`.                     |
+| `socialLinksVisible`     | object  | all `true` | Per-platform visibility flags. When `false`, the platform is omitted from the public footer even if a URL is set. |
 
 ---
 
