@@ -137,21 +137,23 @@ curl -X PUT http://localhost:5173/api/config/sectors \
 
 ## `GET /api/config/social-links`
 
-Public — no authentication required. Returns the social media URLs configured by admins in the Settings panel. Used by the public footer to render icon links. Only non-empty fields are meaningful — the footer hides icons whose URL is blank.
+Public — no authentication required. Returns the social media URLs configured by admins in the Settings panel. Used by the public footer to render icon links.
+
+Platforms hidden via the **Visible / Hidden** toggle in Settings are returned as `""`, which the footer treats as absent. A platform is only shown in the footer when its URL is non-empty **and** its visibility is enabled.
 
 ### Response `200`
 
 ```json
 {
   "facebook":  "https://facebook.com/humanconcernusa",
-  "twitter":   "https://x.com/humanconcernusa",
+  "twitter":   "",
   "instagram": "https://instagram.com/humanconcernusa",
   "linkedin":  "https://linkedin.com/company/humanconcernusa",
   "youtube":   "https://youtube.com/@humanconcernusa"
 }
 ```
 
-All fields are always present; unset fields return `""`.
+All five keys are always present. A key returns `""` when the URL is blank **or** when the platform is toggled hidden by a superadmin.
 
 ### curl
 
