@@ -24,13 +24,14 @@ Mounted at `/api/invite`.
 
 ```json
 {
-  "_id":       "6650a1b2c3d4e5f607a8b9c1",
-  "email":     "newuser@example.com",
-  "role":      "admin",
-  "region":    "south_asia",
-  "used":      false,
-  "expiresAt": "2026-06-10T10:00:00.000Z",
-  "createdAt": "2026-06-08T10:00:00.000Z"
+  "_id":        "6650a1b2c3d4e5f607a8b9c1",
+  "email":      "newuser@example.com",
+  "role":       "admin",
+  "region":     "south_asia",
+  "department": "Programmes",
+  "used":       false,
+  "expiresAt":  "2026-06-10T10:00:00.000Z",
+  "createdAt":  "2026-06-08T10:00:00.000Z"
 }
 ```
 
