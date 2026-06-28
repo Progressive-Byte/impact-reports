@@ -35,7 +35,7 @@ const canEdit = (admin, report) =>
 // Helper — view access: superadmin, assigned editor, or approval reviewer
 const canView = (admin, report) =>
   canEdit(admin, report) ||
-  (report.approvalAssignedTo && String(report.approvalAssignedTo._id ?? report.approvalAssignedTo) === String(admin._id));
+  (report.approvalAssignedTo?.some(a => String(a._id ?? a) === String(admin._id)));
 
 // Helper — returns an error message if any assignee already appears on another
 // report with the same project name (same project, same user = duplicate)
