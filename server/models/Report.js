@@ -25,6 +25,18 @@ const milestoneSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const testimonialSchema = new mongoose.Schema(
+  {
+    stars:       { type: Number, default: 5, min: 1, max: 5 },
+    body:        { type: String, default: '' },
+    clientImage: { type: String, default: '' },
+    name:        { type: String, default: '' },
+    designation: { type: String, default: '' },
+    address:     { type: String, default: '' },
+  },
+  { _id: false }
+);
+
 const reportSchema = new mongoose.Schema(
   {
     projectName:       { type: String, required: true, trim: true },
