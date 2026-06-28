@@ -12,7 +12,8 @@ const ReportListRow = ({ report }) => (
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
         />
       </div>
-      <div className="flex-grow min-w-0">
+
+      <div className="flex-grow min-w-0 w-full">
         <div className="flex flex-wrap items-center gap-2 mb-2">
           <span className="px-3 py-1 rounded-full bg-gray-50 border border-gray-100 text-[10px] font-black uppercase tracking-widest text-gray-500">
             {report.year}
@@ -28,9 +29,27 @@ const ReportListRow = ({ report }) => (
           {report.title}
         </h3>
         <p className="mt-1 text-xs sm:text-sm text-gray-500 line-clamp-1">{report.summary}</p>
+
+        {/* Mobile bottom row: impact left, compact button right */}
+        <div className="flex items-center justify-between mt-3 sm:hidden">
+          <div>
+            <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Impact</p>
+            <p className="text-base font-black text-[#0B0D0F]">
+              {report.metrics.beneficiaries.toLocaleString()}
+            </p>
+          </div>
+          <Link
+            to={`/report/${report.slug || report.id}`}
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0B0D0F] hover:bg-[#E52321] text-white px-4 py-2 text-[10px] font-black uppercase tracking-[0.25em] transition-all"
+          >
+            Report <SafeIcon icon="FiArrowRight" className="text-sm" />
+          </Link>
+        </div>
       </div>
-      <div className="flex items-center gap-4 w-full sm:w-auto">
-        <div className="hidden sm:block text-right min-w-[100px]">
+
+      {/* Desktop: impact + full button */}
+      <div className="hidden sm:flex items-center gap-4 flex-shrink-0">
+        <div className="text-right min-w-[100px]">
           <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Impact</p>
           <p className="text-base font-black text-[#0B0D0F]">
             {report.metrics.beneficiaries.toLocaleString()}
@@ -38,7 +57,7 @@ const ReportListRow = ({ report }) => (
         </div>
         <Link
           to={`/report/${report.slug || report.id}`}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0B0D0F] hover:bg-[#E52321] text-white px-6 py-3 text-[10px] font-black uppercase tracking-[0.25em] transition-all"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0B0D0F] hover:bg-[#E52321] text-white px-6 py-3 text-[10px] font-black uppercase tracking-[0.25em] transition-all"
         >
           Report <SafeIcon icon="FiArrowRight" className="text-base" />
         </Link>
