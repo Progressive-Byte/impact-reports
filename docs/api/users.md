@@ -33,6 +33,7 @@ Mounted at `/api/admin`. All routes require `Authorization: Bearer <token>`.
   "email":       "sadek@example.com",
   "role":        "superadmin",
   "region":      "global",
+  "department":  "Programmes",
   "isActive":    true,
   "totpEnabled": false,
   "lastLogin":   "2026-06-08T10:30:00.000Z",
