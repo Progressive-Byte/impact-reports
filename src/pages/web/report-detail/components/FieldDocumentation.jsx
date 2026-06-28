@@ -39,21 +39,21 @@ const FieldDocumentation = ({ fieldReports, onImageError, onMediaSelect }) => {
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="bg-white rounded-[2.5rem] p-8 md:p-10 shadow-[0_18px_50px_rgba(0,0,0,0.05)] border border-gray-100"
+      className="bg-white rounded-[2.5rem] p-5 sm:p-8 md:p-10 shadow-[0_18px_50px_rgba(0,0,0,0.05)] border border-gray-100"
     >
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-        <div className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#0B0D0F] text-white flex items-center justify-center flex-shrink-0">
-            <SafeIcon icon="FiCamera" className="text-2xl" />
+      <div className="flex items-start justify-between mb-5 sm:mb-8 gap-3">
+        <div className="flex items-start gap-3">
+          <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#0B0D0F] text-white flex items-center justify-center flex-shrink-0">
+            <SafeIcon icon="FiCamera" className="text-lg sm:text-2xl" />
           </div>
           <div>
-            <h2 className="text-2xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight text-left uppercase">Field Documentation</h2>
-            <p className="text-gray-500 mt-1 text-left text-sm">Verified visual evidence from our active ground teams.</p>
+            <h2 className="text-xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight text-left uppercase leading-tight">Field Documentation</h2>
+            <p className="text-gray-500 mt-0.5 text-left text-xs sm:text-sm">Verified visual evidence from our active ground teams.</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-full border border-gray-100 self-start md:self-auto">
+        <div className="flex items-center gap-1.5 sm:gap-2 bg-gray-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border border-gray-100 flex-shrink-0">
           <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-[10px] font-black text-green-700 uppercase tracking-widest">Live Updates</span>
+          <span className="text-[9px] sm:text-[10px] font-black text-green-700 uppercase tracking-widest">Live Updates</span>
         </div>
       </div>
 
