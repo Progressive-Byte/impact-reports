@@ -14,11 +14,16 @@ const TestimonialCard = () => (
     <div className="h-1 w-full bg-gradient-to-r from-[#E52321] via-[#E52321]/60 to-transparent" />
 
     <div className="p-6">
-      {/* Header row: label + stars */}
+      {/* Header: large quote mark + label + stars */}
       <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center">
-            <SafeIcon icon="FiMessageSquare" className="text-[#E52321] text-sm" />
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center flex-shrink-0">
+            <span
+              className="text-[#E52321] font-black select-none"
+              style={{ fontFamily: 'Georgia, serif', fontSize: '1.6rem', lineHeight: 1 }}
+            >
+              &ldquo;
+            </span>
           </div>
           <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Testimonial</p>
         </div>
@@ -29,20 +34,18 @@ const TestimonialCard = () => (
         </div>
       </div>
 
-      {/* Large opening quote */}
-      <div className="w-10 h-10 rounded-2xl bg-[#E52321]/8 flex items-center justify-center mb-4">
-        <span className="text-[#E52321] text-3xl font-black leading-none select-none" style={{ fontFamily: 'Georgia, serif', lineHeight: 1 }}>&ldquo;</span>
-      </div>
-
-      {/* Quote text */}
-      <p className="text-sm sm:text-base font-semibold text-[#0B0D0F] leading-relaxed">
-        The mobile clinic arrived when we had no other options. They saved my son's life — I cannot put into words the relief our family felt.
+      {/* Quote text with italic red emphasis */}
+      <p className="text-[15px] font-medium text-[#0B0D0F] leading-relaxed">
+        The mobile clinic arrived when we had no other options. They{' '}
+        <span className="text-[#E52321] italic font-semibold">saved my son&rsquo;s life</span>
+        {' '}— I cannot put into words the relief our family felt.
       </p>
 
       {/* Author */}
       <div className="mt-6 pt-5 border-t border-gray-100 flex items-center gap-3">
-        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#E52321]/15 to-[#E52321]/5 border border-[#E52321]/10 flex items-center justify-center flex-shrink-0">
-          <SafeIcon icon="FiUser" className="text-[#E52321] text-lg" />
+        {/* Initials avatar */}
+        <div className="w-11 h-11 rounded-full bg-[#E52321]/10 border border-[#E52321]/20 flex items-center justify-center flex-shrink-0">
+          <span className="text-[#E52321] text-xs font-black tracking-wide">TM</span>
         </div>
         <div className="min-w-0 text-left">
           <p className="font-black text-[#0B0D0F] text-sm leading-none">Tariq M.</p>
