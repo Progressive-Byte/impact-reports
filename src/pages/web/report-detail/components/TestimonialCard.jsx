@@ -8,12 +8,23 @@ const TestimonialCard = () => (
   <motion.div
     whileHover={{ y: -4 }}
     transition={{ type: 'spring', stiffness: 320, damping: 26 }}
-    className="bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden"
+    className="relative bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden"
   >
+    {/* Left glow blob */}
+    <div
+      className="pointer-events-none absolute -left-8 top-1/2 -translate-y-1/2 w-36 h-48 rounded-full opacity-25"
+      style={{ background: 'radial-gradient(ellipse at center, #E52321 0%, transparent 70%)', filter: 'blur(28px)' }}
+    />
+    {/* Right glow blob */}
+    <div
+      className="pointer-events-none absolute -right-8 top-1/2 -translate-y-1/2 w-36 h-48 rounded-full opacity-20"
+      style={{ background: 'radial-gradient(ellipse at center, #E52321 0%, transparent 70%)', filter: 'blur(28px)' }}
+    />
+
     {/* Top accent bar */}
     <div className="h-1 w-full bg-gradient-to-r from-[#E52321] via-[#E52321]/60 to-transparent" />
 
-    <div className="p-6">
+    <div className="relative p-6">
       {/* Header: large quote mark + label + stars */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
