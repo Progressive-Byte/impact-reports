@@ -4,7 +4,7 @@ import StepIndicator, { STEPS } from './TabNav';
 const TOTAL_STEPS = STEPS.length;
 
 const WizardShell = ({
-  step, loading, form, update, adminOptions, allAdminOptions, regionOptions, sectorOptions, departmentOptions,
+  step, loading, form, update, adminOptions, allAdminOptions, regionOptions, sectorOptions,
   StepContent, saving, onBack, onNext, onStepClick, onApprove,
   isSuperAdmin = true, isViewer = false, isApprover = false, fieldErrors = {},
 }) => {
