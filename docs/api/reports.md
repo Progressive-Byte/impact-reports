@@ -234,12 +234,24 @@ Returns `400` if the report's current status is `"trash"` — restore it first.
 
 **`narrative`**
 
-Both fields accept rich HTML produced by the Tiptap editor (bold, italic, strikethrough, bullet lists). Stored as HTML; rendered with `dangerouslySetInnerHTML` on the public portal.
+`projectBackground` and `strategicResponse` accept rich HTML from the Tiptap editor. `testimonials` is an optional array of client testimonials displayed in the public report sidebar.
 
-| Field               | Type   | Required | Description         |
-| ------------------- | ------ | :------: | ------------------- |
-| `projectBackground` | string | Yes      | Crisis context      |
-| `strategicResponse` | string | Yes      | Response operations |
+| Field               | Type   | Required | Description                                     |
+| ------------------- | ------ | :------: | ----------------------------------------------- |
+| `projectBackground` | string | Yes      | Crisis context (rich HTML)                      |
+| `strategicResponse` | string | Yes      | Response operations (rich HTML)                 |
+| `testimonials`      | array  | —        | Array of testimonial objects (see below)        |
+
+Each `testimonials` item:
+
+| Field         | Type   | Required | Description                                                               |
+| ------------- | ------ | :------: | ------------------------------------------------------------------------- |
+| `stars`       | number | —        | Rating 1–5 (default `5`)                                                  |
+| `body`        | string | —        | Quote text as rich HTML (Tiptap). Rendered with `dangerouslySetInnerHTML` |
+| `clientImage` | string | —        | Cloudinary URL of the client's photo. Falls back to initials avatar       |
+| `name`        | string | —        | Client full name                                                           |
+| `designation` | string | —        | Role or title (e.g. `"CEO"`)                                              |
+| `address`     | string | —        | Location (e.g. `"Dhaka, Bangladesh"`)                                     |
 
 **`metrics`**
 
