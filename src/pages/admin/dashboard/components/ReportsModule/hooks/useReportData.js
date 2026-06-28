@@ -91,6 +91,19 @@ export function useReportData() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sectorOptions.length]);
 
+  // Lazy-load department options from the backend config endpoint.
+  const loadDepartmentOptions = useCallback(() => {
+    if (departmentOptions.length > 0 || departmentOptionsLoadingRef.current) return;
+    departmentOptionsLoadingRef.current = true;
+    publicApiRequest('/api/config/departments')
+      .then(data => setDepartmentOptions(
+        (data.departments || []).map(d => ({ value: d, label: d }))
+      ))
+      .catch(() => {})
+      .finally(() => { departmentOptionsLoadingRef.current = false; });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [departmentOptions.length]);
+
   const fetchTabCounts = useCallback(async () => {
     try {
       const data = await adminApiRequest('/api/reports/counts');
