@@ -21,6 +21,7 @@ function yearToFiscal(year) {
 function shapeCard(r) {
   const bg     = (r.projectBackground || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
   const region = r.region || deriveRegion(r.countries);
+  const rawSummary = r.shortSubtitle?.trim() || bg;
   return {
     id:        r._id.toString(),
     slug:      r.slug      || r._id.toString(),
@@ -30,7 +31,7 @@ function shapeCard(r) {
     region,
     sector:    r.sector   || '',
     year:      deriveYear(r.fiscalYear),
-    summary:   bg.length > 200 ? bg.slice(0, 200).trimEnd() + '…' : bg,
+    summary:   rawSummary.length > 200 ? rawSummary.slice(0, 200).trimEnd() + '…' : rawSummary,
     countries: r.countries || [],
     metrics: {
       beneficiaries: r.livesImpacted || 0,
