@@ -105,6 +105,13 @@ const Settings = () => {
         linkedin:  settingsData.socialLinks?.linkedin  || '',
         youtube:   settingsData.socialLinks?.youtube   || '',
       });
+      setSocialLinksVisible({
+        facebook:  settingsData.socialLinksVisible?.facebook  !== false,
+        twitter:   settingsData.socialLinksVisible?.twitter   !== false,
+        instagram: settingsData.socialLinksVisible?.instagram !== false,
+        linkedin:  settingsData.socialLinksVisible?.linkedin  !== false,
+        youtube:   settingsData.socialLinksVisible?.youtube   !== false,
+      });
     } catch {
       toast.error('Failed to load settings');
     } finally {
