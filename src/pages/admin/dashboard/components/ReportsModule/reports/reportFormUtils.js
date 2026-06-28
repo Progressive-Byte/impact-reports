@@ -11,6 +11,7 @@ export const BLANK_FORM = {
   fiscalYear:        'FY25',
   region:            '',
   sector:            '',
+  department:        '',
   livesImpacted:     0,
   projectBackground: '',
   strategicResponse: '',
