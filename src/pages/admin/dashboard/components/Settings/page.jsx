@@ -210,6 +210,7 @@ const Settings = () => {
           failedLoginWarnings:    notifications.failedLoginWarnings,
           weeklyDigest:           notifications.weeklyDigest,
           socialLinks,
+          socialLinksVisible,
         }),
       });
       toast.success('Settings saved successfully');
