@@ -120,7 +120,7 @@ const ReportDetail = () => {
       <div className="pt-28 sm:pt-32">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <Link to="/" className="inline-flex items-center text-gray-500 hover:text-[#0B0D0F] transition-colors text-xs font-black tracking-widest uppercase">
-            <SafeIcon icon="FiArrowLeft" className="mr-2" /> Back to Database
+            <SafeIcon icon="FiArrowLeft" className="mr-2" /> Back to Home
           </Link>
         </div>
 
