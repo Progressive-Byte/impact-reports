@@ -100,6 +100,7 @@ const Settings = () => {
         failedLoginWarnings: settingsData.failedLoginWarnings ?? true,
         weeklyDigest:        settingsData.weeklyDigest        ?? false,
       }));
+      setDonationUrl(settingsData.donationUrl || '');
       setSocialLinks({
         facebook:  settingsData.socialLinks?.facebook  || '',
         twitter:   settingsData.socialLinks?.twitter   || '',
