@@ -70,6 +70,10 @@ const Settings = () => {
     facebook: '', twitter: '', instagram: '', linkedin: '', youtube: '',
   });
 
+  const [socialLinksVisible, setSocialLinksVisible] = useState({
+    facebook: true, twitter: true, instagram: true, linkedin: true, youtube: true,
+  });
+
   const fetchSettings = useCallback(async () => {
     setLoading(true);
     try {
