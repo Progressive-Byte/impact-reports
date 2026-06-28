@@ -39,6 +39,7 @@ export const reportToForm = (report, defaultRegion = '') => ({
   status:              report.status          || 'pending',
   approvalAssignedTo:  (report.approvalAssignedTo || []).map(a => String(a._id ?? a)),
   actualProjectId:     report.actualProjectId || '',
+  shortSubtitle:     report.shortSubtitle   || '',
   donationUrl:       report.donationUrl     || '',
   cost:              report.cost            ?? 0,
   assignedTo:        (report.assignedTo || []).map(a => String(a._id ?? a)),
