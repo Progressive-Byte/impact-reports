@@ -75,6 +75,41 @@ router.put('/sectors', protect, async (req, res) => {
   }
 });
 
+// GET /api/config/departments — public; returns DB departments
+router.get('/departments', async (_req, res) => {
+  try {
+    const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+    res.json({ departments: settings?.departments || [] });
+  } catch {
+    res.json({ departments: [] });
+  }
+});
+
+// PUT /api/config/departments — superadmin only, replaces the full department list
+router.put('/departments', protect, async (req, res) => {
+  if (req.admin.role !== 'superadmin') {
+    return res.status(403).json({ message: 'Superadmin only' });
+  }
+  const { departments } = req.body;
+  if (!Array.isArray(departments) || departments.length === 0) {
+    return res.status(400).json({ message: 'At least one department is required' });
+  }
+  const cleaned = departments.map(d => d.trim()).filter(Boolean);
+  if (cleaned.length === 0) {
+    return res.status(400).json({ message: 'At least one department is required' });
+  }
+  try {
+    const settings = await PlatformSettings.findOneAndUpdate(
+      { key: 'platform' },
+      { $set: { departments: cleaned } },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    ).lean();
+    res.json({ departments: settings.departments });
+  } catch {
+    res.status(500).json({ message: 'Failed to save departments' });
+  }
+});
+
 // GET /api/config/social-links — public; returns only visible social media links
 router.get('/social-links', async (_req, res) => {
   try {
