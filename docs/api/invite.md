@@ -107,6 +107,7 @@ Check whether an invite token is valid before showing the registration form. Cal
   "email":                  "newuser@example.com",
   "role":                   "admin",
   "region":                 "south_asia",
+  "department":             "Programmes",
   "enforceStrongPasswords": true
 }
 ```
@@ -116,6 +117,7 @@ Check whether an invite token is valid before showing the registration form. Cal
 | `email`                  | Pre-filled on the registration form (read-only)                                                   |
 | `role`                   | Role the new account will receive                                                                 |
 | `region`                 | Region the new account will be assigned to                                                        |
+| `department`             | Department the new account will be assigned to                                                    |
 | `enforceStrongPasswords` | Mirrors the current platform setting. When `true`, the registration form shows a requirements checklist and the submit button is disabled until all checks pass |
 
 ### Errors
