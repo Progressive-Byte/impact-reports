@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaFemale } from 'react-icons/fa';
+import { TbWoman } from 'react-icons/tb';
 import SafeIcon from '../../../../common/SafeIcon';
 import DemographicRow from './DemographicRow';
 
