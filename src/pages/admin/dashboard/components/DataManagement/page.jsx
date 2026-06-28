@@ -190,7 +190,7 @@ const DataManagement = () => {
         <ListCard
           icon="FiBriefcase"
           title="Departments"
-          subtitle="Used in report General tab to categorize by department"
+          subtitle="Used in user profiles and invite forms"
           items={departments}
           loading={loading}
           onAdd={() => setDepartments(p => [...p, ''])}
