@@ -17,6 +17,13 @@ const platformSettingsSchema = new mongoose.Schema({
     linkedin:  { type: String, default: '' },
     youtube:   { type: String, default: '' },
   },
+  socialLinksVisible: {
+    facebook:  { type: Boolean, default: true },
+    twitter:   { type: Boolean, default: true },
+    instagram: { type: Boolean, default: true },
+    linkedin:  { type: Boolean, default: true },
+    youtube:   { type: Boolean, default: true },
+  },
 }, { timestamps: true });
 
 export default mongoose.model('PlatformSettings', platformSettingsSchema);
