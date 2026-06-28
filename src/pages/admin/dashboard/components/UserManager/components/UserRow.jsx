@@ -140,9 +140,9 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
         </div>
       </div>
 
-      {/* Region */}
+      {/* Department */}
       <div>
-        <span className="text-sm text-gray-500 capitalize">{(user.region || 'global').replace('_', ' ')}</span>
+        <span className="text-sm text-gray-500">{user.department || '—'}</span>
       </div>
 
       {/* Role — read-only for own account */}
