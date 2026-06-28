@@ -65,7 +65,7 @@ const SearchModal = ({ isOpen, onClose }) => {
               <input 
                 ref={inputRef}
                 type="text" 
-                placeholder="Search by name, ID, country, or region..."
+                placeholder="Search by Country, Region, Sector, or Year..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={(e) => {
