@@ -65,12 +65,13 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
 
 **Status values**
 
-| Status      | When set                                                                        |
-| ----------- | ------------------------------------------------------------------------------- |
-| `pending`   | Just created — no step saved yet                                                |
-| `draft`     | At least one step saved but not all five                                        |
-| `published` | All five steps saved (after final `location` step submit)                       |
-| `trash`     | Soft-deleted via `DELETE /api/reports/:id` — hidden from all lists except Trash |
+| Status              | When set                                                                        |
+| ------------------- | ------------------------------------------------------------------------------- |
+| `pending`           | Just created — no step saved yet                                                |
+| `draft`             | At least one step saved but not all five                                        |
+| `pending_approval`  | All five steps saved and `approvalAssignedTo` is non-empty — awaiting sign-off  |
+| `published`         | All five steps saved and no approval reviewers assigned (or approval granted)   |
+| `trash`             | Soft-deleted via `DELETE /api/reports/:id` — hidden from all lists except Trash |
 
 Reports with `status: "trash"` are excluded from the public portal and from the admin "All" list view. Only the explicit `?status=trash` filter surfaces them.
 
