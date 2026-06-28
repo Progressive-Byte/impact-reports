@@ -260,6 +260,7 @@ Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the 
   "failedLoginWarnings":    true,
   "weeklyDigest":           false,
   "require2fa":             false,
+  "donationUrl":            "https://donate.example.com",
   "socialLinks": {
     "facebook":  "https://facebook.com/humanconcernusa",
     "twitter":   "",
