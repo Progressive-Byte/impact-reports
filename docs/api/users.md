@@ -239,20 +239,22 @@ Update an admin's username, email, role, and/or region.
 
 ### Request body (all fields optional — only provided fields are updated)
 
-| Field      | Type   | Required | Validation                  | Description                        | Example          |
-| ---------- | ------ | :------: | --------------------------- | ---------------------------------- | ---------------- |
-| `username` | string | No       | unique                      | New login handle                   | `"updated_name"` |
-| `email`    | string | No       | unique, stored lowercase    | New contact email                  | `"new@example.com"` |
-| `role`     | string | No       | `superadmin`, `editor`, or `viewer` | New role                      | `"superadmin"`   |
-| `region`   | string | No       | free text                           | Assigned region               | `"middle_east"`  |
+| Field        | Type   | Required | Validation                          | Description                        | Example           |
+| ------------ | ------ | :------: | ----------------------------------- | ---------------------------------- | ----------------- |
+| `username`   | string | No       | unique                              | New login handle                   | `"updated_name"`  |
+| `email`      | string | No       | unique, stored lowercase            | New contact email                  | `"new@example.com"` |
+| `role`       | string | No       | `superadmin`, `editor`, or `viewer` | New role                           | `"superadmin"`    |
+| `region`     | string | No       | free text                           | Assigned region                    | `"middle_east"`   |
+| `department` | string | No       | free text                           | Organisational department          | `"Programmes"`    |
 
 Example:
 
 ```json
 {
-  "username": "updated_name",
-  "role":     "superadmin",
-  "region":   "middle_east"
+  "username":   "updated_name",
+  "role":       "superadmin",
+  "region":     "middle_east",
+  "department": "Programmes"
 }
 ```
 
