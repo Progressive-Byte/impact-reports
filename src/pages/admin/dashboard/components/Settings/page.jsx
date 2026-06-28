@@ -212,6 +212,7 @@ const Settings = () => {
           require2fa:             security.require2fa,
           failedLoginWarnings:    notifications.failedLoginWarnings,
           weeklyDigest:           notifications.weeklyDigest,
+          donationUrl,
           socialLinks,
           socialLinksVisible,
         }),
