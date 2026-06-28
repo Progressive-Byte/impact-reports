@@ -14,6 +14,7 @@ export const BLANK_FORM = {
   livesImpacted:     0,
   projectBackground: '',
   strategicResponse: '',
+  testimonials:      [],
   children:          0,
   women:             0,
   men:               0,
