@@ -157,24 +157,26 @@ Create a new report. Only `superadmin` can call this. The new report gets status
 
 ### Request body
 
-| Field             | Type     | Required | Description                                       | Example                     |
-| ----------------- | -------- | :------: | ------------------------------------------------- | --------------------------- |
-| `projectName`     | string   | Yes      | Unique project name                               | `"Winter Relief Alpha"`     |
-| `assignedTo`      | string[] | Yes      | Array of Admin `_id` strings (role = editor)      | `["6650a1...","6650a2..."]` |
-| `actualProjectId` | string   | —        | Human-readable project ID set by the creator      | `"BurmaWater-1001"`         |
+| Field                | Type     | Required | Description                                       | Example                     |
+| -------------------- | -------- | :------: | ------------------------------------------------- | --------------------------- |
+| `projectName`        | string   | Yes      | Unique project name                               | `"Winter Relief Alpha"`     |
+| `assignedTo`         | string[] | Yes      | Array of Admin `_id` strings (editors)            | `["6650a1...","6650a2..."]` |
+| `approvalAssignedTo` | string[] | Yes      | Array of Admin `_id` strings who must approve     | `["6650b1..."]`             |
+| `actualProjectId`    | string   | —        | Human-readable project ID set by the creator      | `"BurmaWater-1001"`         |
 
 ### Response `201`
 
-Returns the created Report object (with `assignedTo` and `createdBy` populated).
+Returns the created Report object (with `assignedTo`, `approvalAssignedTo`, and `createdBy` populated).
 
 ### Errors
 
-| Status | Condition                                         |
-| ------ | ------------------------------------------------- |
-| `400`  | `projectName` missing or empty                    |
-| `400`  | `assignedTo` empty or not an array                |
-| `400`  | `assignedTo` contains duplicate admin IDs         |
-| `403`  | Caller is not `superadmin`                        |
+| Status | Condition                                                 |
+| ------ | --------------------------------------------------------- |
+| `400`  | `projectName` missing or empty                            |
+| `400`  | `assignedTo` empty or not an array                        |
+| `400`  | `approvalAssignedTo` empty or not an array                |
+| `400`  | `assignedTo` or `approvalAssignedTo` contain duplicate IDs|
+| `403`  | Caller is not `superadmin`                                |
 
 ### curl
 
@@ -182,7 +184,7 @@ Returns the created Report object (with `assignedTo` and `createdBy` populated).
 curl -X POST http://localhost:5173/api/reports \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{"projectName":"Winter Relief Alpha","assignedTo":["6650a1b2c3d4e5f607a8b9c0"],"actualProjectId":"BurmaWater-1001"}'
+  -d '{"projectName":"Winter Relief Alpha","assignedTo":["6650a1b2c3d4e5f607a8b9c0"],"approvalAssignedTo":["6650b1..."],"actualProjectId":"BurmaWater-1001"}'
 ```
 
 ---
