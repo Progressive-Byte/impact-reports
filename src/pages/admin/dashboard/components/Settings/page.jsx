@@ -66,6 +66,8 @@ const Settings = () => {
     failedLoginWarnings: true,
   });
 
+  const [donationUrl, setDonationUrl] = useState('');
+
   const [socialLinks, setSocialLinks] = useState({
     facebook: '', twitter: '', instagram: '', linkedin: '', youtube: '',
   });
