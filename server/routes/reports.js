@@ -256,6 +256,9 @@ router.post('/', async (req, res) => {
     if (!Array.isArray(assignedTo) || assignedTo.length === 0) {
       return res.status(400).json({ message: 'At least one assignee is required' });
     }
+    if (!Array.isArray(approvalAssignedTo) || approvalAssignedTo.length === 0) {
+      return res.status(400).json({ message: 'At least one approval reviewer is required' });
+    }
 
     // Reject duplicate user IDs within this report
     const uniqueAssignees = [...new Set(assignedTo.map(String))];
@@ -276,8 +279,8 @@ router.post('/', async (req, res) => {
       projectId:          `REP-${String(seq).padStart(3, '0')}`,
       actualProjectId:    (actualProjectId || '').trim(),
       assignedTo:         uniqueAssignees,
+      approvalAssignedTo,
       createdBy:          req.admin._id,
-      ...(approvalAssignedTo ? { approvalAssignedTo } : {}),
     });
 
     const report = await Report.findById(created._id).populate(POPULATE);
