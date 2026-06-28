@@ -13,29 +13,32 @@ const ROLE_OPTIONS = [
 ];
 
 const EditUserModal = ({ user, open, onClose, onUpdated }) => {
-  const [form,          setForm]          = useState({ username: '', email: '', region: '', role: 'editor' });
-  const [loading,       setLoading]       = useState(false);
-  const [regionOptions, setRegionOptions] = useState([]);
+  const [form,              setForm]              = useState({ username: '', email: '', region: '', role: 'editor', department: '' });
+  const [loading,           setLoading]           = useState(false);
+  const [regionOptions,     setRegionOptions]     = useState([]);
+  const [departmentOptions, setDepartmentOptions] = useState([]);
 
-  // Fetch regions from DB when modal opens
+  // Fetch regions + departments from DB when modal opens
   useEffect(() => {
     if (!open) return;
-    publicApiRequest('/api/config/regions')
-      .then(data => {
-        const opts = (data.regions || []).map(r => ({ value: r, label: r }));
-        setRegionOptions(opts);
-      })
-      .catch(() => {});
+    Promise.all([
+      publicApiRequest('/api/config/regions'),
+      publicApiRequest('/api/config/departments'),
+    ]).then(([regData, depData]) => {
+      setRegionOptions((regData.regions     || []).map(r => ({ value: r, label: r })));
+      setDepartmentOptions((depData.departments || []).map(d => ({ value: d, label: d })));
+    }).catch(() => {});
   }, [open]);
 
   // Sync form when user prop changes
   useEffect(() => {
     if (user) {
       setForm({
-        username: user.username || '',
-        email:    user.email    || '',
-        region:   user.region   || '',
-        role:     user.role     || 'editor',
+        username:   user.username   || '',
+        email:      user.email      || '',
+        region:     user.region     || '',
+        role:       user.role       || 'editor',
+        department: user.department || '',
       });
     }
   }, [user]);
@@ -54,10 +57,11 @@ const EditUserModal = ({ user, open, onClose, onUpdated }) => {
       const updated = await adminApiRequest(`/api/admin/admins/${user._id}`, {
         method: 'PUT',
         body: JSON.stringify({
-          username: form.username.trim(),
-          email:    form.email.trim(),
-          region:   form.region,
-          role:     form.role,
+          username:   form.username.trim(),
+          email:      form.email.trim(),
+          region:     form.region,
+          role:       form.role,
+          department: form.department,
         }),
       });
       onUpdated?.(updated);
@@ -146,6 +150,18 @@ const EditUserModal = ({ user, open, onClose, onUpdated }) => {
                     disabled={loading}
                   />
                 </div>
+              </div>
+
+              {/* Department */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Department</label>
+                <CustomSelect
+                  value={form.department}
+                  onChange={val => setForm(p => ({ ...p, department: val }))}
+                  options={departmentOptions}
+                  placeholder={departmentOptions.length ? 'Select department...' : 'Loading…'}
+                  disabled={loading}
+                />
               </div>
             </div>
 
