@@ -4,7 +4,8 @@ import MultiSelect from './MultiSelect';
 
 const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], regionOptions = [], sectorOptions = [], departmentOptions = [], isSuperAdmin = true, fieldErrors = {} }) => (
   <div className="space-y-5">
-    {/* Actual Project ID + Donation URL */}
+
+    {/* Row 1: Actual Project ID | Donation URL */}
     <div className="grid grid-cols-2 gap-5">
       <Input
         label="Actual Project ID"
@@ -19,6 +20,8 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         onChange={e => update('donationUrl', e.target.value)}
       />
     </div>
+
+    {/* Row 2: Project Name | Project Lead/Partner */}
     <div className="grid grid-cols-2 gap-5">
       <Input
         label="Project Name" required
@@ -28,6 +31,17 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         readOnly={!isSuperAdmin}
         error={fieldErrors.projectName}
       />
+      <Input
+        label="Project Lead/Partner" required
+        placeholder="Lead name"
+        value={form.projectLead}
+        onChange={e => update('projectLead', e.target.value)}
+        error={fieldErrors.projectLead}
+      />
+    </div>
+
+    {/* Row 3: Assigned To | Approval Reviewer (side by side for superadmin) */}
+    <div className={`grid gap-5 ${isSuperAdmin ? 'grid-cols-2' : 'grid-cols-1'}`}>
       <MultiSelect
         label="Assigned To" required
         value={form.assignedTo}
@@ -37,25 +51,20 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         readOnly={!isSuperAdmin}
         error={fieldErrors.assignedTo}
       />
+      {isSuperAdmin && (
+        <MultiSelect
+          label="Approval Reviewer" required
+          value={form.approvalAssignedTo}
+          onChange={val => update('approvalAssignedTo', val)}
+          options={allAdminOptions}
+          placeholder="Select approval reviewers..."
+          error={fieldErrors.approvalAssignedTo}
+        />
+      )}
     </div>
-    {isSuperAdmin && (
-      <MultiSelect
-        label="Approval Reviewer" required
-        value={form.approvalAssignedTo}
-        onChange={val => update('approvalAssignedTo', val)}
-        options={allAdminOptions}
-        placeholder="Select approval reviewers..."
-        error={fieldErrors.approvalAssignedTo}
-      />
-    )}
+
+    {/* Row 4: Fiscal Year | Lives Impacted */}
     <div className="grid grid-cols-2 gap-5">
-      <Input
-        label="Project Lead/Partner" required
-        placeholder="Lead name"
-        value={form.projectLead}
-        onChange={e => update('projectLead', e.target.value)}
-        error={fieldErrors.projectLead}
-      />
       <Input
         label="Fiscal Year" required
         placeholder="e.g. FY26"
@@ -63,7 +72,17 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         onChange={e => update('fiscalYear', e.target.value)}
         error={fieldErrors.fiscalYear}
       />
+      <Input
+        label="Lives Impacted" required
+        type="number"
+        min="1"
+        value={form.livesImpacted}
+        onChange={e => update('livesImpacted', e.target.value)}
+        error={fieldErrors.livesImpacted}
+      />
     </div>
+
+    {/* Row 5: Region | Sector | Department */}
     <div className="grid grid-cols-3 gap-5">
       <CustomSelect
         label="Region" required
@@ -90,15 +109,9 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         error={fieldErrors.department}
       />
     </div>
+
+    {/* Row 6: Cost (half-width) */}
     <div className="grid grid-cols-2 gap-5">
-      <Input
-        label="Lives Impacted" required
-        type="number"
-        min="1"
-        value={form.livesImpacted}
-        onChange={e => update('livesImpacted', e.target.value)}
-        error={fieldErrors.livesImpacted}
-      />
       <Input
         label="Cost"
         type="number"
@@ -108,6 +121,7 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         onChange={e => update('cost', e.target.value)}
       />
     </div>
+
   </div>
 );
 
