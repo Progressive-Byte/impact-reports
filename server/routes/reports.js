@@ -17,7 +17,7 @@ const POPULATE = [
 
 // Which fields each step is allowed to update
 const STEP_FIELDS = {
-  general:   ['projectName', 'assignedTo', 'actualProjectId', 'donationUrl', 'cost', 'projectLead', 'fiscalYear', 'region', 'sector', 'livesImpacted'],
+  general:   ['projectName', 'assignedTo', 'approvalAssignedTo', 'actualProjectId', 'donationUrl', 'cost', 'projectLead', 'fiscalYear', 'region', 'sector', 'livesImpacted'],
   narrative: ['projectBackground', 'strategicResponse', 'testimonials'],
   metrics:   ['children', 'women', 'men', 'deliverables'],
   media:     ['images', 'thumbnail', 'videoUrl', 'milestones'],
