@@ -144,13 +144,11 @@ export function useReportData() {
     allAdminOptions,
     regionOptions,
     sectorOptions,
-    departmentOptions,
     loadingList, loadingReport,
     fetchReports,
     loadAdminOptions,
     loadAllAdminOptions,
     loadRegionOptions,
     loadSectorOptions,
-    loadDepartmentOptions,
   };
 }
