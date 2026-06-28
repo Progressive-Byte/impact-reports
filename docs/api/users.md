@@ -8,7 +8,7 @@ Mounted at `/api/admin`. All routes require `Authorization: Bearer <token>`.
 | GET    | `/api/admin/stats`                         | Bearer      | —                                         | Total and active admin counts                      |
 | GET    | `/api/admin/admins`                        | Bearer      | —                                         | Paginated list with search + filter                |
 | POST   | `/api/admin/admins`                        | Superadmin  | `username`, `email`, `password`, `role?`  | Create admin directly                              |
-| PUT    | `/api/admin/admins/:id`                    | Superadmin  | `username?`, `email?`, `role?`, `region?` | Full profile update                                |
+| PUT    | `/api/admin/admins/:id`                    | Superadmin  | `username?`, `email?`, `role?`, `region?`, `department?` | Full profile update                     |
 | PATCH  | `/api/admin/admins/:id/role`               | Superadmin  | `role`                                    | Change role only                                   |
 | PATCH  | `/api/admin/admins/:id/toggle`             | Superadmin  | —                                         | Toggle active ↔ suspended                          |
 | DELETE | `/api/admin/admins/:id`                    | Superadmin  | —                                         | Permanently delete admin                           |
