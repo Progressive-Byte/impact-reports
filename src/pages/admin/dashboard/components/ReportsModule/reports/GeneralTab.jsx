@@ -64,7 +64,7 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         error={fieldErrors.fiscalYear}
       />
     </div>
-    <div className="grid grid-cols-2 gap-5">
+    <div className="grid grid-cols-3 gap-5">
       <CustomSelect
         label="Region" required
         value={form.region}
@@ -80,6 +80,14 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         options={sectorOptions}
         placeholder={sectorOptions.length ? 'Select sector...' : 'Loading…'}
         error={fieldErrors.sector}
+      />
+      <CustomSelect
+        label="Department"
+        value={form.department}
+        onChange={val => update('department', val)}
+        options={departmentOptions}
+        placeholder={departmentOptions.length ? 'Select department...' : 'Loading…'}
+        error={fieldErrors.department}
       />
     </div>
     <div className="grid grid-cols-2 gap-5">
