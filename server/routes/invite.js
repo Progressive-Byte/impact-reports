@@ -119,12 +119,13 @@ router.post('/register', async (req, res) => {
     }
 
     await Admin.create({
-      username: username.trim(),
-      email: invite.email,
+      username:   username.trim(),
+      email:      invite.email,
       password,
-      role: invite.role,
-      region: invite.region,
-      isActive: true,
+      role:       invite.role,
+      region:     invite.region,
+      department: invite.department || '',
+      isActive:   true,
     });
 
     invite.used = true;
