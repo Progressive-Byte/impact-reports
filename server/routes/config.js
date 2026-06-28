@@ -147,7 +147,8 @@ router.patch('/settings', protect, async (req, res) => {
       failedLoginWarnings:    settings.failedLoginWarnings,
       weeklyDigest:           settings.weeklyDigest,
       require2fa:             settings.require2fa,
-      socialLinks:            settings.socialLinks || {},
+      socialLinks:            settings.socialLinks        || {},
+      socialLinksVisible:     settings.socialLinksVisible || {},
     });
   } catch {
     res.status(500).json({ message: 'Failed to save settings' });
