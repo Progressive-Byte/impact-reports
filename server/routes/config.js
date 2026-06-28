@@ -102,6 +102,7 @@ router.get('/settings', protect, async (_req, res) => {
       weeklyDigest:           settings?.weeklyDigest           ?? false,
       require2fa:             settings?.require2fa             ?? false,
       socialLinks:            settings?.socialLinks            || {},
+      socialLinksVisible:     settings?.socialLinksVisible     || {},
     });
   } catch {
     res.status(500).json({ message: 'Failed to load settings' });
