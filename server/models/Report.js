@@ -60,6 +60,7 @@ const reportSchema = new mongoose.Schema(
     // Narrative step
     projectBackground: { type: String, default: '' },
     strategicResponse: { type: String, default: '' },
+    testimonials:      { type: [testimonialSchema], default: [] },
 
     // Metrics step
     children:          { type: Number, default: 0 },
