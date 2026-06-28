@@ -472,8 +472,7 @@ router.patch('/:id/approve', async (req, res) => {
     if (!report) return res.status(404).json({ message: 'Report not found' });
 
     const isAssignedApprover =
-      report.approvalAssignedTo &&
-      String(report.approvalAssignedTo) === String(req.admin._id);
+      report.approvalAssignedTo?.some(a => String(a._id ?? a) === String(req.admin._id));
 
     if (!isAssignedApprover && req.admin.role !== 'superadmin') {
       return res.status(403).json({ message: 'You are not the approval reviewer for this report' });
