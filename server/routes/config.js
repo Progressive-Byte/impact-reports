@@ -146,6 +146,7 @@ router.get('/settings', protect, async (_req, res) => {
       failedLoginWarnings:    settings?.failedLoginWarnings    ?? true,
       weeklyDigest:           settings?.weeklyDigest           ?? false,
       require2fa:             settings?.require2fa             ?? false,
+      donationUrl:            settings?.donationUrl            || '',
       socialLinks:            settings?.socialLinks            || {},
       socialLinksVisible:     settings?.socialLinksVisible     || {},
     });
