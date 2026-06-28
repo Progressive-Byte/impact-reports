@@ -45,7 +45,6 @@ const WizardShell = ({
               allAdminOptions={allAdminOptions}
               regionOptions={regionOptions}
               sectorOptions={sectorOptions}
-              departmentOptions={departmentOptions}
               isSuperAdmin={isSuperAdmin}
               fieldErrors={{}}
             />
@@ -58,7 +57,6 @@ const WizardShell = ({
             allAdminOptions={allAdminOptions}
             regionOptions={regionOptions}
             sectorOptions={sectorOptions}
-            departmentOptions={departmentOptions}
             isSuperAdmin={isSuperAdmin}
             fieldErrors={fieldErrors}
           />
