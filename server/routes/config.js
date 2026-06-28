@@ -75,11 +75,16 @@ router.put('/sectors', protect, async (req, res) => {
   }
 });
 
-// GET /api/config/social-links — public; returns social media links for the footer
+// GET /api/config/social-links — public; returns only visible social media links
 router.get('/social-links', async (_req, res) => {
   try {
     const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
-    res.json(settings?.socialLinks || {});
+    const links   = settings?.socialLinks        || {};
+    const visible = settings?.socialLinksVisible || {};
+    const KEYS    = ['facebook', 'twitter', 'instagram', 'linkedin', 'youtube'];
+    const result  = {};
+    KEYS.forEach(k => { result[k] = visible[k] !== false ? (links[k] || '') : ''; });
+    res.json(result);
   } catch {
     res.json({});
   }
