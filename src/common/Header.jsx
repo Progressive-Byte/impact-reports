@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import SafeIcon from './SafeIcon';
 import { motion } from 'framer-motion';
+import { publicApiRequest } from '../services/publicApi';
 
 const LogoIcon = ({ className = "w-10 h-10 sm:w-12 sm:h-12" }) => (
   <div className={`${className} rounded-full flex items-center justify-center flex-shrink-0 shadow-md shadow-red-500/10 overflow-hidden bg-white border border-gray-100 relative`}>
@@ -12,6 +13,13 @@ const LogoIcon = ({ className = "w-10 h-10 sm:w-12 sm:h-12" }) => (
 const Header = ({ onSearchClick }) => {
   const { pathname } = useLocation();
   const isReportDetail = /^\/report\//.test(pathname);
+  const [donationUrl, setDonationUrl] = useState('');
+
+  useEffect(() => {
+    publicApiRequest('/api/config/donate')
+      .then(data => setDonationUrl(data.url || ''))
+      .catch(() => {});
+  }, []);
 
   return (
     <>
@@ -40,9 +48,17 @@ const Header = ({ onSearchClick }) => {
                   <span className="hidden md:inline">Search Reports</span>
                 </button>
               </nav>
-              <a href="#" data-cursor-label="DONATE" className="bg-[#E52321] hover:bg-[#C91D1B] text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-[12px] sm:text-sm font-black tracking-widest transition-all duration-300 shadow-md shadow-red-900/10 uppercase active:scale-95">
-                Donate
-              </a>
+              {donationUrl && (
+                <a
+                  href={donationUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-cursor-label="DONATE"
+                  className="bg-[#E52321] hover:bg-[#C91D1B] text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-[12px] sm:text-sm font-black tracking-widest transition-all duration-300 shadow-md shadow-red-900/10 uppercase active:scale-95"
+                >
+                  Donate
+                </a>
+              )}
             </div>
           </div>
         </div>
