@@ -224,6 +224,7 @@ All fields are optional — only provided fields are updated.
 | `weeklyDigest`           | boolean | Toggle weekly digest email to superadmins                                |
 | `require2fa`             | boolean | When `true`, all logins require 2FA (email OTP or TOTP)                  |
 | `socialLinks`            | object  | Social media URLs — only keys provided are updated (partial update supported) |
+| `socialLinksVisible`     | object  | Per-platform visibility flags — only keys provided are updated               |
 
 `socialLinks` sub-fields (all optional strings):
 
@@ -234,6 +235,16 @@ All fields are optional — only provided fields are updated.
 | `instagram` | Instagram profile URL                |
 | `linkedin`  | LinkedIn company page URL            |
 | `youtube`   | YouTube channel URL                  |
+
+`socialLinksVisible` sub-fields (all optional booleans, default `true`):
+
+| Sub-field   | Description                                                                      |
+| ----------- | -------------------------------------------------------------------------------- |
+| `facebook`  | `false` hides the Facebook icon from the public footer even if a URL is set     |
+| `twitter`   | Same for X (Twitter)                                                             |
+| `instagram` | Same for Instagram                                                               |
+| `linkedin`  | Same for LinkedIn                                                                |
+| `youtube`   | Same for YouTube                                                                 |
 
 Example:
 
@@ -248,6 +259,10 @@ Example:
   "socialLinks": {
     "facebook":  "https://facebook.com/humanconcernusa",
     "instagram": "https://instagram.com/humanconcernusa"
+  },
+  "socialLinksVisible": {
+    "twitter": false,
+    "linkedin": false
   }
 }
 ```
