@@ -31,7 +31,7 @@ const ReportCard = ({ report }) => (
       </p>
 
       {/* Bottom row — Location + Impact */}
-      <div className="mt-5 flex items-end">
+      <div className="mt-5 flex items-center justify-between">
         <div className="flex flex-col items-start gap-0.5 min-w-0">
           <div className="flex items-center gap-1.5">
             <SafeIcon icon="FiMapPin" className="text-white text-[10px] flex-shrink-0" />
