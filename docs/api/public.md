@@ -51,7 +51,7 @@ All four endpoints that return report data use the same card shape:
 - `year` is converted from the internal `fiscalYear` field (`"FY25"` → `"2025"`).
 - `region` is the value set by the admin in the General step. Allowed values: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global`. Reports saved before the region field was introduced fall back to a value derived from their `countries` list.
 - `image` is the report's thumbnail URL if one has been set in the Media step; otherwise falls back to the first image in `images[]`; `""` if none. Always a full Cloudinary CDN URL.
-- `summary` is truncated to 200 characters with a trailing `…` if needed.
+- `summary` uses the report's `shortSubtitle` field if set; otherwise falls back to a plain-text excerpt of `projectBackground`. Truncated to 200 characters with a trailing `…` if needed.
 
 ---
 
