@@ -60,6 +60,8 @@ const WizardShell = ({
             sectorOptions={sectorOptions}
             isSuperAdmin={isSuperAdmin}
             fieldErrors={fieldErrors}
+            hiddenFields={hiddenFields}
+            onToggle={onToggleVisibility}
           />
         )}
       </div>
