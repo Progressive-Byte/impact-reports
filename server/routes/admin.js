@@ -162,11 +162,10 @@ router.put('/admins/:id', async (req, res) => {
     if (req.admin.role !== 'superadmin') {
       return res.status(403).json({ message: 'Only superadmin can edit users' });
     }
-    const { username, email, region, role, department } = req.body;
+    const { username, email, role, department } = req.body;
     const update = {};
     if (username)             update.username   = username.trim();
     if (email)                update.email      = email.toLowerCase().trim();
-    if (region)               update.region     = region;
     if (department !== undefined) update.department = department;
     if (role && ['superadmin', 'editor', 'viewer'].includes(role)) update.role = role;
 
