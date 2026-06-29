@@ -66,10 +66,6 @@ const TestimonialsSection = ({ form, update }) => {
 
   return (
     <div>
-      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">
-        Testimonials
-      </p>
-
       <div className="space-y-4">
         {form.testimonials.map((t, idx) => (
           <div key={t.id} className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-4">
