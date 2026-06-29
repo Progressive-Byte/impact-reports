@@ -55,7 +55,6 @@ const EditUserModal = ({ user, open, onClose, onUpdated }) => {
         body: JSON.stringify({
           username:   form.username.trim(),
           email:      form.email.trim(),
-          region:     form.region,
           role:       form.role,
           department: form.department,
         }),
