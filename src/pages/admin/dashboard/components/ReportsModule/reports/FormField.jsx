@@ -39,14 +39,17 @@ export const Input = ({ label, required, error, readOnly, rightLabel, className 
   </div>
 );
 
-export const Textarea = ({ label, required, error, readOnly, className = '', rows = 5, ...props }) => (
+export const Textarea = ({ label, required, error, readOnly, rightLabel, className = '', rows = 5, ...props }) => (
   <div className={className}>
     {label && (
-      <label className="flex items-center gap-1.5 mb-1.5 text-sm font-medium text-gray-700">
-        {label}
-        {required && !readOnly && <span className="text-[#E52321]">*</span>}
-        {readOnly && <SafeIcon icon="FiLock" className="text-[10px] text-gray-400" />}
-      </label>
+      <div className="flex items-center justify-between mb-1.5">
+        <label className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
+          {label}
+          {required && !readOnly && <span className="text-[#E52321]">*</span>}
+          {readOnly && <SafeIcon icon="FiLock" className="text-[10px] text-gray-400" />}
+        </label>
+        {rightLabel}
+      </div>
     )}
     <textarea
       rows={rows}
