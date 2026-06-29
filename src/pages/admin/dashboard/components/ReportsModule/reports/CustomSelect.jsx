@@ -9,6 +9,7 @@ const CustomSelect = ({
   options = [],
   placeholder = 'Select an option...',
   error,
+  rightLabel,
   className = '',
 }) => {
   const [open, setOpen] = useState(false);
