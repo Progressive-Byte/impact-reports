@@ -1,4 +1,4 @@
-import SafeIcon from '../../../../../common/SafeIcon';
+import SafeIcon from '../../../../../../common/SafeIcon';
 
 const ListCard = ({ icon, title, subtitle, items, loading, onAdd, onUpdate, onRemove, addLabel, placeholder }) => (
   <div className="bg-white border border-gray-200 rounded-2xl shadow-sm flex flex-col">

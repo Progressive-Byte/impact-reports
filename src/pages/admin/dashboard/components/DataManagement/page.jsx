@@ -4,7 +4,7 @@ import SafeIcon from '../../../../../common/SafeIcon';
 import PageHeader from '../../common/PageHeader';
 import { publicApiRequest } from '../../../../../services/publicApi';
 import { adminApiRequest } from '../../../../../services/adminApi';
-import ListCard from './ListCard';
+import ListCard from './components/ListCard';
 
 const DataManagement = () => {
   const [regions,     setRegions]     = useState([]);
