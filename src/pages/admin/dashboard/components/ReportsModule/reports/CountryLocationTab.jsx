@@ -165,6 +165,7 @@ const CountryLocationTab = ({ form, update, fieldErrors = {}, hiddenFields = [],
         options={COUNTRY_OPTIONS}
         placeholder="Search and select countries..."
         error={fieldErrors.countries}
+        rightLabel={<FieldToggle fieldKey="countries" hiddenFields={hiddenFields} onToggle={onToggle} />}
       />
 
       {/* Per-country sections */}
