@@ -13,6 +13,7 @@ const getTextTarget = (el) => {
   return el.closest('input, textarea, select, [contenteditable="true"]');
 };
 
+// Must stay as imperative style: createElement + per-frame DOM mutation
 function spawnPulse(container, px, py) {
   for (let i = 0; i < 3; i++) {
     const sz = 40 + i * 20;
@@ -39,6 +40,7 @@ function spawnPulse(container, px, py) {
   }
 }
 
+// Must stay as imperative style: createElement + per-frame RAF updates
 function useTrail(containerRef) {
   const trailRef = useRef([]);
   const posRef = useRef(Array.from({ length: TRAIL_COUNT }, () => ({ x: -999, y: -999 })));
@@ -91,30 +93,12 @@ const CursorLabel = ({ label }) => (
     animate={{ opacity: 1, y: 0, scale: 1 }}
     exit={{ opacity: 0, y: 6, scale: 0.92 }}
     transition={{ duration: 0.2, ease: [0.34, 1.56, 0.64, 1] }}
-    style={{
-      position: 'absolute',
-      left: '50%',
-      bottom: 'calc(100% + 14px)',
-      x: '-50%',
-      pointerEvents: 'none',
-      whiteSpace: 'nowrap',
-    }}
+    className="absolute left-1/2 bottom-[calc(100%+14px)] pointer-events-none whitespace-nowrap"
+    style={{ x: '-50%' }}
   >
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 7,
-        background: 'rgba(255,255,255,0.92)',
-        border: '0.5px solid rgba(0,0,0,0.10)',
-        borderRadius: 100,
-        padding: '5px 13px 5px 11px',
-        backdropFilter: 'blur(8px)',
-        WebkitBackdropFilter: 'blur(8px)',
-      }}
-    >
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: RED, flexShrink: 0, display: 'block' }} />
-      <span style={{ fontSize: 11, fontWeight: 500, letterSpacing: '0.07em', color: 'rgba(0,0,0,0.5)', textTransform: 'lowercase' }}>
+    <div className="flex items-center gap-[7px] bg-white/[0.92] border-[0.5px] border-solid border-black/10 rounded-full py-[5px] pr-[13px] pl-[11px] backdrop-blur-[8px]">
+      <span className="w-1.5 h-1.5 rounded-full bg-[#E52321] shrink-0 block" />
+      <span className="text-[11px] font-medium tracking-[0.07em] text-black/50 lowercase">
         {label}
       </span>
     </div>
@@ -178,7 +162,6 @@ const CustomCursor = () => {
       rafRef.current = requestAnimationFrame(loop);
       const { variant: v, pressed: pr, visible: vis } = stateRef.current;
 
-      // Direct follow — no magnetic offset
       cursorPos.current.x += (rawPos.current.x - cursorPos.current.x) * 0.18;
       cursorPos.current.y += (rawPos.current.y - cursorPos.current.y) * 0.18;
 
@@ -199,6 +182,7 @@ const CustomCursor = () => {
       const dS = sp(dotScale.current, tDot, dotScalev.current, 700, 38, DT);
       dotScale.current = dS.val; dotScalev.current = dS.vel;
 
+      // Must stay as direct DOM mutations: 60fps spring physics
       const ring = ringElRef.current;
       const dot = dotElRef.current;
       if (ring) {
@@ -279,16 +263,10 @@ const CustomCursor = () => {
   const showLabel = Boolean(label);
 
   return (
-    <div ref={containerRef} style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999 }} aria-hidden="true">
+    <div ref={containerRef} className="fixed inset-0 pointer-events-none z-[9999]" aria-hidden="true">
       <div
         ref={ringElRef}
-        style={{
-          position: 'fixed', left: 0, top: 0,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          willChange: 'transform, width, height',
-          border: `1px solid rgba(229,35,33,0.32)`,
-          background: 'rgba(229,35,33,0.05)',
-        }}
+        className="fixed left-0 top-0 flex items-center justify-center will-change-[transform,width,height] border border-[rgba(229,35,33,0.32)] bg-[rgba(229,35,33,0.05)]"
       >
         <AnimatePresence>
           {showLabel && <CursorLabel label={label} key={label} />}
@@ -296,10 +274,7 @@ const CustomCursor = () => {
 
         <div
           ref={dotElRef}
-          style={{
-            width: 8, height: 8, borderRadius: '50%',
-            background: RED, flexShrink: 0, willChange: 'transform',
-          }}
+          className="w-2 h-2 rounded-full bg-[#E52321] shrink-0 will-change-transform"
         />
       </div>
     </div>
