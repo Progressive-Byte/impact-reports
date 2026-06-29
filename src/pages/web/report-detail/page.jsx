@@ -213,7 +213,7 @@ const ReportDetail = () => {
             />
           )}
 
-          <ReportCTAFooter donationUrl={report.donationUrl} slug={report.slug || slug} projectName={report.projectName} />
+          <ReportCTAFooter donationUrl={report.donationUrl} slug={report.slug || slug} projectName={report.projectName} hiddenFields={hiddenSet} />
         </div>
       </div>
 
