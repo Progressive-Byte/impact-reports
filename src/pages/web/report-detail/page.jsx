@@ -13,7 +13,7 @@ import ProjectCountries from './components/ProjectCountries';
 import ReportHero from './components/ReportHero';
 import ProjectMetaCard from './components/ProjectMetaCard';
 import DemographicsCard from './components/DemographicsCard';
-import TestimonialCard from './components/TestimonialCard';
+import TestimonialSlider from './components/TestimonialSlider';
 import FieldDocumentation from './components/FieldDocumentation';
 import LocationsSection from './components/LocationsSection';
 import ReportCTAFooter from './components/ReportCTAFooter';
