@@ -161,6 +161,24 @@ const ReportsModule = ({ onCountChange }) => {
     }
   };
 
+  const handleToggleVisibility = useCallback(async (fieldKey) => {
+    const current = form.hiddenFields || [];
+    const next = current.includes(fieldKey)
+      ? current.filter(k => k !== fieldKey)
+      : [...current, fieldKey];
+    update('hiddenFields', next);
+    if (!reportId) return;
+    try {
+      await adminApiRequest(`/api/reports/${reportId}/field-visibility`, {
+        method: 'PATCH',
+        body:   JSON.stringify({ hiddenFields: next }),
+      });
+    } catch {
+      update('hiddenFields', current);
+      toast.error('Failed to update field visibility');
+    }
+  }, [form.hiddenFields, reportId]);
+
   const handleApprove = async () => {
     setSaving(true);
     try {
