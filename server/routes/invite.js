@@ -72,7 +72,6 @@ router.get('/validate', async (req, res) => {
     res.json({
       email:                  invite.email,
       role:                   invite.role,
-      region:                 invite.region,
       enforceStrongPasswords: settings?.enforceStrongPasswords ?? false,
     });
   } catch (err) {
