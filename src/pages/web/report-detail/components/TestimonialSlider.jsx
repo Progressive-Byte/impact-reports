@@ -17,13 +17,15 @@ const TestimonialSlider = ({ testimonials }) => {
   // Single testimonial — render the full card as-is, no slider chrome
   if (testimonials.length === 1) return <TestimonialCard testimonial={testimonials[0]} />;
 
+  // Dot navigation: direction inferred from index position
   const goTo = (index) => {
     setDirection(index > current ? 1 : -1);
     setCurrent(index);
   };
 
-  const prev = () => goTo(current === 0 ? testimonials.length - 1 : current - 1);
-  const next = () => goTo(current === testimonials.length - 1 ? 0 : current + 1);
+  // Arrow/swipe navigation: direction is always fixed regardless of wrap-around
+  const prev = () => { setDirection(-1); setCurrent(current === 0 ? testimonials.length - 1 : current - 1); };
+  const next = () => { setDirection(1);  setCurrent(current === testimonials.length - 1 ? 0 : current + 1); };
 
   // Touch swipe (mobile)
   const touchStartX = useRef(null);
