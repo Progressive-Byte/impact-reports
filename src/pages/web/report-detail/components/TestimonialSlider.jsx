@@ -12,6 +12,7 @@ const variants = {
 const TestimonialSlider = ({ testimonials }) => {
   const [current,   setCurrent]   = useState(0);
   const [direction, setDirection] = useState(1);
+  const touchStartX = useRef(null);
 
   if (!testimonials?.length) return null;
 
@@ -27,9 +28,6 @@ const TestimonialSlider = ({ testimonials }) => {
   // Arrow/swipe navigation: direction is always fixed regardless of wrap-around
   const prev = () => { setDirection(-1); setCurrent(current === 0 ? testimonials.length - 1 : current - 1); };
   const next = () => { setDirection(1);  setCurrent(current === testimonials.length - 1 ? 0 : current + 1); };
-
-  // Touch swipe (mobile)
-  const touchStartX = useRef(null);
   const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
   const handleTouchEnd = (e) => {
     if (touchStartX.current === null) return;
