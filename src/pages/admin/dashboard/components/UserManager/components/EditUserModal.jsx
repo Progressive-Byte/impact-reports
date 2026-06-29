@@ -13,21 +13,18 @@ const ROLE_OPTIONS = [
 ];
 
 const EditUserModal = ({ user, open, onClose, onUpdated }) => {
-  const [form,              setForm]              = useState({ username: '', email: '', region: '', role: 'editor', department: '' });
+  const [form,              setForm]              = useState({ username: '', email: '', role: 'editor', department: '' });
   const [loading,           setLoading]           = useState(false);
-  const [regionOptions,     setRegionOptions]     = useState([]);
   const [departmentOptions, setDepartmentOptions] = useState([]);
 
-  // Fetch regions + departments from DB when modal opens
+  // Fetch departments from DB when modal opens
   useEffect(() => {
     if (!open) return;
-    Promise.all([
-      publicApiRequest('/api/config/regions'),
-      publicApiRequest('/api/config/departments'),
-    ]).then(([regData, depData]) => {
-      setRegionOptions((regData.regions     || []).map(r => ({ value: r, label: r })));
-      setDepartmentOptions((depData.departments || []).map(d => ({ value: d, label: d })));
-    }).catch(() => {});
+    publicApiRequest('/api/config/departments')
+      .then((depData) => {
+        setDepartmentOptions((depData.departments || []).map(d => ({ value: d, label: d })));
+      })
+      .catch(() => {});
   }, [open]);
 
   // Sync form when user prop changes
@@ -36,7 +33,6 @@ const EditUserModal = ({ user, open, onClose, onUpdated }) => {
       setForm({
         username:   user.username   || '',
         email:      user.email      || '',
-        region:     user.region     || '',
         role:       user.role       || 'editor',
         department: user.department || '',
       });
