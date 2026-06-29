@@ -166,6 +166,7 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {}, hiddenFields = [], o
         placeholder="https://youtube.com/watch?v=... or Vimeo / S3 link"
         value={form.videoUrl}
         onChange={e => update('videoUrl', e.target.value)}
+        rightLabel={<FieldToggle fieldKey="videoUrl" hiddenFields={hiddenFields} onToggle={onToggle} />}
       />
 
       {/* ── Milestones ────────────────────────────────────────────────── */}
