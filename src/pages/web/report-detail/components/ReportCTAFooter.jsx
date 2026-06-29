@@ -42,8 +42,9 @@ const SOCIALS = [
   },
 ];
 
-const ReportCTAFooter = ({ donationUrl, slug, projectName }) => {
-  const href    = normalizeUrl(donationUrl);
+const ReportCTAFooter = ({ donationUrl, slug, projectName, hiddenFields }) => {
+  const donationHidden = hiddenFields?.has ? hiddenFields.has('donationUrl') : (hiddenFields || []).includes('donationUrl');
+  const href    = !donationHidden ? normalizeUrl(donationUrl) : '';
   const [open,   setOpen]   = useState(false);
   const [copied, setCopied] = useState(false);
   const wrapperRef = useRef(null);
