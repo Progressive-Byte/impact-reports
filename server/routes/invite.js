@@ -17,7 +17,7 @@ const sha256 = (val) => crypto.createHash('sha256').update(String(val)).digest('
 // POST /api/invite  — send invite (requires auth)
 router.post('/', protect, async (req, res) => {
   try {
-    const { email, role, region, department } = req.body;
+    const { email, role, department } = req.body;
 
     if (!email) return res.status(400).json({ message: 'Email is required' });
     if (!department?.trim()) return res.status(400).json({ message: 'Department is required' });
@@ -40,7 +40,6 @@ router.post('/', protect, async (req, res) => {
     await Invite.create({
       email: email.toLowerCase(),
       role,
-      region:     region || 'global',
       department: department.trim(),
       tokenHash:  sha256(rawToken),
       expiresAt:  new Date(Date.now() + 48 * 60 * 60 * 1000),
