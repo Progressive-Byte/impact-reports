@@ -5,52 +5,16 @@ import CustomSelect from '../../ReportsModule/reports/CustomSelect';
 import Checkbox from '../../../common/Checkbox';
 import { adminApiRequest } from '../../../../../../services/adminApi';
 import { useAdminAuth } from '../../../../../../context/AdminAuthContext';
+import StatusBadge from './StatusBadge';
+import { ROLE_OPTIONS, avatarColor, getInitials, formatLogin } from './userUtils';
 
-const ROLE_OPTIONS = [
-  { value: 'editor',     label: 'Editor' },
-  { value: 'viewer',     label: 'Viewer' },
-  { value: 'superadmin', label: 'Superadmin' },
-];
-
-const AVATAR_COLORS = [
-  'bg-teal-500', 'bg-emerald-500', 'bg-rose-400',
-  'bg-blue-500', 'bg-purple-500', 'bg-amber-500', 'bg-cyan-500',
-];
-
-const avatarColor = (str = '') => AVATAR_COLORS[str.charCodeAt(0) % AVATAR_COLORS.length];
-
-const getInitials = (username = '', email = '') => {
-  const src   = username || email.split('@')[0];
-  const parts = src.split(/[._\-\s]+/);
-  return parts.length >= 2
-    ? (parts[0][0] + parts[1][0]).toUpperCase()
-    : src.slice(0, 2).toUpperCase();
-};
-
-const formatLogin = (date) => {
-  if (!date) return 'Never';
-  const d = new Date(date);
-  return `${d.toISOString().slice(0, 10)} · ${d.toTimeString().slice(0, 5)}`;
-};
-
-const StatusBadge = ({ isActive }) => (
-  <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full border ${
-    isActive
-      ? 'bg-green-50 text-green-700 border-green-200'
-      : 'bg-red-50 text-[#E52321] border-red-200'
-  }`}>
-    {isActive
-      ? <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
-      : <SafeIcon icon="FiX" className="text-[10px] flex-shrink-0" />}
-    {isActive ? 'Active' : 'Suspended'}
-  </span>
-);
+// cols: checkbox | email/user | department | role | status | last-login | actions
+const ROW_GRID = 'grid grid-cols-[20px_minmax(10rem,2fr)_minmax(7rem,1fr)_11rem_7rem_minmax(9rem,1fr)_15rem] items-center gap-4 px-6';
 
 const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit }) => {
   const { admin: currentAdmin } = useAdminAuth();
   const isSelf = String(currentAdmin?._id) === String(user._id);
 
-  // Local optimistic role — kept for responsiveness during the API call
   const [role,          setRole]    = useState(user.role);
   const [confirmRevoke, setConfirm] = useState(false);
   const [loadingRole,   setLRole]   = useState(false);
@@ -109,9 +73,6 @@ const UserRow = ({ user, isSelected, onToggleSelect, onUpdate, onDelete, onEdit 
       setConfirm(false);
     }
   };
-
-  // cols: checkbox | email/user | department | role | status | last-login | actions
-  const ROW_GRID = 'grid grid-cols-[20px_minmax(10rem,2fr)_minmax(7rem,1fr)_11rem_7rem_minmax(9rem,1fr)_15rem] items-center gap-4 px-6';
 
   return (
     <div className={`${ROW_GRID} py-4 transition-colors ${
