@@ -83,6 +83,7 @@ export const reportToForm = (report, defaultRegion = '') => ({
     lat:     l.lat     || '',
     lng:     l.lng     || '',
   })),
+  hiddenFields:      report.hiddenFields || [],
 });
 
 export function validateStep(stepKey, form, isSuperAdmin = true) {
