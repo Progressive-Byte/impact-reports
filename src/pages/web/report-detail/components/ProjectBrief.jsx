@@ -22,18 +22,24 @@ const ProjectBrief = ({ report, hiddenFields }) => {
             </span> */}
           </div>
 
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {[
-              { label: 'Project ID', value: shortId },
-              { label: 'Primary Sector', value: report.sector },
-              { label: 'Operational Region', value: report.region },
-            ].map(({ label, value }) => (
-              <div key={label} className="rounded-2xl bg-white border border-gray-100 p-5">
-                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">{label}</p>
-                <p className="text-sm font-black text-[#0B0D0F]">{value || '—'}</p>
+          {(() => {
+            const metaCards = [
+              !isHidden('actualProjectId') && { label: 'Project ID',         value: shortId },
+              !isHidden('sector')          && { label: 'Primary Sector',      value: report.sector },
+              !isHidden('region')          && { label: 'Operational Region',  value: report.region },
+            ].filter(Boolean);
+            if (!metaCards.length) return null;
+            return (
+              <div className={`mt-6 grid grid-cols-1 gap-4 ${metaCards.length === 1 ? 'sm:grid-cols-1' : metaCards.length === 2 ? 'sm:grid-cols-2' : 'sm:grid-cols-3'}`}>
+                {metaCards.map(({ label, value }) => (
+                  <div key={label} className="rounded-2xl bg-white border border-gray-100 p-5">
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">{label}</p>
+                    <p className="text-sm font-black text-[#0B0D0F]">{value || '—'}</p>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            );
+          })()}
         </div>
 
         {report.projectBackground && (
