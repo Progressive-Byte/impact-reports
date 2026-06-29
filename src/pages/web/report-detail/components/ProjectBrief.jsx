@@ -42,7 +42,7 @@ const ProjectBrief = ({ report, hiddenFields }) => {
           })()}
         </div>
 
-        {report.projectBackground && (
+        {!isHidden('projectBackground') && report.projectBackground && (
           <CollapsibleSection
             title="Project Background"
             isOpen={openSections.background}
@@ -56,7 +56,7 @@ const ProjectBrief = ({ report, hiddenFields }) => {
           </CollapsibleSection>
         )}
 
-        {report.strategicResponse && (
+        {!isHidden('strategicResponse') && report.strategicResponse && (
           <CollapsibleSection
             title="Strategic Response"
             isOpen={openSections.response}
