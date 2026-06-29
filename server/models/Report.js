@@ -81,6 +81,9 @@ const reportSchema = new mongoose.Schema(
 
     // Completed step tracking
     stepsCompleted:    [{ type: String, enum: ['general', 'narrative', 'metrics', 'media', 'location'] }],
+
+    // Field visibility — keys in this array are hidden on the public report page
+    hiddenFields:      [{ type: String }],
   },
   { timestamps: true }
 );
