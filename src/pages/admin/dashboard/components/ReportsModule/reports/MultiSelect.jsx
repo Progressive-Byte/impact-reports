@@ -66,9 +66,12 @@ const MultiSelect = ({
   return (
     <div className="relative" ref={ref}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-          {label} {required && <span className="text-[#E52321]">*</span>}
-        </label>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="text-sm font-medium text-gray-700">
+            {label} {required && <span className="text-[#E52321]">*</span>}
+          </label>
+          {rightLabel}
+        </div>
       )}
 
       <button
