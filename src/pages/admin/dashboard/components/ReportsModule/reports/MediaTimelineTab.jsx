@@ -175,9 +175,12 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {}, hiddenFields = [], o
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
             Project Milestones <span className="text-[#E52321]">*</span>
           </p>
-          {fieldErrors.milestones && (
-            <p className="text-xs text-red-500 font-medium">{fieldErrors.milestones}</p>
-          )}
+          <div className="flex items-center gap-3">
+            {fieldErrors.milestones && (
+              <p className="text-xs text-red-500 font-medium">{fieldErrors.milestones}</p>
+            )}
+            <FieldToggle fieldKey="milestones" hiddenFields={hiddenFields} onToggle={onToggle} />
+          </div>
         </div>
         <div className="space-y-3">
           {form.milestones.map((m) => (
