@@ -59,7 +59,7 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
                 backgroundImage:    `url(${media.url})`,
                 backgroundSize:     'cover',
                 backgroundPosition: 'center',
-                filter:             'blur(12px)',
+                filter:             'blur(5px)',
                 transform:          'scale(1.1)', // hide blur edges
               }}
             />
