@@ -58,6 +58,8 @@ const TestimonialSlider = ({ testimonials }) => {
           animate="center"
           exit="exit"
           transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           <TestimonialCard testimonial={testimonials[current]} bare />
         </motion.div>
