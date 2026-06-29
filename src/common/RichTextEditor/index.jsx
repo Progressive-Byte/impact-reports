@@ -56,10 +56,13 @@ const RichTextEditor = ({
   return (
     <div>
       {label && (
-        <label className="flex items-center gap-1.5 mb-1.5 text-sm font-medium text-gray-700">
-          {label}
-          {required && !readOnly && <span className="text-[#E52321]">*</span>}
-        </label>
+        <div className="flex items-center justify-between mb-1.5">
+          <label className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
+            {label}
+            {required && !readOnly && <span className="text-[#E52321]">*</span>}
+          </label>
+          {rightLabel}
+        </div>
       )}
 
       <div className={`border rounded-xl overflow-hidden transition-all ${
