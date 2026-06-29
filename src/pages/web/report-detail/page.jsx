@@ -170,9 +170,7 @@ const ReportDetail = () => {
           <div className="space-y-8">
             {/* <ProjectMetaCard report={report} /> */}
             {hasDemographics && <DemographicsCard demographics={report.demographics} />}
-            {report.testimonials?.map((t, i) => (
-              <TestimonialCard key={i} testimonial={t} />
-            ))}
+            <TestimonialSlider testimonials={report.testimonials} />
           </div>
         </div>
 
