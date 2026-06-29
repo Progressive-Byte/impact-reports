@@ -121,7 +121,6 @@ router.post('/register', async (req, res) => {
       email:      invite.email,
       password,
       role:       invite.role,
-      region:     invite.region,
       department: invite.department || '',
       isActive:   true,
     });
