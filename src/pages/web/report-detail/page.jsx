@@ -130,7 +130,7 @@ const ReportDetail = () => {
           </Link>
         </div>
 
-        <ReportHero report={report} onImageError={handleImageError} />
+        <ReportHero report={report} onImageError={handleImageError} hiddenFields={hiddenSet} />
 
         {/* Stats bar */}
         {(() => {
