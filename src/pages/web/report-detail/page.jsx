@@ -77,13 +77,19 @@ const ReportDetail = () => {
     return [...new Set((report.countries || []).map(cleanCountryName))].sort();
   }, [report]);
 
+  const hiddenSet = useMemo(() => new Set(report?.hiddenFields || []), [report]);
+  const isHidden = (key) => hiddenSet.has(key);
+
   const fieldReports = useMemo(() => {
     if (!report) return [];
     const items = [];
-    if (report.videoUrl) items.push({ type: 'video', url: report.videoUrl });
-    (report.images || []).forEach((img) => items.push({ type: 'image', url: img.url }));
+    if (report.videoUrl && !isHidden('videoUrl')) items.push({ type: 'video', url: report.videoUrl });
+    if (!isHidden('images')) {
+      (report.images || []).forEach((img) => items.push({ type: 'image', url: img.url }));
+    }
     return items;
-  }, [report]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [report, hiddenSet]);
 
   const handleImageError = (e) => {
     e.target.onerror = null;
