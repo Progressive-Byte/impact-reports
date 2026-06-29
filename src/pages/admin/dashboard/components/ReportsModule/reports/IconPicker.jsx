@@ -1,20 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
+import * as FiIcons from 'react-icons/fi';
 import SafeIcon from '../../../../../../common/SafeIcon';
 
-const ICONS = [
-  'FiHome',       'FiDroplet',    'FiSun',        'FiHeart',      'FiUsers',      'FiUser',
-  'FiBook',       'FiBookOpen',   'FiPackage',     'FiFilter',     'FiShield',     'FiTruck',
-  'FiGlobe',      'FiMapPin',     'FiActivity',    'FiTool',       'FiCoffee',     'FiBox',
-  'FiLifeBuoy',   'FiZap',        'FiStar',        'FiFlag',       'FiBriefcase',  'FiCamera',
-  'FiClock',      'FiCompass',    'FiDollarSign',  'FiGift',       'FiPhone',      'FiSmile',
-  'FiAward',      'FiBarChart2',  'FiCheckCircle', 'FiDatabase',   'FiGrid',       'FiLayers',
-  'FiMap',        'FiMic',        'FiMonitor',     'FiNavigation', 'FiPercent',    'FiPieChart',
-  'FiRadio',      'FiSettings',   'FiSliders',     'FiUmbrella',   'FiWifi',       'FiWind',
-  'FiCalendar',   'FiCpu',        'FiFeather',     'FiHash',       'FiImage',      'FiKey',
-  'FiLock',       'FiMusic',      'FiPrinter',     'FiSave',       'FiSearch',     'FiTrendingUp',
-  'FiAnchor',     'FiBattery',    'FiCloud',       'FiCode',       'FiEdit',       'FiExternalLink',
-  'FiEye',        'FiFilm',       'FiHelpCircle',  'FiInfo',       'FiLink',       'FiMail',
-];
+// Derived from the installed react-icons/fi package — no hardcoding needed.
+// Automatically includes any new icons when react-icons is updated.
+const ICONS = Object.keys(FiIcons).filter(k => k.startsWith('Fi')).sort();
 
 const IconPicker = ({ value, onChange }) => {
   const [open,   setOpen]   = useState(false);
@@ -58,7 +48,7 @@ const IconPicker = ({ value, onChange }) => {
           <div className="p-2 border-b border-gray-100">
             <input
               type="text"
-              placeholder="Search icons..."
+              placeholder={`Search ${ICONS.length} icons…`}
               value={search}
               onChange={e => setSearch(e.target.value)}
               autoFocus
