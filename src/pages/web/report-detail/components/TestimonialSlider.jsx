@@ -2,10 +2,11 @@ import { useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import TestimonialCard from './TestimonialCard';
 
+// Pure slide — no opacity fade, so one card pushes the other with no gap
 const variants = {
-  enter:  (dir) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
-  center:           { x: 0, opacity: 1 },
-  exit:   (dir) => ({ x: dir > 0 ? '-100%' : '100%', opacity: 0 }),
+  enter:  (dir) => ({ x: dir > 0 ? '100%' : '-100%' }),
+  center:           { x: 0 },
+  exit:   (dir) => ({ x: dir > 0 ? '-100%' : '100%' }),
 };
 
 const TestimonialSlider = ({ testimonials }) => {
