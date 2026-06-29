@@ -13,9 +13,9 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
   useEffect(() => {
     if (!isOpen) return;
     const handler = (e) => {
-      if (e.key === 'Escape')                    onClose();
-      if (e.key === 'ArrowLeft'  && hasPrev)     onNavigate(currentIndex - 1);
-      if (e.key === 'ArrowRight' && hasNext)     onNavigate(currentIndex + 1);
+      if (e.key === 'Escape')               onClose();
+      if (e.key === 'ArrowLeft'  && hasPrev) onNavigate(currentIndex - 1);
+      if (e.key === 'ArrowRight' && hasNext) onNavigate(currentIndex + 1);
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -23,10 +23,8 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
 
   // Touch swipe (mobile)
   const touchStartX = useRef(null);
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-  const handleTouchEnd = (e) => {
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd   = (e) => {
     if (touchStartX.current === null) return;
     const delta = e.changedTouches[0].clientX - touchStartX.current;
     if (Math.abs(delta) < 40) { touchStartX.current = null; return; }
@@ -44,26 +42,35 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-8 md:p-12 cursor-zoom-out"
+          // overflow-hidden so the scale(1.2) blurred bg never bleeds outside viewport
+          className="fixed inset-0 z-[100] overflow-hidden flex items-center justify-center p-4 sm:p-8 md:p-12 cursor-zoom-out"
           onClick={onClose}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* ── Background ─────────────────────────────────────────────────── */}
-          <div className="absolute inset-0 overflow-hidden">
-            {/* Mobile: blurred image backdrop (images only) */}
-            {isImage && media.url && (
-              <img
-                src={media.url}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-80 sm:opacity-0 pointer-events-none select-none"
-              />
-            )}
-            {/* Dark overlay — lighter on mobile (image does the work), full black on desktop */}
-            <div className="absolute inset-0 bg-black/50 sm:bg-black/95" />
-          </div>
+          {/* ── Layer 1: solid black base (always) ──────────────────────── */}
+          <div className="absolute inset-0 bg-black" />
 
-          {/* ── Prev arrow (desktop only) ───────────────────────────────────── */}
+          {/* ── Layer 2: blurred current image (mobile only, images only) ── */}
+          {isImage && media.url && (
+            <div
+              className="absolute inset-0 sm:hidden"
+              style={{
+                backgroundImage:    `url(${media.url})`,
+                backgroundSize:     'cover',
+                backgroundPosition: 'center',
+                filter:             'blur(28px)',
+                transform:          'scale(1.2)', // hide blur edges
+              }}
+            />
+          )}
+
+          {/* ── Layer 3: dark tint overlay ───────────────────────────────── */}
+          {/* mobile: semi-transparent so the blurred image shows through   */}
+          {/* desktop: near-opaque black                                      */}
+          <div className="absolute inset-0 bg-black/55 sm:bg-black/92" />
+
+          {/* ── Prev arrow (desktop only) ─────────────────────────────────── */}
           <AnimatePresence>
             {hasPrev && (
               <motion.button
@@ -79,7 +86,7 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
             )}
           </AnimatePresence>
 
-          {/* ── Next arrow (desktop only) ───────────────────────────────────── */}
+          {/* ── Next arrow (desktop only) ─────────────────────────────────── */}
           <AnimatePresence>
             {hasNext && (
               <motion.button
@@ -95,20 +102,20 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
             )}
           </AnimatePresence>
 
-          {/* ── Media card ─────────────────────────────────────────────────── */}
+          {/* ── Media card ────────────────────────────────────────────────── */}
           <motion.div
             key={currentIndex}
             initial={{ scale: 0.92, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.92, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative max-w-7xl max-h-full w-full flex flex-col items-center justify-center cursor-default"
+            className="relative z-10 max-w-7xl max-h-full w-full flex flex-col items-center justify-center cursor-default"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
               onClick={onClose}
-              className="absolute -top-12 right-0 sm:-top-4 sm:-right-12 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors group z-10"
+              className="absolute -top-12 right-0 sm:-top-4 sm:-right-12 w-10 h-10 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center text-white transition-colors group"
             >
               <SafeIcon icon="FiX" className="text-2xl group-hover:rotate-90 transition-transform" />
             </button>
@@ -135,7 +142,7 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
             })() : (
               <img
                 src={media.url}
-                className="max-w-full max-h-[80vh] sm:max-h-[85vh] object-contain rounded-xl shadow-2xl border border-white/10"
+                className="max-w-full max-h-[78vh] sm:max-h-[85vh] object-contain rounded-xl shadow-2xl border border-white/10"
                 alt="Documentation"
                 draggable={false}
               />
@@ -152,7 +159,6 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
                   {currentIndex + 1} / {mediaList.length}
                 </p>
               )}
-              {/* Mobile swipe hint — visible only on first open if multiple images */}
               {mediaList.length > 1 && (
                 <p className="sm:hidden text-white/30 text-[9px] mt-2 tracking-widest uppercase">
                   swipe to navigate
