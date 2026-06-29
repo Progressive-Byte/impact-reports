@@ -1,8 +1,11 @@
 import SafeIcon from '../../../../../../common/SafeIcon';
 import { Input } from './FormField';
 import IconPicker from './IconPicker';
+import FieldToggle from './FieldToggle';
 
-const MetricsTab = ({ form, update, fieldErrors = {} }) => {
+const MetricsTab = ({ form, update, fieldErrors = {}, hiddenFields = [], onToggle }) => {
+  const toggle = (key) => <FieldToggle fieldKey={key} hiddenFields={hiddenFields} onToggle={onToggle} />;
+
   const addDeliverable = () =>
     update('deliverables', [...form.deliverables, { id: Date.now(), label: '', count: '', icon: '', description: '' }]);
   const removeDeliverable = (id) =>
@@ -15,7 +18,12 @@ const MetricsTab = ({ form, update, fieldErrors = {} }) => {
 
   return (
     <div className="space-y-5">
+      {/* Demographics section */}
       <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Demographics</p>
+          {toggle('demographics')}
+        </div>
         <div className="grid grid-cols-3 gap-4">
           <Input label="Children %" type="number" min="0" max="100" value={form.children} onChange={e => update('children', e.target.value)} error={overLimit ? ' ' : undefined} />
           <Input label="Women %"   type="number" min="0" max="100" value={form.women}    onChange={e => update('women',    e.target.value)} error={overLimit ? ' ' : undefined} />
@@ -41,28 +49,28 @@ const MetricsTab = ({ form, update, fieldErrors = {} }) => {
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
             Custom Deliverables <span className="text-[#E52321]">*</span>
           </p>
-          {fieldErrors.deliverables && (
-            <p className="text-xs text-red-500 font-medium">{fieldErrors.deliverables}</p>
-          )}
+          <div className="flex items-center gap-3">
+            {fieldErrors.deliverables && (
+              <p className="text-xs text-red-500 font-medium">{fieldErrors.deliverables}</p>
+            )}
+            {toggle('deliverables')}
+          </div>
         </div>
 
         <div className="space-y-3">
           {form.deliverables.map((d) => (
             <div key={d.id} className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-3">
-              {/* Row 1: icon picker + label + count + delete */}
               <div className="flex items-center gap-3">
                 <IconPicker
                   value={d.icon}
                   onChange={val => updateDeliverable(d.id, 'icon', val)}
                 />
-
                 <Input
                   placeholder="Metric Label (e.g. Solar Wells)"
                   value={d.label}
                   onChange={e => updateDeliverable(d.id, 'label', e.target.value)}
                   className="flex-1"
                 />
-
                 <Input
                   type="number"
                   placeholder="Count"
@@ -70,7 +78,6 @@ const MetricsTab = ({ form, update, fieldErrors = {} }) => {
                   onChange={e => updateDeliverable(d.id, 'count', e.target.value)}
                   className="w-28"
                 />
-
                 <button
                   onClick={() => removeDeliverable(d.id)}
                   className="w-10 h-10 flex items-center justify-center text-gray-400 hover:text-[#E52321] border border-gray-200 rounded-xl bg-white transition-colors flex-shrink-0"
@@ -78,8 +85,6 @@ const MetricsTab = ({ form, update, fieldErrors = {} }) => {
                   <SafeIcon icon="FiTrash2" className="text-sm" />
                 </button>
               </div>
-
-              {/* Row 2: description */}
               <Input
                 placeholder="Short description (e.g. Installed across rural communities)"
                 value={d.description}
