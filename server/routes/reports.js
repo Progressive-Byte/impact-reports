@@ -465,6 +465,29 @@ router.delete('/:id/permanent', async (req, res) => {
   }
 });
 
+// ── PATCH /api/reports/:id/field-visibility ─────────────────────────
+router.patch('/:id/field-visibility', async (req, res) => {
+  try {
+    if (req.admin.role === 'viewer') {
+      return res.status(403).json({ message: 'Viewers have read-only access' });
+    }
+    const report = await Report.findById(req.params.id);
+    if (!report) return res.status(404).json({ message: 'Report not found' });
+    if (!canEdit(req.admin, report)) {
+      return res.status(403).json({ message: 'Access denied' });
+    }
+    const { hiddenFields } = req.body;
+    if (!Array.isArray(hiddenFields)) {
+      return res.status(400).json({ message: 'hiddenFields must be an array' });
+    }
+    report.hiddenFields = hiddenFields;
+    await report.save();
+    res.json({ hiddenFields: report.hiddenFields });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // ── PATCH /api/reports/:id/approve ──────────────────────────────────
 router.patch('/:id/approve', async (req, res) => {
   try {
