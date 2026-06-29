@@ -7,11 +7,12 @@ const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1557682250-33bd709cbe8
 const ReportHero = ({ report, onImageError, hiddenFields }) => {
   const isHidden = (key) => hiddenFields?.has ? hiddenFields.has(key) : (hiddenFields || []).includes(key);
 
-  const heroSummary = (!isHidden('shortSubtitle') && report.shortSubtitle?.trim()) || (() => {
-    if (isHidden('projectBackground')) return '';
-    const bg = (report.projectBackground || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-    return bg.length > 200 ? bg.slice(0, 200).trimEnd() + '…' : bg;
-  })();
+  const heroSummary = isHidden('shortSubtitle')
+    ? ''
+    : report.shortSubtitle?.trim() || (() => {
+        const bg = (report.projectBackground || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+        return bg.length > 200 ? bg.slice(0, 200).trimEnd() + '…' : bg;
+      })();
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
