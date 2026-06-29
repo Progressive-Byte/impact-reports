@@ -188,24 +188,30 @@ const ReportDetail = () => {
         </div>
 
         <div className="mt-20 space-y-10 sm:space-y-12">
-          <FieldDocumentation
-            fieldReports={fieldReports}
-            onImageError={handleImageError}
-            onMediaSelect={(item) => setSelectedIndex(fieldReports.findIndex(f => f === item))}
-          />
+          {fieldReports.length > 0 && (
+            <FieldDocumentation
+              fieldReports={fieldReports}
+              onImageError={handleImageError}
+              onMediaSelect={(item) => setSelectedIndex(fieldReports.findIndex(f => f === item))}
+            />
+          )}
 
-          <ProjectCountries
-            countries={uniqueCountries}
-            region={report.region}
-            isOpen={openSections.countries}
-            onToggle={() => toggleSection('countries')}
-          />
+          {!isHidden('countries') && (
+            <ProjectCountries
+              countries={uniqueCountries}
+              region={report.region}
+              isOpen={openSections.countries}
+              onToggle={() => toggleSection('countries')}
+            />
+          )}
 
-          <LocationsSection
-            report={report}
-            isOpen={openSections.locations}
-            onToggle={() => toggleSection('locations')}
-          />
+          {!isHidden('countries') && (
+            <LocationsSection
+              report={report}
+              isOpen={openSections.locations}
+              onToggle={() => toggleSection('locations')}
+            />
+          )}
 
           <ReportCTAFooter donationUrl={report.donationUrl} slug={report.slug || slug} projectName={report.projectName} />
         </div>
