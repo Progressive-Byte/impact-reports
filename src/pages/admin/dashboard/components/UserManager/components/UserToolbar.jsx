@@ -39,7 +39,7 @@ const UserToolbar = ({
         />
         <input
           type="text"
-          placeholder="Search email, user or region…"
+          placeholder="Search email or username…"
           value={inputSearch}
           onChange={e => setInputSearch(e.target.value)}
           autoComplete="off"
