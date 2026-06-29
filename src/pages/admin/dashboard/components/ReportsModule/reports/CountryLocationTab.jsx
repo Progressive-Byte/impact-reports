@@ -16,7 +16,7 @@ function getStateOptions(countryName) {
   return State.getStatesOfCountry(iso).map(s => ({ value: s.name, label: s.name }));
 }
 
-const CountryLocationTab = ({ form, update, fieldErrors = {} }) => {
+const CountryLocationTab = ({ form, update, fieldErrors = {}, hiddenFields = [], onToggle }) => {
   const [gpsOpen,   setGpsOpen]   = useState(new Set());
   const [collapsed, setCollapsed] = useState(new Set());
   const [pickerCfg, setPickerCfg] = useState(null);
