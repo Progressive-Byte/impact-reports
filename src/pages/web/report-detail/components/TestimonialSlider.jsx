@@ -51,22 +51,31 @@ const TestimonialSlider = ({ testimonials }) => {
       {/* Top accent bar */}
       <div className="h-1 w-full bg-gradient-to-r from-[#E52321] via-[#E52321]/60 to-transparent" />
 
-      {/* Slide area — swipeable on mobile */}
-      <AnimatePresence custom={direction} mode="wait">
-        <motion.div
-          key={current}
-          custom={direction}
-          variants={variants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
+      {/* Slide area */}
+      <div className="relative overflow-hidden">
+        {/* Ghost — invisible, always renders current slide to hold container height */}
+        <div className="invisible pointer-events-none select-none" aria-hidden="true">
           <TestimonialCard testimonial={testimonials[current]} bare />
-        </motion.div>
-      </AnimatePresence>
+        </div>
+
+        {/* Animated slides — absolutely stacked so exit + enter happen simultaneously */}
+        <AnimatePresence custom={direction} initial={false}>
+          <motion.div
+            key={current}
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.32, ease: [0.32, 0.72, 0, 1] }}
+            className="absolute top-0 left-0 w-full"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+          >
+            <TestimonialCard testimonial={testimonials[current]} bare />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
       {/* Controls — docked inside the same card shell */}
       <div className="border-t border-gray-100 flex items-center justify-between px-6 py-3">

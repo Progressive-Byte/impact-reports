@@ -12,40 +12,30 @@ const ROLE_OPTIONS = [
   { value: 'superadmin', label: 'Superadmin' },
 ];
 
-const INITIAL = { email: '', role: 'editor', region: '', department: '' };
+const INITIAL = { email: '', role: 'editor', department: '' };
 
 const InviteModal = ({ open, onClose, onInviteSent }) => {
   const [form,              setForm]              = useState(INITIAL);
   const [loading,           setLoading]           = useState(false);
-  const [regionOptions,     setRegionOptions]     = useState([]);
   const [departmentOptions, setDepartmentOptions] = useState([]);
 
   useEffect(() => {
     if (!open) return;
-    Promise.all([
-      publicApiRequest('/api/config/regions'),
-      publicApiRequest('/api/config/departments'),
-    ]).then(([regData, depData]) => {
-      const regOpts = (regData.regions     || []).map(r => ({ value: r, label: r }));
-      const depOpts = (depData.departments || []).map(d => ({ value: d, label: d }));
-      setRegionOptions(regOpts);
-      setDepartmentOptions(depOpts);
-      setForm(p => ({
-        ...p,
-        region:     p.region     || regOpts[0]?.value || '',
-        department: p.department || '',
-      }));
-    }).catch(() => {});
+    publicApiRequest('/api/config/departments')
+      .then((depData) => {
+        setDepartmentOptions((depData.departments || []).map(d => ({ value: d, label: d })));
+      })
+      .catch(() => {});
   }, [open]);
 
   const handleClose = () => {
     if (loading) return;
-    setForm(p => ({ ...INITIAL, region: regionOptions[0]?.value || '' }));
+    setForm(INITIAL);
     onClose();
   };
 
   const handleSend = async () => {
-    if (!form.email.trim())     { toast.error('Email is required');      return; }
+    if (!form.email.trim())      { toast.error('Email is required');      return; }
     if (!form.department.trim()) { toast.error('Department is required'); return; }
 
     setLoading(true);
@@ -55,7 +45,7 @@ const InviteModal = ({ open, onClose, onInviteSent }) => {
         body: JSON.stringify(form),
       });
       toast.success(`Invite sent to ${form.email}`);
-      setForm(p => ({ ...INITIAL, region: regionOptions[0]?.value || '' }));
+      setForm(INITIAL);
       onClose();
       onInviteSent?.();
     } catch (err) {
