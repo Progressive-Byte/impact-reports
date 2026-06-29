@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import CollapsibleSection from '../../../../common/CollapsibleSection';
 
-const ProjectBrief = ({ report }) => {
+const ProjectBrief = ({ report, hiddenFields }) => {
   const [openSections, setOpenSections] = useState({ background: true, response: false });
   const toggle = (key) => setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  const isHidden = (key) => hiddenFields?.has ? hiddenFields.has(key) : (hiddenFields || []).includes(key);
 
   const shortId = report.projectId || `REP-${report.id.slice(-6).toUpperCase()}`;
 
