@@ -7,6 +7,7 @@ const WizardShell = ({
   step, loading, form, update, adminOptions, allAdminOptions, regionOptions, sectorOptions,
   StepContent, saving, onBack, onNext, onStepClick, onApprove,
   isSuperAdmin = true, isViewer = false, isApprover = false, fieldErrors = {},
+  hiddenFields = [], onToggleVisibility,
 }) => {
   const isReadOnly = isViewer || isApprover;
 
