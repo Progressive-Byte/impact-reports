@@ -48,7 +48,7 @@ const TestimonialSlider = ({ testimonials }) => {
       {/* Top accent bar */}
       <div className="h-1 w-full bg-gradient-to-r from-[#E52321] via-[#E52321]/60 to-transparent" />
 
-      {/* Slide area — overflow-hidden already on parent */}
+      {/* Slide area — swipeable on mobile */}
       <AnimatePresence custom={direction} mode="wait">
         <motion.div
           key={current}
