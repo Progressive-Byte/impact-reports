@@ -12,14 +12,17 @@ const readOnlyClasses =
 const errorBorderClasses =
   'border-red-400 focus:border-red-400 focus:ring-[3px] focus:ring-red-100 focus:ring-offset-0';
 
-export const Input = ({ label, required, error, readOnly, className = '', ...props }) => (
+export const Input = ({ label, required, error, readOnly, rightLabel, className = '', ...props }) => (
   <div className={className}>
     {label && (
-      <label className="flex items-center gap-1.5 mb-1.5 text-sm font-medium text-gray-700">
-        {label}
-        {required && !readOnly && <span className="text-[#E52321]">*</span>}
-        {readOnly && <SafeIcon icon="FiLock" className="text-[10px] text-gray-400" />}
-      </label>
+      <div className="flex items-center justify-between mb-1.5">
+        <label className="flex items-center gap-1.5 text-sm font-medium text-gray-700">
+          {label}
+          {required && !readOnly && <span className="text-[#E52321]">*</span>}
+          {readOnly && <SafeIcon icon="FiLock" className="text-[10px] text-gray-400" />}
+        </label>
+        {rightLabel}
+      </div>
     )}
     <input
       {...props}
