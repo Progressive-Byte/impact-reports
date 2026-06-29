@@ -10,6 +10,7 @@ const MultiSelect = ({
   onChange,
   options = [],
   placeholder = 'Select...',
+  rightLabel,
 }) => {
   const [open,   setOpen]   = useState(false);
   const [search, setSearch] = useState('');
