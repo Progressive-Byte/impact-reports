@@ -74,6 +74,7 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {}, hiddenFields = [], o
             <span className={`text-xs font-bold tabular-nums ${atImageLimit ? 'text-[#E52321]' : 'text-gray-400'}`}>
               {imageCount} / {MAX_IMAGES}
             </span>
+            <FieldToggle fieldKey="images" hiddenFields={hiddenFields} onToggle={onToggle} />
           </div>
         </div>
 
