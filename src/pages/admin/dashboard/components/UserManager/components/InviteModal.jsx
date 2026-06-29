@@ -100,26 +100,15 @@ const InviteModal = ({ open, onClose, onInviteSent }) => {
               />
             </div>
 
-            {/* Role + Region */}
-            <div className="grid grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Role</label>
-                <CustomSelect
-                  value={form.role}
-                  onChange={val => setForm(p => ({ ...p, role: val }))}
-                  options={ROLE_OPTIONS}
-                  disabled={loading}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Region</label>
-                <CustomSelect
-                  value={form.region}
-                  onChange={val => setForm(p => ({ ...p, region: val }))}
-                  options={regionOptions}
-                  disabled={loading}
-                />
-              </div>
+            {/* Role */}
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Role</label>
+              <CustomSelect
+                value={form.role}
+                onChange={val => setForm(p => ({ ...p, role: val }))}
+                options={ROLE_OPTIONS}
+                disabled={loading}
+              />
             </div>
 
             {/* Department */}
