@@ -326,6 +326,8 @@ const ReportsModule = ({ onCountChange }) => {
               isViewer={effectiveIsViewer}
               isApprover={isApprover}
               fieldErrors={fieldErrors}
+              hiddenFields={form.hiddenFields || []}
+              onToggleVisibility={handleToggleVisibility}
             />
           );
         })()
