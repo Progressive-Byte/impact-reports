@@ -4,11 +4,12 @@ import SafeIcon from '../../../../../../common/SafeIcon';
 import { Input } from './FormField';
 import RichTextEditor from '@/common/RichTextEditor';
 import { adminApiRequest } from '../../../../../../services/adminApi';
+import FieldToggle from './FieldToggle';
 
 const MAX_IMAGES  = 10;
 const MAX_SIZE_MB = 2;
 
-const MediaTimelineTab = ({ form, update, fieldErrors = {} }) => {
+const MediaTimelineTab = ({ form, update, fieldErrors = {}, hiddenFields = [], onToggle }) => {
   const fileInputRef              = useRef({});
   const [uploading, setUploading] = useState({});
 
