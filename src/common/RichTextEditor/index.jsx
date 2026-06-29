@@ -14,6 +14,7 @@ const RichTextEditor = ({
   placeholder = '',
   minHeight = 120,
   readOnly = false,
+  rightLabel,
 }) => {
   const editor = useEditor({
     extensions: [
