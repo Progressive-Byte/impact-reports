@@ -25,6 +25,18 @@ const TestimonialSlider = ({ testimonials }) => {
   const prev = () => goTo(current === 0 ? testimonials.length - 1 : current - 1);
   const next = () => goTo(current === testimonials.length - 1 ? 0 : current + 1);
 
+  // Touch swipe (mobile)
+  const touchStartX = useRef(null);
+  const handleTouchStart = (e) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(delta) < 40) { touchStartX.current = null; return; }
+    if (delta < 0) next();
+    else prev();
+    touchStartX.current = null;
+  };
+
   return (
     // Unified card shell — same radius/bg/border/shadow as a single TestimonialCard
     <div className="relative bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden">
