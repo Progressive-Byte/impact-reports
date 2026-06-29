@@ -4,8 +4,11 @@ import SafeIcon from '../../../../common/SafeIcon';
 
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1557682250-33bd709cbe85?auto=format&fit=crop&w=1200&q=80';
 
-const ReportHero = ({ report, onImageError }) => {
-  const heroSummary = report.shortSubtitle?.trim() || (() => {
+const ReportHero = ({ report, onImageError, hiddenFields }) => {
+  const isHidden = (key) => hiddenFields?.has ? hiddenFields.has(key) : (hiddenFields || []).includes(key);
+
+  const heroSummary = (!isHidden('shortSubtitle') && report.shortSubtitle?.trim()) || (() => {
+    if (isHidden('projectBackground')) return '';
     const bg = (report.projectBackground || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     return bg.length > 200 ? bg.slice(0, 200).trimEnd() + '…' : bg;
   })();
