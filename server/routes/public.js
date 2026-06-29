@@ -132,6 +132,7 @@ router.get('/reports/:idOrSlug', async (req, res) => {
       countries:    report.countries    || [],
       locations:    report.locations    || [],
       testimonials: report.testimonials || [],
+      hiddenFields: report.hiddenFields || [],
     });
   } catch (err) {
     if (err.name === 'CastError') return res.status(404).json({ message: 'Report not found' });
