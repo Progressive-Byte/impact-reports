@@ -26,6 +26,7 @@ export const BLANK_FORM = {
   milestones:        [{ id: 1, date: '', title: '', description: '' }],
   countries:         [],
   locations:         [],
+  hiddenFields:      [],
 };
 
 export const getBlankForm = (defaultRegion = '') => ({
