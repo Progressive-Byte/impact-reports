@@ -3,6 +3,7 @@ import { Country, State } from 'country-state-city';
 import MultiSelect from './MultiSelect';
 import GpsPickerModal from './GpsPickerModal';
 import CountrySection from './CountrySection';
+import FieldToggle from './FieldToggle';
 
 // Built once at module level
 const ALL_COUNTRIES   = Country.getAllCountries();
