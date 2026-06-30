@@ -64,7 +64,7 @@ const ReportListRow = ({ report }) => {
       </div>
 
       {/* ── Desktop layout ────────────────────────────────────────── */}
-      <div className="hidden sm:flex items-center gap-5 p-5">
+      <div className="hidden sm:flex items-start gap-5 p-5">
         {/* Image — all corners rounded */}
         <Link to={destination} className="block w-40 h-24 rounded-2xl overflow-hidden flex-shrink-0">
           <img
