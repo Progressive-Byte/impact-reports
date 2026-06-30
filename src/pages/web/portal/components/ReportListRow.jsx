@@ -85,28 +85,32 @@ const ReportListRow = ({ report }) => {
             <p className="mt-1 text-sm text-gray-500 line-clamp-2 leading-relaxed">{report.summary}</p>
           </div>
 
-          {/* Bottom row: meta left — impact + button right */}
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
-            {/* Location meta */}
-            <div className="flex items-center gap-2.5 min-w-0">
-              <span className="flex items-center gap-1 text-xs font-semibold text-gray-500 flex-shrink-0">
-                <FiMapPin className="text-[#E52321] text-[11px]" />
+          {/* Bottom row: [region / year-sector] | [IMPACT / number] → [button] */}
+          <div className="flex items-center mt-3 pt-3 border-t border-gray-50">
+            {/* Left col: region + year-sector stacked */}
+            <div className="flex flex-col min-w-0">
+              <span className="flex items-center gap-1 text-xs font-semibold text-gray-500">
+                <FiMapPin className="text-[#E52321] text-[11px] flex-shrink-0" />
                 {report.region}
               </span>
-              <span className="w-px h-3 bg-gray-300 flex-shrink-0" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 truncate">
-                {report.year} &middot; {report.sector}
+              <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+                {report.year} - {report.sector}
               </span>
             </div>
 
-            {/* Impact + button */}
-            <div className="flex items-center gap-3 flex-shrink-0 ml-4">
-              <div className="text-right">
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Impact</p>
-                <p className="text-base font-black text-[#0B0D0F]">
-                  {report.metrics.beneficiaries.toLocaleString()}
-                </p>
-              </div>
+            {/* Vertical divider */}
+            <span className="w-px h-8 bg-gray-200 flex-shrink-0 mx-4" />
+
+            {/* Right col: IMPACT label + number stacked */}
+            <div className="flex flex-col flex-shrink-0">
+              <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Impact</p>
+              <p className="text-base font-black text-[#0B0D0F]">
+                {report.metrics.beneficiaries.toLocaleString()}
+              </p>
+            </div>
+
+            {/* Button pushed to far right */}
+            <div className="ml-auto pl-4">
               <ArrowBtn to={destination} />
             </div>
           </div>
