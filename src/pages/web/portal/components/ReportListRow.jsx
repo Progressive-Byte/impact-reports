@@ -48,7 +48,7 @@ const ReportListRow = ({ report }) => {
               {report.title}
             </h3>
           </Link>
-          <p className="mt-1 text-sm text-gray-500 line-clamp-3 leading-relaxed">{report.summary}</p>
+          <p className="mt-1 text-sm text-gray-500 line-clamp-1 leading-relaxed">{report.summary}</p>
 
           {/* Impact + button */}
           <div className="flex items-end justify-between mt-3">
