@@ -64,9 +64,9 @@ const ReportListRow = ({ report }) => {
       </div>
 
       {/* ── Desktop layout ────────────────────────────────────────── */}
-      <div className="hidden sm:flex items-stretch gap-5 p-5">
+      <div className="hidden sm:flex items-center gap-5 p-5">
         {/* Image — all corners rounded */}
-        <Link to={destination} className="block w-44 h-[7rem] rounded-2xl overflow-hidden flex-shrink-0 self-center">
+        <Link to={destination} className="block w-40 h-24 rounded-2xl overflow-hidden flex-shrink-0">
           <img
             src={report.image}
             alt={report.title}
@@ -75,7 +75,7 @@ const ReportListRow = ({ report }) => {
         </Link>
 
         {/* Content — grows, stacks vertically */}
-        <div className="flex-grow min-w-0 flex flex-col justify-between">
+        <div className="flex-grow min-w-0 flex flex-col">
           <div>
             <Link to={destination}>
               <h3 className="text-xl font-black text-[#0B0D0F] tracking-tight line-clamp-1 group-hover:text-[#E52321] transition-colors">
