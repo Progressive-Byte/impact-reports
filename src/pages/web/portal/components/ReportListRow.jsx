@@ -64,9 +64,9 @@ const ReportListRow = ({ report }) => {
       </div>
 
       {/* ── Desktop layout ────────────────────────────────────────── */}
-      <div className="hidden sm:flex items-start gap-5 p-5">
-        {/* Image — all corners rounded */}
-        <Link to={destination} className="block w-40 h-24 rounded-2xl overflow-hidden flex-shrink-0">
+      <div className="hidden sm:flex items-stretch gap-5 p-5">
+        {/* Image — stretches to full card height, all corners rounded */}
+        <Link to={destination} className="block w-40 rounded-2xl overflow-hidden flex-shrink-0">
           <img
             src={report.image}
             alt={report.title}
@@ -82,11 +82,11 @@ const ReportListRow = ({ report }) => {
                 {report.title}
               </h3>
             </Link>
-            <p className="mt-1 text-sm text-gray-500 line-clamp-2 leading-relaxed">{report.summary}</p>
+            <p className="mt-1 text-sm text-gray-500 line-clamp-1 leading-relaxed">{report.summary}</p>
           </div>
 
-          {/* Bottom row: [region / year-sector] | [IMPACT / number] → [button] */}
-          <div className="flex items-center mt-3 pt-3 border-t border-gray-50">
+          {/* Bottom row pinned to bottom — [region / year-sector] | [IMPACT / number] → [button] */}
+          <div className="flex items-center mt-auto pt-3 border-t border-gray-50">
             {/* Left col: region + year-sector stacked */}
             <div className="flex flex-col min-w-0">
               <span className="flex items-center gap-1 text-xs font-semibold text-gray-500">
