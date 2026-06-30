@@ -5,9 +5,9 @@ import { FiMapPin, FiArrowRight } from 'react-icons/fi';
 const ArrowBtn = ({ to }) => (
   <Link
     to={to}
-    className="inline-flex items-center justify-center rounded-full bg-[#0B0D0F] hover:bg-[#E52321] text-white p-2.5 transition-colors duration-300 flex-shrink-0"
+    className="inline-flex items-center justify-center rounded-full bg-[#0B0D0F] hover:bg-[#E52321] text-white px-4 py-2 transition-colors duration-300 flex-shrink-0"
   >
-    <FiArrowRight className="text-sm" />
+    <FiArrowRight className="text-base" />
   </Link>
 );
 
