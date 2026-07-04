@@ -77,14 +77,17 @@ const LocationsMapPage = () => {
             />
           </Suspense>
         </div>
-      </div>
 
-      <CountryReportsSheet
-        isOpen={Boolean(selectedCountry)}
-        onClose={() => setSelectedCountry(null)}
-        country={selectedCountry}
-        reports={selectedReports}
-      />
+        <div ref={reportsSectionRef}>
+          {selectedCountry && (
+            <CountryReportsGrid
+              country={selectedCountry}
+              reports={selectedReports}
+              onClear={() => setSelectedCountry(null)}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 };
