@@ -1,0 +1,77 @@
+import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import { Link } from 'react-router-dom';
+import SafeIcon from '../../../common/SafeIcon';
+import { usePublicLocationsMap } from '../../../hooks/usePublicLocationsMap';
+import CountryListPanel from './components/CountryListPanel';
+import CountryReportsSheet from './components/CountryReportsSheet';
+import MapSkeleton from './components/MapSkeleton';
+
+const LocationsMapCanvas = lazy(() => import('./components/LocationsMapCanvas'));
+
+const LocationsMapPage = () => {
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const { locations, totalCountries, loading, fetchLocationsMap } = usePublicLocationsMap();
+
+  useEffect(() => {
+    fetchLocationsMap();
+  }, [fetchLocationsMap]);
+
+  const handleSelectCountry = useCallback((country) => {
+    setSelectedCountry((prev) => (prev === country ? null : country));
+  }, []);
+
+  const selectedReports = locations.find((l) => l.country === selectedCountry)?.reports || [];
+
+  return (
+    <div className="bg-[#F9FAFB] min-h-screen">
+      <div className="bg-[#0B0D0F] pt-32 pb-16 md:pt-40 md:pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="inline-flex items-center gap-2 bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/20 px-4 py-2 rounded-full text-[10px] font-black tracking-[0.25em] uppercase mb-6">
+            <SafeIcon icon="FiGlobe" className="text-sm" /> Global Footprint
+          </span>
+          <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter leading-[1.1] uppercase">
+            All Locations Map
+          </h1>
+          <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            {totalCountries > 0
+              ? `Published reports across ${totalCountries} ${totalCountries === 1 ? 'country' : 'countries'}. Select a pin or country to explore its reports.`
+              : 'Explore published reports by country.'}
+          </p>
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 mt-6 text-[11px] font-bold text-gray-400 hover:text-white transition-colors"
+          >
+            <SafeIcon icon="FiArrowLeft" className="text-xs" /> Back to all reports
+          </Link>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 lg:gap-8 items-start">
+          <CountryListPanel
+            locations={locations}
+            loading={loading}
+            selectedCountry={selectedCountry}
+            onSelectCountry={handleSelectCountry}
+          />
+          <Suspense fallback={<MapSkeleton />}>
+            <LocationsMapCanvas
+              locations={locations}
+              selectedCountry={selectedCountry}
+              onSelectCountry={handleSelectCountry}
+            />
+          </Suspense>
+        </div>
+      </div>
+
+      <CountryReportsSheet
+        isOpen={Boolean(selectedCountry)}
+        onClose={() => setSelectedCountry(null)}
+        country={selectedCountry}
+        reports={selectedReports}
+      />
+    </div>
+  );
+};
+
+export default LocationsMapPage;
