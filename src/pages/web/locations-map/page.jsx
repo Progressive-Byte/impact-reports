@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useCallback, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import { Link } from 'react-router-dom';
 import SafeIcon from '../../../common/SafeIcon';
 import { usePublicLocationsMap } from '../../../hooks/usePublicLocationsMap';
 import CountryListPanel from './components/CountryListPanel';
-import CountryReportsSheet from './components/CountryReportsSheet';
+import CountryReportsGrid from './components/CountryReportsGrid';
 import MapSkeleton from './components/MapSkeleton';
 
 const LocationsMapCanvas = lazy(() => import('./components/LocationsMapCanvas'));
@@ -11,10 +11,17 @@ const LocationsMapCanvas = lazy(() => import('./components/LocationsMapCanvas'))
 const LocationsMapPage = () => {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const { locations, totalCountries, loading, fetchLocationsMap } = usePublicLocationsMap();
+  const reportsSectionRef = useRef(null);
 
   useEffect(() => {
     fetchLocationsMap();
   }, [fetchLocationsMap]);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      reportsSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [selectedCountry]);
 
   const handleSelectCountry = useCallback((country) => {
     setSelectedCountry((prev) => (prev === country ? null : country));
