@@ -24,8 +24,16 @@ const LocationsMapPage = () => {
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen">
-      <div className="bg-[#0B0D0F] pt-32 pb-16 md:pt-40 md:pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="bg-[#0B0D0F] pt-32 pb-16 md:pt-40 md:pb-20 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <img
+            src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=2000"
+            alt=""
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0B0D0F] via-transparent to-[#0B0D0F]" />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <span className="inline-flex items-center gap-2 bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/20 px-4 py-2 rounded-full text-[10px] font-black tracking-[0.25em] uppercase mb-6">
             <SafeIcon icon="FiGlobe" className="text-sm" /> Global Footprint
           </span>
