@@ -1,29 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-import { Country } from 'country-state-city';
 import SafeIcon from '../../../../common/SafeIcon';
 import CollapsibleSection from '../../../../common/CollapsibleSection';
-
-L.Marker.prototype.options.icon = L.icon({
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-});
-
-const COUNTRY_COORDS_DB = {};
-Country.getAllCountries().forEach((c) => {
-  if (c.latitude && c.longitude) {
-    COUNTRY_COORDS_DB[c.name] = [parseFloat(c.latitude), parseFloat(c.longitude)];
-  }
-});
-
-function getCountryPos(name) {
-  return COUNTRY_COORDS_DB[name] || null;
-}
+import { getCountryPos } from '../../../../utils/countryCoords';
+import '../../../../utils/leafletDefaultIcon';
 
 // Fits the map viewport to given positions whenever they change
 const FitBounds = ({ positions }) => {

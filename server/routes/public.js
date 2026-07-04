@@ -168,6 +168,41 @@ router.get('/stats', async (req, res) => {
   }
 });
 
+// ── GET /api/public/locations-map ────────────────────────────────────
+// Aggregates published reports into one entry per country they belong to,
+// for the "All Locations Map" page's pins + per-country report list.
+router.get('/locations-map', async (req, res) => {
+  try {
+    const base = { status: 'published' };
+
+    const rows = await Report.aggregate([
+      { $match: base },
+      { $project: {
+          projectName: 1, slug: 1, projectId: 1, actualProjectId: 1, shortSubtitle: 1,
+          images: 1, thumbnail: 1, region: 1, sector: 1, fiscalYear: 1,
+          projectBackground: 1, livesImpacted: 1, countries: 1, locations: 1,
+      } },
+      // Alias before $unwind so the real `countries` array survives on each
+      // pushed doc — $unwind overwrites the original field with a single string.
+      { $addFields: { countryKey: '$countries' } },
+      { $unwind: '$countryKey' },
+      { $group: { _id: '$countryKey', reports: { $push: '$$ROOT' } } },
+      { $project: { _id: 0, country: '$_id', reports: 1 } },
+      { $sort: { country: 1 } },
+    ]);
+
+    const locations = rows.map(({ country, reports }) => ({
+      country,
+      reportCount: reports.length,
+      reports: reports.map(shapeCard),
+    }));
+
+    res.json({ locations, totalCountries: locations.length });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // ── GET /api/public/filters ──────────────────────────────────────────
 router.get('/filters', async (req, res) => {
   try {
