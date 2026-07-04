@@ -135,6 +135,10 @@ const Portal = () => {
 
       <MetricsStrip stats={stats} />
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 md:mt-8">
+        <LocationsMapTeaser totalCountries={stats.totalCountries} />
+      </div>
+
       <section ref={resultsSectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
         <SearchBar
           value={inputSearch}
