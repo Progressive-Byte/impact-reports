@@ -7,6 +7,7 @@ import { publicApiRequest } from '../../../services/publicApi';
 import FilterGroup from './components/FilterGroup';
 import PortalHero from './components/PortalHero';
 import MetricsStrip from './components/MetricsStrip';
+import LocationsMapTeaser from './components/LocationsMapTeaser';
 import SearchBar from './components/SearchBar';
 import MobileFilterBar from './components/MobileFilterBar';
 import FilterSidebar from './components/FilterSidebar';
