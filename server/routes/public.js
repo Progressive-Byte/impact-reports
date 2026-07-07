@@ -191,11 +191,29 @@ router.get('/locations-map', async (req, res) => {
       { $sort: { country: 1 } },
     ]);
 
-    const locations = rows.map(({ country, reports }) => ({
-      country,
-      reportCount: reports.length,
-      reports: reports.map(shapeCard),
-    }));
+    const locations = rows.map(({ country, reports }) => {
+      const sites = reports.flatMap((r) => {
+        const reportSites = r.locations?.length > 0
+          ? r.locations.filter((l) => l.country === country)
+          : [{ address: country, lat: '', lng: '' }];
+        return reportSites.map((s) => ({
+          address:     s.address || country,
+          lat:         s.lat || '',
+          lng:         s.lng || '',
+          region:      r.region || deriveRegion(r.countries),
+          reportId:    r._id.toString(),
+          reportSlug:  r.slug || r._id.toString(),
+          reportTitle: r.projectName,
+        }));
+      });
+
+      return {
+        country,
+        reportCount: reports.length,
+        reports: reports.map(shapeCard),
+        sites,
+      };
+    });
 
     res.json({ locations, totalCountries: locations.length });
   } catch (err) {
