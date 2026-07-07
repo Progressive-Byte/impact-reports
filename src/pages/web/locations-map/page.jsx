@@ -4,6 +4,7 @@ import SafeIcon from '../../../common/SafeIcon';
 import { usePublicLocationsMap } from '../../../hooks/usePublicLocationsMap';
 import CountryListPanel from './components/CountryListPanel';
 import CountryReportsGrid from './components/CountryReportsGrid';
+import LocationsImplementedSection from './components/LocationsImplementedSection';
 import MapSkeleton from './components/MapSkeleton';
 
 const LocationsMapCanvas = lazy(() => import('./components/LocationsMapCanvas'));
