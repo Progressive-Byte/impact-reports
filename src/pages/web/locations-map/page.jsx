@@ -42,10 +42,10 @@ const LocationsMapPage = () => {
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <span className="inline-flex items-center gap-2 bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/20 px-4 py-2 rounded-full text-[10px] font-black tracking-[0.25em] uppercase mb-6">
-            <SafeIcon icon="FiGlobe" className="text-sm" /> Global Footprint
+            <SafeIcon icon="FiGlobe" className="text-sm" /> All Locations Map
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter leading-[1.1] uppercase">
-            All Locations Map
+            Global Footprint
           </h1>
           <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
             {totalCountries > 0
