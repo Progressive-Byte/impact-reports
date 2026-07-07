@@ -21,7 +21,7 @@ export const REGION_CENTERS = {
   Global:       { lat: 38.9072,  lng: -77.0369 },
 };
 
-export const getGpsData = (location, region) => {
+export const getGpsCoords = (location, region) => {
   let hash = 0;
   for (let i = 0; i < location.length; i++) {
     hash = location.charCodeAt(i) + ((hash << 5) - hash);
@@ -29,5 +29,10 @@ export const getGpsData = (location, region) => {
   const base = REGION_CENTERS[region] || REGION_CENTERS.Global;
   const offsetLat = (hash % 100) / 25;
   const offsetLng = ((hash >> 8) % 100) / 25;
-  return `${(base.lat + offsetLat).toFixed(4)}, ${(base.lng + offsetLng).toFixed(4)}`;
+  return { lat: base.lat + offsetLat, lng: base.lng + offsetLng };
+};
+
+export const getGpsData = (location, region) => {
+  const { lat, lng } = getGpsCoords(location, region);
+  return `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
 };
