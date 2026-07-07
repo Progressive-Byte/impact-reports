@@ -37,14 +37,14 @@ const LocationsImplementedSection = ({ locations, loading }) => {
           </div>
         </div>
         <div className="flex items-center bg-gray-50 p-1 rounded-xl border border-gray-100">
-          {['grid', 'list'].map((mode) => (
+          {['grid', 'list', 'map'].map((mode) => (
             <button
               key={mode}
               type="button"
               onClick={() => setViewMode(mode)}
               className={`p-2 rounded-lg transition-all duration-300 ${viewMode === mode ? 'bg-white text-[#E52321] shadow-sm' : 'text-gray-400 hover:text-gray-600'}`}
             >
-              <SafeIcon icon={mode === 'grid' ? 'FiGrid' : 'FiList'} className="text-lg" />
+              <SafeIcon icon={mode === 'grid' ? 'FiGrid' : mode === 'list' ? 'FiList' : 'FiMap'} className="text-lg" />
             </button>
           ))}
         </div>
