@@ -47,18 +47,18 @@ const LocationsMapTeaser = ({ totalCountries, countries = [] }) => {
               <h3 className="text-lg sm:text-xl font-black text-[#0B0D0F] tracking-tight">
                 Explore Our Global Reach
               </h3>
-              <p className="text-sm text-gray-500 mt-1 mb-3">
+              {/* <p className="text-sm text-gray-500 mt-1 mb-3">
                 {totalCountries > 0
                   ? `Published reports across ${totalCountries} ${totalCountries === 1 ? 'country' : 'countries'}.`
                   : 'See every reporting location on an interactive map.'}
-              </p>
+              </p> */}
 
               {visiblePins.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2">
                   {visiblePins.map((country) => (
                     <span
                       key={country}
-                      className="inline-flex items-center gap-1.5 bg-gray-50 group-hover:bg-[#E52321]/5 border border-gray-100 group-hover:border-[#E52321]/20 rounded-full px-3 py-1.5 text-xs font-bold text-gray-700 transition-colors duration-500"
+                      className="inline-flex items-center gap-1.5 bg-gray-50 group-hover:bg-[#E52321]/5 border border-gray-100 group-hover:border-[#E52321]/20 rounded-full mt-1 px-3 py-1.5 text-xs font-bold text-gray-700 transition-colors duration-500"
                     >
                       <SafeIcon icon="FiMapPin" className="text-[#E52321] text-[10px]" />
                       {country}
