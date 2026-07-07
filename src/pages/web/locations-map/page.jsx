@@ -79,6 +79,8 @@ const LocationsMapPage = () => {
           </Suspense>
         </div>
 
+        <LocationsImplementedSection locations={locations} loading={loading} />
+
         <div ref={reportsSectionRef}>
           {selectedCountry && (
             <CountryReportsGrid
