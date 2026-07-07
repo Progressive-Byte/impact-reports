@@ -76,11 +76,19 @@ const LocationsImplementedSection = ({ locations, loading }) => {
       )}
 
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 animate-pulse">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-[72px] rounded-2xl bg-gray-100" />
-          ))}
-        </div>
+        viewMode === 'map' ? (
+          <MapSkeleton />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 animate-pulse">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="h-[72px] rounded-2xl bg-gray-100" />
+            ))}
+          </div>
+        )
+      ) : viewMode === 'map' ? (
+        <Suspense fallback={<MapSkeleton />}>
+          <LocationsImplementedMapCanvas sites={filtered} activeCountry={activeCountry} />
+        </Suspense>
       ) : (
         <motion.div
           layout
