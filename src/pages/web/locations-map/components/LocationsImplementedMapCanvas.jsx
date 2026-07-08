@@ -40,11 +40,11 @@ const LocationsImplementedMapCanvas = ({ sites, activeCountry }) => {
         center={[20, 0]}
         zoom={2}
         scrollWheelZoom={false}
+        attributionControl={false}
         style={{ height: '100%', width: '100%', minHeight: '500px', zIndex: 1 }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&copy; OpenStreetMap"
         />
         <FitBounds positions={positions} />
         {pinned.map((site, idx) => (
