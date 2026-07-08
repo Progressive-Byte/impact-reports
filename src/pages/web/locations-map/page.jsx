@@ -42,7 +42,7 @@ const LocationsMapPage = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-[#0B0D0F] via-transparent to-[#0B0D0F]" />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <span className="inline-flex items-center gap-2 bg-[#E52321]/10 text-[#E52321] border border-[#E52321]/20 px-4 py-2 rounded-full text-[10px] font-black tracking-[0.25em] uppercase mb-6">
+          <span className="inline-flex items-center gap-2 bg-[#D1FAE5] text-[#065F46] border border-[#065F46]/20 px-4 py-2 rounded-full text-[10px] font-black tracking-[0.25em] uppercase mb-6">
             <SafeIcon icon="FiGlobe" className="text-sm" /> All Locations Map
           </span>
           <h1 className="text-3xl sm:text-4xl md:text-6xl font-black text-white mb-4 tracking-tighter leading-[1.1] uppercase">
