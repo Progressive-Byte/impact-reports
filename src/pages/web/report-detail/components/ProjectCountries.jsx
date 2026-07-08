@@ -93,11 +93,11 @@ const ProjectCountries = ({ countries, region, isOpen, onToggle }) => {
               center={[20, 0]}
               zoom={2}
               scrollWheelZoom={false}
+              attributionControl={false}
               style={{ height: '100%', width: '100%', zIndex: 1 }}
             >
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; OpenStreetMap"
               />
               <FitBounds positions={selected ? positions : allPositions} />
               {visibleCountries.map((country) => {
