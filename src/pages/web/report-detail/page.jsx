@@ -141,7 +141,7 @@ const ReportDetail = () => {
           ].filter(Boolean);
           const cols = tiles.length === 1 ? 'md:grid-cols-1' : tiles.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3';
           return (
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10">
               <div className={`bg-white rounded-[2rem] border border-gray-100 shadow-[0_18px_50px_rgba(0,0,0,0.05)] overflow-hidden grid grid-cols-1 ${cols} divide-y md:divide-y-0 md:divide-x divide-gray-100`}>
                 {tiles.map(t => <StatTile key={t.title} title={t.title} value={t.value} icon={t.icon} />)}
               </div>
