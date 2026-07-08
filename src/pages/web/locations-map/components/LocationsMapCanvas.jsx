@@ -20,7 +20,7 @@ const FitBounds = ({ positions }) => {
   return null;
 };
 
-const LocationsMapCanvas = ({ locations, selectedCountry, onSelectCountry }) => {
+const LocationsMapCanvas = ({ locations, selectedCountry, onSelectCountry, minHeight = '500px' }) => {
   const allPositions = locations
     .map(({ country }) => getCountryPos(country))
     .filter(Boolean);
@@ -34,12 +34,12 @@ const LocationsMapCanvas = ({ locations, selectedCountry, onSelectCountry }) => 
     .filter(Boolean);
 
   return (
-    <div className="relative rounded-[2rem] overflow-hidden shadow-lg min-h-[500px] border border-gray-100">
+    <div className="relative rounded-[2rem] overflow-hidden shadow-lg border border-gray-100" style={{ minHeight }}>
       <MapContainer
         center={[20, 0]}
         zoom={2}
         scrollWheelZoom={false}
-        style={{ height: '100%', width: '100%', minHeight: '500px', zIndex: 1 }}
+        style={{ height: '100%', width: '100%', minHeight, zIndex: 1 }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
