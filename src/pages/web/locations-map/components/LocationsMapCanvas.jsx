@@ -39,11 +39,11 @@ const LocationsMapCanvas = ({ locations, selectedCountry, onSelectCountry, minHe
         center={[20, 0]}
         zoom={2}
         scrollWheelZoom={false}
+        attributionControl={false}
         style={{ height: '100%', width: '100%', minHeight, zIndex: 1 }}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution="&copy; OpenStreetMap"
         />
         <FitBounds positions={selectedCountry ? positions : allPositions} />
         {visibleLocations.map(({ country, reportCount }) => {
