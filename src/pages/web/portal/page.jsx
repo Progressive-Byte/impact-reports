@@ -137,7 +137,7 @@ const Portal = () => {
       <MetricsStrip stats={stats} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 md:mt-14">
-        <LocationsMapTeaser totalCountries={stats.totalCountries} countries={filterOptions.countries} />
+        <LocationsMapTeaser />
       </div>
 
       <section ref={resultsSectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-12 md:pt-24 md:pb-24">
