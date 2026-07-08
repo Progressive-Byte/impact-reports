@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import SafeIcon from '../../../../common/SafeIcon';
 import CollapsibleSection from '../../../../common/CollapsibleSection';
 import { getGpsData } from '../../../../utils/location';
 import { useLocalStorage } from '../../../../hooks/useLocalStorage';
+import MapSkeleton from '../../locations-map/components/MapSkeleton';
+
+const LocationsImplementedMapCanvas = lazy(() => import('../../locations-map/components/LocationsImplementedMapCanvas'));
 
 const LocationsSection = ({ report, isOpen, onToggle }) => {
   const [viewMode, setViewMode]         = useLocalStorage('locationViewMode', 'grid');
