@@ -50,7 +50,7 @@ const LocationsMapPage = () => {
           </h1>
           <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
             {totalCountries > 0
-              ? `Published reports across ${totalCountries} ${totalCountries === 1 ? 'country' : 'countries'}. Select a pin or country to explore its reports.`
+              ? `Select a pin or country to explore its reports.`
               : 'Explore published reports by country.'}
           </p>
           <Link
