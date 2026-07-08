@@ -136,11 +136,11 @@ const Portal = () => {
 
       <MetricsStrip stats={stats} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 md:mt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 md:mt-14">
         <LocationsMapTeaser totalCountries={stats.totalCountries} countries={filterOptions.countries} />
       </div>
 
-      <section ref={resultsSectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-24">
+      <section ref={resultsSectionRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-12 md:pt-24 md:pb-24">
         <SearchBar
           value={inputSearch}
           onChange={(e) => setInputSearch(e.target.value)}
