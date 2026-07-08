@@ -142,11 +142,11 @@ const GpsPickerModal = ({
               center={countryCenter}
               zoom={initLat !== null ? 8 : 5}
               scrollWheelZoom
+              attributionControl={false}
               style={{ height: '100%', width: '100%', zIndex: 1 }}
             >
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution="&copy; OpenStreetMap"
               />
               <MapClickHandler onClick={placePin} />
               <Marker
