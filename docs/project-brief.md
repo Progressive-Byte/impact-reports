@@ -88,6 +88,29 @@ Editors and viewers who try to open a section they don't have access to are simp
 - Idle sessions log out automatically after a configurable period.
 - Every login, logout, and failed attempt is recorded in an activity log, exportable for audits, with repeated failures raising an in-app notification.
 
+## Technology used to build it
+
+A full-stack JavaScript application — one language across the browser and the server.
+
+| Layer | Technology |
+|---|---|
+| Frontend framework | React 18, built and served by Vite |
+| Routing | React Router v7 |
+| Styling & animation | Tailwind CSS, Framer Motion |
+| Charts | ECharts |
+| Maps | React Leaflet |
+| Rich text editing | Tiptap v3 (used in the Narrative and Media wizard steps) |
+| Backend framework | Node.js with Express |
+| Database | MongoDB (via Mongoose), hosted on MongoDB Atlas |
+| Authentication | JWT bearer tokens; bcrypt password hashing; TOTP (authenticator app) and emailed one-time codes for two-factor login |
+| Image hosting | Cloudinary |
+| Outbound email | Nodemailer over SMTP (welcome/invite emails, OTP codes, weekly digest) |
+| Scheduled jobs | node-cron (weekly digest every Monday; monthly activity-log archival) |
+| Data export | xlsx (CSV/Excel export for reports and activity logs) |
+| Hosting / process management | PM2 on a self-managed server; deployment automated via GitHub Actions on push to the `deploy` branch |
+
+The codebase is a single repository: the React frontend (`src/`) and the Express backend (`server/`) live side by side and deploy together, with Express serving the built frontend in production.
+
 ## What this saves the organization
 
 - **One data entry pass, not several** — the same information that appears on the public site also drives exports and internal reporting, so there's no re-typing.
