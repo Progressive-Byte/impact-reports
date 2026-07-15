@@ -33,9 +33,9 @@ const ReportRow = ({
     .map(a => a.username || a.email)
     .join(', ');
 
-  const approvalReviewerName = entry.approvalAssignedTo
-    ? (entry.approvalAssignedTo.username || entry.approvalAssignedTo.email)
-    : null;
+  const approvalReviewerName = (entry.approvalAssignedTo || [])
+    .map(a => a.username || a.email)
+    .join(', ');
 
   const handleConfirm = () => {
     setConfirming(false);
