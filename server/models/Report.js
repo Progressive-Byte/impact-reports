@@ -55,7 +55,7 @@ const reportSchema = new mongoose.Schema(
     projectLead:       { type: String, default: '' },
     reportingPeriod:   { type: String, default: String(new Date().getFullYear()) },
     region:            { type: String, default: '' },
-    sector:            { type: String, default: '' },
+    sector:            { type: [String], default: [] },
     livesImpacted:     { type: Number, default: 0 },
 
     // Narrative step
