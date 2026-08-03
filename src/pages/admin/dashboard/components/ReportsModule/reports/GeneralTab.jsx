@@ -101,12 +101,12 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
           error={fieldErrors.region}
           rightLabel={toggle('region')}
         />
-        <CustomSelect
+        <MultiSelect
           label="Sector" required
           value={form.sector}
           onChange={val => update('sector', val)}
           options={sectorOptions}
-          placeholder={sectorOptions.length ? 'Select sector...' : 'Loading…'}
+          placeholder={sectorOptions.length ? 'Select sectors...' : 'Loading…'}
           error={fieldErrors.sector}
           rightLabel={toggle('sector')}
         />
