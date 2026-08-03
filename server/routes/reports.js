@@ -331,8 +331,6 @@ function validateStepPayload(stepName, body, isSuperAdmin) {
       const validImages = (body.images || []).filter(img => img.url?.trim());
       if (!validImages.length) return 'Add at least one image URL';
       if (validImages.length > 10) return 'Maximum 10 images allowed';
-      const validMilestones = (body.milestones || []).filter(m => m.date?.trim() && m.title?.trim());
-      if (!validMilestones.length) return 'Add at least one milestone with a date and title';
       break;
     }
     case 'location': {
