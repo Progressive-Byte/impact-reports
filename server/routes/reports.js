@@ -191,7 +191,7 @@ router.get('/export', async (req, res) => {
       'Slug':                 r.slug             ?? '',
       'Status':               r.status           ?? '',
       'Project Lead':         r.projectLead      ?? '',
-      'Fiscal Year':          r.fiscalYear       ?? '',
+      'Reporting Period':     r.reportingPeriod  ?? '',
       'Region':               r.region           ?? '',
       'Sector':               r.sector           ?? '',
       'Lives Impacted':       r.livesImpacted    ?? 0,
