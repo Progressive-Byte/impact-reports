@@ -53,7 +53,7 @@ const reportSchema = new mongoose.Schema(
     donationUrl:       { type: String, default: '' },
     cost:              { type: Number, default: 0 },
     projectLead:       { type: String, default: '' },
-    fiscalYear:        { type: String, default: 'FY25' },
+    reportingPeriod:   { type: String, default: String(new Date().getFullYear()) },
     region:            { type: String, default: '' },
     sector:            { type: String, default: '' },
     livesImpacted:     { type: Number, default: 0 },
