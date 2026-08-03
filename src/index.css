@@ -8,21 +8,6 @@
   }
 }
 
-@layer base {
-  @media (hover: hover) and (pointer: fine) {
-    html.has-custom-cursor,
-    html.has-custom-cursor * {
-      cursor: none;
-    }
-
-    html.has-custom-cursor input,
-    html.has-custom-cursor textarea,
-    html.has-custom-cursor [contenteditable="true"] {
-      cursor: text;
-    }
-  }
-}
-
 /* Tiptap rich text editor */
 .tiptap-editor .tiptap {
   outline: none;
