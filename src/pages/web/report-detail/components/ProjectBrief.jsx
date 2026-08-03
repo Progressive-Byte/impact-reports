@@ -25,7 +25,7 @@ const ProjectBrief = ({ report, hiddenFields }) => {
           {(() => {
             const metaCards = [
               !isHidden('actualProjectId') && { label: 'Project ID',         value: shortId },
-              !isHidden('sector')          && { label: 'Primary Sector',      value: report.sector },
+              !isHidden('sector')          && { label: 'Sector' + ((report.sector || []).length > 1 ? 's' : ''), value: (report.sector || []).join(', ') },
               !isHidden('region')          && { label: 'Operational Region',  value: report.region },
             ].filter(Boolean);
             if (!metaCards.length) return null;
