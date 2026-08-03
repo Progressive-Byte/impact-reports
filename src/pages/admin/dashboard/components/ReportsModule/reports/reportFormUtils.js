@@ -11,7 +11,7 @@ export const BLANK_FORM = {
   projectLead:       '',
   reportingPeriod:   String(new Date().getFullYear()),
   region:            '',
-  sector:            '',
+  sector:            [],
   livesImpacted:     0,
   projectBackground: '',
   strategicResponse: '',
