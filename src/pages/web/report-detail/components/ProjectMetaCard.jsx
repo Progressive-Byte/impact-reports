@@ -11,8 +11,8 @@ const ProjectMetaCard = ({ report }) => (
     </div>
     <div className="p-6 space-y-4">
       {[
-        { label: 'Sector',       value: report.sector,      icon: 'FiLayers'   },
-        { label: 'Fiscal Year',  value: report.year,        icon: 'FiCalendar' },
+        { label: 'Sector',           value: report.sector,           icon: 'FiLayers'   },
+        { label: 'Reporting Period', value: report.reportingPeriod,  icon: 'FiCalendar' },
         { label: 'Region',       value: report.region,      icon: 'FiGlobe'    },
         { label: 'Project Lead', value: report.projectLead, icon: 'FiUser'     },
       ].filter(({ value }) => value).map(({ label, value, icon }) => (
