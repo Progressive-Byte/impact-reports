@@ -173,7 +173,7 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {}, hiddenFields = [], o
       <div>
         <div className="flex items-center justify-between mb-3">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
-            Project Milestones <span className="text-[#E52321]">*</span>
+            Project Milestones (optional)
           </p>
           <div className="flex items-center gap-3">
             {fieldErrors.milestones && (
