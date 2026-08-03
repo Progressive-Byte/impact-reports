@@ -5,7 +5,7 @@
 | Property        | Value                                                         |
 | --------------- | ------------------------------------------------------------- |
 | Runtime         | Node.js + Express (ES modules)                                |
-| Database        | MongoDB Atlas via Mongoose                                    |
+| Database        | MongoDB via Mongoose (self-hosted on the production droplet)  |
 | Default port    | `5173` — override with `PORT` env var                         |
 | CORS origins    | `http://localhost:5174`, `http://localhost:4173`              |
 | Content-Type    | `application/json`                                            |
