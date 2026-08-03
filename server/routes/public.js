@@ -179,7 +179,7 @@ router.get('/locations-map', async (req, res) => {
       { $match: base },
       { $project: {
           projectName: 1, slug: 1, projectId: 1, actualProjectId: 1, shortSubtitle: 1,
-          images: 1, thumbnail: 1, region: 1, sector: 1, fiscalYear: 1,
+          images: 1, thumbnail: 1, region: 1, sector: 1, reportingPeriod: 1,
           projectBackground: 1, livesImpacted: 1, countries: 1, locations: 1,
       } },
       // Alias before $unwind so the real `countries` array survives on each
