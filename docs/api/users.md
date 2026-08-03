@@ -578,7 +578,7 @@ curl -X DELETE http://localhost:5173/api/admin/settings/disable-totp \
 
 One-off maintenance endpoint. Iterates all `Report` documents that have no `slug` field and generates one from their `projectName` using the same `toSlug()` + `uniqueSlug()` logic used at creation time. Safe to run multiple times — reports with an existing slug are skipped.
 
-Requires **superadmin** role. Also available as `npm run backfill:slugs` from the CLI.
+Requires **superadmin** role.
 
 ### Response `200`
 
