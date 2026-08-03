@@ -107,7 +107,7 @@ router.get('/reports/:idOrSlug', async (req, res) => {
       title:             report.projectName,
       image:             report.thumbnail || report.images?.[0]?.url || '',
       region,
-      sector:            report.sector            || '',
+      sector:            report.sector            || [],
       year:              deriveYear(report.reportingPeriod),
       reportingPeriod:   report.reportingPeriod   || '',
       projectLead:       report.projectLead       || '',
