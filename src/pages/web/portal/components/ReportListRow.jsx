@@ -88,12 +88,12 @@ const ReportListRow = ({ report }) => {
           {/* Bottom row pinned to bottom — [region / year-sector] | [IMPACT / number] → [button] */}
           <div className="flex items-center mt-auto pt-3 border-t border-gray-50">
             {/* Left col: region + year-sector stacked */}
-            <div className="flex flex-col min-w-0">
-              <span className="flex items-center gap-1 text-xs font-semibold text-gray-500">
+            <div className="flex flex-col min-w-0 flex-1">
+              <span className="flex items-center gap-1 text-xs font-semibold text-gray-500 truncate">
                 <FiMapPin className="text-[#E52321] text-[11px] flex-shrink-0" />
                 {report.region}
               </span>
-              <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 truncate block">
                 {report.year} - {(report.sector || []).join(', ')}
               </span>
             </div>
