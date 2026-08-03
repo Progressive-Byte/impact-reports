@@ -182,6 +182,11 @@ const MediaTimelineTab = ({ form, update, fieldErrors = {}, hiddenFields = [], o
             <FieldToggle fieldKey="milestones" hiddenFields={hiddenFields} onToggle={onToggle} />
           </div>
         </div>
+        {form.milestones.length === 0 && (
+          <p className="text-xs text-gray-400 mb-3">
+            Not every program follows a linear sequence — leave this empty for continuous services (e.g. ongoing maternal health care). The "Implementation Timeline" section is hidden on the public report when there are no milestones.
+          </p>
+        )}
         <div className="space-y-3">
           {form.milestones.map((m) => (
             <div key={m.id} className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-3">
