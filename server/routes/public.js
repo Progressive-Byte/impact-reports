@@ -227,7 +227,7 @@ router.get('/filters', async (req, res) => {
     const base = { status: 'published' };
     const [allReports, sectors, countries, reportingPeriods] = await Promise.all([
       Report.find(base).select('region countries'),
-      Report.distinct('sector',          { ...base, sector:          { $ne: '' } }),
+      Report.distinct('sector', base),
       Report.distinct('countries',  base),
       Report.distinct('reportingPeriod', { ...base, reportingPeriod: { $ne: '' } }),
     ]);
