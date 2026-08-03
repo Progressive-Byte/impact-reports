@@ -3,7 +3,6 @@ import SearchModal from './common/SearchModal';
 import Header from './common/Header';
 import Footer from './common/Footer';
 import NavigationProgress from './common/NavigationProgress';
-import CustomCursor from './common/CustomCursor';
 
 const Layout = ({ children }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
