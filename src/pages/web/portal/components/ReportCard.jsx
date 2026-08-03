@@ -38,7 +38,7 @@ const ReportCard = ({ report }) => (
             <span className="text-white text-[11px] font-semibold truncate">{report.region}</span>
           </div>
           <span className="text-[8px] md:text-[10px] uppercase tracking-[0.18em] text-white truncate">
-            {report.year} • {report.sector}
+            {report.year} • {(report.sector || []).join(', ')}
           </span>
         </div>
 
