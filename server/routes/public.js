@@ -243,7 +243,7 @@ router.get('/filters', async (req, res) => {
       regions:   [...regionSet].sort(),
       sectors:   sectors.sort(),
       countries: countries.filter(Boolean).sort(),
-      years:     [...new Set(fiscalYears.map(deriveYear).filter(Boolean))].sort().reverse(),
+      years:     [...new Set(reportingPeriods.map(deriveYear).filter(Boolean))].sort().reverse(),
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
