@@ -66,7 +66,7 @@ router.get('/reports', async (req, res) => {
     if (regionArr.length)  filter.region    = { $in: regionArr };
     if (sectorArr.length)  filter.sector    = { $in: sectorArr };
     if (countryArr.length) filter.countries = { $in: countryArr };
-    if (yearArr.length)    filter.fiscalYear = { $in: yearArr.map(yearToFiscal) };
+    if (yearArr.length)    filter.reportingPeriod = { $regex: yearArr.map(escapeRegex).join('|') };
 
     const [reports, total] = await Promise.all([
       Report.find(filter)
