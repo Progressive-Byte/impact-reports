@@ -81,26 +81,14 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         )}
       </div>
 
-      {/* Row 4: Fiscal Year | Lives Impacted */}
-      <div className="grid grid-cols-2 gap-5">
-        <Input
-          label="Fiscal Year" required
-          placeholder="e.g. FY26"
-          value={form.fiscalYear}
-          onChange={e => update('fiscalYear', e.target.value)}
-          error={fieldErrors.fiscalYear}
-          rightLabel={toggle('fiscalYear')}
-        />
-        <Input
-          label="Lives Impacted" required
-          type="number"
-          min="1"
-          value={form.livesImpacted}
-          onChange={e => update('livesImpacted', e.target.value)}
-          error={fieldErrors.livesImpacted}
-          rightLabel={toggle('livesImpacted')}
-        />
-      </div>
+      {/* Row 4: Reporting Period — full width */}
+      <ReportingPeriodField
+        label="Reporting Period" required
+        value={form.reportingPeriod}
+        onChange={val => update('reportingPeriod', val)}
+        error={fieldErrors.reportingPeriod}
+        rightLabel={toggle('reportingPeriod')}
+      />
 
       {/* Row 5: Region | Sector */}
       <div className="grid grid-cols-2 gap-5">
@@ -124,8 +112,17 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         />
       </div>
 
-      {/* Row 6: Cost */}
+      {/* Row 6: Lives Impacted | Cost */}
       <div className="grid grid-cols-2 gap-5">
+        <Input
+          label="Lives Impacted" required
+          type="number"
+          min="1"
+          value={form.livesImpacted}
+          onChange={e => update('livesImpacted', e.target.value)}
+          error={fieldErrors.livesImpacted}
+          rightLabel={toggle('livesImpacted')}
+        />
         <Input
           label="Cost"
           type="number"
