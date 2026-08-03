@@ -64,7 +64,7 @@ const ReportHero = ({ report, onImageError, hiddenFields }) => {
               <span className="text-white text-[11px] font-semibold">{report.region}</span>
             </div>
             <span className="text-[8px] md:text-[10px] uppercase tracking-[0.18em] text-white/70">
-              {report.year} • {report.sector}
+              {report.year} • {(report.sector || []).join(', ')}
             </span>
           </div>
         </div>
