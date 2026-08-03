@@ -99,7 +99,7 @@ export function validateStep(stepKey, form, isSuperAdmin = true) {
       if (!form.projectLead.trim())     errors.projectLead     = 'Project lead is required';
       if (!form.reportingPeriod)        errors.reportingPeriod = 'Reporting period is required';
       if (!form.region)                 errors.region          = 'Region is required';
-      if (!form.sector)                 errors.sector          = 'Sector is required';
+      if (!form.sector.length)          errors.sector          = 'At least one sector is required';
       if (!form.livesImpacted || Number(form.livesImpacted) <= 0)
         errors.livesImpacted = 'Lives impacted must be greater than 0';
       break;
