@@ -97,7 +97,7 @@ export function validateStep(stepKey, form, isSuperAdmin = true) {
         if (!form.approvalAssignedTo.length) errors.approvalAssignedTo = 'At least one approval reviewer is required';
       }
       if (!form.projectLead.trim())     errors.projectLead     = 'Project lead is required';
-      if (!form.fiscalYear)             errors.fiscalYear      = 'Fiscal year is required';
+      if (!form.reportingPeriod)        errors.reportingPeriod = 'Reporting period is required';
       if (!form.region)                 errors.region          = 'Region is required';
       if (!form.sector)                 errors.sector          = 'Sector is required';
       if (!form.livesImpacted || Number(form.livesImpacted) <= 0)
