@@ -315,7 +315,7 @@ function validateStepPayload(stepName, body, isSuperAdmin) {
       if (!body.projectLead?.trim())                        return 'Project lead is required';
       if (!body.reportingPeriod)                            return 'Reporting period is required';
       if (!body.region?.trim())                             return 'Region is required';
-      if (!body.sector?.trim())                             return 'Sector is required';
+      if (!Array.isArray(body.sector) || !body.sector.length) return 'At least one sector is required';
       if (!body.livesImpacted || Number(body.livesImpacted) <= 0) return 'Lives impacted must be greater than 0';
       break;
     case 'narrative':
