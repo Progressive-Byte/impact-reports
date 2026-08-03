@@ -101,7 +101,7 @@ A full-stack JavaScript application — one language across the browser and the 
 | Maps | React Leaflet |
 | Rich text editing | Tiptap v3 (used in the Narrative and Media wizard steps) |
 | Backend framework | Node.js with Express |
-| Database | MongoDB (via Mongoose), hosted on MongoDB Atlas |
+| Database | MongoDB (via Mongoose), self-hosted on the production droplet |
 | Authentication | JWT bearer tokens; bcrypt password hashing; TOTP (authenticator app) and emailed one-time codes for two-factor login |
 | Image hosting | Cloudinary |
 | Outbound email | Nodemailer over SMTP (welcome/invite emails, OTP codes, weekly digest) |
