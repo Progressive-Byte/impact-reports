@@ -38,7 +38,7 @@ Creates one account if none exists yet:
 
 | Variable         | Required | Description                                              |
 | ---------------- | :------: | -------------------------------------------------------- |
-| `MONGODB_URI`    | Yes      | MongoDB Atlas connection string                          |
+| `MONGODB_URI`    | Yes      | MongoDB connection string                                |
 | `JWT_SECRET`     | Yes      | Secret used to sign JWTs                                 |
 | `JWT_EXPIRES_IN` | Yes      | Token lifetime — e.g. `24h`                              |
 | `PORT`           | No       | HTTP port (default `5173`)                               |
