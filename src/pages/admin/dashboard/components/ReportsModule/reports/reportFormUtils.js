@@ -155,7 +155,7 @@ export const buildStepPayload = {
     donationUrl:        f.donationUrl     || '',
     cost:               Number(f.cost) || 0,
     projectLead:        f.projectLead,
-    fiscalYear:         f.fiscalYear,
+    reportingPeriod:    f.reportingPeriod,
     region:             f.region,
     sector:             f.sector,
     livesImpacted:      Number(f.livesImpacted) || 0,
