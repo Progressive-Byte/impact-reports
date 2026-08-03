@@ -28,7 +28,7 @@ function shapeCard(r) {
     title:     r.projectName,
     image:     r.thumbnail || r.images?.[0]?.url || '',
     region,
-    sector:    r.sector   || '',
+    sector:    r.sector   || [],
     year:      deriveYear(r.reportingPeriod),
     summary:   rawSummary.length > 200 ? rawSummary.slice(0, 200).trimEnd() + '…' : rawSummary,
     countries: r.countries || [],
