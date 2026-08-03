@@ -23,7 +23,7 @@ export const BLANK_FORM = {
   images:            [{ id: 1, url: '' }],
   thumbnail:         '',
   videoUrl:          '',
-  milestones:        [{ id: 1, date: '', title: '', description: '' }],
+  milestones:        [],
   countries:         [],
   locations:         [],
   hiddenFields:      [],
