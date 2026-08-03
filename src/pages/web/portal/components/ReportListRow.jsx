@@ -33,12 +33,12 @@ const ReportListRow = ({ report }) => {
         {/* Content */}
         <div className="px-4 pb-4">
           {/* Meta row */}
-          <div className="flex items-center justify-between mb-2">
-            <span className="flex items-center gap-1 text-xs font-semibold text-gray-500">
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <span className="flex items-center gap-1 text-xs font-semibold text-gray-500 flex-shrink-0">
               <FiMapPin className="text-[#E52321] text-[11px] flex-shrink-0" />
               {report.region}
             </span>
-            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
+            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 truncate text-right min-w-0">
               {report.year} &middot; {(report.sector || []).join(', ')}
             </span>
           </div>
