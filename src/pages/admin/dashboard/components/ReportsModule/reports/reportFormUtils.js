@@ -9,7 +9,7 @@ export const BLANK_FORM = {
   cost:              0,
   assignedTo:        [],
   projectLead:       '',
-  fiscalYear:        'FY25',
+  reportingPeriod:   String(new Date().getFullYear()),
   region:            '',
   sector:            '',
   livesImpacted:     0,
