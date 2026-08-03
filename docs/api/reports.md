@@ -41,7 +41,7 @@ Mounted at `/api/reports`. All routes require `Authorization: Bearer <token>`.
   "donationUrl":        "https://donate.example.com/project",
   "cost":               15000,
   "projectLead":        "Ali Hassan",
-  "fiscalYear":         "FY25",
+  "reportingPeriod":    "2025",
   "region":             "South Asia",
   "sector":             "Healthcare",
   "livesImpacted":      4800,
