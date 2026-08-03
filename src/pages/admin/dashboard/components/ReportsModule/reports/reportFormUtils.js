@@ -121,8 +121,6 @@ export function validateStep(stepKey, form, isSuperAdmin = true) {
       const validImages = form.images.filter(img => img.url.trim());
       if (!validImages.length)     errors.images = 'Add at least one image URL';
       if (validImages.length > 10) errors.images = 'Maximum 10 images allowed';
-      const validMilestones = form.milestones.filter(m => m.date.trim() && m.title.trim());
-      if (!validMilestones.length) errors.milestones = 'Add at least one milestone with a date and title';
       break;
     }
 
