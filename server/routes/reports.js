@@ -193,7 +193,7 @@ router.get('/export', async (req, res) => {
       'Project Lead':         r.projectLead      ?? '',
       'Reporting Period':     r.reportingPeriod  ?? '',
       'Region':               r.region           ?? '',
-      'Sector':               r.sector           ?? '',
+      'Sector':               (r.sector || []).join('; '),
       'Lives Impacted':       r.livesImpacted    ?? 0,
       'Countries':            (r.countries  || []).join('; '),
       'Project Background':   r.projectBackground  ?? '',
