@@ -41,7 +41,6 @@ const Header = ({ onSearchClick }) => {
               <nav className="flex items-center">
                 <button
                   onClick={onSearchClick}
-                  data-cursor-label="SEARCH"
                   className="text-[14px] sm:text-[15px] font-bold text-black hover:text-[#E52321] flex items-center transition-all duration-300 ease-in-out group px-3 sm:px-4 py-2"
                 >
                   <SafeIcon icon="FiSearch" className="text-lg group-hover:scale-110 transition-transform sm:mr-2" />
@@ -53,7 +52,6 @@ const Header = ({ onSearchClick }) => {
                   href={donationUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  data-cursor-label="DONATE"
                   className="bg-[#E52321] hover:bg-[#C91D1B] text-white px-5 py-2.5 sm:px-7 sm:py-3 rounded-full text-[12px] sm:text-sm font-black tracking-widest transition-all duration-300 shadow-md shadow-red-900/10 uppercase active:scale-95"
                 >
                   Donate
@@ -71,7 +69,6 @@ const Header = ({ onSearchClick }) => {
           animate={{ x: 0 }}
           whileHover={{ x: -10 }}
           onClick={onSearchClick}
-          data-cursor-label="SEARCH"
           className="fixed right-0 top-1/2 -translate-y-1/2 z-[60] bg-[#E52321] text-white p-2.5 pl-4 sm:p-4 sm:pl-6 rounded-l-full shadow-2xl flex items-center space-x-2 sm:space-x-3 group transition-all duration-300"
           title="Open Search"
         >

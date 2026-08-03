@@ -61,7 +61,6 @@ const FieldDocumentation = ({ fieldReports, onImageError, onMediaSelect }) => {
         {/* Featured item */}
         <div
           className="lg:w-2/3 relative rounded-2xl overflow-hidden min-h-[300px] md:min-h-[450px] group cursor-pointer shadow-lg"
-          data-cursor-label={featured.type === 'video' ? 'PLAY' : 'VIEW'}
           onClick={() => onMediaSelect(featured)}
         >
           {featured.type === 'video' ? (
@@ -96,7 +95,6 @@ const FieldDocumentation = ({ fieldReports, onImageError, onMediaSelect }) => {
               <div
                 key={idx}
                 className="relative rounded-2xl overflow-hidden shadow-md h-full min-h-[140px] cursor-pointer group"
-                data-cursor-label={fr.type === 'video' ? 'PLAY' : 'VIEW'}
                 onClick={() => onMediaSelect(fr)}
               >
                 {fr.type === 'video' ? (
@@ -131,7 +129,6 @@ const FieldDocumentation = ({ fieldReports, onImageError, onMediaSelect }) => {
             <div
               key={idx}
               className="relative rounded-2xl overflow-hidden shadow-md min-h-[140px] cursor-pointer group"
-              data-cursor-label={fr.type === 'video' ? 'PLAY' : 'VIEW'}
               onClick={() => onMediaSelect(fr)}
             >
               {fr.type === 'video' ? (

@@ -114,7 +114,6 @@ const Footer = () => {
                     <button
                       type="submit"
                       disabled={status === 'loading' || !email.trim()}
-                      data-cursor-label="JOIN"
                       className="absolute right-2 top-2 bottom-2 bg-black hover:bg-[#E52321] text-white rounded-full px-6 text-[13px] font-bold transition-all duration-300 transform active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {status === 'loading' ? '…' : 'Join'}
