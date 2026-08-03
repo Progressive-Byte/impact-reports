@@ -2,6 +2,7 @@ import { Input, Textarea } from './FormField';
 import CustomSelect from './CustomSelect';
 import MultiSelect from './MultiSelect';
 import FieldToggle from './FieldToggle';
+import ReportingPeriodField from './ReportingPeriodField';
 
 const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], regionOptions = [], sectorOptions = [], isSuperAdmin = true, fieldErrors = {}, hiddenFields = [], onToggle }) => {
   const toggle = (key) => <FieldToggle fieldKey={key} hiddenFields={hiddenFields} onToggle={onToggle} />;
