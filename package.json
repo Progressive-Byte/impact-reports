@@ -14,9 +14,7 @@
     "server": "node server/index.js",
     "server:dev": "nodemon server/index.js",
     "start": "NODE_ENV=production node server/index.js",
-    "seed": "node server/scripts/seed.js",
-    "backfill:reporting-period": "node server/scripts/backfill-reporting-period.js",
-    "backfill:sector-array": "node server/scripts/backfill-sector-array.js"
+    "seed": "node server/scripts/seed.js"
   },
   "dependencies": {
     "@questlabs/react-sdk": "^2.2.92",
