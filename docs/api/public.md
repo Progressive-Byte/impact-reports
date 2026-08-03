@@ -200,6 +200,7 @@ Returns `404` if the report does not exist or is not `published`.
   "region":            "Middle East",
   "sector":            "Healthcare",
   "year":              "2025",
+  "reportingPeriod":   "2025",
   "projectLead":       "Dr. Ahmed Hassan",
   "shortSubtitle":     "Delivering emergency medical support across conflict-affected communities.",
   "projectBackground": "Full text of project background...",
