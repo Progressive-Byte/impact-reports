@@ -45,7 +45,7 @@ export const reportToForm = (report, defaultRegion = '') => ({
   cost:              report.cost            ?? 0,
   assignedTo:        (report.assignedTo || []).map(a => String(a._id ?? a)),
   projectLead:       report.projectLead || '',
-  fiscalYear:        report.fiscalYear  || 'FY25',
+  reportingPeriod:   report.reportingPeriod || String(new Date().getFullYear()),
   region:            report.region      || defaultRegion,
   sector:            report.sector      || '',
   livesImpacted:     report.livesImpacted ?? 0,
