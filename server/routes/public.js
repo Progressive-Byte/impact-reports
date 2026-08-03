@@ -225,11 +225,11 @@ router.get('/locations-map', async (req, res) => {
 router.get('/filters', async (req, res) => {
   try {
     const base = { status: 'published' };
-    const [allReports, sectors, countries, fiscalYears] = await Promise.all([
+    const [allReports, sectors, countries, reportingPeriods] = await Promise.all([
       Report.find(base).select('region countries'),
-      Report.distinct('sector',     { ...base, sector:    { $ne: '' } }),
+      Report.distinct('sector',          { ...base, sector:          { $ne: '' } }),
       Report.distinct('countries',  base),
-      Report.distinct('fiscalYear', { ...base, fiscalYear: { $ne: '' } }),
+      Report.distinct('reportingPeriod', { ...base, reportingPeriod: { $ne: '' } }),
     ]);
 
     // Derive region from countries for reports that don't have it stored yet
