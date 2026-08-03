@@ -180,7 +180,9 @@ export const buildStepPayload = {
     images:     f.images.filter(img => img.url.trim()).map(({ url }) => ({ url })),
     thumbnail:  f.thumbnail || '',
     videoUrl:   f.videoUrl.trim(),
-    milestones: f.milestones.map(({ date, title, description }) => ({ date, title, description })),
+    milestones: f.milestones
+      .filter(m => m.date.trim() && m.title.trim())
+      .map(({ date, title, description }) => ({ date, title, description })),
   }),
   location:  (f) => ({
     countries: f.countries,
