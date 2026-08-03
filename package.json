@@ -15,7 +15,6 @@
     "server:dev": "nodemon server/index.js",
     "start": "NODE_ENV=production node server/index.js",
     "seed": "node server/scripts/seed.js",
-    "backfill:slugs": "node server/scripts/backfill-slugs.js",
     "backfill:reporting-period": "node server/scripts/backfill-reporting-period.js",
     "backfill:sector-array": "node server/scripts/backfill-sector-array.js"
   },
