@@ -94,7 +94,7 @@ const ReportListRow = ({ report }) => {
                 {report.region}
               </span>
               <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">
-                {report.year} - {report.sector}
+                {report.year} - {(report.sector || []).join(', ')}
               </span>
             </div>
 
