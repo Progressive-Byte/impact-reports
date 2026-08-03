@@ -5,18 +5,17 @@ import { deriveRegion } from '../utils/regionUtils.js';
 
 const router = express.Router();
 
-// "FY25" → "2025", "FY2025" → "2025"
-function deriveYear(fiscalYear) {
-  const match = (fiscalYear || '').match(/(\d+)/);
+// Extracts a representative 4-digit year from a reporting period string, for
+// sorting/filtering — "2025" → "2025", "2025–2027" → "2025",
+// "Jan 2025 – Dec 2026" → "2025". Also handles legacy "FY25"/"FY2025" values.
+function deriveYear(reportingPeriod) {
+  const match = (reportingPeriod || '').match(/(\d+)/);
   if (!match) return '';
   const n = parseInt(match[1], 10);
   return n < 100 ? `20${String(n).padStart(2, '0')}` : String(n);
 }
 
-// "2025" → "FY25"
-function yearToFiscal(year) {
-  return `FY${String(year).slice(-2)}`;
-}
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 function shapeCard(r) {
   const bg     = (r.projectBackground || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
