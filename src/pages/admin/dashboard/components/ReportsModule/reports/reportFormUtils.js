@@ -47,7 +47,7 @@ export const reportToForm = (report, defaultRegion = '') => ({
   projectLead:       report.projectLead || '',
   reportingPeriod:   report.reportingPeriod || String(new Date().getFullYear()),
   region:            report.region      || defaultRegion,
-  sector:            report.sector      || '',
+  sector:            Array.isArray(report.sector) ? report.sector : (report.sector ? [report.sector] : []),
   livesImpacted:     report.livesImpacted ?? 0,
   projectBackground: report.projectBackground || '',
   strategicResponse: report.strategicResponse || '',
