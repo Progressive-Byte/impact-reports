@@ -234,7 +234,7 @@ Returns `400` if the report's current status is `"trash"` — restore it first.
 | `donationUrl`        | string   | —             | Per-report donation link shown on the public report page's "Donate Now" button        |
 | `cost`               | number   | —             | Project cost (stored for internal use; not yet surfaced on the public portal)         |
 | `projectLead`        | string   | Yes           | Lead person / partner name                                                            |
-| `fiscalYear`         | string   | Yes           | e.g. `"FY25"`                                                                         |
+| `reportingPeriod`    | string   | Yes           | Single year (`"2025"`), multi-year range (`"2025–2027"`), or date range (`"Jan 2025 – Dec 2026"`) |
 | `region`             | string   | Yes           | One of: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global`             |
 | `sector`             | string   | Yes           | Free-text sector e.g. `"Healthcare"`                                                  |
 | `livesImpacted`      | number   | Yes (> 0)     | Number of lives impacted                                                              |
