@@ -165,9 +165,7 @@ const ReportingPeriodField = ({
         </div>
       )}
 
-      {error ? (
-        <p className="mt-1.5 text-xs text-red-500 font-medium">{error}</p>
-      ) : (
+      {!error && (
         <p className="mt-1.5 text-xs text-gray-400">{EXAMPLES[state.type]}</p>
       )}
     </div>
