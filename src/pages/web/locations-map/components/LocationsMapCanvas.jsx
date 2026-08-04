@@ -39,6 +39,7 @@ const LocationsMapCanvas = ({ locations, selectedCountry, onSelectCountry, minHe
         center={[20, 0]}
         zoom={2}
         scrollWheelZoom={false}
+        attributionControl={false}
         style={{ height: '100%', width: '100%', minHeight, zIndex: 1 }}
       >
         <TileLayer
@@ -47,6 +48,7 @@ const LocationsMapCanvas = ({ locations, selectedCountry, onSelectCountry, minHe
           subdomains="abcd"
           maxZoom={19}
         />
+        <AttributionControl position="bottomright" prefix={false} />
         <FitBounds positions={selectedCountry ? positions : allPositions} />
         {visibleLocations.map(({ country, reportCount }) => {
           const pos = getCountryPos(country);
