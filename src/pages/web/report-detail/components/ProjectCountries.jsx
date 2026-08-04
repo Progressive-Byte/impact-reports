@@ -93,6 +93,7 @@ const ProjectCountries = ({ countries, region, isOpen, onToggle }) => {
               center={[20, 0]}
               zoom={2}
               scrollWheelZoom={false}
+              attributionControl={false}
               style={{ height: '100%', width: '100%', zIndex: 1 }}
             >
               <TileLayer
@@ -101,6 +102,7 @@ const ProjectCountries = ({ countries, region, isOpen, onToggle }) => {
                 subdomains="abcd"
                 maxZoom={19}
               />
+              <AttributionControl position="bottomright" prefix={false} />
               <FitBounds positions={selected ? positions : allPositions} />
               {visibleCountries.map((country) => {
                 const pos = getCountryPos(country);
