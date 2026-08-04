@@ -142,6 +142,7 @@ const GpsPickerModal = ({
               center={countryCenter}
               zoom={initLat !== null ? 8 : 5}
               scrollWheelZoom
+              attributionControl={false}
               style={{ height: '100%', width: '100%', zIndex: 1 }}
             >
               <TileLayer
@@ -150,6 +151,7 @@ const GpsPickerModal = ({
                 subdomains="abcd"
                 maxZoom={19}
               />
+              <AttributionControl position="bottomright" prefix={false} />
               <MapClickHandler onClick={placePin} />
               <Marker
                 position={[lat, lng]}
