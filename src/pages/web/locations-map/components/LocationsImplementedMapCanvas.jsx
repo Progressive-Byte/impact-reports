@@ -40,6 +40,7 @@ const LocationsImplementedMapCanvas = ({ sites, activeCountry }) => {
         center={[20, 0]}
         zoom={2}
         scrollWheelZoom={false}
+        attributionControl={false}
         style={{ height: '100%', width: '100%', minHeight: '500px', zIndex: 1 }}
       >
         <TileLayer
@@ -48,6 +49,7 @@ const LocationsImplementedMapCanvas = ({ sites, activeCountry }) => {
           subdomains="abcd"
           maxZoom={19}
         />
+        <AttributionControl position="bottomright" prefix={false} />
         <FitBounds positions={positions} />
         {pinned.map((site, idx) => (
           <Marker key={`${site.country}-${site.address}-${idx}`} position={site.pos}>
