@@ -68,3 +68,15 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* Map tile attribution — required by OpenStreetMap's ODbL license and CARTO's
+   terms of use; kept legible but visually minimal. */
+.leaflet-control-attribution {
+  font-size: 9px !important;
+  padding: 0 4px !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  color: #9ca3af !important;
+}
+.leaflet-control-attribution a {
+  color: #9ca3af !important;
+}
