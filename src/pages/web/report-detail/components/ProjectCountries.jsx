@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Tooltip, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Tooltip, useMap, AttributionControl } from 'react-leaflet';
 import L from 'leaflet';
 import SafeIcon from '../../../../common/SafeIcon';
 import CollapsibleSection from '../../../../common/CollapsibleSection';
