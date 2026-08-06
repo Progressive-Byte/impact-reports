@@ -182,7 +182,9 @@ const ReportDetail = () => {
 
           {/* Sidebar */}
           <div className="space-y-8">
-            {!isHidden('demographics') && hasDemographics && <DemographicsCard demographics={report.demographics} />}
+            {!isHidden('demographics') && hasDemographics && (
+              <DemographicsCard title={report.demographicsTitle || 'Recipient Demographics'} demographics={report.demographics} />
+            )}
             {!isHidden('testimonials') && <TestimonialSlider testimonials={report.testimonials} />}
           </div>
         </div>
