@@ -227,7 +227,7 @@ Returns `404` if the report does not exist or is not `published`.
   ],
   "testimonials": [
     {
-      "stars":       5,
+      "title":       "A Lifeline in Crisis",
       "body":        "<p>The mobile clinic arrived when we had no other options...</p>",
       "clientImage": "https://res.cloudinary.com/...",
       "name":        "Tariq M.",
