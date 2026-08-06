@@ -23,7 +23,7 @@ const TestimonialCard = ({ testimonial, bare = false }) => {
 
   const content = (
     <div className="relative p-6">
-      {/* Header: quote badge + label + stars */}
+      {/* Header: quote badge + label + title */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center flex-shrink-0">
@@ -33,15 +33,9 @@ const TestimonialCard = ({ testimonial, bare = false }) => {
           </div>
           <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Testimonial</p>
         </div>
-        <div className="flex items-center gap-0.5">
-          {Array.from({ length: MAX_STARS }).map((_, i) => (
-            <SafeIcon
-              key={i}
-              icon="FiStar"
-              className={`text-sm transition-colors ${i < stars ? 'text-amber-400 fill-amber-400' : 'text-gray-200'}`}
-            />
-          ))}
-        </div>
+        {title && (
+          <p className="text-sm font-black text-[#0B0D0F] truncate max-w-[60%]">{title}</p>
+        )}
       </div>
 
       {/* Body */}
