@@ -314,7 +314,8 @@ function validateStepPayload(stepName, body, isSuperAdmin) {
         if (!body.projectName?.trim())                      return 'Project name is required';
         if (!Array.isArray(body.assignedTo) || !body.assignedTo.length) return 'At least one assignee is required';
       }
-      if (!body.projectLead?.trim())                        return 'Project lead is required';
+      if (!body.programLead?.trim())                        return 'Program lead is required';
+      if (!body.implementingPartner?.trim())                return 'Implementing partner is required';
       if (!body.reportingPeriod)                            return 'Reporting period is required';
       if (!body.region?.trim())                             return 'Region is required';
       if (!Array.isArray(body.sector) || !body.sector.length) return 'At least one sector is required';
