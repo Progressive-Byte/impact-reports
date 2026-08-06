@@ -15,6 +15,19 @@ router.get('/donate', async (_req, res) => {
   }
 });
 
+// GET /api/config/hero — public; returns the portal hero section title & background image
+router.get('/hero', async (_req, res) => {
+  try {
+    const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
+    res.json({
+      title:           settings?.heroTitle           || 'Global Projects Impact Reports',
+      backgroundImage: settings?.heroBackgroundImage  || '',
+    });
+  } catch {
+    res.json({ title: 'Global Projects Impact Reports', backgroundImage: '' });
+  }
+});
+
 // GET /api/config/regions — public; returns DB regions
 router.get('/regions', async (_req, res) => {
   try {
