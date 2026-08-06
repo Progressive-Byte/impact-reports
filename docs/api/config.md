@@ -284,6 +284,8 @@ Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the 
   "weeklyDigest":           false,
   "require2fa":             false,
   "donationUrl":            "https://donate.example.com",
+  "heroTitle":              "Global Projects Impact Reports",
+  "heroBackgroundImage":    "https://res.cloudinary.com/impactreports/image/upload/...",
   "socialLinks": {
     "facebook":  "https://facebook.com/humanconcernusa",
     "twitter":   "",
