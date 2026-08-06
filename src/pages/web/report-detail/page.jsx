@@ -119,7 +119,7 @@ const ReportDetail = () => {
   }
 
   const activeLocations = report.locations?.length || report.countries?.length || 0;
-  const hasDemographics = (report.demographics?.men || 0) + (report.demographics?.women || 0) + (report.demographics?.children || 0) > 0;
+  const hasDemographics = (report.demographics || []).length > 0;
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen pb-24 font-sans [overflow-x:clip]">
