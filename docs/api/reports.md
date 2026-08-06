@@ -352,7 +352,7 @@ Download all reports as a flat file. Only `superadmin` can call this.
 | -------- | ------ | :-----: | -------------------------------------------------- |
 | `format` | string | `csv`   | `csv` — plain text; `excel` — `.xlsx` workbook     |
 
-Each row includes: `Project ID`, `Project Name`, `Slug`, `Status`, `Program Lead`, `Implementing Partner`, `Partner Organization(s)`, `Reporting Period`, `Region`, `Sector`, `Lives Impacted`, `Countries`, `Project Background`, `Strategic Response`, `Children`, `Women`, `Men`, `Deliverables`, `Images Count`, `Thumbnail URL`, `Video URL`, `Milestones Count`, `Steps Completed`, `Assigned To`, `Created By`, `Created At`, `Updated At`.
+Each row includes: `Project ID`, `Project Name`, `Slug`, `Status`, `Program Lead`, `Implementing Partner`, `Partner Organization(s)`, `Reporting Period`, `Region`, `Sector`, `Lives Impacted`, `Countries`, `Project Background`, `Strategic Response`, `Demographics Title`, `Demographics`, `Deliverables`, `Images Count`, `Thumbnail URL`, `Video URL`, `Milestones Count`, `Steps Completed`, `Assigned To`, `Created By`, `Created At`, `Updated At`.
 
 ### curl
 
