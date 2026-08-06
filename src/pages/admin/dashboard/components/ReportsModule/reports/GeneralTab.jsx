@@ -28,7 +28,7 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
         />
       </div>
 
-      {/* Row 2: Project Name | Project Lead/Partner */}
+      {/* Row 2: Project Name | Program Lead */}
       <div className="grid grid-cols-2 gap-5">
         <Input
           label="Project Name" required
@@ -39,12 +39,32 @@ const GeneralTab = ({ form, update, adminOptions = [], allAdminOptions = [], reg
           error={fieldErrors.projectName}
         />
         <Input
-          label="Project Lead/Partner" required
+          label="Program Lead" required
           placeholder="Lead name"
-          value={form.projectLead}
-          onChange={e => update('projectLead', e.target.value)}
-          error={fieldErrors.projectLead}
-          rightLabel={toggle('projectLead')}
+          value={form.programLead}
+          onChange={e => update('programLead', e.target.value)}
+          error={fieldErrors.programLead}
+          rightLabel={toggle('programLead')}
+        />
+      </div>
+
+      {/* Row 2b: Implementing Partner | Partner Organization(s) */}
+      <div className="grid grid-cols-2 gap-5">
+        <Input
+          label="Implementing Partner" required
+          placeholder="Partner organization name"
+          value={form.implementingPartner}
+          onChange={e => update('implementingPartner', e.target.value)}
+          error={fieldErrors.implementingPartner}
+          rightLabel={toggle('implementingPartner')}
+        />
+        <Input
+          label="Partner Organization(s)"
+          placeholder="e.g. Red Crescent, WFP, local NGOs..."
+          value={form.partnerOrganizations}
+          onChange={e => update('partnerOrganizations', e.target.value)}
+          error={fieldErrors.partnerOrganizations}
+          rightLabel={toggle('partnerOrganizations')}
         />
       </div>
 
