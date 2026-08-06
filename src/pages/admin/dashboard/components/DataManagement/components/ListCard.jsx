@@ -27,33 +27,47 @@ const ListCard = ({ icon, title, subtitle, items, loading, onAdd, onUpdate, onRe
             <div className="w-7 h-7 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center flex-shrink-0">
               <SafeIcon icon={icon} className="text-gray-400 text-xs" />
             </div>
-            <input
-              type="text"
-              value={item}
-              onChange={e => onUpdate(idx, e.target.value)}
-              placeholder={placeholder}
-              className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] bg-white transition-all"
-            />
-            <button
-              onClick={() => onRemove(idx)}
-              className="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-[#E52321] hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
-              title="Remove"
-            >
-              <SafeIcon icon="FiTrash2" className="text-sm" />
-            </button>
+            {readOnly ? (
+              <div className="flex-1 border border-gray-100 rounded-xl px-4 py-2.5 text-sm text-gray-700 bg-gray-50">
+                {item}
+              </div>
+            ) : (
+              <input
+                type="text"
+                value={item}
+                onChange={e => onUpdate(idx, e.target.value)}
+                placeholder={placeholder}
+                className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] bg-white transition-all"
+              />
+            )}
+            {!readOnly && (
+              <button
+                onClick={() => onRemove(idx)}
+                className="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-[#E52321] hover:bg-red-50 rounded-lg transition-colors flex-shrink-0"
+                title="Remove"
+              >
+                <SafeIcon icon="FiTrash2" className="text-sm" />
+              </button>
+            )}
           </div>
         ))
       )}
     </div>
 
     <div className="px-4 sm:px-6 pb-6">
-      <button
-        onClick={onAdd}
-        className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 hover:border-[#E52321] hover:text-[#E52321] text-gray-400 text-sm font-bold py-3 rounded-xl transition-colors"
-      >
-        <SafeIcon icon="FiPlus" className="text-base" />
-        {addLabel}
-      </button>
+      {readOnly ? (
+        <p className="text-xs text-gray-400 text-center">
+          Fixed list — kept consistent across all programs, not editable here.
+        </p>
+      ) : (
+        <button
+          onClick={onAdd}
+          className="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 hover:border-[#E52321] hover:text-[#E52321] text-gray-400 text-sm font-bold py-3 rounded-xl transition-colors"
+        >
+          <SafeIcon icon="FiPlus" className="text-base" />
+          {addLabel}
+        </button>
+      )}
     </div>
   </div>
 );
