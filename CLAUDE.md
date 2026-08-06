@@ -91,7 +91,7 @@ The entire project uses ES modules (`"type": "module"` in `package.json`). Serve
 - `Report` — core document; fields grouped by wizard step (see `STEP_FIELDS` in `routes/reports.js`); `stepsCompleted` array drives auto-publish
 - `Admin` — username, email, bcrypt password (rounds: 12), role (`superadmin|editor|viewer`), region, `isActive`; `failedLoginAttempts` triggers a notification at threshold 3; `totpSecret` + `totpEnabled` for TOTP 2FA; `resetOTPCode` (SHA-256-hashed) + `resetOTPExpires`; `loginOTPCode` + `loginOTPExpires` for email OTP login
 - `Counter` — atomic auto-increment via `Counter.next(name)`; used for sequential `projectId` on report creation
-- `PlatformSettings` — singleton (`key: 'platform'`) storing `defaultRegion`, `sessionTimeoutMinutes` (default 30), and the editable `regions`/`sectors` taxonomy arrays
+- `PlatformSettings` — singleton (`key: 'platform'`) storing `defaultRegion`, `sessionTimeoutMinutes` (default 30), and the editable `sectors`/`departments` taxonomy arrays. **Regions are not stored here** — they're a fixed, hardcoded list (see below), unlike sectors/departments which superadmins can freely edit via Data Management.
 - `Subscriber` — email-only model for newsletter signups; unique index; 11000 duplicate-key errors are silently treated as success to avoid email enumeration
 - `Notification` — system alerts (type, title, message, read flag)
 - `Invite` — SHA-256-hashed tokens with 48-hour expiry; cleared after registration
