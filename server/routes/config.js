@@ -16,39 +16,11 @@ router.get('/donate', async (_req, res) => {
   }
 });
 
-// GET /api/config/regions — public; returns DB regions
-router.get('/regions', async (_req, res) => {
-  try {
-    const settings = await PlatformSettings.findOne({ key: 'platform' }).lean();
-    res.json({ regions: settings?.regions || [] });
-  } catch {
-    res.json({ regions: [] });
-  }
-});
-
-// PUT /api/config/regions — superadmin only, replaces the full region list
-router.put('/regions', protect, async (req, res) => {
-  if (req.admin.role !== 'superadmin') {
-    return res.status(403).json({ message: 'Superadmin only' });
-  }
-  const { regions } = req.body;
-  if (!Array.isArray(regions) || regions.length === 0) {
-    return res.status(400).json({ message: 'At least one region is required' });
-  }
-  const cleaned = regions.map(r => r.trim()).filter(Boolean);
-  if (cleaned.length === 0) {
-    return res.status(400).json({ message: 'At least one region is required' });
-  }
-  try {
-    const settings = await PlatformSettings.findOneAndUpdate(
-      { key: 'platform' },
-      { $set: { regions: cleaned } },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
-    ).lean();
-    res.json({ regions: settings.regions });
-  } catch {
-    res.status(500).json({ message: 'Failed to save regions' });
-  }
+// GET /api/config/regions — public; returns the fixed, organization-wide region list.
+// This list is hardcoded (server/config/regions.js), not editable via the API — region
+// values must stay consistent across all programs/reports, so there is no PUT here.
+router.get('/regions', (_req, res) => {
+  res.json({ regions: REGIONS });
 });
 
 // GET /api/config/sectors — public; returns DB sectors
