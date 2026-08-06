@@ -238,6 +238,8 @@ const Settings = () => {
           failedLoginWarnings:    notifications.failedLoginWarnings,
           weeklyDigest:           notifications.weeklyDigest,
           donationUrl,
+          heroTitle,
+          heroBackgroundImage,
           socialLinks,
           socialLinksVisible,
         }),
