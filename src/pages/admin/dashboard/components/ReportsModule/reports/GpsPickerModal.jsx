@@ -86,6 +86,16 @@ const GpsPickerModal = ({
   const [name,      setName]      = useState(initialName);
   const [geocoding, setGeocoding] = useState(false);
   const [nameTouched, setNameTouched] = useState(!!initialName);
+  const [recenterTick, setRecenterTick] = useState(0);
+
+  const handleLatInput = (e) => {
+    setLat(parseFloat(e.target.value) || 0);
+    setRecenterTick(t => t + 1);
+  };
+  const handleLngInput = (e) => {
+    setLng(parseFloat(e.target.value) || 0);
+    setRecenterTick(t => t + 1);
+  };
 
   const placePin = useCallback(async (clickLat, clickLng) => {
     const newLat = parseFloat(clickLat.toFixed(6));
