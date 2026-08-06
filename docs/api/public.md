@@ -208,11 +208,12 @@ Returns `404` if the report does not exist or is not `published`.
   "projectBackground": "Full text of project background...",
   "strategicResponse": "Full text of strategic response...",
   "livesImpacted":     120000,
-  "demographics": {
-    "men":      30,
-    "women":    40,
-    "children": 30
-  },
+  "demographicsTitle": "Recipient Demographics",
+  "demographics": [
+    { "label": "Men",             "percentage": 30,   "icon": "FiUser"   },
+    { "label": "Women",           "percentage": 40,   "icon": "FiUsers"  },
+    { "label": "Pregnant Women",  "percentage": null, "icon": "FiHeart"  }
+  ],
   "deliverables": [
     { "label": "Mobile Clinics Deployed", "count": 5, "icon": "FiTruck", "description": "" }
   ],
