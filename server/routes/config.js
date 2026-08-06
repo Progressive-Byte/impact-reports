@@ -2,7 +2,6 @@ import express from 'express';
 import PlatformSettings from '../models/PlatformSettings.js';
 import { protect } from '../middleware/auth.js';
 import { sendWeeklyDigest } from '../utils/sendWeeklyDigest.js';
-import { REGIONS } from '../config/regions.js';
 
 const router = express.Router();
 
