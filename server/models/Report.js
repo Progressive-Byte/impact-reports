@@ -27,7 +27,7 @@ const milestoneSchema = new mongoose.Schema(
 
 const testimonialSchema = new mongoose.Schema(
   {
-    stars:       { type: Number, default: 5, min: 1, max: 5 },
+    title:       { type: String, default: '' },
     body:        { type: String, default: '' },
     clientImage: { type: String, default: '' },
     name:        { type: String, default: '' },
