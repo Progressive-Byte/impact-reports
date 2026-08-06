@@ -266,14 +266,21 @@ Each `testimonials` item:
 
 **`metrics`**
 
-`children + women + men` must not exceed 100 — validated client-side with a live progress bar; the server does not enforce the cap.
+| Field               | Type     | Required | Description                                                                         |
+| ------------------- | -------- | :------: | ------------------------------------------------------------------------------------ |
+| `demographicsTitle` | string   | —        | Editable heading for the demographics section (default `"Recipient Demographics"`)  |
+| `demographics`      | array    | —        | Freeform list of demographic categories (see below)                                 |
+| `deliverables`      | array    | Yes      | At least one item required (see below)                                              |
 
-| Field          | Type     | Required | Description                              |
-| -------------- | -------- | :------: | ---------------------------------------- |
-| `children`     | number   | —        | Children demographic %                   |
-| `women`        | number   | —        | Women demographic %                      |
-| `men`          | number   | —        | Men demographic %                        |
-| `deliverables` | array    | Yes      | At least one item required (see below)   |
+Each `demographics` item:
+
+| Field        | Type           | Required | Description                                                                 |
+| ------------ | -------------- | :------: | ---------------------------------------------------------------------------- |
+| `label`      | string         | Yes      | Category name (e.g. `"Men"`, `"Pregnant Women"`) — fully freeform per report |
+| `percentage` | number or null | —        | 0–100, or `null`/omitted to show the category without a percentage/bar      |
+| `icon`       | string         | —        | react-icons `Fi*` icon name, same convention as `deliverables[].icon`        |
+
+Categories are freeform per report — there is no fixed Men/Women/Children set. The sum of all items that *do* have a `percentage` must not exceed 100 — validated both client-side (live progress bar) and server-side in `PATCH /reports/:id/step/metrics`. Items with `percentage: null` are excluded from that sum and rendered as a label-only row (no bar) on the public report page.
 
 Each `deliverables` item:
 
