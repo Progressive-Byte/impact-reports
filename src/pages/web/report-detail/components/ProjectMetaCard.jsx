@@ -14,7 +14,9 @@ const ProjectMetaCard = ({ report }) => (
         { label: 'Sector',           value: (report.sector || []).join(', '), icon: 'FiLayers'   },
         { label: 'Reporting Period', value: report.reportingPeriod,  icon: 'FiCalendar' },
         { label: 'Region',       value: report.region,      icon: 'FiGlobe'    },
-        { label: 'Project Lead', value: report.projectLead, icon: 'FiUser'     },
+        { label: 'Program Lead',           value: report.programLead,          icon: 'FiUser'  },
+        { label: 'Implementing Partner',   value: report.implementingPartner,  icon: 'FiUsers' },
+        { label: 'Partner Organization(s)',value: report.partnerOrganizations, icon: 'FiUsers' },
       ].filter(({ value }) => value).map(({ label, value, icon }) => (
         <div key={label} className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-gray-50 border border-gray-100 flex items-center justify-center flex-shrink-0">
