@@ -257,7 +257,7 @@ Each `testimonials` item:
 
 | Field         | Type   | Required | Description                                                               |
 | ------------- | ------ | :------: | ------------------------------------------------------------------------- |
-| `stars`       | number | —        | Rating 1–5 (default `5`)                                                  |
+| `title`       | string | —        | Short title/heading for the testimonial (default `""`)                   |
 | `body`        | string | —        | Quote text as rich HTML (Tiptap). Rendered with `dangerouslySetInnerHTML` |
 | `clientImage` | string | —        | Cloudinary URL of the client's photo. Falls back to initials avatar       |
 | `name`        | string | —        | Client full name                                                           |
