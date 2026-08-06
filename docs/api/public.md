@@ -240,7 +240,7 @@ Returns `404` if the report does not exist or is not `published`.
 ```
 
 **Notes:**
-- `demographics` values are **percentages** (0–100), computed from the raw `men`/`women`/`children` counts stored on the report.
+- `demographics` is a freeform array of `{ label, percentage, icon }` — categories are defined per-report (not a fixed Men/Women/Children set). `percentage` is `null` when a category was recorded without a numeric value, in which case the UI renders the label with no bar. `demographicsTitle` is the editable heading shown above the section (default `"Recipient Demographics"`).
 - `milestones[].description` is mapped from the `notes` field in the database.
 - `image` follows the same fallback logic as the card endpoint: `thumbnail` → first `images[].url` → `""`.
 - `year` is derived from `reportingPeriod` the same way as the list endpoint (first year found). The detail endpoint also returns the full `reportingPeriod` string (e.g. `"2025–2027"` or `"Jan 2025 – Dec 2026"`) for display on the report page.
