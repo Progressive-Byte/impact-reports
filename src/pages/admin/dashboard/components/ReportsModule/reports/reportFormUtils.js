@@ -57,7 +57,7 @@ export const reportToForm = (report, defaultRegion = '') => ({
   strategicResponse: report.strategicResponse || '',
   testimonials: (report.testimonials || []).map((t, i) => ({
     id:          i + 1,
-    stars:       t.stars       ?? 5,
+    title:       t.title       || '',
     body:        t.body        || '',
     clientImage: t.clientImage || '',
     name:        t.name        || '',
