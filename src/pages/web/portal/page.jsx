@@ -45,6 +45,7 @@ const Portal = () => {
   useEffect(() => {
     fetchStats();
     loadFilterOptions();
+    publicApiRequest('/api/config/hero').then(setHero).catch(() => {});
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
