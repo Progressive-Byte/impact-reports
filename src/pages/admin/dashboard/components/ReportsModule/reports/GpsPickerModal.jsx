@@ -25,6 +25,18 @@ const MapClickHandler = ({ onClick }) => {
   return null;
 };
 
+// Re-centers the map view when coordinates are typed manually (click/drag
+// already happen within the visible map, so they don't need this).
+const RecenterOnManualEntry = ({ lat, lng, trigger }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (!trigger) return;
+    map.setView([lat, lng], map.getZoom());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger]);
+  return null;
+};
+
 // Reverse geocode a lat/lng using Nominatim → returns a short place name
 async function reverseGeocode(lat, lng) {
   try {
