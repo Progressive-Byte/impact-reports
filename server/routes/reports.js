@@ -318,7 +318,7 @@ function validateStepPayload(stepName, body, isSuperAdmin) {
       if (!body.programLead?.trim())                        return 'Program lead is required';
       if (!body.implementingPartner?.trim())                return 'Implementing partner is required';
       if (!body.reportingPeriod)                            return 'Reporting period is required';
-      if (!body.region?.trim())                             return 'Region is required';
+      if (!REGIONS.includes(body.region))                   return `Region must be one of: ${REGIONS.join(', ')}`;
       if (!Array.isArray(body.sector) || !body.sector.length) return 'At least one sector is required';
       if (!body.livesImpacted || Number(body.livesImpacted) <= 0) return 'Lives impacted must be greater than 0';
       break;
