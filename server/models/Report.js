@@ -75,9 +75,8 @@ const reportSchema = new mongoose.Schema(
     testimonials:      { type: [testimonialSchema], default: [] },
 
     // Metrics step
-    children:          { type: Number, default: 0 },
-    women:             { type: Number, default: 0 },
-    men:               { type: Number, default: 0 },
+    demographicsTitle: { type: String, default: 'Recipient Demographics' },
+    demographics:      { type: [demographicSchema], default: [] },
     deliverables:      { type: [deliverableSchema], default: [] },
 
     // Media & Timeline step
