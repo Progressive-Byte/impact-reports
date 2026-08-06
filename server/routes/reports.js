@@ -19,7 +19,7 @@ const POPULATE = [
 const STEP_FIELDS = {
   general:   ['projectName', 'assignedTo', 'approvalAssignedTo', 'actualProjectId', 'shortSubtitle', 'donationUrl', 'cost', 'programLead', 'implementingPartner', 'partnerOrganizations', 'reportingPeriod', 'region', 'sector', 'livesImpacted'],
   narrative: ['projectBackground', 'strategicResponse', 'testimonials'],
-  metrics:   ['children', 'women', 'men', 'deliverables'],
+  metrics:   ['demographicsTitle', 'demographics', 'deliverables'],
   media:     ['images', 'thumbnail', 'videoUrl', 'milestones'],
   location:  ['countries', 'locations'],
 };
