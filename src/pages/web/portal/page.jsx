@@ -134,7 +134,7 @@ const Portal = () => {
 
   return (
     <div className="bg-[#F9FAFB] min-h-screen">
-      <PortalHero />
+      <PortalHero title={hero.title} backgroundImage={hero.backgroundImage} />
 
       <MetricsStrip stats={stats} />
 
