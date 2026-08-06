@@ -68,6 +68,10 @@ const Settings = () => {
 
   const [donationUrl, setDonationUrl] = useState('');
 
+  const [heroTitle, setHeroTitle] = useState('');
+  const [heroBackgroundImage, setHeroBackgroundImage] = useState('');
+  const [uploadingHero, setUploadingHero] = useState(false);
+
   const [socialLinks, setSocialLinks] = useState({
     facebook: '', twitter: '', instagram: '', linkedin: '', youtube: '',
   });
