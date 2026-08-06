@@ -218,6 +218,29 @@ curl http://localhost:5173/api/config/donate
 
 ---
 
+## `GET /api/config/hero`
+
+Public — no authentication required. Returns the public portal homepage's hero banner title and background photo, configured by a superadmin in the platform Settings ("Hero Section" card). Used by `PortalHero.jsx` on page load.
+
+### Response `200`
+
+```json
+{
+  "title":           "Global Projects Impact Reports",
+  "backgroundImage": "https://res.cloudinary.com/impactreports/image/upload/..."
+}
+```
+
+Both fields fall back to the original hardcoded copy/photo when unset, so the homepage renders unchanged until a superadmin edits them.
+
+### curl
+
+```bash
+curl http://localhost:5173/api/config/hero
+```
+
+---
+
 ## `GET /api/config/social-links`
 
 Public — no authentication required. Returns the social media URLs configured by admins in the Settings panel. Used by the public footer to render icon links.
