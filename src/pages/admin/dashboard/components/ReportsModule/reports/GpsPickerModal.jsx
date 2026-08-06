@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents, AttributionControl } from 'react-leaflet';
+import { useState, useCallback, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, useMapEvents, useMap, AttributionControl } from 'react-leaflet';
 import L from 'leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
