@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { REGIONS } from '../config/regions.js';
 
 const deliverableSchema = new mongoose.Schema(
   {
