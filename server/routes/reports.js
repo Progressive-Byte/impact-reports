@@ -200,9 +200,10 @@ router.get('/export', async (req, res) => {
       'Countries':            (r.countries  || []).join('; '),
       'Project Background':   r.projectBackground  ?? '',
       'Strategic Response':   r.strategicResponse  ?? '',
-      'Children':             r.children ?? 0,
-      'Women':                r.women    ?? 0,
-      'Men':                  r.men      ?? 0,
+      'Demographics Title':   r.demographicsTitle ?? '',
+      'Demographics':         (r.demographics || [])
+        .map(d => `${d.label}${d.percentage != null ? ` (${d.percentage}%)` : ''}`)
+        .join('; '),
       'Deliverables':         (r.deliverables || []).map(d => `${d.label}(${d.count})`).join('; '),
       'Images Count':         (r.images     || []).length,
       'Thumbnail URL':        r.thumbnail  ?? '',
