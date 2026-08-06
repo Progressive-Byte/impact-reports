@@ -36,6 +36,7 @@ const CURRENCY_OPTIONS = [
 ];
 
 const Settings = () => {
+  const heroFileInputRef = useRef(null);
   const { admin, updateAdmin } = useAdminAuth();
   const isSuperAdmin = admin?.role === 'superadmin';
   const [regionOptions,   setRegionOptions]   = useState([]);
