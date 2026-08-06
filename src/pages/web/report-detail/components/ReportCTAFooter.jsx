@@ -126,9 +126,9 @@ const ReportCTAFooter = ({
             <SafeIcon icon="FiHeart" className="text-2xl" />
           </motion.div>
           <div>
-            <h3 className="mt-1 text-2xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight">Support This Mission</h3>
+            <h3 className="mt-1 text-2xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight">{ctaTitle}</h3>
             <p className="mt-3 text-gray-600 text-sm sm:text-base leading-relaxed max-w-2xl">
-              Your partnership allows our teams to remain on the ground and expand our reach to those who need it most.
+              {ctaDescription}
             </p>
           </div>
         </div>
