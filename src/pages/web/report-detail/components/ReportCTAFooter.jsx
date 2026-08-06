@@ -135,7 +135,7 @@ const ReportCTAFooter = ({
 
         {/* Right — actions */}
         <div className="lg:col-span-4 flex flex-col gap-3" ref={wrapperRef}>
-          {/* Donate Now */}
+          {/* CTA button — text/link fully configurable per report */}
           {href ? (
             <a
               href={href}
@@ -143,11 +143,11 @@ const ReportCTAFooter = ({
               rel="noopener noreferrer"
               className="w-full block text-center bg-[#E52321] hover:bg-[#C91D1B] text-white px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.25em] shadow-lg shadow-red-500/20 active:scale-95 transition-transform"
             >
-              Donate Now
+              {ctaButtonText}
             </a>
           ) : (
             <button disabled className="w-full bg-gray-200 text-gray-400 px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.25em] cursor-not-allowed">
-              Donate Now
+              {ctaButtonText}
             </button>
           )}
 
