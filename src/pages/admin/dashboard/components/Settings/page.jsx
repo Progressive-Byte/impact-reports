@@ -105,6 +105,8 @@ const Settings = () => {
         weeklyDigest:        settingsData.weeklyDigest        ?? false,
       }));
       setDonationUrl(settingsData.donationUrl || '');
+      setHeroTitle(settingsData.heroTitle || '');
+      setHeroBackgroundImage(settingsData.heroBackgroundImage || '');
       setSocialLinks({
         facebook:  settingsData.socialLinks?.facebook  || '',
         twitter:   settingsData.socialLinks?.twitter   || '',
