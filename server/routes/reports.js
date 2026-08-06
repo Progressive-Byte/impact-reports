@@ -2,6 +2,7 @@ import express from 'express';
 import XLSX from 'xlsx';
 import Report from '../models/Report.js';
 import Counter from '../models/Counter.js';
+import { REGIONS } from '../config/regions.js';
 import { protect } from '../middleware/auth.js';
 import { parsePagination, buildMeta } from '../utils/pagination.js';
 import { toSlug, uniqueSlug } from '../utils/slugUtils.js';
