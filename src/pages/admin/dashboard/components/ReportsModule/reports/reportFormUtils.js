@@ -179,9 +179,14 @@ export const buildStepPayload = {
     })),
   }),
   metrics:   (f) => ({
-    children:     Number(f.children) || 0,
-    women:        Number(f.women) || 0,
-    men:          Number(f.men) || 0,
+    demographicsTitle: f.demographicsTitle.trim() || 'Recipient Demographics',
+    demographics: f.demographics
+      .filter(d => d.label.trim())
+      .map(({ label, percentage, icon }) => ({
+        label:      label.trim(),
+        percentage: (percentage === '' || percentage === null || percentage === undefined) ? null : Number(percentage),
+        icon:       icon || '',
+      })),
     deliverables: f.deliverables.map(({ label, count, icon, description }) => ({
       label,
       count:       Number(count) || 0,
