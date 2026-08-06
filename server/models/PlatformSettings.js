@@ -9,7 +9,6 @@ const platformSettingsSchema = new mongoose.Schema({
   weeklyDigest:           { type: Boolean, default: false },
   require2fa:             { type: Boolean, default: false },
   donationUrl:            { type: String,   default: '' },
-  regions:                { type: [String], default: [] },
   sectors:                { type: [String], default: [] },
   departments:            { type: [String], default: [] },
   socialLinks: {
