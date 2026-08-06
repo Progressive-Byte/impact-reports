@@ -56,7 +56,7 @@ const reportSchema = new mongoose.Schema(
     implementingPartner:  { type: String, default: '' },
     partnerOrganizations: { type: String, default: '' },
     reportingPeriod:   { type: String, default: String(new Date().getFullYear()) },
-    region:            { type: String, default: '', enum: [...REGIONS, ''] },
+    region:            { type: String, default: '' },
     sector:            { type: [String], default: [] },
     livesImpacted:     { type: Number, default: 0 },
 
