@@ -242,7 +242,7 @@ const GpsPickerModal = ({
                     type="number"
                     step="0.000001"
                     value={lng}
-                    onChange={e => setLng(parseFloat(e.target.value) || 0)}
+                    onChange={handleLngInput}
                     className="w-full text-xs font-bold text-gray-700 border border-gray-200 rounded-xl px-3 py-2 outline-none focus:border-[#E52321] transition-colors"
                   />
                 </div>
