@@ -34,10 +34,15 @@ const DataManagement = () => {
   useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const handleSave = async () => {
+    const cleanedRegions     = regions.map(r => r.trim()).filter(Boolean);
     const cleanedSectors     = sectors.map(s => s.trim()).filter(Boolean);
     const cleanedDepartments = departments.map(d => d.trim()).filter(Boolean);
 
+    if (cleanedRegions.length === 0) { toast.error('Add at least one region'); return; }
     if (cleanedSectors.length === 0) { toast.error('Add at least one sector'); return; }
+
+    const dupRegion = cleanedRegions.find((r, i) => cleanedRegions.indexOf(r) !== i);
+    if (dupRegion) { toast.error(`Duplicate region: "${dupRegion}"`); return; }
 
     const dupSector = cleanedSectors.find((s, i) => cleanedSectors.indexOf(s) !== i);
     if (dupSector) { toast.error(`Duplicate sector: "${dupSector}"`); return; }
@@ -48,6 +53,10 @@ const DataManagement = () => {
     setSaving(true);
     try {
       const requests = [
+        adminApiRequest('/api/config/regions', {
+          method: 'PUT',
+          body: JSON.stringify({ regions: cleanedRegions }),
+        }),
         adminApiRequest('/api/config/sectors', {
           method: 'PUT',
           body: JSON.stringify({ sectors: cleanedSectors }),
@@ -60,6 +69,7 @@ const DataManagement = () => {
         }));
       }
       await Promise.all(requests);
+      setRegions(cleanedRegions);
       setSectors(cleanedSectors);
       setDepartments(cleanedDepartments);
       toast.success('Data saved successfully');
