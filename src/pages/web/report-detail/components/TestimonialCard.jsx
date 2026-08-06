@@ -13,7 +13,7 @@ const initials = (name) =>
 // bare=true: renders only inner content — no card shell, no shadow, no glow.
 // Used by TestimonialSlider which provides its own unified shell.
 const TestimonialCard = ({ testimonial, bare = false }) => {
-  const stars       = testimonial?.stars       ?? MAX_STARS;
+  const title       = testimonial?.title       || '';
   const body        = testimonial?.body        || '';
   const clientImage = testimonial?.clientImage || '';
   const name        = testimonial?.name        || '';
