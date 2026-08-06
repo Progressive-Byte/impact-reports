@@ -239,7 +239,7 @@ Returns `400` if the report's current status is `"trash"` — restore it first.
 | `implementingPartner` | string   | Yes           | Name of the primary implementing partner organization                                 |
 | `partnerOrganizations`| string   | —             | Free-text list of additional partner organizations (multi-select planned; text for now) |
 | `reportingPeriod`    | string   | Yes           | Single year (`"2025"`), multi-year range (`"2025–2027"`), or date range (`"Jan 2025 – Dec 2026"`) |
-| `region`             | string   | Yes           | One of: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `Global`             |
+| `region`             | string   | Yes           | Must be one of the fixed values from `GET /api/config/regions`: `Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `SWANA`, `Global` — enforced by both a Mongoose `enum` and step-save validation, not freely editable |
 | `sector`             | string   | Yes           | Free-text sector e.g. `"Healthcare"`                                                  |
 | `livesImpacted`      | number   | Yes (> 0)     | Number of lives impacted                                                              |
 
