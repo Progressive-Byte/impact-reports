@@ -6,28 +6,6 @@ import RichTextEditor from '@/common/RichTextEditor';
 import { adminApiRequest } from '../../../../../../services/adminApi';
 
 const MAX_SIZE_MB = 2;
-const MAX_STARS   = 5;
-
-const StarPicker = ({ value, onChange }) => (
-  <div className="flex items-center gap-1">
-    {Array.from({ length: MAX_STARS }).map((_, i) => (
-      <button
-        key={i}
-        type="button"
-        onClick={() => onChange(i + 1)}
-        className="transition-transform hover:scale-110"
-      >
-        <SafeIcon
-          icon="FiStar"
-          className={`text-xl transition-colors ${i < value ? 'text-amber-400 fill-amber-400' : 'text-gray-300'}`}
-        />
-      </button>
-    ))}
-    <span className="ml-1.5 text-[10px] font-black text-gray-400 uppercase tracking-widest">
-      {value} / {MAX_STARS}
-    </span>
-  </div>
-);
 
 const TestimonialsSection = ({ form, update }) => {
   const fileInputRefs = useRef({});
