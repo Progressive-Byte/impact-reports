@@ -327,6 +327,11 @@ function validateStepPayload(stepName, body, isSuperAdmin) {
       if (!body.strategicResponse?.trim())  return 'Strategic response is required';
       break;
     case 'metrics': {
+      const total = (body.demographics || []).reduce((sum, d) => {
+        if (d.percentage === null || d.percentage === undefined || d.percentage === '') return sum;
+        return sum + (Number(d.percentage) || 0);
+      }, 0);
+      if (total > 100) return 'Demographic percentages must not exceed 100%';
       const valid = (body.deliverables || []).filter(d => d.label?.trim() && Number(d.count) > 0);
       if (!valid.length) return 'Add at least one deliverable with a label and count';
       break;
