@@ -103,7 +103,9 @@ The entire project uses ES modules (`"type": "module"` in `package.json`). Serve
 
 **Slugs**: Generated from `projectName` via `toSlug()` + `uniqueSlug()` (appends `-2`, `-3`, … on collision). Public routes accept either a MongoDB ObjectId or a slug.
 
-**Region auto-derivation**: `server/utils/regionUtils.js` exports `deriveRegion(countries)` — maps ISO country codes to one of five org regions (Africa, Middle East, South Asia, Southeast Asia, Global). Called on the `location` step save.
+**Region is a fixed, hardcoded list — not editable data.** `server/config/regions.js` exports the six canonical org regions (`Africa`, `Middle East`, `South Asia`, `Southeast Asia`, `SWANA`, `Global`). `Report.region` is a Mongoose `enum` constrained to this exact list (plus `''` for not-yet-set), and `POST/PATCH` step saves reject anything else (`server/routes/reports.js`, `validateStepPayload`). `GET /api/config/regions` just returns this hardcoded array — there is intentionally no `PUT`. This exists specifically to prevent staff typing a country/city name (e.g. `"Gaza"`) into what should be a controlled region value; to change the list itself, edit `server/config/regions.js` in code, not through the UI. Contrast with `sector`/`department`, which remain freeform, superadmin-editable taxonomy arrays on `PlatformSettings` via Data Management.
+
+**Region auto-derivation** (separate from the above): `server/utils/regionUtils.js` exports `deriveRegion(countries)` — maps ISO country codes to one of the org regions. It is **not** called on step save; it's used only as a read-time fallback in `server/routes/public.js` (`report.region || deriveRegion(report.countries)`) for older reports that predate the `region` field being populated. It never overwrites a stored `region` value.
 
 **Pagination**: `server/utils/pagination.js` exports `parsePagination(query)` and `buildMeta({page, limit, total})` — used by all paginated list endpoints.
 
