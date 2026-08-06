@@ -312,6 +312,8 @@ Requires `Authorization: Bearer <token>` (any authenticated admin). Returns the 
 | `weeklyDigest`           | boolean | `false` | When `true`, a summary email is sent to all superadmins every Monday 08:00  |
 | `require2fa`             | boolean | `false` | When `true`, all logins require 2FA. Admins with TOTP set up choose between their authenticator app or email OTP; others receive email OTP automatically. |
 | `donationUrl`            | string  | `""`    | URL for the "Donate" button in the public site header. When empty, the button is hidden. Also available unauthenticated via `GET /api/config/donate`. |
+| `heroTitle`              | string  | `"Global Projects Impact Reports"` | Headline on the public portal homepage banner. Also available unauthenticated via `GET /api/config/hero`. |
+| `heroBackgroundImage`    | string  | stock photo URL | Background photo behind the homepage banner title. Uploaded via `POST /api/upload` (Cloudinary) or pasted as a URL. Also available unauthenticated via `GET /api/config/hero`. |
 | `socialLinks`            | object  | `{}`    | Social media URLs — see `GET /api/config/social-links`.                     |
 | `socialLinksVisible`     | object  | all `true` | Per-platform visibility flags. When `false`, the platform is omitted from the public footer even if a URL is set. |
 
