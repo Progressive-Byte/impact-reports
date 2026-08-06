@@ -14,7 +14,7 @@ const TestimonialsSection = ({ form, update }) => {
   const add = () =>
     update('testimonials', [
       ...form.testimonials,
-      { id: Date.now(), stars: 5, body: '', clientImage: '', name: '', designation: '', address: '' },
+      { id: Date.now(), title: '', body: '', clientImage: '', name: '', designation: '', address: '' },
     ]);
 
   const remove = (id) =>
