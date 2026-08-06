@@ -2,8 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import SafeIcon from '../../../../common/SafeIcon';
 
-const MAX_STARS = 5;
-
 const initials = (name) =>
   (name || '')
     .split(' ')
