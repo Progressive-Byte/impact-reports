@@ -233,7 +233,10 @@ Returns `400` if the report's current status is `"trash"` — restore it first.
 | `approvalAssignedTo` | string[] | Superadmin    | Array of Admin `_id` strings who must approve before publishing                       |
 | `actualProjectId`    | string   | —             | Human-readable project ID (e.g. `"BurmaWater-1001"`)                                 |
 | `shortSubtitle`      | string   | —             | Short plain-text description shown on the report card and report detail hero section  |
-| `donationUrl`        | string   | —             | Per-report donation link shown on the public report page's "Donate Now" button        |
+| `donationUrl`        | string   | —             | Link for the public report page's "Support This Mission" CTA button. Despite the field name, it's a generic engagement link — donation page, volunteer signup, petition, partnership contact form, etc. |
+| `ctaTitle`           | string   | —             | Heading for the "Support This Mission" section (default `"Support This Mission"`)     |
+| `ctaDescription`     | string   | —             | Body copy for the "Support This Mission" section (default explains partnership/donation impact) |
+| `ctaButtonText`      | string   | —             | Label for the CTA button (default `"Donate Now"`) — e.g. `"Volunteer Today"`, `"Partner With Us"`, `"Sign the Petition"` |
 | `cost`               | number   | —             | Project cost (stored for internal use; not yet surfaced on the public portal)         |
 | `programLead`         | string   | Yes           | Name of the internal program lead for this project                                    |
 | `implementingPartner` | string   | Yes           | Name of the primary implementing partner organization                                 |
