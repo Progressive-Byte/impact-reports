@@ -175,6 +175,7 @@ const GpsPickerModal = ({
               />
               <AttributionControl position="bottomright" prefix={false} />
               <MapClickHandler onClick={placePin} />
+              <RecenterOnManualEntry lat={lat} lng={lng} trigger={recenterTick} />
               <Marker
                 position={[lat, lng]}
                 draggable
