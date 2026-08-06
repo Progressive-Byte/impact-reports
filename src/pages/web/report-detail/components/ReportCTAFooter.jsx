@@ -42,7 +42,15 @@ const SOCIALS = [
   },
 ];
 
-const ReportCTAFooter = ({ donationUrl, slug, projectName, hiddenFields }) => {
+const ReportCTAFooter = ({
+  donationUrl,
+  ctaTitle = 'Support This Mission',
+  ctaDescription = 'Your partnership allows our teams to remain on the ground and expand our reach to those who need it most.',
+  ctaButtonText = 'Donate Now',
+  slug,
+  projectName,
+  hiddenFields,
+}) => {
   const donationHidden = hiddenFields?.has ? hiddenFields.has('donationUrl') : (hiddenFields || []).includes('donationUrl');
   const href    = !donationHidden ? normalizeUrl(donationUrl) : '';
   const [open,   setOpen]   = useState(false);
