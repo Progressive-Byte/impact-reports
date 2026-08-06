@@ -118,11 +118,12 @@ router.get('/reports/:idOrSlug', async (req, res) => {
       projectBackground: report.projectBackground || '',
       strategicResponse: report.strategicResponse || '',
       livesImpacted:     report.livesImpacted     || 0,
-      demographics: {
-        men:      report.men      || 0,
-        women:    report.women    || 0,
-        children: report.children || 0,
-      },
+      demographicsTitle: report.demographicsTitle || 'Recipient Demographics',
+      demographics: (report.demographics || []).map(d => ({
+        label:      d.label || '',
+        percentage: d.percentage ?? null,
+        icon:       d.icon  || '',
+      })),
       deliverables: report.deliverables || [],
       milestones:   (report.milestones || []).map((m) => ({
         date:        m.date  || '',
