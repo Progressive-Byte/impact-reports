@@ -336,6 +336,8 @@ All fields are optional — only provided fields are updated.
 | `weeklyDigest`           | boolean | Toggle weekly digest email to superadmins                                |
 | `require2fa`             | boolean | When `true`, all logins require 2FA (email OTP or TOTP)                  |
 | `donationUrl`            | string  | URL for the public "Donate" button. Send `""` to hide the button.        |
+| `heroTitle`              | string  | Headline for the public portal homepage banner.                         |
+| `heroBackgroundImage`    | string  | Background photo URL for the homepage banner (upload via `POST /api/upload` first, then send the returned Cloudinary URL). |
 | `socialLinks`            | object  | Social media URLs — only keys provided are updated (partial update supported) |
 | `socialLinksVisible`     | object  | Per-platform visibility flags — only keys provided are updated               |
 
