@@ -142,7 +142,7 @@ Session inactivity timeout: `startWatcher(minutes)` polls every 30 s, comparing 
 | `overview` | `AdminDashboard` | KPI cards and charts |
 | `reports` | `ReportsModule` | Report list + five-step wizard |
 | `users` | `UserManager` | Admin user CRUD |
-| `data` | `DataManagement` | Edit sectors & departments taxonomy; regions shown read-only (fixed list) |
+| `data` | `DataManagement` | Edit regions, sectors & departments taxonomy |
 | `subscribers` | `SubscribersModule` | Newsletter subscriber list |
 | `settings` | `Settings` | Password, profile, TOTP, platform settings |
 
