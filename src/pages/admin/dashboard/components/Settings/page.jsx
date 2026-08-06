@@ -180,6 +180,25 @@ const Settings = () => {
     </div>
   );
 
+  const handleHeroUpload = async (file) => {
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('File too large. Max 2 MB.');
+      return;
+    }
+    setUploadingHero(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const data = await adminApiRequest('/api/upload', { method: 'POST', body: formData });
+      setHeroBackgroundImage(data.url);
+    } catch (err) {
+      toast.error(err.message || 'Upload failed');
+    } finally {
+      setUploadingHero(false);
+    }
+  };
+
   const handleDisableTotp = async () => {
     setDisablingTotp(true);
     try {
