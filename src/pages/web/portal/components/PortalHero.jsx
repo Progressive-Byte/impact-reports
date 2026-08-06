@@ -1,11 +1,14 @@
 import { motion } from 'framer-motion';
 import SafeIcon from '../../../../common/SafeIcon';
 
-const PortalHero = () => (
+const DEFAULT_TITLE = 'Global Projects Impact Reports';
+const DEFAULT_BACKGROUND = 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=2000';
+
+const PortalHero = ({ title, backgroundImage }) => (
   <section className="bg-[#0B0D0F] pt-40 pb-28 md:pt-48 md:pb-44 relative overflow-hidden">
     <div className="absolute inset-0 opacity-20 pointer-events-none">
       <img
-        src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=2000"
+        src={backgroundImage || DEFAULT_BACKGROUND}
         alt=""
         className="w-full h-full object-cover"
       />
@@ -17,8 +20,7 @@ const PortalHero = () => (
           <SafeIcon icon="FiCheck" className="text-sm" /> Verified Transparency
         </span>
         <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white mb-6 sm:mb-8 tracking-tighter leading-[1.1] sm:leading-[0.9] uppercase">
-          Global Projects <br className="hidden sm:block" />
-          <span className="text-[#E52321]">Impact Reports</span>
+          {title || DEFAULT_TITLE}
         </h1>
         <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed px-4">
           A comprehensive database of our global initiatives, ensuring every contribution is
