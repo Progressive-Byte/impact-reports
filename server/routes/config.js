@@ -176,7 +176,7 @@ router.patch('/settings', protect, async (req, res) => {
     return res.status(403).json({ message: 'Superadmin only' });
   }
   try {
-    const { defaultRegion, sessionTimeoutMinutes, enforceStrongPasswords, failedLoginWarnings, weeklyDigest, require2fa, donationUrl, socialLinks, socialLinksVisible } = req.body;
+    const { defaultRegion, sessionTimeoutMinutes, enforceStrongPasswords, failedLoginWarnings, weeklyDigest, require2fa, donationUrl, heroTitle, heroBackgroundImage, socialLinks, socialLinksVisible } = req.body;
     const update = {};
     if (defaultRegion          !== undefined) update.defaultRegion          = defaultRegion;
     if (sessionTimeoutMinutes  !== undefined) update.sessionTimeoutMinutes  = Number(sessionTimeoutMinutes);
@@ -185,6 +185,8 @@ router.patch('/settings', protect, async (req, res) => {
     if (weeklyDigest           !== undefined) update.weeklyDigest           = Boolean(weeklyDigest);
     if (require2fa             !== undefined) update.require2fa             = Boolean(require2fa);
     if (donationUrl            !== undefined) update.donationUrl            = String(donationUrl).trim();
+    if (heroTitle              !== undefined) update.heroTitle              = String(heroTitle).trim();
+    if (heroBackgroundImage    !== undefined) update.heroBackgroundImage    = String(heroBackgroundImage).trim();
     const SOCIAL_KEYS = ['facebook', 'twitter', 'instagram', 'linkedin', 'youtube'];
     if (socialLinks !== undefined) {
       SOCIAL_KEYS.forEach(k => {
