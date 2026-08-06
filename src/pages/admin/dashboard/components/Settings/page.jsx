@@ -406,6 +406,69 @@ const Settings = () => {
             </SettingCard>
           </div>
 
+          {/* Hero Section — full width */}
+          <div className="sm:col-span-2">
+            <SettingCard icon="FiImage" title="Hero Section">
+              <div className="pt-2 space-y-4">
+                <div>
+                  <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    value={heroTitle}
+                    onChange={e => setHeroTitle(e.target.value)}
+                    placeholder="Global Projects Impact Reports"
+                    className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] transition-colors placeholder-gray-300"
+                  />
+                  <p className="mt-1.5 text-xs text-gray-400">Headline shown on the public homepage banner.</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2">
+                    Background Photo
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <div className="w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center flex-shrink-0 overflow-hidden">
+                      {heroBackgroundImage ? (
+                        <img src={heroBackgroundImage} alt="" className="w-full h-full object-cover" onError={e => { e.target.style.display = 'none'; }} />
+                      ) : (
+                        <SafeIcon icon="FiImage" className="text-gray-400 text-lg" />
+                      )}
+                    </div>
+                    <input
+                      type="url"
+                      value={heroBackgroundImage}
+                      onChange={e => setHeroBackgroundImage(e.target.value)}
+                      placeholder="Paste an image URL or upload →"
+                      className="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#E52321] focus:ring-[3px] focus:ring-[#fdecec] transition-colors placeholder-gray-300"
+                    />
+                    <input
+                      ref={heroFileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/gif"
+                      className="hidden"
+                      onChange={e => handleHeroUpload(e.target.files[0])}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => heroFileInputRef.current?.click()}
+                      disabled={uploadingHero}
+                      title="Upload image (max 2 MB)"
+                      className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-[#E52321] border border-gray-200 rounded-xl bg-white transition-colors flex-shrink-0 disabled:opacity-50"
+                    >
+                      {uploadingHero
+                        ? <div className="w-4 h-4 border-2 border-[#E52321] border-t-transparent rounded-full animate-spin" />
+                        : <SafeIcon icon="FiUpload" className="text-sm" />
+                      }
+                    </button>
+                  </div>
+                  <p className="mt-1.5 text-xs text-gray-400">Shown behind the title on the public homepage banner. JPEG, PNG, WebP or GIF, max 2 MB.</p>
+                </div>
+              </div>
+            </SettingCard>
+          </div>
+
           {/* Social Media — full width below the two columns */}
           <div className="sm:col-span-2">
             <SettingCard icon="FiShare2" title="Social Media Links">
