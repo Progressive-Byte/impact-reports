@@ -63,9 +63,13 @@ export const reportToForm = (report, defaultRegion = '') => ({
     designation: t.designation || '',
     address:     t.address     || '',
   })),
-  children:          report.children ?? 0,
-  women:             report.women ?? 0,
-  men:               report.men ?? 0,
+  demographicsTitle: report.demographicsTitle || 'Recipient Demographics',
+  demographics: (report.demographics || []).map((d, i) => ({
+    id:         i + 1,
+    label:      d.label || '',
+    percentage: d.percentage ?? '',
+    icon:       d.icon  || '',
+  })),
   deliverables:      (report.deliverables || []).map((d, i) => ({
     id:          i + 1,
     label:       d.label       || '',
