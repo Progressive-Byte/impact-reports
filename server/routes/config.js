@@ -211,6 +211,9 @@ router.patch('/settings', protect, async (req, res) => {
       failedLoginWarnings:    settings.failedLoginWarnings,
       weeklyDigest:           settings.weeklyDigest,
       require2fa:             settings.require2fa,
+      donationUrl:            settings.donationUrl            || '',
+      heroTitle:              settings.heroTitle              || '',
+      heroBackgroundImage:    settings.heroBackgroundImage    || '',
       socialLinks:            settings.socialLinks        || {},
       socialLinksVisible:     settings.socialLinksVisible || {},
     });
