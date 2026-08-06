@@ -94,14 +94,10 @@ const DataManagement = () => {
         <ListCard
           icon="FiGlobe"
           title="Regions"
-          subtitle="Used in reports, user profiles, and invite forms"
+          subtitle="Fixed organization-wide list — kept consistent across all programs"
           items={regions}
           loading={loading}
-          onAdd={() => setRegions(p => [...p, ''])}
-          onUpdate={(idx, val) => setRegions(p => p.map((r, i) => i === idx ? val : r))}
-          onRemove={(idx) => setRegions(p => p.filter((_, i) => i !== idx))}
-          addLabel="Add Region"
-          placeholder="Region name"
+          readOnly
         />
 
         <ListCard
