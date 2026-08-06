@@ -21,60 +21,14 @@ Base path: `/api/config`
 
 ## `GET /api/config/regions`
 
-Public — no authentication required. Returns the active region list. Reads from the `PlatformSettings.regions` array in MongoDB; if that array is empty (e.g. before any regions have been saved via the Data Management tab), falls back to the hardcoded defaults in `server/config/regions.js`.
+Public — no authentication required. Returns the fixed organization-wide region list, hardcoded in `server/config/regions.js`. There is no write endpoint — regions are intentionally **not** editable via the API or the Data Management UI, so the value stored on `Report.region` stays consistent across all programs (see `docs/api/reports.md` — `region` is a Mongoose `enum` constrained to this exact list). To add, rename, or remove a region, edit `REGIONS` in `server/config/regions.js` directly.
 
 ### Response `200`
 
 ```json
 {
-  "regions": ["Africa", "Middle East", "South Asia", "Southeast Asia", "Global"]
+  "regions": ["Africa", "Middle East", "South Asia", "Southeast Asia", "SWANA", "Global"]
 }
-```
-
----
-
-## `PUT /api/config/regions`
-
-Requires **superadmin** role. Replaces the entire region list stored in `PlatformSettings.regions`. After this call, `GET /api/config/regions` returns only the new list.
-
-### Request body
-
-| Field     | Type     | Required | Description                                      |
-| --------- | -------- | :------: | ------------------------------------------------ |
-| `regions` | string[] | Yes      | Non-empty array of region name strings. Blank/empty strings are stripped before saving. |
-
-Example:
-
-```json
-{
-  "regions": ["Africa", "Middle East", "South Asia", "Southeast Asia", "Global", "Eastern Europe"]
-}
-```
-
-### Response `200`
-
-```json
-{
-  "regions": ["Africa", "Middle East", "South Asia", "Southeast Asia", "Global", "Eastern Europe"]
-}
-```
-
-### Errors
-
-| Status | Condition                                          |
-| ------ | -------------------------------------------------- |
-| `400`  | `regions` is not an array, is empty, or all entries are blank |
-| `401`  | Missing or invalid token                           |
-| `403`  | Caller is not `superadmin`                         |
-| `500`  | Database error                                     |
-
-### curl
-
-```bash
-curl -X PUT http://localhost:5173/api/config/regions \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"regions":["Africa","Middle East","South Asia","Southeast Asia","Global"]}'
 ```
 
 ---
