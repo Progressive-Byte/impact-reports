@@ -24,6 +24,7 @@ const Portal = () => {
   const [expandedGroups, setExpandedGroups] = useState(ALL_CLOSED);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [hero, setHero] = useState({ title: '', backgroundImage: '' });
 
   const {
     urlSearch, urlPage, filters,
