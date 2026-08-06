@@ -6,7 +6,8 @@ Base path: `/api/config`
 
 | Method | Path                      | Auth                | Description                                              |
 | ------ | ------------------------- | ------------------- | -------------------------------------------------------- |
-| GET    | `/regions`                | None                | Returns the fixed, hardcoded region list                 |
+| GET    | `/regions`                | None                | Returns the active region list                            |
+| PUT    | `/regions`                | Bearer (superadmin) | Replace the full region list                              |
 | GET    | `/sectors`                | None                | Returns the active sector list                           |
 | PUT    | `/sectors`                | Bearer (superadmin) | Replace the full sector list                             |
 | GET    | `/departments`            | None                | Returns the active department list                       |
