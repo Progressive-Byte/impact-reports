@@ -37,6 +37,15 @@ const testimonialSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const demographicSchema = new mongoose.Schema(
+  {
+    label:      { type: String, default: '' },
+    percentage: { type: Number, default: null },
+    icon:       { type: String, default: '' },
+  },
+  { _id: false }
+);
+
 const reportSchema = new mongoose.Schema(
   {
     projectName:       { type: String, required: true, trim: true },
