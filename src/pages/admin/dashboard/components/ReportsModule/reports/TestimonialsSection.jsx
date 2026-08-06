@@ -48,14 +48,11 @@ const TestimonialsSection = ({ form, update }) => {
         {form.testimonials.map((t, idx) => (
           <div key={t.id} className="bg-gray-50 border border-gray-100 rounded-xl p-4 space-y-4">
 
-            {/* Star rating + index + remove */}
+            {/* Index + remove */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
-                  #{idx + 1}
-                </span>
-                <StarPicker value={t.stars} onChange={val => set(t.id, 'stars', val)} />
-              </div>
+              <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">
+                #{idx + 1}
+              </span>
               <button
                 onClick={() => remove(t.id)}
                 className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-[#E52321] border border-gray-200 rounded-lg bg-white transition-colors"
@@ -63,6 +60,13 @@ const TestimonialsSection = ({ form, update }) => {
                 <SafeIcon icon="FiTrash2" className="text-sm" />
               </button>
             </div>
+
+            {/* Title */}
+            <Input
+              placeholder="Title"
+              value={t.title}
+              onChange={e => set(t.id, 'title', e.target.value)}
+            />
 
             {/* Body (rich text) */}
             <RichTextEditor
