@@ -23,20 +23,20 @@ const TestimonialCard = ({ testimonial, bare = false }) => {
 
   const content = (
     <div className="relative p-6">
-      {/* Header: quote badge + label + title */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center flex-shrink-0">
-            <span className="text-[#E52321] font-black select-none font-serif text-[1.6rem] leading-none translate-y-1">
-              &ldquo;
-            </span>
-          </div>
-          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Testimonial</p>
+      {/* Header: quote badge + label */}
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 rounded-xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center flex-shrink-0">
+          <span className="text-[#E52321] font-black select-none font-serif text-[1.6rem] leading-none translate-y-1">
+            &ldquo;
+          </span>
         </div>
-        {title && (
-          <p className="text-sm font-black text-[#0B0D0F] truncate max-w-[60%]">{title}</p>
-        )}
+        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Testimonial</p>
       </div>
+
+      {/* Title */}
+      {title && (
+        <p className="text-base font-black text-[#0B0D0F] mb-2">{title}</p>
+      )}
 
       {/* Body */}
       {body && (
