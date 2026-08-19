@@ -70,7 +70,7 @@ const TestimonialSlider = ({ testimonials, sectionTitle = 'Testimonial' }) => {
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
           >
-            <TestimonialCard testimonial={testimonials[current]} bare />
+            <TestimonialCard testimonial={testimonials[current]} sectionTitle={sectionTitle} bare />
           </motion.div>
         </AnimatePresence>
       </div>
