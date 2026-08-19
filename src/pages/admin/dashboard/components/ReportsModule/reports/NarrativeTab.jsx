@@ -2,6 +2,7 @@ import RichTextEditor from '@/common/RichTextEditor';
 import TestimonialsSection from './TestimonialsSection';
 import FieldToggle from './FieldToggle';
 import SafeIcon from '../../../../../../common/SafeIcon';
+import { Input } from './FormField';
 
 const NarrativeTab = ({ form, update, fieldErrors = {}, hiddenFields = [], onToggle }) => {
   const toggle = (key) => <FieldToggle fieldKey={key} hiddenFields={hiddenFields} onToggle={onToggle} />;
