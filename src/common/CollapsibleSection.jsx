@@ -111,12 +111,12 @@ const CollapsibleSection = ({
         onClick={onToggle}
         className="w-full flex items-center justify-between px-6 sm:px-10 py-6 sm:py-8 hover:bg-gray-50/60 transition-colors group text-left"
       >
-        <div className="flex items-start gap-4 pr-4">
-          <div className="w-10 h-10 rounded-2xl bg-[#E52321]/10 border border-[#E52321]/15 flex items-center justify-center flex-shrink-0">
-            <span className="w-2 h-2 rounded-full bg-[#E52321]" />
+        <div className="flex items-start gap-3 pr-4">
+          <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#0B0D0F] text-white flex items-center justify-center flex-shrink-0">
+            <SafeIcon icon={icon} className="text-lg sm:text-2xl" />
           </div>
           <div className="min-w-0">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-black text-[#0B0D0F] tracking-tight leading-tight">
+            <h2 className="text-xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight uppercase leading-tight">
               {title}
             </h2>
             {subtitle && (
