@@ -137,6 +137,7 @@ router.get('/reports/:idOrSlug', async (req, res) => {
       videoUrl:     report.videoUrl     || '',
       countries:    report.countries    || [],
       locations:    report.locations    || [],
+      testimonialsTitle: report.testimonialsTitle || 'Testimonial',
       testimonials: report.testimonials || [],
       hiddenFields: report.hiddenFields || [],
     });
