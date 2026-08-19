@@ -17,9 +17,12 @@ const ProjectBrief = ({ report, hiddenFields }) => {
             <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-[#0B0D0F] text-white flex items-center justify-center flex-shrink-0">
               <SafeIcon icon="FiFileText" className="text-lg sm:text-2xl" />
             </div>
-            <h2 className="text-xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight uppercase leading-tight">
-              Executive Summary
-            </h2>
+            <div className="min-w-0">
+              <h2 className="text-xl sm:text-3xl font-black text-[#0B0D0F] tracking-tight uppercase leading-tight">
+                Executive Summary
+              </h2>
+              <p className="text-gray-500 mt-1 text-xs sm:text-sm leading-relaxed">Key facts and narrative overview of this project.</p>
+            </div>
           </div>
 
           {(() => {
