@@ -20,6 +20,7 @@ export const BLANK_FORM = {
   livesImpacted:     0,
   projectBackground: '',
   strategicResponse: '',
+  testimonialsTitle: 'Testimonial',
   testimonials:      [],
   demographicsTitle: 'Recipient Demographics',
   demographics:      [],
