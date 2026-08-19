@@ -27,6 +27,7 @@ const LocationsSection = ({ report, isOpen, onToggle }) => {
     <CollapsibleSection
       title="Locations Implemented"
       subtitle="Geographic footprint of the verified project sites."
+      icon="FiMapPin"
       isOpen={isOpen}
       onToggle={onToggle}
       headerRight={
