@@ -181,6 +181,7 @@ export const buildStepPayload = {
   narrative: (f) => ({
     projectBackground: f.projectBackground,
     strategicResponse: f.strategicResponse,
+    testimonialsTitle: f.testimonialsTitle.trim() || 'Testimonial',
     testimonials: f.testimonials.map(({ title, body, clientImage, name, designation, address }) => ({
       title, body, clientImage, name, designation, address,
     })),
