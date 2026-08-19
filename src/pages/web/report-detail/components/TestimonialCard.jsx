@@ -30,7 +30,7 @@ const TestimonialCard = ({ testimonial, bare = false, sectionTitle = 'Testimonia
             &ldquo;
           </span>
         </div>
-        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">Testimonial</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-gray-400">{sectionTitle}</p>
       </div>
 
       {/* Title */}
