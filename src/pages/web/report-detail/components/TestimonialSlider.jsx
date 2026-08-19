@@ -9,7 +9,7 @@ const variants = {
   exit:   (dir) => ({ x: dir > 0 ? '-100%' : '100%' }),
 };
 
-const TestimonialSlider = ({ testimonials }) => {
+const TestimonialSlider = ({ testimonials, sectionTitle = 'Testimonial' }) => {
   const [current,   setCurrent]   = useState(0);
   const [direction, setDirection] = useState(1);
   const touchStartX = useRef(null);
@@ -17,7 +17,7 @@ const TestimonialSlider = ({ testimonials }) => {
   if (!testimonials?.length) return null;
 
   // Single testimonial — render the full card as-is, no slider chrome
-  if (testimonials.length === 1) return <TestimonialCard testimonial={testimonials[0]} />;
+  if (testimonials.length === 1) return <TestimonialCard testimonial={testimonials[0]} sectionTitle={sectionTitle} />;
 
   // Dot navigation: direction inferred from index position
   const goTo = (index) => {
