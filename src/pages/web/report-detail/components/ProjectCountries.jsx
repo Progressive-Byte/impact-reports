@@ -33,6 +33,7 @@ const ProjectCountries = ({ countries, region, isOpen, onToggle }) => {
     <CollapsibleSection
       title="Project Countries"
       subtitle={`Implementation breadth across ${region}.`}
+      icon="FiGlobe"
       isOpen={isOpen}
       onToggle={onToggle}
     >
