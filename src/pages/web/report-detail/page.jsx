@@ -157,7 +157,7 @@ const ReportDetail = () => {
             <ProjectBrief report={report} hiddenFields={hiddenSet} />
 
             {!isHidden('deliverables') && report.deliverables?.length > 0 && (
-              <CollapsibleSection title="Project Deliverables" icon="FiPackage" isOpen={openSections.deliverables} onToggle={() => toggleSection('deliverables')}>
+              <CollapsibleSection title="Project Deliverables" subtitle="Verified outputs and quantities delivered on the ground." icon="FiPackage" isOpen={openSections.deliverables} onToggle={() => toggleSection('deliverables')}>
                 <div className="p-6 sm:p-8 space-y-3">
                   {report.deliverables.map((item, idx) => <DeliverableRow key={idx} item={item} />)}
                 </div>
