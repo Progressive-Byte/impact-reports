@@ -224,6 +224,43 @@ const CountryLocationTab = ({ form, update, fieldErrors = {}, hiddenFields = [],
         </div>
       )}
 
+      {/* Support This Mission — fully customizable CTA section */}
+      <div className="space-y-4 border border-gray-100 rounded-xl p-4 bg-gray-50/50">
+        <div className="flex items-center justify-between">
+          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            Support This Mission (CTA Section)
+          </p>
+          <FieldToggle fieldKey="donationUrl" hiddenFields={hiddenFields} onToggle={onToggle} />
+        </div>
+        <div className="grid grid-cols-2 gap-5">
+          <Input
+            label="Section Title"
+            placeholder="e.g. Support This Mission"
+            value={form.ctaTitle}
+            onChange={e => update('ctaTitle', e.target.value)}
+          />
+          <Input
+            label="Button Text"
+            placeholder="e.g. Donate Now, Volunteer Today, Partner With Us"
+            value={form.ctaButtonText}
+            onChange={e => update('ctaButtonText', e.target.value)}
+          />
+        </div>
+        <Textarea
+          label="Description"
+          placeholder="Brief message explaining how supporters can get involved..."
+          rows={2}
+          value={form.ctaDescription}
+          onChange={e => update('ctaDescription', e.target.value)}
+        />
+        <Input
+          label="Button Link"
+          placeholder="https://... (donation page, volunteer form, petition, contact page, etc.)"
+          value={form.donationUrl}
+          onChange={e => update('donationUrl', e.target.value)}
+        />
+      </div>
+
       {/* GPS / Map picker modal */}
       {pickerCfg && (
         <GpsPickerModal
