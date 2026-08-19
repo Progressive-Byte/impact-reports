@@ -18,7 +18,7 @@ const POPULATE = [
 // Which fields each step is allowed to update
 const STEP_FIELDS = {
   general:   ['projectName', 'assignedTo', 'approvalAssignedTo', 'actualProjectId', 'shortSubtitle', 'cost', 'programLead', 'implementingPartner', 'partnerOrganizations', 'reportingPeriod', 'region', 'sector', 'livesImpacted'],
-  narrative: ['projectBackground', 'strategicResponse', 'testimonials'],
+  narrative: ['projectBackground', 'strategicResponse', 'testimonialsTitle', 'testimonials'],
   metrics:   ['demographicsTitle', 'demographics', 'deliverables'],
   media:     ['images', 'thumbnail', 'videoUrl', 'milestones'],
   location:  ['countries', 'locations', 'donationUrl', 'ctaTitle', 'ctaDescription', 'ctaButtonText'],
