@@ -53,7 +53,7 @@ const TestimonialSlider = ({ testimonials, sectionTitle = 'Testimonial' }) => {
       <div className="relative overflow-hidden">
         {/* Ghost — invisible, always renders current slide to hold container height */}
         <div className="invisible pointer-events-none select-none" aria-hidden="true">
-          <TestimonialCard testimonial={testimonials[current]} bare />
+          <TestimonialCard testimonial={testimonials[current]} sectionTitle={sectionTitle} bare />
         </div>
 
         {/* Animated slides — absolutely stacked so exit + enter happen simultaneously */}
