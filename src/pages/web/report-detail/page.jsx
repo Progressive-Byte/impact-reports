@@ -165,7 +165,7 @@ const ReportDetail = () => {
             )}
 
             {!isHidden('milestones') && report.milestones?.length > 0 && (
-              <CollapsibleSection title="Implementation Timeline" icon="FiClock" isOpen={openSections.timeline} onToggle={() => toggleSection('timeline')}>
+              <CollapsibleSection title="Implementation Timeline" subtitle="Key milestones tracking project execution over time." icon="FiClock" isOpen={openSections.timeline} onToggle={() => toggleSection('timeline')}>
                 <div className="px-6 sm:px-10 py-8">
                   <div className="relative pl-8 sm:pl-10">
                     <div className="absolute left-3 sm:left-3.5 top-2 bottom-2 w-px bg-[#E52321] z-0" />
