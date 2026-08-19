@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CollapsibleSection from '../../../../common/CollapsibleSection';
+import SafeIcon from '../../../../common/SafeIcon';
 
 const ProjectBrief = ({ report, hiddenFields }) => {
   const [openSections, setOpenSections] = useState({ background: true, response: false });
