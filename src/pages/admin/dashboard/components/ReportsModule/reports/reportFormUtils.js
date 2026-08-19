@@ -61,6 +61,7 @@ export const reportToForm = (report, defaultRegion = '') => ({
   livesImpacted:     report.livesImpacted ?? 0,
   projectBackground: report.projectBackground || '',
   strategicResponse: report.strategicResponse || '',
+  testimonialsTitle: report.testimonialsTitle || 'Testimonial',
   testimonials: (report.testimonials || []).map((t, i) => ({
     id:          i + 1,
     title:       t.title       || '',
