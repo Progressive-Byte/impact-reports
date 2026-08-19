@@ -185,7 +185,12 @@ const ReportDetail = () => {
             {!isHidden('demographics') && hasDemographics && (
               <DemographicsCard title={report.demographicsTitle || 'Recipient Demographics'} demographics={report.demographics} />
             )}
-            {!isHidden('testimonials') && <TestimonialSlider testimonials={report.testimonials} />}
+            {!isHidden('testimonials') && (
+              <TestimonialSlider
+                testimonials={report.testimonials}
+                sectionTitle={report.testimonialsTitle || 'Testimonial'}
+              />
+            )}
           </div>
         </div>
 
