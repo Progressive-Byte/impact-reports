@@ -217,5 +217,9 @@ export const buildStepPayload = {
         lat:     lat || '',
         lng:     lng || '',
       })),
+    donationUrl:    f.donationUrl     || '',
+    ctaTitle:       f.ctaTitle.trim()       || 'Support This Mission',
+    ctaDescription: f.ctaDescription.trim() || 'Your partnership allows our teams to remain on the ground and expand our reach to those who need it most.',
+    ctaButtonText:  f.ctaButtonText.trim()  || 'Donate Now',
   }),
 };
