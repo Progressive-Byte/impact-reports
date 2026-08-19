@@ -33,6 +33,12 @@ const NarrativeTab = ({ form, update, fieldErrors = {}, hiddenFields = [], onTog
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Testimonials</p>
           {toggle('testimonials')}
         </div>
+        <Input
+          placeholder="Section title (e.g. Testimonial)"
+          value={form.testimonialsTitle}
+          onChange={e => update('testimonialsTitle', e.target.value)}
+          className="mb-4"
+        />
         <TestimonialsSection form={form} update={update} />
       </div>
     </div>
