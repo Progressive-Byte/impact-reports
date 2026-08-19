@@ -16,6 +16,7 @@ const CollapsibleSection = ({
   headerRight,
   variant = 'section',
   selectedCount = 0,
+  icon = 'FiCircle',
 }) => {
   if (variant === 'brief') {
     return (
