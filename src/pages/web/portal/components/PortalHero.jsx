@@ -35,6 +35,7 @@ const PortalHero = ({ title, backgroundImage }) => {
             {line1}
             {line2 && (
               <>
+                {' '}
                 <br className="hidden sm:block" />
                 <span className="text-[#E52321]">{line2}</span>
               </>
