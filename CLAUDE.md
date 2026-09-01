@@ -25,6 +25,7 @@ npm run build          # lint + Vite build → dist/
 npm run build:server   # Vite SSR-bundles Express → dist/server/ (uses vite.server.config.js, @server alias)
 npm run build:all      # build frontend then server (dist/ + dist/server/)
 npm run seed           # seed MongoDB with initial data
+npm run migrate:demographics  # one-time migration: old men/women/children fields → freeform `demographics` array
 npm run server         # start backend without nodemon (no hot-reload)
 npm run start          # production mode (NODE_ENV=production, serves dist/ from Express)
 npm run preview        # preview the Vite build locally
