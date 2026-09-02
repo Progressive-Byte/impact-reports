@@ -1,20 +1,25 @@
-# The backend server run
-npm run server:dev
+# Development
 
-  See:
-  MongoDB Atlas connected
-  Server running on http://localhost:5000
+Two terminals are required simultaneously. **Start the backend first** — Vite defaults to `:5173` and auto-increments to `:5174` only if `:5173` is already occupied. If Vite starts first, it claims `:5173`, the proxy target breaks, and API calls fail silently.
 
-  # The frontend server run
-  npm run dev (frontend on :5173)
-  
-  Then login will work. Need two terminals running simultaneously:
+| Terminal 1 | Terminal 2 |
+|---|---|
+| `npm run server:dev` (backend on `:5173`) | `npm run dev` (frontend on `:5174`) |
 
-  ┌─────────────────────────────────┬───────────────────────────────────────┐
-  │           Terminal 1            │              Terminal 2               │
-  ├─────────────────────────────────┼───────────────────────────────────────┤
-  │ npm run dev (frontend on :5173) │ npm run server:dev (backend on :5000) │
-  └─────────────────────────────────┴───────────────────────────────────────┘
-  npm run build:server — builds only the server
-  - npm run build:server — builds only the server
-  - npm run build:all — builds frontend then server (dist/ + dist/server/)
+Vite proxies `/api` and `/uploads` to `:5173` during development, so the frontend always calls relative paths like `/api/...`.
+
+Other commands:
+
+```bash
+npm run lint           # ESLint (also runs automatically before build)
+npm run lint:error     # ESLint — errors only, no warnings
+npm run build          # lint + Vite build → dist/
+npm run build:server   # Vite SSR-bundles Express → dist/server/
+npm run build:all      # build frontend then server (dist/ + dist/server/)
+npm run seed           # seed MongoDB with initial data
+npm run server         # start backend without nodemon (no hot-reload)
+npm run start          # production mode (NODE_ENV=production, serves dist/ from Express)
+npm run preview        # preview the Vite build locally
+```
+
+See `CLAUDE.md` for architecture and further details.
