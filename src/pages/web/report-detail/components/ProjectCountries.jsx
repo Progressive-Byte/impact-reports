@@ -98,9 +98,9 @@ const ProjectCountries = ({ countries, region, isOpen, onToggle }) => {
               style={{ height: '100%', width: '100%', zIndex: 1 }}
             >
               <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-                subdomains="abcd"
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                subdomains="abc"
                 maxZoom={19}
               />
               <AttributionControl position="bottomright" prefix={false} />
