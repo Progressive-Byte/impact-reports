@@ -169,9 +169,8 @@ const GpsPickerModal = ({
               style={{ height: '100%', width: '100%', zIndex: 1 }}
             >
               <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                subdomains="abc"
+                url={TILE_LAYER_URL}
+                attribution={TILE_LAYER_ATTRIBUTION}
                 maxZoom={19}
               />
               <AttributionControl position="bottomright" prefix={false} />
