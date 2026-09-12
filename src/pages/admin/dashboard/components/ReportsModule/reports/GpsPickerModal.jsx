@@ -6,6 +6,7 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Country } from 'country-state-city';
 import SafeIcon from '../../../../../../common/SafeIcon';
+import { TILE_LAYER_URL, TILE_LAYER_ATTRIBUTION } from '../../../../../../utils/mapTiles';
 
 L.Marker.prototype.options.icon = L.icon({
   iconUrl: markerIcon,
