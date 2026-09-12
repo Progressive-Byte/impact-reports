@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import SafeIcon from '../../../../common/SafeIcon';
 import { getGpsCoords } from '../../../../utils/location';
 import '../../../../utils/leafletDefaultIcon';
+import { TILE_LAYER_URL, TILE_LAYER_ATTRIBUTION } from '../../../../utils/mapTiles';
 
 // Fits the map viewport to given positions whenever they change
 const FitBounds = ({ positions }) => {
