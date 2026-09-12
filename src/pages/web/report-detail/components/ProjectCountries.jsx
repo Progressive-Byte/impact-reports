@@ -5,6 +5,7 @@ import SafeIcon from '../../../../common/SafeIcon';
 import CollapsibleSection from '../../../../common/CollapsibleSection';
 import { getCountryPos } from '../../../../utils/countryCoords';
 import '../../../../utils/leafletDefaultIcon';
+import { TILE_LAYER_URL, TILE_LAYER_ATTRIBUTION } from '../../../../utils/mapTiles';
 
 // Fits the map viewport to given positions whenever they change
 const FitBounds = ({ positions }) => {
