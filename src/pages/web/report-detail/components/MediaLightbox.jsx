@@ -48,8 +48,8 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* ── Layer 1: solid black base (always) ──────────────────────── */}
-          <div className="absolute inset-0 bg-black" />
+          {/* ── Layer 1: solid navy base (always) ───────────────────────── */}
+          <div className="absolute inset-0 bg-[#101A30]" />
 
           {/* ── Layer 2: blurred current image (mobile only, images only) ── */}
           {isImage && media.url && (
