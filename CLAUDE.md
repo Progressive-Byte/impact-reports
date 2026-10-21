@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development
 
-Two terminals are required simultaneously. **Start the backend first** — Vite defaults to `:5173` and auto-increments to `:5174` only if `:5173` is already occupied. If Vite starts first, it claims `:5173`, the proxy target breaks, and API calls fail silently.
+Two terminals are required simultaneously, in either order. Vite is pinned to `:5174` with `strictPort: true` (`vite.config.js`), so it can never claim the backend's `:5173`; it errors out instead if `:5174` is taken. Local `.env` must have `PORT=5173` to match the proxy target. `nodemon.json` restricts nodemon to watching `server/` — without it, Vite's temporary `vite.config.js.timestamp-*.mjs` file in the project root triggers backend restarts that crash with `EADDRINUSE`. nodemon does not watch `.env`; restart manually after editing it.
 
 ```bash
 # Terminal 1 — backend (Express + nodemon on :5173)
