@@ -10,6 +10,9 @@ export default defineConfig({
     }
   },
   server: {
+    // Pinned so Vite never grabs the backend's :5173 (the proxy target below)
+    port: 5174,
+    strictPort: true,
     historyApiFallback: true,
     proxy: {
       '/api': {
