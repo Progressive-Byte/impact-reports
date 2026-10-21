@@ -41,6 +41,8 @@ jobs:
             set -e
             git config --global --add safe.directory ${{ secrets.DEPLOY_PATH }}
             cd ${{ secrets.DEPLOY_PATH }}
+            # The repo's lockfile is the source of truth; drop any server-side edits (e.g. from `npm install`) that would block the pull
+            git checkout -- package-lock.json
             git pull origin deploy
             npm ci
             npm run build:all
