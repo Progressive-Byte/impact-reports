@@ -67,8 +67,8 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
 
           {/* ── Layer 3: dark tint overlay ───────────────────────────────── */}
           {/* mobile: semi-transparent so the blurred image shows through   */}
-          {/* desktop: near-opaque black                                      */}
-          <div className="absolute inset-0 bg-black/50 sm:bg-black/92" />
+          {/* desktop: near-opaque navy                                       */}
+          <div className="absolute inset-0 bg-[#101A30]/50 sm:bg-[#101A30]/92" />
 
           {/* ── Prev arrow (desktop only) ─────────────────────────────────── */}
           <AnimatePresence>
