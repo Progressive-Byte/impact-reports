@@ -43,7 +43,10 @@ jobs:
             cd ${{ secrets.DEPLOY_PATH }}
             # The repo's lockfile is the source of truth; drop any server-side edits (e.g. from `npm install`) that would block the pull
             git checkout -- package-lock.json
+            # Markdown docs are removed from the live server after each pull; restore them first so the pull doesn't conflict
+            git ls-files -z --deleted -- '*.md' | xargs -0 -r git checkout --
             git pull origin deploy
+            git ls-files -z -- '*.md' | xargs -0 -r rm -f
             npm ci
             npm run build:all
             pm2 flush
