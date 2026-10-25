@@ -33,8 +33,6 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
     touchStartX.current = null;
   };
 
-  const isImage = media?.type !== 'video';
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -42,33 +40,13 @@ const MediaLightbox = ({ mediaList = [], currentIndex, title, onClose, onNavigat
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          // overflow-hidden so the scale(1.2) blurred bg never bleeds outside viewport
           className="fixed inset-0 z-[100] overflow-hidden flex items-center justify-center p-4 sm:p-8 md:p-12 cursor-zoom-out"
           onClick={onClose}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* ── Layer 1: solid navy base (always) ───────────────────────── */}
           <div className="absolute inset-0 bg-[#101A30]" />
-
-          {/* ── Layer 2: blurred current image (mobile only, images only) ── */}
-          {isImage && media.url && (
-            <div
-              className="absolute inset-0 sm:hidden"
-              style={{
-                backgroundImage:    `url(${media.url})`,
-                backgroundSize:     'cover',
-                backgroundPosition: 'center',
-                filter:             'blur(5px)',
-                transform:          'scale(1.1)', // hide blur edges
-              }}
-            />
-          )}
-
-          {/* ── Layer 3: dark tint overlay ───────────────────────────────── */}
-          {/* mobile: semi-transparent so the blurred image shows through   */}
-          {/* desktop: near-opaque navy                                       */}
-          <div className="absolute inset-0 bg-[#101A30]/50 sm:bg-[#101A30]/92" />
+          <div className="absolute inset-0 bg-[#101A30]/92" />
 
           {/* ── Prev arrow (desktop only) ─────────────────────────────────── */}
           <AnimatePresence>
