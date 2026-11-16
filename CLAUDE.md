@@ -48,7 +48,7 @@ PM2 configuration is in `ecosystem.config.cjs`. In production, the app runs on *
 
 The backend loads `.env` from the **project root** (not `server/`). This is done by `server/bootstrap.js`, which must be the first import in `server/index.js`. Required variables:
 
-- `MONGODB_URI` — MongoDB connection string. Production runs a self-hosted MongoDB (8.0) directly on the same Hostinger VPS, bound to `127.0.0.1:27017` with auth enabled (`mongodb://impactReportsApp:***@127.0.0.1:27017/impact-reports?authSource=impact-reports`) — not MongoDB Atlas. Local dev may still point at an Atlas cluster.
+- `MONGODB_URI` — MongoDB connection string. Production runs a self-hosted MongoDB (8.0) directly on the same DigitalOcean droplet, bound to `127.0.0.1:27017` with auth enabled (`mongodb://impactReportsApp:***@127.0.0.1:27017/impact-reports?authSource=impact-reports`) — not MongoDB Atlas. Local dev may still point at an Atlas cluster.
 - `JWT_SECRET` — secret for signing JWTs
 - `JWT_EXPIRES_IN` — e.g. `1d`
 - `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET` — image uploads
